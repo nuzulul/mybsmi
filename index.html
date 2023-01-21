@@ -1,0 +1,1507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#2196f3">
+  <meta http-equiv="Content-Security-Policy" content="default-src * 'self' 'unsafe-inline' 'unsafe-eval' data:">
+  <title>MyBSMI</title>
+  <link rel="stylesheet" href="https://unpkg.com/framework7/framework7-bundle.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/framework7-icons">
+  <style>
+    :root {
+      --f7-panel-transition-duration: 250ms;
+      --f7-bars-bg-color: #fff;
+      --f7-page-bg-color: #f2f3f8;
+      --f7-navbar-border-color: transparent;
+      --f7-navbar-shadow-image: linear-gradient(to bottom,
+        rgba(0,0,0,0.15) 0%,
+        rgba(0,0,0,0.08) 40%,
+        rgba(0,0,0,0.04) 50%,
+        rgba(0,0,0,0) 90%,
+        rgba(0,0,0,0) 100%
+      );
+
+    }
+    .aurora {
+      --f7-list-item-text-font-size: 13px;
+      --f7-list-item-text-line-height: 18px;
+      --f7-panel-collapsed-width: 44px;
+    }
+    .ios {
+      --f7-panel-collapsed-width: 58px;
+    }
+    .md {
+      --f7-panel-collapsed-width: 60px;
+    }
+    
+    @media (min-width: 1024px) {
+      .panel-open[data-panel="left"] {
+        display: none !important;
+      }
+    }
+    .panel-left.dark {
+      --f7-list-chevron-icon-color: rgba(255,255,255,0.4);
+    }
+    .panel-left .list .icon,
+    .panel-left .treeview .icon {
+      color: #fff;
+    }
+    .panel-left .active-link {
+      background-color: var(--f7-theme-color);
+      --f7-list-link-hover-bg-color: var(--f7-theme-color-tint);
+      --f7-list-link-pressed-bg-color: var(--f7-theme-color-shade);
+    }
+
+    .dashboard-cards {
+      --f7-card-margin-vertical: 0px;
+      --f7-card-margin-horizontal: 0px;
+      --f7-card-box-shadow: 0px 0px 13px 0px rgba(82, 63, 105, 0.1);
+    }
+
+    .product-image {
+      width: 56px;
+      height: 56px;
+      border-radius: 4px;
+    }
+
+    .avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+    }
+
+    @media (min-width: 768px) {
+      .card-content.scrollable {
+        overflow: auto;
+        -webkit-overflow-scrolling: touch;
+        height: 260px;
+      }
+    }
+
+    .timeline-item-divider {
+      background: var(--f7-theme-color);
+    }
+    .timeline-item-divider:after,
+    .timeline-item-divider:before {
+      width: 2px;
+    }
+
+    @media (min-width: 768px) {
+      .events-col .card {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+      }
+      .events-col .card-content {
+        flex-shrink: 10;
+        min-height: 0;
+        overflow: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+    }
+    @media (max-width: 767px) {
+      .events-col {
+        height: auto !important;
+      }
+    }
+
+    .tasks-list {
+      --f7-list-item-title-white-space: normal;
+      --f7-list-item-title-font-weight: 500;
+    }
+    .aurora .tasks-list {
+      --f7-list-item-padding-vertical: 8px;
+      --f7-badge-size: 14px;
+    }
+    .tasks-list .item-media {
+      width: 4px;
+      min-width: 0 !important;
+      margin-right: 5px;
+    }
+    .tasks-list .category-icon {
+      height: 24px;
+      width: 4px;
+      border-radius: 2px;
+      background: var(--f7-theme-color);
+    }
+
+
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="panel panel-left panel-reveal panel-init dark" data-visible-breakpoint="1024" data-collapsed-breakpoint="1">
+      <div class="view">
+        <div class="page">
+          <div class="list">
+            <ul>
+              <li>
+                <a href="#" class="item-content item-link active-link">
+                  <div class="item-media">
+                    <i class="icon f7-icons">square_grid_2x2_fill</i>
+                  </div>
+                  <div class="item-inner">
+                    <div class="item-title">Dashboard</div>
+                  </div>
+                </a>
+              </li>
+            </ul>
+          </div>
+<!--
+          <div class="list">
+            <ul>
+              <li>
+                <a href="#" class="item-content item-link">
+                  <div class="item-media">
+                    <i class="icon f7-icons">person_circle_fill</i>
+                  </div>
+                  <div class="item-inner">
+                    <div class="item-title">Users</div>
+                  </div>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <div class="list">
+            <ul>
+              <li>
+                <a href="#" class="item-content item-link">
+                  <div class="item-media">
+                    <i class="icon f7-icons">folder_fill</i>
+                  </div>
+                  <div class="item-inner">
+                    <div class="item-title">Categories</div>
+                  </div>
+                </a>
+              </li>
+              <li>
+                <a href="#" class="item-content item-link">
+                  <div class="item-media">
+                    <i class="icon f7-icons">cart_fill</i>
+                  </div>
+                  <div class="item-inner">
+                    <div class="item-title">Products</div>
+                  </div>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <div class="list">
+            <ul>
+              <li>
+                <a href="#" class="item-content item-link">
+                  <div class="item-media">
+                    <i class="icon f7-icons">bag_fill</i>
+                  </div>
+                  <div class="item-inner">
+                    <div class="item-title">Sales</div>
+                  </div>
+                </a>
+              </li>
+              <li>
+                <a href="#" class="item-content item-link">
+                  <div class="item-media">
+                    <i class="icon f7-icons">graph_circle_fill</i>
+                  </div>
+                  <div class="item-inner">
+                    <div class="item-title">Analytics</div>
+                  </div>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <div class="block block-strong no-padding-horizontal padding-vertical-half">
+            <div class="treeview">
+              <div class="treeview-item">
+                <div class="treeview-item-root treeview-item-toggle">
+                  <div class="treeview-toggle"></div>
+                  <div class="treeview-item-content">
+                    <div class="treeview-item-label">Departments</div>
+                  </div>
+                </div>
+                <div class="treeview-item-children">
+                  <div class="treeview-item">
+                    <a href="#" class="treeview-item-root">
+                      <div class="treeview-item-content">
+                        <div class="treeview-item-label">New York</div>
+                      </div>
+                    </a>
+                  </div>
+                  <div class="treeview-item">
+                    <a href="#" class="treeview-item-root">
+                      <div class="treeview-item-content">
+                        <div class="treeview-item-label">London</div>
+                      </div>
+                    </a>
+                  </div>
+                  <div class="treeview-item">
+                    <a href="#" class="treeview-item-root">
+                      <div class="treeview-item-content">
+                        <div class="treeview-item-label">Beijing</div>
+                      </div>
+                    </a>
+                  </div>
+                  <div class="treeview-item">
+                    <a href="#" class="treeview-item-root">
+                      <div class="treeview-item-content">
+                        <div class="treeview-item-label">Tokyo</div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+-->
+          
+          
+          
+        </div>
+      </div>
+    </div>
+    <div class="view view-main view-init">
+      <div class="page">
+        <div class="navbar">
+          <div class="navbar-bg"></div>
+          <div class="navbar-inner">
+            <div class="left">
+              <a class="link panel-open icon-only" data-panel="left">
+                <i class="icon f7-icons">bars</i>
+              </a>
+            </div>
+            <div class="title">Dashboard</div>
+            <div class="right">
+              <a class="link popover-open" data-popover=".profile-popover">
+                <span class="margin-right-half">User</span>
+                <img src="https://i.pravatar.cc/56?u=9" class="avatar">
+              </a>
+            </div>
+            <div class="title-large">
+              <div class="title-large-text display-flex align-items-center">
+                <i class="icon f7-icons margin-right-half" style="font-size: 24px">square_grid_2x2_fill</i>
+                <span>Dashboard</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="popover profile-popover">
+          <div class="popover-inner">
+            <h3 class="text-align-center">User</h3>
+            <!--<div class="list no-hairlines no-hairlines-between">
+              <ul>
+                <li>
+                  <a href="#" class="item-link item-content">
+                    <div class="item-media">
+                      <i class="icon f7-icons">person_circle_fill</i>
+                    </div>
+                    <div class="item-inner">
+                      <div class="item-title">Profile</div>
+                    </div>
+                  </a>
+                </li>
+                <li>
+                  <a href="#" class="item-link item-content">
+                    <div class="item-media">
+                      <i class="icon f7-icons">gear_fill</i>
+                    </div>
+                    <div class="item-inner">
+                      <div class="item-title">User Settings</div>
+                    </div>
+                  </a>
+                </li>
+              </ul>
+            </div>-->
+
+            <div class="list no-hairlines no-hairlines-between margin-bottom">
+              <ul>
+                <li>
+                  <a href="#" class="item-link item-content my-logout">
+                    <div class="item-media">
+                      <i class="icon f7-icons">exit_fill</i>
+                    </div>
+                    <div class="item-inner">
+                      <div class="item-title">Logout</div>
+                    </div>
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+          </div>
+        </div>
+        <div class="page-content">
+          <div class="dashboard-cards">
+            <div class="row margin-horizontal">
+              <div class="col-100 medium-66 margin-top charts-col">
+                <div class="row">
+                  <div class="col-50">
+                    <div class="card">
+                      <div class="card-header">Cabang</div>
+                      <div class="card-content card-content-padding text-align-center">
+                        <div
+                          class="gauge gauge-init"
+                          data-type="circle"
+                          data-value="1.00"
+                          data-value-text="38"
+                          data-label-text="Kota/Kabupaten"
+                          data-value-text-color="#f44336"
+                          data-border-color="#f44336"
+                          data-border-width="30"
+                        ></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-50">
+                    <div class="card">
+                      <div class="card-header">Relawan</div>
+                      <div class="card-content card-content-padding text-align-center">
+                        <div
+                          class="gauge gauge-init"
+                          data-type="circle"
+                          data-value="1.00"
+                          data-value-text="1"
+                          data-label-text="Orang"
+                          data-value-text-color="#ff9800"
+                          data-border-color="#ff9800"
+                          data-border-width="30"
+                        ></div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+              
+              
+<!--              
+              <div class="col-100 medium-33 margin-top events-col">
+                <div class="card">
+                  <div class="card-header">Latest Events</div>
+                  <div class="card-content card-content-padding">
+                    <div class="timeline no-margin no-padding">
+                      <div class="timeline-item">
+                        <div class="timeline-item-date">10:00</div>
+                        <div class="timeline-item-divider"></div>
+                        <div class="timeline-item-content">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolor fugiat ipsam hic</div>
+                      </div>
+                      <div class="timeline-item">
+                        <div class="timeline-item-date">11:00</div>
+                        <div class="timeline-item-divider"></div>
+                        <div class="timeline-item-content">Another text goes here</div>
+                      </div>
+                      <div class="timeline-item">
+                        <div class="timeline-item-date">14:45</div>
+                        <div class="timeline-item-divider"></div>
+                        <div class="timeline-item-content">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolor fugiat ipsam hic porro enim, accusamus perferendis, quas commodi alias quaerat eius nemo deleniti. Odio quasi quos quis iure, aperiam pariatur?</div>
+                      </div>
+                      <div class="timeline-item">
+                        <div class="timeline-item-date">16:24</div>
+                        <div class="timeline-item-divider"></div>
+                        <div class="timeline-item-content">One more text here</div>
+                      </div>
+                      <div class="timeline-item">
+                        <div class="timeline-item-date">17:11</div>
+                        <div class="timeline-item-divider"></div>
+                        <div class="timeline-item-content">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolor fugiat ipsam hic</div>
+                      </div>
+                      <div class="timeline-item">
+                        <div class="timeline-item-date">17:28</div>
+                        <div class="timeline-item-divider"></div>
+                        <div class="timeline-item-content">Another text goes here</div>
+                      </div>
+                      <div class="timeline-item">
+                        <div class="timeline-item-date">18:00</div>
+                        <div class="timeline-item-divider"></div>
+                        <div class="timeline-item-content">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolor fugiat ipsam hic porro enim, accusamus perferendis, quas commodi alias quaerat eius nemo deleniti. Odio quasi quos quis iure, aperiam pariatur?</div>
+                      </div>
+                      <div class="timeline-item">
+                        <div class="timeline-item-date">19:19</div>
+                        <div class="timeline-item-divider"></div>
+                        <div class="timeline-item-content">One more text here</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+-->              
+              
+              
+              
+            </div>
+            
+<!--            <div class="row margin-horizontal">
+              <div class="col-100 medium-66 margin-top">
+                <div class="card">
+                  <div class="card-header">
+                    <span>Best Sellers</span>
+                    <div class="segmented">
+                      <a class="button button-small button-outline tab-link-active tab-link" style="width:auto">Today</a>
+                      <a class="button button-small button-outline tab-link" style="width:auto">Week</a>
+                      <a class="button button-small button-outline tab-link" style="width:auto">Month</a>
+                    </div>
+                  </div>
+                  <div class="card-content card-content-padding scrollable">
+                    <div class="list media-list">
+                      <ul>
+                        <li class="item-content">
+                          <div class="item-media">
+                            <img class="product-image" src="https://placeimg.com/112/112/1">
+                          </div>
+                          <div class="item-inner">
+                            <div class="item-title-row">
+                              <div class="item-title">Logo Design</div>
+                              <div class="item-after">12 sales</div>
+                            </div>
+                            <div class="item-text">Design</div>
+                          </div>
+                        </li>
+                        <li class="item-content">
+                          <div class="item-media">
+                            <img class="product-image" src="https://placeimg.com/112/112/2">
+                          </div>
+                          <div class="item-inner">
+                            <div class="item-title-row">
+                              <div class="item-title">Website Design</div>
+                              <div class="item-after">10 sales</div>
+                            </div>
+                            <div class="item-text">Design</div>
+                          </div>
+                        </li>
+                        <li class="item-content">
+                          <div class="item-media">
+                            <img class="product-image" src="https://placeimg.com/112/112/3">
+                          </div>
+                          <div class="item-inner">
+                            <div class="item-title-row">
+                              <div class="item-title">PSD to HTML</div>
+                              <div class="item-after">8 sales</div>
+                            </div>
+                            <div class="item-text">Coding</div>
+                          </div>
+                        </li>
+                        <li class="item-content">
+                          <div class="item-media">
+                            <img class="product-image" src="https://placeimg.com/112/112/4">
+                          </div>
+                          <div class="item-inner">
+                            <div class="item-title-row">
+                              <div class="item-title">Business Card</div>
+                              <div class="item-after">7 sales</div>
+                            </div>
+                            <div class="item-text">Design</div>
+                          </div>
+                        </li>
+                        <li class="item-content">
+                          <div class="item-media">
+                            <img class="product-image" src="https://placeimg.com/112/112/5">
+                          </div>
+                          <div class="item-inner">
+                            <div class="item-title-row">
+                              <div class="item-title">Sketch to HTML</div>
+                              <div class="item-after">5 sales</div>
+                            </div>
+                            <div class="item-text">Coding</div>
+                          </div>
+                        </li>
+                        <li class="item-content">
+                          <div class="item-media">
+                            <img class="product-image" src="https://placeimg.com/112/112/5">
+                          </div>
+                          <div class="item-inner">
+                            <div class="item-title-row">
+                              <div class="item-title">Vecotor assets</div>
+                              <div class="item-after">4 sales</div>
+                            </div>
+                            <div class="item-text">Design</div>
+                          </div>
+                        </li>
+                        <li class="item-content">
+                          <div class="item-media">
+                            <img class="product-image" src="https://placeimg.com/112/112/6">
+                          </div>
+                          <div class="item-inner">
+                            <div class="item-title-row">
+                              <div class="item-title">50 Twitter Folowers Pack</div>
+                              <div class="item-after">3 sales</div>
+                            </div>
+                            <div class="item-text">Social</div>
+                          </div>
+                        </li>
+                        <li class="item-content">
+                          <div class="item-media">
+                            <img class="product-image" src="https://placeimg.com/112/112/6">
+                          </div>
+                          <div class="item-inner">
+                            <div class="item-title-row">
+                              <div class="item-title">100 Twitter Folowers Pack</div>
+                              <div class="item-after">2 sales</div>
+                            </div>
+                            <div class="item-text">Social</div>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+-->
+
+              
+<!--
+              <div class="col-100 medium-33 margin-top">
+                <div class="card">
+                  <div class="card-header">New Users</div>
+                  <div class="card-content card-content-padding scrollable">
+                    <div class="list media-list">
+                      <ul>
+                        <li class="item-content">
+                          <div class="item-media">
+                            <img class="avatar" src="https://i.pravatar.cc/56?u=1">
+                          </div>
+                          <div class="item-inner">
+                            <div class="item-title-row">
+                              <div class="item-title">John Doe</div>
+                            </div>
+                            <div class="item-text">john@doe.com</div>
+                          </div>
+                        </li>
+                        <li class="item-content">
+                          <div class="item-media">
+                            <img class="avatar" src="https://i.pravatar.cc/56?u=2">
+                          </div>
+                          <div class="item-inner">
+                            <div class="item-title-row">
+                              <div class="item-title">Jane Doe</div>
+                            </div>
+                            <div class="item-text">jane@doe.com</div>
+                          </div>
+                        </li>
+                        <li class="item-content">
+                          <div class="item-media">
+                            <img class="avatar" src="https://i.pravatar.cc/56?u=3">
+                          </div>
+                          <div class="item-inner">
+                            <div class="item-title-row">
+                              <div class="item-title">Kate</div>
+                            </div>
+                            <div class="item-text">kate@athome.app</div>
+                          </div>
+                        </li>
+                        <li class="item-content">
+                          <div class="item-media">
+                            <img class="avatar" src="https://i.pravatar.cc/56?u=4">
+                          </div>
+                          <div class="item-inner">
+                            <div class="item-title-row">
+                              <div class="item-title">Mary</div>
+                            </div>
+                            <div class="item-text">-</div>
+                          </div>
+                        </li>
+                        <li class="item-content">
+                          <div class="item-media">
+                            <img class="avatar" src="https://i.pravatar.cc/56?u=5">
+                          </div>
+                          <div class="item-inner">
+                            <div class="item-title-row">
+                              <div class="item-title">Frame Work</div>
+                            </div>
+                            <div class="item-text">frame@work7.com</div>
+                          </div>
+                        </li>
+                        <li class="item-content">
+                          <div class="item-media">
+                            <img class="avatar" src="https://i.pravatar.cc/56?u=1">
+                          </div>
+                          <div class="item-inner">
+                            <div class="item-title-row">
+                              <div class="item-title">John Doe</div>
+                            </div>
+                            <div class="item-text">john@doe.com</div>
+                          </div>
+                        </li>
+                        <li class="item-content">
+                          <div class="item-media">
+                            <img class="avatar" src="https://i.pravatar.cc/56?u=2">
+                          </div>
+                          <div class="item-inner">
+                            <div class="item-title-row">
+                              <div class="item-title">Jane Doe</div>
+                            </div>
+                            <div class="item-text">jane@doe.com</div>
+                          </div>
+                        </li>
+                        <li class="item-content">
+                          <div class="item-media">
+                            <img class="avatar" src="https://i.pravatar.cc/56?u=3">
+                          </div>
+                          <div class="item-inner">
+                            <div class="item-title-row">
+                              <div class="item-title">Kate</div>
+                            </div>
+                            <div class="item-text">kate@athome.app</div>
+                          </div>
+                        </li>
+                        <li class="item-content">
+                          <div class="item-media">
+                            <img class="avatar" src="https://i.pravatar.cc/56?u=4">
+                          </div>
+                          <div class="item-inner">
+                            <div class="item-title-row">
+                              <div class="item-title">Mary</div>
+                            </div>
+                            <div class="item-text">-</div>
+                          </div>
+                        </li>
+                        <li class="item-content">
+                          <div class="item-media">
+                            <img class="avatar" src="https://i.pravatar.cc/56?u=5">
+                          </div>
+                          <div class="item-inner">
+                            <div class="item-title-row">
+                              <div class="item-title">Frame Work</div>
+                            </div>
+                            <div class="item-text">frame@work7.com</div>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+-->
+
+
+
+
+            <div class="row margin-horizontal margin-bottom">
+              <div class="col-100 medium-66 margin-top">
+                <div class="card data-table">
+                  <div class="card-header">Rekapitulasi Relawan</div>
+                  <div class="card-content">
+                    <table>
+                      <thead>
+                        <tr>
+                          <th class="label-cell">Cabang</th>
+                          <th class="numeric-cell">Medis</th>
+                          <th class="numeric-cell">Non Medis</th>
+                          <th class="numeric-cell">Total</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td class="label-cell">BSMI Kota Surabaya</td>
+                          <td class="numeric-cell">1</td>
+                          <td class="numeric-cell">24</td>
+                          <td class="numeric-cell">1000</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <div class="data-table-footer">
+                      <!--<div class="data-table-rows-select">
+                        Rows per page:
+                        <div class="input input-dropdown input-with-value">
+                          <select class="input-with-value">
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                            <option value="25">25</option>
+                            <option value="all">All</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="data-table-pagination">
+                        <span class="data-table-pagination-label">1-5 of 10</span>
+                        <a href="#" class="link disabled">
+                          <i class="icon icon-prev color-gray"></i>
+                        </a>
+                        <a href="#" class="link">
+                          <i class="icon icon-next color-gray"></i>
+                        </a>
+                      </div>-->
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+
+
+<!--
+            <div class="row margin-horizontal margin-bottom">
+              <div class="col-100 medium-33 margin-top">
+                <div class="card">
+                  <div class="card-header">Notifications</div>
+                  <div class="card-content card-content-padding scrollable">
+                    <div class="list media-list">
+                      <ul>
+                        <li class="item-content">
+                          <div class="item-media">
+                            <i class="icon f7-icons text-color-yellow">exclamationmark_triangle_fill</i>
+                          </div>
+                          <div class="item-inner">
+                            <div class="item-title-row">
+                              <div class="item-title">Server access error</div>
+                              <div class="item-after">15:45</div>
+                            </div>
+                            <div class="item-text">Lorem ipsum dolor sit amet, consectetuer edipiscing elit</div>
+                          </div>
+                        </li>
+                        <li class="item-content">
+                          <div class="item-media">
+                            <i class="icon f7-icons text-color-green">cart_fill</i>
+                          </div>
+                          <div class="item-inner">
+                            <div class="item-title-row">
+                              <div class="item-title">New order received</div>
+                              <div class="item-after">13:20</div>
+                            </div>
+                            <div class="item-text">Lorem ipsum dolor sit amet, consectetuer edipiscing elit</div>
+                          </div>
+                        </li>
+                        <li class="item-content">
+                          <div class="item-media">
+                            <i class="icon f7-icons text-color-green">cart_fill</i>
+                          </div>
+                          <div class="item-inner">
+                            <div class="item-title-row">
+                              <div class="item-title">New order received</div>
+                              <div class="item-after">11:11</div>
+                            </div>
+                            <div class="item-text">Lorem ipsum dolor sit amet, consectetuer edipiscing elit</div>
+                          </div>
+                        </li>
+                        <li class="item-content">
+                          <div class="item-media">
+                            <i class="icon f7-icons text-color-blue">person_circle_fill</i>
+                          </div>
+                          <div class="item-inner">
+                            <div class="item-title-row">
+                              <div class="item-title">New user registered</div>
+                              <div class="item-after">10:16</div>
+                            </div>
+                            <div class="item-text">Lorem ipsum dolor sit amet, consectetuer edipiscing elit</div>
+                          </div>
+                        </li>
+                        <li class="item-content">
+                          <div class="item-media">
+                            <i class="icon f7-icons text-color-teal">document_text_fill</i>
+                          </div>
+                          <div class="item-inner">
+                            <div class="item-title-row">
+                              <div class="item-title">New report uploaded</div>
+                              <div class="item-after">02:00</div>
+                            </div>
+                            <div class="item-text">Lorem ipsum dolor sit amet, consectetuer edipiscing elit</div>
+                          </div>
+                        </li>
+                        <li class="item-content">
+                          <div class="item-media">
+                            <i class="icon f7-icons text-color-blue">person_circle_fill</i>
+                          </div>
+                          <div class="item-inner">
+                            <div class="item-title-row">
+                              <div class="item-title">New user registered</div>
+                              <div class="item-after">Yesterday at 22:56</div>
+                            </div>
+                            <div class="item-text">Lorem ipsum dolor sit amet, consectetuer edipiscing elit</div>
+                          </div>
+                        </li>
+                        <li class="item-content">
+                          <div class="item-media">
+                            <i class="icon f7-icons text-color-blue">person_circle_fill</i>
+                          </div>
+                          <div class="item-inner">
+                            <div class="item-title-row">
+                              <div class="item-title">New user registered</div>
+                              <div class="item-after">Yesterday at 20:10</div>
+                            </div>
+                            <div class="item-text">Lorem ipsum dolor sit amet, consectetuer edipiscing elit</div>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+-->
+
+<!--
+              <div class="col-100 medium-33 margin-top">
+                <div class="card">
+                  <div class="card-header">Tasks</div>
+                  <div class="card-content card-content-padding scrollable">
+                    <div class="list tasks-list">
+                      <ul>
+                        <li>
+                          <label class="item-checkbox item-content">
+                            <div class="item-media">
+                              <span class="category-icon color-blue"></span>
+                            </div>
+                            <input type="checkbox"/>
+                            <i class="icon icon-checkbox"></i>
+                            <div class="item-inner">
+                              <div class="item-title">Prepare docs for meeting</div>
+                            </div>
+                          </label>
+                        </li>
+                        <li>
+                          <label class="item-checkbox item-content">
+                            <div class="item-media">
+                              <span class="category-icon color-blue"></span>
+                            </div>
+                            <input type="checkbox"/>
+                            <i class="icon icon-checkbox"></i>
+                            <div class="item-inner">
+                              <div class="item-title">Add new HS spectrum module to Color Picker</div>
+                            </div>
+                          </label>
+                        </li>
+                        <li>
+                          <label class="item-checkbox item-content">
+                            <div class="item-media">
+                              <span class="category-icon color-orange"></span>
+                            </div>
+                            <input type="checkbox"/>
+                            <i class="icon icon-checkbox"></i>
+                            <div class="item-inner">
+                              <div class="item-title">Add year/month selector to Calendar component</div>
+                            </div>
+                          </label>
+                        </li>
+                        <li>
+                          <label class="item-checkbox item-content">
+                            <div class="item-media">
+                              <span class="category-icon color-green"></span>
+                            </div>
+                            <input type="checkbox"/>
+                            <i class="icon icon-checkbox"></i>
+                            <div class="item-inner">
+                              <div class="item-title">Add new experimental set</div>
+                            </div>
+                          </label>
+                        </li>
+                        <li>
+                          <label class="item-checkbox item-content">
+                            <div class="item-media">
+                              <span class="category-icon color-pink"></span>
+                            </div>
+                            <input type="checkbox"/>
+                            <i class="icon icon-checkbox"></i>
+                            <div class="item-inner">
+                              <div class="item-title">Add learning mode to instruments set</div>
+                            </div>
+                          </label>
+                        </li>
+                        <li>
+                          <label class="item-checkbox item-content">
+                            <div class="item-media">
+                              <span class="category-icon color-blue"></span>
+                            </div>
+                            <input type="checkbox"/>
+                            <i class="icon icon-checkbox"></i>
+                            <div class="item-inner">
+                              <div class="item-title">Prepare docs for meeting</div>
+                            </div>
+                          </label>
+                        </li>
+                        <li>
+                          <label class="item-checkbox item-content">
+                            <div class="item-media">
+                              <span class="category-icon color-blue"></span>
+                            </div>
+                            <input type="checkbox"/>
+                            <i class="icon icon-checkbox"></i>
+                            <div class="item-inner">
+                              <div class="item-title">Add new HS spectrum module to Color Picker</div>
+                            </div>
+                          </label>
+                        </li>
+                        <li>
+                          <label class="item-checkbox item-content">
+                            <div class="item-media">
+                              <span class="category-icon color-orange"></span>
+                            </div>
+                            <input type="checkbox"/>
+                            <i class="icon icon-checkbox"></i>
+                            <div class="item-inner">
+                              <div class="item-title">Add year/month selector to Calendar component</div>
+                            </div>
+                          </label>
+                        </li>
+                        <li>
+                          <label class="item-checkbox item-content">
+                            <div class="item-media">
+                              <span class="category-icon color-green"></span>
+                            </div>
+                            <input type="checkbox"/>
+                            <i class="icon icon-checkbox"></i>
+                            <div class="item-inner">
+                              <div class="item-title">Add new experimental set</div>
+                            </div>
+                          </label>
+                        </li>
+                        <li>
+                          <label class="item-checkbox item-content">
+                            <div class="item-media">
+                              <span class="category-icon color-pink"></span>
+                            </div>
+                            <input type="checkbox"/>
+                            <i class="icon icon-checkbox"></i>
+                            <div class="item-inner">
+                              <div class="item-title">Add learning mode to instruments set</div>
+                            </div>
+                          </label>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+-->
+
+<!--
+              <div class="col-100 medium-33 margin-top">
+                <div class="card">
+                  <div class="card-header">Support Tickets</div>
+                  <div class="card-content card-content-padding scrollable">
+                    <div class="list media-list" style="--f7-list-item-text-max-lines: 5">
+                      <ul>
+                        <li class="item-content">
+                          <div class="item-media">
+                            <img class="avatar" src="https://i.pravatar.cc/56?u=1">
+                          </div>
+                          <div class="item-inner">
+                            <div class="item-title-row">
+                              <div class="item-title">John Doe</div>
+                              <div class="item-after"><span class="badge color-blue">Pending</span></div>
+                            </div>
+                            <div class="item-subtitle">1 hour ago</div>
+                            <div class="item-text">Lorem ipsum dolor sit amet,consectetuer edipiscing elit,sed diam nonummy nibh euismod tinciduntut laoreet doloremagna aliquam erat volutpat.</div>
+                          </div>
+                        </li>
+                        <li class="item-content">
+                          <div class="item-media">
+                            <img class="avatar" src="https://i.pravatar.cc/56?u=2">
+                          </div>
+                          <div class="item-inner">
+                            <div class="item-title-row">
+                              <div class="item-title">Jane Doe</div>
+                              <div class="item-after"><span class="badge color-green">Closed</span></div>
+                            </div>
+                            <div class="item-subtitle">6 hours ago</div>
+                            <div class="item-text">Sed diam nonummy nibh euismod tinciduntut laoreet doloremagna aliquam erat volutpat.Ut wisi enim ad minim veniam,quis nostrud exerci tation ullamcorper.</div>
+                          </div>
+                        </li>
+                        <li class="item-content">
+                          <div class="item-media">
+                            <img class="avatar" src="https://i.pravatar.cc/56?u=3">
+                          </div>
+                          <div class="item-inner">
+                            <div class="item-title-row">
+                              <div class="item-title">Kate</div>
+                              <div class="item-after"><span class="badge color-green">Closed</span></div>
+                            </div>
+                            <div class="item-subtitle">1 day ago</div>
+                            <div class="item-text">Lorem ipsum dolor sit amet,consectetuer edipiscing elit,sed diam nonummy nibh euismod tinciduntut laoreet doloremagna aliquam erat volutpat.</div>
+                          </div>
+                        </li>
+                        <li class="item-content">
+                          <div class="item-media">
+                            <img class="avatar" src="https://i.pravatar.cc/56?u=4">
+                          </div>
+                          <div class="item-inner">
+                            <div class="item-title-row">
+                              <div class="item-title">Mary</div>
+                              <div class="item-after"><span class="badge color-orange">Issue</span></div>
+                            </div>
+                            <div class="item-subtitle">3 days ago</div>
+                            <div class="item-text">Sed diam nonummy nibh euismod tinciduntut laoreet doloremagna aliquam erat volutpat.Ut wisi enim ad minim veniam,quis nostrud exerci tation ullamcorper.</div>
+                          </div>
+                        </li>
+                        <li class="item-content">
+                          <div class="item-media">
+                            <img class="avatar" src="https://i.pravatar.cc/56?u=5">
+                          </div>
+                          <div class="item-inner">
+                            <div class="item-title-row">
+                              <div class="item-title">Frame Work</div>
+                              <div class="item-after"><span class="badge color-blue">Pending</span></div>
+                            </div>
+                            <div class="item-subtitle">5 days ago</div>
+                            <div class="item-text">Lorem ipsum dolor sit amet,consectetuer edipiscing elit,sed diam nonummy nibh euismod tinciduntut laoreet doloremagna aliquam erat volutpat.</div>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+-->              
+              
+              
+            
+              
+            </div>  
+          </div>
+
+        </div>
+      </div>
+
+<!--start login------------------------------------------------------------------------------->
+    <form class="login-screen" id="my-login-screen">
+      <div class="view">
+        <div class="page">
+          <div class="page-content login-screen-content">
+            <div class="login-screen-title">Login</div>
+            <div class="list">
+              <ul>
+                <li class="item-content item-input">
+                  <div class="item-inner">
+                    <div class="item-title item-label">Email</div>
+                    <div class="item-input-wrap">
+                      <input type="email" name="email" placeholder="Alamat email" required validate>
+                    </div>
+                  </div>
+                </li>
+                <li class="item-content item-input">
+                  <div class="item-inner">
+                    <div class="item-title item-label">Password</div>
+                    <div class="item-input-wrap">
+                      <input type="password" name="password" placeholder="Password" minlength="10" required validate>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="list">
+              <div class="block-footer"><a href="#" class="button button-raised button-fill login-button">Login</a><a href="#" class="item-link list-button login-screen-close" data-login-screen="#my-login-screen">Batal</a></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form> 
+<!--start login------------------------------------------------------------------------------->
+
+
+<!--start aktivasi------------------------------------------------------------------------------->     
+    <form class="login-screen" id="my-aktivasi-screen">
+      <div class="view">
+        <div class="page">
+          <div class="page-content login-screen-content">
+            <div class="login-screen-title">Aktivasi Akun</div>
+            <div class="list">
+              <ul>
+                <li class="item-content item-input"><b>Akun Relawan</b>
+                </li>
+                <li class="item-content item-input">
+                  <div class="item-inner">
+                    <div class="item-title item-label">Email *</div>
+                    <div class="item-input-wrap">
+                      <input type="email" name="email" placeholder="Alamat email" required validate>
+                    </div>
+                  </div>
+                </li>
+                <li class="item-content item-input">
+                  <div class="item-inner">
+                    <div class="item-title item-label">Password *</div>
+                    <div class="item-input-wrap">
+                      <input type="password" name="password" placeholder="Password" minlength="10" required validate>
+                    </div>
+                  </div>
+                </li>
+                <li class="item-content item-input">
+                  <div class="item-inner">
+                    <div class="item-title item-label">Konfirm Password *</div>
+                    <div class="item-input-wrap">
+                      <input type="password" name="konfirmpassword" placeholder="Konfirm Password" minlength="10" required validate>
+                    </div>
+                  </div>
+                </li>
+                <li class="item-content item-input"><b>Data Relawan</b>
+                </li>
+                <li class="item-content item-input">
+                  <div class="item-inner">
+                    <div class="item-title item-label">Nama Lengkap dan Gelar *</div>
+                    <div class="item-input-wrap">
+                      <input type="text" name="nama" placeholder="Nama lengkap dan gelar" required validate>
+                    </div>
+                  </div>
+                </li>
+                <li class="item-content item-input smart-select smart-select-init" data-open-in="popover">
+                  <div class="item-inner">
+                    <div class="item-title item-label">Jenis Kelamin *</div>
+                    <div class="item-after">-- Jenis Kelamin --</div>
+                    <div class="item-input-wrap">
+                                  <select name="jeniskelamin" required validate>
+                                    <option value="" disabled selected>-- Jenis Kelamin --</option>
+                                    <option value="Laki-Laki">Laki-laki</option>
+                                    <option value="Perempuan">Perempuan</option>
+                                  </select>
+                    </div>
+                  </div>
+                </li>
+                <li class="item-content item-input">
+                  <div class="item-inner">
+                    <div class="item-title item-label">Tanggal Lahir *</div>
+                    <div class="item-input-wrap">
+                      <input type="text" name="tanggallahir" placeholder="Tanggal Lahir" readonly="readonly" class="calendar-input" required validate>
+                    </div>
+                  </div>
+                </li>
+                <li class="item-content item-input">
+                  <div class="item-inner">
+                    <div class="item-title item-label">Alamat Lengkap Domisili *</div>
+                    <div class="item-input-wrap">
+                      <input type="text" name="alamatdomisili" placeholder="Alamat Lengkap Domisili" required validate>
+                    </div>
+                  </div>
+                </li>
+                <li class="item-content item-input smart-select smart-select-init" data-open-in="popover">
+                  <div class="item-inner">
+                    <div class="item-title item-label">Profesi *</div>
+                    <div class="item-after">-- Profesi --</div>
+                    <div class="item-input-wrap">
+                                  <select name="profesi" required validate>
+                                    <option value="" disabled selected>-- Profesi --</option>
+                                    <option value="Dokter Spesialis">Dokter Spesialis</option>
+                                    <option value="Dokter Umum">Dokter Umum</option>
+                                    <option value="Dokter Gigi">Dokter Gigi</option>
+                                    <option value="Bidan">Bidan</option>
+                                    <option value="Perawat">Perawat</option>
+                                    <option value="Apoteker">Apoteker</option>
+                                    <option value="Umum">Umum/Non Medis</option>
+                                  </select>
+                    </div>
+                  </div>
+                </li>
+                <li class="item-content item-input smart-select smart-select-init" data-open-in="popover">
+                  <div class="item-inner">
+                    <div class="item-title item-label">Golongan Darah *</div>
+                    <div class="item-after">-- Golongan Darah --</div>
+                    <div class="item-input-wrap">
+                                  <select name="golongandarah" required validate>
+                                    <option value="" disabled selected>-- Golongan Darah --</option>
+                                    <option value="A">A</option>
+                                    <option value="B">B</option>
+                                    <option value="AB">AB</option>
+                                    <option value="O">O</option>
+                                    <option value="Tidak Tahu">Tidak Tahu</option>
+                                  </select>
+                    </div>
+                  </div>
+                </li>
+                <li class="item-content item-input">
+                  <div class="item-inner">
+                    <div class="item-title item-label">No HP/Whatsapp *</div>
+                    <div class="item-input-wrap">
+                      <input type="text" name="nohp" placeholder="No HP/Whatsapp" required validate>
+                    </div>
+                  </div>
+                </li>
+                <li class="item-content item-input smart-select smart-select-init" data-open-in="popover">
+                  <div class="item-inner">
+                    <div class="item-title item-label">Anggota Cabang *</div>
+                    <div class="item-after">-- Cabang --</div>
+                    <div class="item-input-wrap">
+                                  <select name="cabang" required validate>
+                                    <option value="" disabled selected>-- Cabang --</option>
+                                    <option value="" disabled>-- ZONA 1 --</option>
+                                    <option value="BSMI Kota Surabaya">BSMI Kota Surabaya</option>
+                                    <option value="BSMI Kab Sidoarjo">BSMI Kab Sidoarjo</option>
+                                    <option value="BSMI Kab Mojokerto">BSMI Kab Mojokerto</option>
+                                    <option value="BSMI Kota Mojokerto">BSMI Kota Mojokerto</option>
+                                    <option value="BSMI Kab Lamongan">BSMI Kab Lamongan</option>
+                                    <option value="BSMI Kab Gresik">BSMI Kab Gresik</option>
+                                    <option value="BSMI Kab Tuban">BSMI Kab Tuban</option>
+                                    <option value="BSMI Kab Bojonegoro">BSMI Kab Bojonegoro</option>
+                                    <option value="BSMI Kota Pasuruan">BSMI Kota Pasuruan</option>
+                                    <option value="BSMI Kab Pasuruan">BSMI Kab Pasuruan</option>
+                                    <option value="" disabled >-- ZONA 2 --</option>
+                                    <option value="BSMI Kab Bangkalan">BSMI Kab Bangkalan</option>
+                                    <option value="BSMI Kab Sampang">BSMI Kab Sampang</option>
+                                    <option value="BSMI Kab Pamekasan">BSMI Kab Pamekasan</option>
+                                    <option value="BSMI Kab Sumenep">BSMI Kab Sumenep</option>
+                                    <option value="" disabled >-- ZONA 3 --</option>
+                                    <option value="BSMI Kota Probolinggo">BSMI Kota Probolinggo</option>
+                                    <option value="BSMI Kab Probolinggo">BSMI Kab Probolinggo</option>
+                                    <option value="BSMI Kab Jember">BSMI Kab Jember</option>
+                                    <option value="BSMI Kab Lumajang">BSMI Kab Lumajang</option>
+                                    <option value="BSMI Kab Bondowoso">BSMI Kab Bondowoso</option>
+                                    <option value="BSMI Kab Situbondo">BSMI Kab Situbondo</option>
+                                    <option value="BSMI Kab Banyuwangi">BSMI Kab Banyuwangi</option>
+                                    <option value="" disabled >-- ZONA 4 --</option>
+                                    <option value="BSMI Kab Jombang">BSMI Kab Jombang</option>
+                                    <option value="BSMI Kota Malang">BSMI Kota Malang</option>
+                                    <option value="BSMI Kab Malang">BSMI Kab Malang</option>
+                                    <option value="BSMI Kota Batu">BSMI Kota Batu</option>
+                                    <option value="BSMI Kota Kediri">BSMI Kota Kediri</option>
+                                    <option value="BSMI Kab Kediri">BSMI Kab Kediri</option>
+                                    <option value="BSMI Kota Blitar">BSMI Kota Blitar</option>
+                                    <option value="BSMI Kab Blitar">BSMI Kab Blitar</option>
+                                    <option value="BSMI Kab Tulungagung">BSMI Kab Tulungagung</option>
+                                    <option value="" disabled >-- ZONA 5 --</option>
+                                    <option value="BSMI Kota Madiun">BSMI Kota Madiun</option>
+                                    <option value="BSMI Kab Madiun">BSMI Kab Madiun</option>
+                                    <option value="BSMI Kab Ngawi">BSMI Kab Ngawi</option>
+                                    <option value="BSMI Kab Magetan">BSMI Kab Magetan</option>
+                                    <option value="BSMI Kab Ponorogo">BSMI Kab Ponorogo</option>
+                                    <option value="BSMI Kab Pacitan">BSMI Kab Pacitan</option>
+                                    <option value="BSMI Kab Trenggalek">BSMI Kab Trenggalek</option>
+                                    <option value="BSMI Kab Nganjuk">BSMI Kab Nganjuk</option>
+                                  </select>
+                    </div>
+                  </div>
+                </li>
+                <li class="item-content item-input">
+                  <div class="item-inner">
+                    <div class="item-title item-label">Tahun Bergabung *</div>
+                    <div class="item-input-wrap">
+                      <input type="text" name="tahun" placeholder="Tahun Bergabung" required validate>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="list">
+              <div class="block-footer"><a href="#" class="button button-raised button-fill register-button">AKTIVASI</a><a href="#" class="item-link list-button close-login-button login-screen-close" data-login-screen="#my-aktivasi-screen">Batal</a></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>          
+<!--end register------------------------------------------------------------------------------->     
+
+          
+<!--start overlay------------------------------------------------------------------------------->          
+<div id="overlay-welcome" style="background: rgba(0, 0, 0, 0.8);position: fixed;z-index: 10000;align-items: center;justify-content: center;display: flex;bottom: 0;left: 0;right: 0;top: 0;    background-image: url(https://1.bp.blogspot.com/-YozdStDZzBQ/XmILfAwrWAI/AAAAAAAADfY/Kn9onA-eB1EJVjrcKAjk_jdsVa-MloVigCLcBGAsYHQ/s1600/CGyYOoiUkAAoDe3.jpg);background-size: cover;background-position: center top;">
+  <div style="background:#fff;display: flex;flex-direction:column;margin: auto;align-items: center;justify-content: center;padding:20px 20px;">
+    <img src="https://1.bp.blogspot.com/-I9V1NyLtG68/XmJRZ_RhTJI/AAAAAAAADgI/wJiuL0Wnjvc2jyoV8AMRsIp1YvSQs1QXwCLcBGAsYHQ/s1600/Logo%2BBSMI%2B%2528vector%2529.png" style="width:200px;">
+    <p style="font-size:16px;font-weight:bold;text-align:center;width:300px;margin-top:15px;margin-bottom:2px;">MyBSMI</p>
+    <p style="font-size:14px;font-weight:normal;text-align:center;width:300px;margin-top:0px;margin-bottom:15px;">Selamat Datang di Platform</br>Relawan BSMI Jawa Timur</p>
+    <button class="button button-fill login-screen-open" data-login-screen="#my-login-screen" style="width:100px;">LOGIN</button>
+    <p style="font-size:12px;color:grey;tex-align:center">Belum punya akun? <a href="" class="login-screen-open" data-login-screen="#my-aktivasi-screen">Aktivasi</a></p>
+  </div>
+</div>
+<!--end overlay------------------------------------------------------------------------------->
+
+
+    </div>
+  </div>
+
+
+
+
+  <script src="https://unpkg.com/framework7/framework7-bundle.min.js"></script>
+  <script src="https://unpkg.com/chart.js"></script>
+<!--start script------------------------------------------------------------------------------->
+<script>
+var $$ = Dom7;
+var apiuserurl = "https://script.google.com/macros/s/AKfycbzKfJb-xk6EIwhlKdRV7ghOl80_IxeoOQsUW3bIzOUWIzefnVPvnRfkRP-t99r-kNYdvA/exec";
+
+var app = new Framework7({
+el: '#app',
+theme: 'aurora',
+});
+
+// Fix col sizes
+function fixCols() {
+setTimeout(function() {
+$$('.events-col').css('height', $$('.charts-col').height() + 'px');
+});
+}
+fixCols();
+$$(window).on('resize', fixCols);
+
+
+//aktivasi kalender///////////////////////////
+var calendar = app.calendar.create({
+inputEl: '.calendar-input',
+dateFormat: 'd-m-yyyy',
+openIn: 'popover'
+});
+//aktivasi kalender///////////////////////////
+
+//form-aktivasi/////////////////////////////
+$$('#my-aktivasi-screen .register-button').on('click', function () {
+
+  if (!$$('#my-aktivasi-screen')[0].checkValidity()) {
+        //console.log('Check Validity!');
+        return;
+  }
+
+  var email = $$('#my-aktivasi-screen [name="email"]').val();
+  var password = $$('#my-aktivasi-screen [name="password"]').val();
+  var konfirmpassword = $$('#my-aktivasi-screen [name="konfirmpassword"]').val();
+  var nama = $$('#my-aktivasi-screen [name="nama"]').val();
+  var jeniskelamin = $$('#my-aktivasi-screen [name="jeniskelamin"]').val();
+  var tanggallahir = $$('#my-aktivasi-screen [name="tanggallahir"]').val();
+  var alamatdomisili = $$('#my-aktivasi-screen [name="alamatdomisili"]').val();
+  var profesi = $$('#my-aktivasi-screen [name="profesi"]').val();
+  var nohp = $$('#my-aktivasi-screen [name="nohp"]').val();
+  var cabang = $$('#my-aktivasi-screen [name="cabang"]').val();
+  var tahun = $$('#my-aktivasi-screen [name="tahun"]').val();
+  
+  if(password != konfirmpassword) 
+  {
+    app.dialog.alert('Password dan Konfirm Password Harus Sama','Terjadi Kesalahan');
+    return;
+  }
+  app.preloader.show();
+  app.request({
+    url: apiuserurl,
+    method: 'POST',
+    cache: false,
+    data : { command: 'aktivasi', email: email,password: password, nama: nama, jeniskelamin: jeniskelamin, tanggallahir: tanggallahir, alamatdomisili: alamatdomisili, profesi: profesi, nohp: nohp, cabang: cabang, tahun: tahun  }, 
+    success: function (data, status, xhr)
+      {
+        //console.log(data);
+        app.preloader.hide();
+
+        var status = JSON.parse(data).status;
+        var data = JSON.parse(data).data;
+        if (status == "success")
+        {
+          app.loginScreen.close('#my-aktivasi-screen');
+          $$('#my-aktivasi-screen')[0].reset();
+          //$$('#overlay-welcome').hide();
+          app.dialog.alert('Aktivasi akun anda berhasil','Berhasil');
+        }
+        else if (status == "failed")
+        {
+          app.dialog.alert(data,'Terjadi Kesalahan');
+        }
+        else
+        {
+          app.dialog.alert('Tidak dapat memproses data','Terjadi Kesalahan');
+        }
+      },
+    error: function (xhr, status, message)
+      {
+        console.log(message);
+        app.preloader.hide();
+        app.dialog.alert('Tidak dapat memproses data','Terjadi Kesalahan');
+      },
+  })
+  
+});
+//end form aktivasi//////////////////////////
+
+//start form-login/////////////////////////////
+$$('#my-login-screen .login-button').on('click', function () {
+  if (!$$('#my-login-screen')[0].checkValidity()) {
+        //console.log('Check Validity!');
+        return;
+  }
+  var email = $$('#my-login-screen [name="email"]').val();
+  var password = $$('#my-login-screen [name="password"]').val();
+  app.preloader.show();
+  app.request({
+    url: apiuserurl,
+    method: 'POST',
+    cache: false,
+    data : { command: 'login', email: email,password: password}, 
+    success: function (data, status, xhr)
+      {
+        //console.log(data);
+        app.preloader.hide();
+                
+        var status = JSON.parse(data).status;
+        var data = JSON.parse(data).data;
+        if (status == "success")
+        {
+          app.loginScreen.close('#my-login-screen');
+          $$('#my-login-screen')[0].reset();
+          $$('#overlay-welcome').hide();
+          var json = {email:email,token:data};
+          window.mybsmiuseremail = email;
+          window.mybsmiusertoken = data;
+          window.localStorage["mybsmiuser"] = JSON.stringify(json);
+        }
+        else if (status == "failed")
+        {
+          app.dialog.alert(data,'Terjadi Kesalahan');
+        }
+        else
+        {
+          app.dialog.alert('Tidak dapat memproses data','Terjadi Kesalahan');
+        }
+      },
+    error: function (xhr, status, message)
+      {
+        console.log(message);
+        app.preloader.hide();
+        app.dialog.alert('Tidak dapat memproses data','Terjadi Kesalahan');
+      },
+  })
+});
+document.getElementById('my-login-screen').onkeydown = function(e){
+   if(e.keyCode == 13){
+     $$('#my-login-screen .login-button').click();
+   }
+};
+//end form-login/////////////////////////////
+
+//start check session/////////////////////////
+if (localStorage.getItem("mybsmiuser") !== null) {
+  var json = window.localStorage["mybsmiuser"];
+  var email = JSON.parse(json).email;
+  var token = JSON.parse(json).token
+  app.preloader.show();
+  app.request({
+    url: apiuserurl,
+    method: 'POST',
+    cache: false,
+    data : { command: 'loginwithtoken', email: email, password: token}, 
+    success: function (data, status, xhr)
+      {
+        //console.log(data);
+        app.preloader.hide();
+                
+        var status = JSON.parse(data).status;
+        var data = JSON.parse(data).data;
+        if (status == "success")
+        {
+          $$('#overlay-welcome').hide();
+          window.mybsmiuseremail = email;
+          window.mybsmiusertoken = token;
+        }
+        else if (status == "failed")
+        {
+          localStorage.removeItem("mybsmiuser");
+        }
+        else
+        {
+        }
+      },
+    error: function (xhr, status, message)
+      {
+        console.log(message);
+        app.preloader.hide();
+      },
+  })
+} 
+//end check session///////////////////////////
+
+///logout button/////////////////////////
+$$('.my-logout').on('click', function () {
+  localStorage.removeItem("mybsmiuser");
+  window.mybsmiuseremail = '';
+  window.mybsmiusertoken = '';
+  app.popover.close('.profile-popover', false);
+  $$('#overlay-welcome').css('display','flex');
+  //app.preloader.show();
+  window.location.href = 'https://bsmijatim.org'
+});
+///logout button/////////////////////////
+</script>
+<!--end script------------------------------------------------------------------------------->  
+</body>
+</html>
