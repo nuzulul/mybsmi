@@ -1518,6 +1518,62 @@ document.getElementById('my-login-screen').onkeydown = function(e){
 };
 //end form-login/////////////////////////////
 
+
+/////////////verifikasiemail//////////////////
+var getParams = function (url) {
+	var params = {};
+	var parser = document.createElement('a');
+	parser.href = url;
+	var query = parser.search.substring(1);
+	var vars = query.split('&');
+	for (var i = 0; i < vars.length; i++) {
+		var pair = vars[i].split('=');
+		params[pair[0]] = decodeURIComponent(pair[1]);
+	}
+	return params;
+};
+var params = getParams(window.location.href);
+var code = params.verifikasi;console.log(code);
+
+if (code !== undefined)
+{
+  app.preloader.show();
+  app.request({
+    url: apiuserurl,
+    method: 'GET',
+    cache: false,
+    data : { command: 'verifikasiemail', code: code}, 
+    success: function (data, status, xhr)
+      {
+        //console.log(data);
+        app.preloader.hide();
+
+        var status = JSON.parse(data).status;
+        var data = JSON.parse(data).data;
+        if (status == "success")
+        {
+          app.dialog.alert('Alamat email berhasil diverifikasi','Berhasil');
+        }
+        else if (status == "failed")
+        {
+          app.dialog.alert(data,'Terjadi Kesalahan');
+        }
+        else
+        {
+          app.dialog.alert('Tidak dapat memproses data','Terjadi Kesalahan');
+        }
+      },
+    error: function (xhr, status, message)
+      {
+        //console.log(message);
+        app.preloader.hide();
+        app.dialog.alert('Tidak dapat memproses data','Terjadi Kesalahan');
+      },
+  })
+}
+
+//endverifikasiemail/////////////////////////
+
 //start check session/////////////////////////
 if (localStorage.getItem("mybsmiuser") !== null) {
   var json = window.localStorage["mybsmiuser"];
