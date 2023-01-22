@@ -1202,7 +1202,7 @@
                   <div class="item-inner">
                     <div class="item-title item-label">No HP/Whatsapp *</div>
                     <div class="item-input-wrap">
-                      <input type="text" name="nohp" placeholder="No HP/Whatsapp" required validate>
+                      <input type="number" name="nohp" placeholder="No HP/Whatsapp" required validate>
                     </div>
                   </div>
                 </li>
@@ -1265,7 +1265,7 @@
                   <div class="item-inner">
                     <div class="item-title item-label">Tahun Bergabung *</div>
                     <div class="item-input-wrap">
-                      <input type="text" name="tahun" placeholder="Tahun Bergabung" required validate>
+                      <input type="number" name="tahun" placeholder="Tahun Bergabung" required validate>
                     </div>
                   </div>
                 </li>
@@ -1494,11 +1494,11 @@ $$('#my-login-screen .login-button').on('click', function () {
         }
         else if (status == "verifikasidata")
         {
-          app.dialog.alert(data,'Sedang proses');
+          app.dialog.alert('Akun masih dalam proses verifikasi data','Proses Verifikasi');
         }
         else if (status == "suspen")
         {
-          app.dialog.alert(data,'Sedang proses');
+          app.dialog.alert(data,'Pemberitahuan');
         }
         else
         {
