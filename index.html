@@ -1387,7 +1387,7 @@ $$('#my-aktivasi-screen .register-button').on('click', function () {
       },
     error: function (xhr, status, message)
       {
-        console.log(message);
+        //console.log(message);
         app.preloader.hide();
         app.dialog.alert('Tidak dapat memproses data','Terjadi Kesalahan');
       },
@@ -1507,7 +1507,7 @@ $$('#my-login-screen .login-button').on('click', function () {
       },
     error: function (xhr, status, message)
       {
-        console.log(message);
+        //console.log(message);
         app.preloader.hide();
         app.dialog.alert('Tidak dapat memproses data','Terjadi Kesalahan');
       },
@@ -1535,7 +1535,7 @@ var getParams = function (url) {
 	return params;
 };
 var params = getParams(window.location.href);
-var code = params.verifikasi;console.log(code);
+var code = params.verifikasi;//console.log(code);
 
 if (code !== undefined)
 {
@@ -1628,7 +1628,7 @@ if (localStorage.getItem("mybsmiuser") !== null) {
       },
     error: function (xhr, status, message)
       {
-        console.log(message);
+        //console.log(message);
         app.preloader.hide();
       },
   })
