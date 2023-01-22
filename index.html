@@ -1304,7 +1304,7 @@
 <!--start script------------------------------------------------------------------------------->
 <script>
 var $$ = Dom7;
-var apiuserurl = "https://script.google.com/macros/s/AKfycbzKfJb-xk6EIwhlKdRV7ghOl80_IxeoOQsUW3bIzOUWIzefnVPvnRfkRP-t99r-kNYdvA/exec";
+var apiuserurl = "https://script.google.com/macros/s/AKfycbyAf63715-LzLLAmZUpWWXVL566iX4NE9gRAzCmk3I8zj9lUpkUk9xrrhMP7Sc1k5s3/exec";
 
 var app = new Framework7({
 el: '#app',
@@ -1428,6 +1428,75 @@ $$('#my-login-screen .login-button').on('click', function () {
         else if (status == "failed")
         {
           app.dialog.alert(data,'Terjadi Kesalahan');
+        }
+        else if (status == "verifikasiemail")
+        {
+          //app.dialog.alert(data,'Terjadi Kesalahan');
+            var dialog = app.dialog.create({
+              text: 'Akun membutuhkan verifikasi email',
+              closeByBackdropClick: true,
+              on: {
+                opened: function () {
+                  console.log('Dialog opened')
+                }
+              },
+              buttons: [
+                {
+                  text: 'Kirim Email',
+                  close:false,
+                  onClick: function(dialog, e)
+                    {
+                        app.preloader.show();
+                        app.request({
+                          url: apiuserurl,
+                          method: 'POST',
+                          cache: false,
+                          data : { command: 'verifikasiemail', email: email,password: password  }, 
+                          success: function (data, status, xhr)
+                            {
+                              //console.log(data);
+                              app.preloader.hide();
+
+                              var status = JSON.parse(data).status;
+                              var data = JSON.parse(data).data;
+                              if (status == "success")
+                              {
+                                dialog.close();
+                                app.dialog.alert('Mohon periksa kotak masuk atau kotak spam email anda','Email terkirim');
+                              }
+                              else if (status == "failed")
+                              {
+                                app.dialog.alert(data,'Terjadi Kesalahan');
+                              }
+                              else if (status == "dayliquotalimit")
+                              {
+                                app.dialog.alert(data,'Terjadi Kesalahan');
+                              }
+                              else
+                              {
+                                app.dialog.alert('Tidak dapat memproses data','Terjadi Kesalahan');
+                              }
+                            },
+                          error: function (xhr, status, message)
+                            {
+                              //console.log(message);
+                              app.preloader.hide();
+                              app.dialog.alert('Tidak dapat memproses data','Terjadi Kesalahan');
+                            },
+                        })
+                    }
+                }
+              ],
+            })
+            dialog.open();          
+        }
+        else if (status == "verifikasidata")
+        {
+          app.dialog.alert(data,'Sedang proses');
+        }
+        else if (status == "suspen")
+        {
+          app.dialog.alert(data,'Sedang proses');
         }
         else
         {
