@@ -1213,6 +1213,7 @@
                     <div class="item-input-wrap">
                                   <select name="cabang" required validate>
                                     <option value="" disabled selected>-- Cabang --</option>
+                                    <option value="BSMI Jawa Timur">BSMI Jawa Timur</option>
                                     <option value="" disabled>-- ZONA 1 --</option>
                                     <option value="BSMI Kota Surabaya">BSMI Kota Surabaya</option>
                                     <option value="BSMI Kab Sidoarjo">BSMI Kab Sidoarjo</option>
@@ -1345,6 +1346,7 @@ $$('#my-aktivasi-screen .register-button').on('click', function () {
   var tanggallahir = $$('#my-aktivasi-screen [name="tanggallahir"]').val();
   var alamatdomisili = $$('#my-aktivasi-screen [name="alamatdomisili"]').val();
   var profesi = $$('#my-aktivasi-screen [name="profesi"]').val();
+  var golongandarah = $$('#my-aktivasi-screen [name="golongandarah"]').val();
   var nohp = $$('#my-aktivasi-screen [name="nohp"]').val();
   var cabang = $$('#my-aktivasi-screen [name="cabang"]').val();
   var tahun = $$('#my-aktivasi-screen [name="tahun"]').val();
@@ -1359,7 +1361,7 @@ $$('#my-aktivasi-screen .register-button').on('click', function () {
     url: apiuserurl,
     method: 'POST',
     cache: false,
-    data : { command: 'aktivasi', email: email,password: password, nama: nama, jeniskelamin: jeniskelamin, tanggallahir: tanggallahir, alamatdomisili: alamatdomisili, profesi: profesi, nohp: nohp, cabang: cabang, tahun: tahun  }, 
+    data : { command: 'aktivasi', email: email,password: password, nama: nama, jeniskelamin: jeniskelamin, tanggallahir: tanggallahir, alamatdomisili: alamatdomisili, profesi: profesi, golongandarah:golongandarah, nohp: nohp, cabang: cabang, tahun: tahun  }, 
     success: function (data, status, xhr)
       {
         //console.log(data);
@@ -1372,7 +1374,7 @@ $$('#my-aktivasi-screen .register-button').on('click', function () {
           app.loginScreen.close('#my-aktivasi-screen');
           $$('#my-aktivasi-screen')[0].reset();
           //$$('#overlay-welcome').hide();
-          app.dialog.alert('Aktivasi akun anda berhasil','Berhasil');
+          app.dialog.alert('Pembuatan akun telah berhasil. Klik halaman login untuk masuk menggunakan email dan password. Hubungi admin jika butuh bantuan. Terima kasih.','Berhasil');
         }
         else if (status == "failed")
         {
@@ -1470,7 +1472,7 @@ $$('#my-login-screen .login-button').on('click', function () {
                               }
                               else if (status == "dayliquotalimit")
                               {
-                                app.dialog.alert(data,'Terjadi Kesalahan');
+                                app.dialog.alert('Saat ini server mencapai limit pengiriman email harian mohon coba lagi besok.','Terjadi Masalah');
                               }
                               else
                               {
@@ -1552,7 +1554,25 @@ if (code !== undefined)
         var data = JSON.parse(data).data;
         if (status == "success")
         {
-          app.dialog.alert('Alamat email berhasil diverifikasi','Berhasil');
+            var dialog = app.dialog.create({
+              text: 'Alamat email berhasil diverifikasi',
+              on: {
+                opened: function () {
+                  //console.log('Dialog opened')
+                }
+              },
+              buttons: [
+                {
+                  text: 'OK',
+                  close:false,
+                  onClick: function(dialog, e)
+                    {
+                      window.location.href = 'https://mybsmi.bsmijatim.org';
+                    }
+                }
+              ]
+            })
+            dialog.open();
         }
         else if (status == "failed")
         {
