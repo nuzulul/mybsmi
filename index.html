@@ -10,6 +10,7 @@
   <title>MyBSMI</title>
   <link rel="stylesheet" href="https://unpkg.com/framework7@7.1.2/framework7-bundle.min.css">
   <link rel="stylesheet" href="https://unpkg.com/framework7-icons">
+  <script src='https://www.google.com/recaptcha/api.js'></script>
   <style>
     :root {
       --f7-panel-transition-duration: 250ms;
@@ -1091,6 +1092,11 @@
                     </div>
                   </div>
                 </li>
+                <li class="item-content item-input">
+                  <div style="padding:20px 20px;justify-content:center;align-items:center;display:flex;width:100%;">
+                  <div class="g-recaptcha" data-sitekey="6LcP1RskAAAAANtjMoK9vf0tL37hI_uRIxsQm9-k" data-callback="grecaptcharesponse" data-expired-callback="grecaptchaexpired" data-size="normal"></div>
+                  </div>
+                <li>
               </ul>
             </div>
             <div class="list">
@@ -1281,6 +1287,11 @@
                     </div>
                   </div>
                 </li>
+                <li class="item-content item-input">
+                  <div style="padding:20px 20px;justify-content:center;align-items:center;display:flex;width:100%;">
+                  <div class="g-recaptcha" data-sitekey="6LcP1RskAAAAANtjMoK9vf0tL37hI_uRIxsQm9-k" data-callback="grecaptcharesponse" data-expired-callback="grecaptchaexpired"></div>
+                  </div>
+                <li>
               </ul>
             </div>
             <div class="list">
@@ -1317,8 +1328,9 @@
 <!--start script------------------------------------------------------------------------------->
 <script>
 var $$ = Dom7;
-  var apiuserurl = "https://script.google.com/macros/s/AKfycbyMCP-Wi5yDC6Boy55WIN9sIzMH-0S-cHRVu6LTNoAn_6GBrO2xvpheEqu171f1d0Wn5A/exec";
-  var apidataurl = "https://script.google.com/macros/s/AKfycbwejUlnUNmXidpqORcgyi205WyUkbLwHi8sLDmPbfsuv7M7XcUCY2W-STFKF7TDkXqV/exec";
+var apiuserurl = "https://script.google.com/macros/s/AKfycbz5nXUU_V0n0TKLaXt20_nmT28rMMlIGKvgtLttKtL4gD1RtGZ10PqncplMsaTlKyD4PQ/exec";
+var apidataurl = "https://script.google.com/macros/s/AKfycbwejUlnUNmXidpqORcgyi205WyUkbLwHi8sLDmPbfsuv7M7XcUCY2W-STFKF7TDkXqV/exec";
+var grecaptcharesponsedata = '';
 
 if (window.location.href.indexOf("127.0.0.1") > -1) 
 {
@@ -1359,6 +1371,8 @@ $$('#my-aktivasi-screen .register-button').on('click', function () {
         //console.log('Check Validity!');
         return;
   }
+  
+  if ((grecaptcharesponsedata == undefined) || (grecaptcharesponsedata == '')){return;}
 
   var email = $$('#my-aktivasi-screen [name="email"]').val();
   var password = $$('#my-aktivasi-screen [name="password"]').val();
@@ -1383,7 +1397,7 @@ $$('#my-aktivasi-screen .register-button').on('click', function () {
     url: apiuserurl,
     method: 'POST',
     cache: false,
-    data : { command: 'aktivasi', email: email,password: password, nama: nama, jeniskelamin: jeniskelamin, tanggallahir: tanggallahir, alamatdomisili: alamatdomisili, profesi: profesi, golongandarah:golongandarah, nohp: nohp, cabang: cabang, tahun: tahun  }, 
+    data : { command: 'aktivasi', grecaptcharesponsedata: grecaptcharesponsedata, email: email,password: password, nama: nama, jeniskelamin: jeniskelamin, tanggallahir: tanggallahir, alamatdomisili: alamatdomisili, profesi: profesi, golongandarah:golongandarah, nohp: nohp, cabang: cabang, tahun: tahun  }, 
     success: function (data, status, xhr)
       {
         //console.log(data);
@@ -1414,7 +1428,7 @@ $$('#my-aktivasi-screen .register-button').on('click', function () {
         app.dialog.alert('Tidak dapat memproses data','Terjadi Kesalahan');
       },
   })
-  
+  grecaptcha.reset();grecaptcharesponsedata = '';
 });
 //end form aktivasi//////////////////////////
 
@@ -1424,6 +1438,9 @@ $$('#my-login-screen .login-button').on('click', function () {
         //console.log('Check Validity!');
         return;
   }
+  
+  if ((grecaptcharesponsedata == undefined) || (grecaptcharesponsedata == '')){return;}
+  
   var email = $$('#my-login-screen [name="email"]').val();
   var password = $$('#my-login-screen [name="password"]').val();
   app.preloader.show();
@@ -1431,7 +1448,7 @@ $$('#my-login-screen .login-button').on('click', function () {
     url: apiuserurl,
     method: 'POST',
     cache: false,
-    data : { command: 'login', email: email,password: password}, 
+    data : { command: 'login',grecaptcharesponsedata: grecaptcharesponsedata, email: email,password: password}, 
     success: function (data, status, xhr)
       {
         //console.log(data);
@@ -1535,6 +1552,7 @@ $$('#my-login-screen .login-button').on('click', function () {
         app.dialog.alert('Tidak dapat memproses data','Terjadi Kesalahan');
       },
   })
+  grecaptcha.reset();grecaptcharesponsedata = '';
 });
 document.getElementById('my-login-screen').onkeydown = function(e){
    if(e.keyCode == 13){
@@ -1751,6 +1769,20 @@ function getdefaultdatarun(data)
   
 }
 ///end getdefaultdata//////////////////////////////
+
+///grecaptcha/////////////////////////////////
+function grecaptcharesponse(data)
+{
+  //console.log(data);
+  grecaptcharesponsedata = data;
+}
+
+function grecaptchaexpired()
+{
+  //console.log('expired');
+  grecaptcharesponsedata = '';
+}
+///grecaptcha/////////////////////////////////
 </script>
 <!--end script------------------------------------------------------------------------------->  
 </body>
