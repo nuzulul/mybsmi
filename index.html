@@ -170,6 +170,22 @@
           <div class="list">
             <ul>
               <li>
+                <a href="/kartuanggota/" class="item-content item-link panel-close mybsmi-kartuanggota">
+                  <div class="item-media">
+                    <i class="icon f7-icons">creditcard_fill</i>
+                  </div>
+                  <div class="item-inner">
+                    <div class="item-title">Kartu Anggota</div>
+                  </div>
+                </a>
+              </li>
+            </ul>
+          </div>
+-->
+<!--
+          <div class="list">
+            <ul>
+              <li>
                 <a href="#" class="item-content item-link">
                   <div class="item-media">
                     <i class="icon f7-icons">folder_fill</i>
@@ -1369,13 +1385,26 @@ routes: [
       },
     },
   },
+  {
+    path: '/kartuanggota/',
+    //url: 'biodata.html',
+    on: {
+      pageAfterIn: function test (e, page) {
+        app.dialog.alert('Cooming Soon','MyBSMI');
+      },
+    },
+    beforeEnter: function ({ resolve, reject }) {
+      app.dialog.alert('Cooming Soon','MyBSMI');
+      resolve();
+    },
+  },
 ],
 });
 
 app.on('pageInit', function (page) {
   //console.log('Page is now pageInit');
   app.preloader.show();
-  setTimeout(function () {app.preloader.hide();}, 3000);
+  setTimeout(function () {app.preloader.hide();}, 2000);
   
 });
 
