@@ -8,7 +8,7 @@
   <meta name="theme-color" content="#2196f3">
   <meta http-equiv="Content-Security-Policy" content="default-src * 'self' 'unsafe-inline' 'unsafe-eval' data:">
   <title>MyBSMI</title>
-  <link rel="stylesheet" href="https://unpkg.com/framework7/framework7-bundle.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/framework7@7.1.2/framework7-bundle.min.css">
   <link rel="stylesheet" href="https://unpkg.com/framework7-icons">
   <style>
     :root {
@@ -278,8 +278,8 @@
             <div class="title">Dashboard</div>
             <div class="right">
               <a class="link popover-open" data-popover=".profile-popover">
-                <span class="margin-right-half">User</span>
-                <img src="https://i.pravatar.cc/56?u=9" class="avatar">
+                <span class="margin-right-half"></span>
+                <img src="avatar.png" class="avatar">
               </a>
             </div>
             <div class="title-large">
@@ -292,7 +292,7 @@
         </div>
         <div class="popover profile-popover">
           <div class="popover-inner">
-            <h3 class="text-align-center">User</h3>
+            <h3 class="text-align-center mybsmi-currentusernama">User</h3>
             <!--<div class="list no-hairlines no-hairlines-between">
               <ul>
                 <li>
@@ -346,9 +346,10 @@
                       <div class="card-content card-content-padding text-align-center">
                         <div
                           class="gauge gauge-init"
+                          id="mybsmi-cabang" 
                           data-type="circle"
-                          data-value="1.00"
-                          data-value-text="38"
+                          data-value="0.00"
+                          data-value-text="0"
                           data-label-text="Kota/Kabupaten"
                           data-value-text-color="#f44336"
                           data-border-color="#f44336"
@@ -363,9 +364,10 @@
                       <div class="card-content card-content-padding text-align-center">
                         <div
                           class="gauge gauge-init"
+                          id="mybsmi-relawan" 
                           data-type="circle"
-                          data-value="1.00"
-                          data-value-text="1"
+                          data-value="0.00"
+                          data-value-text="0"
                           data-label-text="Orang"
                           data-value-text-color="#ff9800"
                           data-border-color="#ff9800"
@@ -689,15 +691,29 @@
                     <table>
                       <thead>
                         <tr>
-                          <th class="label-cell">Cabang</th>
+                          <th class="label-cell">BSMI Provinsi</th>
                           <th class="numeric-cell">Relawan</th>
                         </tr>
                       </thead>
-                      <tbody>
-                        <tr>
+                      <tbody class="mybsmi-rekapitulasiprov">
+                        <!--<tr>
                           <td class="label-cell">BSMI Kota Surabaya</td>
                           <td class="numeric-cell">1000</td>
+                        </tr>-->
+                      </tbody>
+                    </table>
+                    <table>
+                      <thead>
+                        <tr>
+                          <th class="label-cell">BSMI Kota/Kabupaten</th>
+                          <th class="numeric-cell">Relawan</th>
                         </tr>
+                      </thead>
+                      <tbody class="mybsmi-rekapitulasicabang">
+                        <!--<tr>
+                          <td class="label-cell">BSMI Kota Surabaya</td>
+                          <td class="numeric-cell">1000</td>
+                        </tr>-->
                       </tbody>
                     </table>
                     <div class="data-table-footer">
@@ -1296,12 +1312,22 @@
 
 
 
-  <script src="https://unpkg.com/framework7/framework7-bundle.min.js"></script>
+  <script src="https://unpkg.com/framework7@7.1.2/framework7-bundle.min.js"></script>
   <script src="https://unpkg.com/chart.js"></script>
 <!--start script------------------------------------------------------------------------------->
 <script>
 var $$ = Dom7;
-var apiuserurl = "https://script.google.com/macros/s/AKfycbyMCP-Wi5yDC6Boy55WIN9sIzMH-0S-cHRVu6LTNoAn_6GBrO2xvpheEqu171f1d0Wn5A/exec";
+  var apiuserurl = "https://script.google.com/macros/s/AKfycbyMCP-Wi5yDC6Boy55WIN9sIzMH-0S-cHRVu6LTNoAn_6GBrO2xvpheEqu171f1d0Wn5A/exec";
+  var apidataurl = "https://script.google.com/macros/s/AKfycbwejUlnUNmXidpqORcgyi205WyUkbLwHi8sLDmPbfsuv7M7XcUCY2W-STFKF7TDkXqV/exec";
+
+if (window.location.href.indexOf("127.0.0.1") > -1) 
+{
+  console.log('local development:127.0.0.1');
+}
+else
+{
+
+}
 
 var app = new Framework7({
 el: '#app',
@@ -1422,6 +1448,7 @@ $$('#my-login-screen .login-button').on('click', function () {
           window.mybsmiuseremail = email;
           window.mybsmiusertoken = data;
           window.localStorage["mybsmiuser"] = JSON.stringify(json);
+          getdefaultdata();
         }
         else if (status == "failed")
         {
@@ -1613,6 +1640,7 @@ if (localStorage.getItem("mybsmiuser") !== null) {
           $$('#overlay-welcome').hide();
           window.mybsmiuseremail = email;
           window.mybsmiusertoken = token;
+          getdefaultdata();
         }
         else if (status == "failed")
         {
@@ -1642,6 +1670,87 @@ $$('.my-logout').on('click', function () {
   window.location.href = 'https://bsmijatim.org'
 });
 ///logout button/////////////////////////
+
+////start getdefaultdata///////////////////////////
+function getdefaultdata()
+{
+  app.preloader.show();
+  app.request({
+    url: apidataurl,
+    method: 'POST',
+    cache: false,
+    data : { token:mybsmiusertoken, command: 'getdefaultdata'}, 
+    success: function (data, status, xhr)
+      {
+        app.preloader.hide();
+        var status = JSON.parse(data).status;
+        var content = JSON.parse(data).data;
+        if (status == "success")
+        {
+          //console.log(content);
+          getdefaultdatarun(content)
+        }
+        else if (status == "failed")
+        {
+          //console.log("failed");
+        }
+        else
+        {
+          //console.log("failed");
+        }
+      },
+    error: function (xhr, status, message)
+      {
+        console.log(message);
+        app.preloader.hide();
+      },
+  })
+}
+
+function getdefaultdatarun(data)
+{
+  $$('.mybsmi-currentusernama').text(data.user.usernama);
+  
+  var relawan = 0;
+  var cabang = 0;
+  var rekapitulasiprov = '';
+  var rekapitulasicabang = '';
+  var datacabang = data.cabang;
+  datacabang.sort(function(a, b){return b.relawan - a.relawan});
+  for(i=0;i<datacabang.length;i++)
+  {
+    if (datacabang[i].cabang == 'BSMI Jawa Timur')
+    {
+      rekapitulasiprov += '<tr> <td class="label-cell">'+datacabang[i].cabang+'</td> <td class="numeric-cell">'+datacabang[i].relawan+'</td> </tr>';
+    }
+    else
+    {
+    rekapitulasicabang += '<tr> <td class="label-cell">'+datacabang[i].cabang+'</td> <td class="numeric-cell">'+datacabang[i].relawan+'</td> </tr>';
+    cabang = cabang+1;
+    }
+    relawan = relawan+datacabang[i].relawan;
+  }
+  $$('.mybsmi-rekapitulasicabang').html(rekapitulasicabang);
+  $$('.mybsmi-rekapitulasiprov').html(rekapitulasiprov);
+  
+  var ratiorelawan = relawan/(relawan*10);
+  var gauge = app.gauge.get('#mybsmi-relawan');
+  gauge.update({
+    el: '#mybsmi-relawan',
+    value: ratiorelawan,
+    valueText: relawan,
+  })  
+
+  var ratiocabang = cabang/38;
+  var gauge = app.gauge.get('#mybsmi-cabang');
+  gauge.update({
+    el: '#mybsmi-cabang',
+    value: ratiocabang,
+    valueText: cabang,
+  })  
+  
+}
+///end getdefaultdata//////////////////////////////
 </script>
 <!--end script------------------------------------------------------------------------------->  
 </body>
