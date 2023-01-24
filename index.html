@@ -6,7 +6,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="theme-color" content="#2196f3">
-  <meta http-equiv="Content-Security-Policy" content="default-src * 'self' 'unsafe-inline' 'unsafe-eval' data:">
+  <meta http-equiv="Content-Security-Policy" content="default-src * 'self' 'unsafe-inline' 'unsafe-eval' data: blob:">
   <title>MyBSMI</title>
   <link rel="stylesheet" href="https://unpkg.com/framework7@7.1.2/framework7-bundle.min.css">
   <link rel="stylesheet" href="https://unpkg.com/framework7-icons">
@@ -296,7 +296,7 @@
             <div class="right">
               <a class="link popover-open" data-popover=".profile-popover">
                 <span class="margin-right-half"></span>
-                <img src="avatar.png" class="avatar">
+                <img src="avatar.png" class="avatar mybsmi-avatar">
               </a>
             </div>
             <div class="title-large">
@@ -1350,7 +1350,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 var $$ = Dom7;
 var apiuserurl = "https://script.google.com/macros/s/AKfycbzlwGx4AR3Jfn9a7dKiSJn_yj-rLVbRJvf10-GjQQdKnM1Zym1aDZpLyJ44VBoUXrTzhw/exec";
-var apidataurl = "https://script.google.com/macros/s/AKfycbx19ZZY6Q1lRgbow7FKDcBkjq6MqMHwmZW0uKX9dAEQc9rvBc3G9knhotr3C3Qn8N9O/exec";
+var apidataurl = "https://script.google.com/macros/s/AKfycbxpzYlnvEV8P0vKow7FSqnCFKT0KNA_SduKsw4FYpG_76FWKvh-Gp82u3ZIWEk6oGXF/exec";
 var mybsmiaktivasi = 'd426d702f89bac9fb66b22ede9593b62a447bf4154dfac317a72fcf4f168172a';
 var grecaptcharesponsedata = '';
 
@@ -1387,6 +1387,9 @@ routes: [
         fpagebiodata();
       },
     },
+    beforeEnter: function ({ resolve, reject }) {
+        fperiksauserstatus({ resolve, reject })
+    },
   },
   {
     path: '/kartuanggota/',
@@ -1403,6 +1406,20 @@ routes: [
   },
 ],
 });
+
+function fperiksauserstatus({ resolve, reject })
+{
+      if (dashboarddata.user.userphoto !== '')
+      {
+        resolve();
+      }
+      else
+      {
+        flengkapidata();
+        reject();
+      }
+
+}
 
 app.on('pageInit', function (page) {
   //console.log('Page is now pageInit');
@@ -1857,6 +1874,7 @@ function getdefaultdata()
 function getdefaultdatarun(data)
 {
   $$('.mybsmi-currentusernama').text(data.user.usernama);
+  if (data.user.userphoto !== '') {$$('.mybsmi-avatar').attr('src','https://drive.google.com/uc?export=view&id='+data.user.userphoto);}
   flogout();
   
   var relawan = 0;
@@ -1925,6 +1943,7 @@ function grecaptchaexpired()
 function fpagebiodata()
 {
     var data = dashboarddata.user;
+    $$('.mybsmi-biodata .mybsmi-userphoto').attr('src','https://drive.google.com/uc?export=view&id='+data.userphoto);
     $$('.mybsmi-biodata .mybsmi-usernama').text(data.usernama);
     $$('.mybsmi-biodata .mybsmi-userjeniskelamin').text(data.userjeniskelamin);
     $$('.mybsmi-biodata .mybsmi-usertanggallahir').text(data.usertanggallahir);
@@ -2160,6 +2179,152 @@ function resetpasswordinput(dynamicPopup,data,email)
       }); 
 }
 ///////RESET PASSWORD BUTTON/////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+///////lengkapi data/////////////////////////////////////
+function flengkapidata()
+{
+  var dialog = app.dialog.create({
+    text: 'Silahkan lengkapi data Anda untuk membuka fitur ini.',
+    closeByBackdropClick: false,
+    destroyOnClose: true,
+    on: {
+      opened: function () {
+        //console.log('Dialog opened')
+      }
+    },
+    buttons: [
+      {
+        text: 'Nanti Saja',
+        close:true,
+        onClick: function(dialog, e)
+          {
+          }
+      },
+      {
+        text: 'Lengkapi Data',
+        close:true,
+        onClick: function(dialog, e)
+          {
+            flengkapiphoto();
+          }
+      },
+    ]
+  });
+  dialog.open();
+}
+
+function flengkapiphoto()
+{
+  var dialog = app.dialog.create({
+    title: 'Photo',
+    closeByBackdropClick: false,
+    destroyOnClose: true,
+    content: '<div style="width:100%;">'
+      +'<form runat="server" style="display:flex;flex-direction:column;align-items:center;justify-content: center;">'
+      +'<img id="mybsmiuploadphotopreview" src="avatar.png" style="width:150px;height:150px;margin: 10px 10px;border-radius: 50%;object-fit: cover;">'
+      +'<input accept="image/jpeg" type="file" id="mybsmiuploadphoto" />'
+      +'</form>'
+      +'</div>',
+    on: {
+      opened: function () {
+          mybsmiuploadphoto.onchange = evt => {
+            const [file] = mybsmiuploadphoto.files
+            if (file) {
+              if (file.size > 524288)
+              {
+                //app.dialog.alert('File tidak boleh lebih dari 500 KB','Terjadi Kesalahan');
+                var toastBottom = app.toast.create({ text: 'File tidak boleh lebih dari 500 KB', closeTimeout: 5000,position: 'center', });toastBottom.open();
+                mybsmiuploadphoto.value = '';
+              }
+              else
+              {
+                mybsmiuploadphotopreview.src = URL.createObjectURL(file)
+              }
+            }
+          }
+      }
+    },
+    buttons: [
+      {
+        text: 'Cancel',
+        close:true,
+        onClick: function(dialog, e)
+          {
+          }
+      },
+      {
+        text: 'Upload',
+        close:false,
+        onClick: function(dialog, e)
+          {
+            const [file] = mybsmiuploadphoto.files
+            if (file) {
+              const fr = new FileReader();
+              fr.onload = function(e) {
+                const obj = {
+                  filename: file.name,
+                  mimeType: file.type,
+                  bytes: [...new Int8Array(e.target.result)]
+                };
+                fuploadphoto(dialog,obj);
+              };
+              fr.readAsArrayBuffer(file);
+            }
+          }
+      },
+    ]
+  });
+  dialog.open();
+
+
+}
+
+function fuploadphoto(dialog,obj)
+{
+  console.log(obj);
+  var data = JSON.stringify(obj);
+  app.preloader.show();
+  app.request({
+    url: apidataurl,
+    method: 'POST',
+    cache: false,
+    data : { token:mybsmiusertoken, command: 'uploaduserphoto', data: data}, 
+    success: function (data, status, xhr)
+      {
+        app.preloader.hide();
+        dialog.close();
+        var status = JSON.parse(data).status;
+        var content = JSON.parse(data).data;
+        if (status == "success")
+        {
+          console.log(content);
+          getdefaultdatarun(content)
+          window.dashboarddata = content;
+        }
+        else if (status == "failed")
+        {
+          //console.log("failed");
+          app.dialog.alert(content,'Terjadi Kesalahan');
+        }
+        else
+        {
+          //console.log("failed");
+          app.dialog.alert(content,'Terjadi Kesalahan');
+        }
+      },
+    error: function (xhr, status, message)
+      {
+        //console.log(message);
+        app.preloader.hide();
+        dialog.close();
+        app.dialog.alert("Server tidak dapat merespon",'Terjadi Kesalahan');
+      },
+  });
+}
+///////////////////////////////////////////////////////
 </script>
 <!--end script------------------------------------------------------------------------------->  
 </body>
