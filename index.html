@@ -1329,7 +1329,8 @@
     <p style="font-size:16px;font-weight:bold;text-align:center;width:300px;margin-top:15px;margin-bottom:2px;">MyBSMI</p>
     <p style="font-size:14px;font-weight:normal;text-align:center;width:300px;margin-top:0px;margin-bottom:15px;">Selamat Datang di Platform</br>Relawan BSMI Jawa Timur</p>
     <button class="button button-fill login-screen-open" data-login-screen="#my-login-screen" style="width:100px;">LOGIN</button>
-    <p style="font-size:12px;color:grey;tex-align:center">Belum punya akun? <a href="" class="login-screen-open" data-login-screen="#my-aktivasi-screen">Aktivasi</a></p>
+    <!--<p style="font-size:12px;color:grey;tex-align:center">Belum punya akun? <a href="" class="login-screen-open" data-login-screen="#my-aktivasi-screen">Aktivasi</a></p>-->
+    <p style="font-size:12px;color:grey;tex-align:center">Belum punya akun? <a href="" class="mybsmi-aktivasiscreen">Aktivasi</a></p>
   </div>
 </div>
 <!--end overlay------------------------------------------------------------------------------->
@@ -1350,6 +1351,7 @@
 var $$ = Dom7;
 var apiuserurl = "https://script.google.com/macros/s/AKfycbzlwGx4AR3Jfn9a7dKiSJn_yj-rLVbRJvf10-GjQQdKnM1Zym1aDZpLyJ44VBoUXrTzhw/exec";
 var apidataurl = "https://script.google.com/macros/s/AKfycbx19ZZY6Q1lRgbow7FKDcBkjq6MqMHwmZW0uKX9dAEQc9rvBc3G9knhotr3C3Qn8N9O/exec";
+var mybsmiaktivasi = 'd426d702f89bac9fb66b22ede9593b62a447bf4154dfac317a72fcf4f168172a';
 var grecaptcharesponsedata = '';
 
 if (window.location.href.indexOf("127.0.0.1") > -1) 
@@ -1441,9 +1443,21 @@ openIn: 'popover'
 
 
 
-
-
 //form-aktivasi/////////////////////////////
+$$('.mybsmi-aktivasiscreen').on('click', function () {
+  app.dialog.prompt("PIN", "MyBSMI", async function (pin) {
+    
+    const buf = await crypto.subtle.digest("SHA-256", new TextEncoder("utf-8").encode(pin));
+    var pinhash = Array.prototype.map.call(new Uint8Array(buf), x=>(('00'+x.toString(16)).slice(-2))).join('');
+    //console.log(pinhash);
+    if (pinhash === mybsmiaktivasi)
+    {
+      app.loginScreen.open('#my-aktivasi-screen');
+    }
+  }
+  )
+});
+
 $$('#my-aktivasi-screen .register-button').on('click', function () {
 
   if (!$$('#my-aktivasi-screen')[0].checkValidity()) {
@@ -1555,10 +1569,12 @@ $$('#my-login-screen .login-button').on('click', function () {
         else if (status == "failed")
         {
           app.dialog.alert(data,'Terjadi Kesalahan');
+          $$('#my-login-screen')[0].reset();
         }
         else if (status == "verifikasiemail")
         {
           //app.dialog.alert(data,'Terjadi Kesalahan');
+            $$('#my-login-screen')[0].reset();
             var dialog = app.dialog.create({
               text: 'Akun membutuhkan verifikasi email',
               closeByBackdropClick: true,
@@ -1620,14 +1636,17 @@ $$('#my-login-screen .login-button').on('click', function () {
         else if (status == "verifikasidata")
         {
           app.dialog.alert('Akun masih dalam proses verifikasi data','Proses Verifikasi');
+          $$('#my-login-screen')[0].reset();
         }
         else if (status == "suspen")
         {
           app.dialog.alert(data,'Pemberitahuan');
+          $$('#my-login-screen')[0].reset();
         }
         else
         {
           app.dialog.alert('Tidak dapat memproses data','Terjadi Kesalahan');
+          $$('#my-login-screen')[0].reset();
         }
       },
     error: function (xhr, status, message)
