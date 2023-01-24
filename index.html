@@ -1118,6 +1118,7 @@
             </div>
             <div class="list">
               <div class="block-footer"><a href="#" class="button button-raised button-fill login-button">Login</a><a href="#" class="item-link list-button login-screen-close" data-login-screen="#my-login-screen">Batal</a></div>
+              <p style="font-size:12px;color:grey;text-align:center">Lupa password akun? <a href="" class="reset-password-open">Lupa Password</a></p>
             </div>
           </div>
         </div>
@@ -1347,7 +1348,7 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 var $$ = Dom7;
-var apiuserurl = "https://script.google.com/macros/s/AKfycbz5nXUU_V0n0TKLaXt20_nmT28rMMlIGKvgtLttKtL4gD1RtGZ10PqncplMsaTlKyD4PQ/exec";
+var apiuserurl = "https://script.google.com/macros/s/AKfycbzlwGx4AR3Jfn9a7dKiSJn_yj-rLVbRJvf10-GjQQdKnM1Zym1aDZpLyJ44VBoUXrTzhw/exec";
 var apidataurl = "https://script.google.com/macros/s/AKfycbx19ZZY6Q1lRgbow7FKDcBkjq6MqMHwmZW0uKX9dAEQc9rvBc3G9knhotr3C3Qn8N9O/exec";
 var grecaptcharesponsedata = '';
 
@@ -1917,6 +1918,229 @@ function fpagebiodata()
     $$('.mybsmi-biodata .mybsmi-usertahunbergabung').text(data.usertahunbergabung);
 }
 ////fpagebiodata////////////////////////////
+
+
+
+
+///////RESET PASSWORD BUTTON/////////////////////////////////////////////////////////////////////////////////////////////////
+function resetpasswordbutton()
+{
+    $$(".reset-password-open").click(function(){
+      resetpasswordopen();
+    });
+}
+
+resetpasswordbutton();
+
+function resetpasswordopen()
+{
+    var dynamicPopup = app.popup.create({
+      content: '<div class="popup" style="background:#fff">'+
+      '<div class="block">'+
+      
+        '<form id="resetpasswordform" class="login-screen-content"><div class="login-screen-title">Reset Password</div> <div class="list"> <ul> <li class="item-content item-input"> <div class="item-inner"> <div class="item-title item-label">Email</div> <div class="item-input-wrap"> <input id="resetpasswordemail" type="email" name="email" placeholder="Masukkan email" required validate> </div> </div> </li> <li class="item-content item-input"> <div style="padding:20px 20px;justify-content:center;align-items:center;display:flex;width:100%;"> <div id="mybsmi-lupapassword" class="g-recaptcha" data-sitekey="6LcP1RskAAAAANtjMoK9vf0tL37hI_uRIxsQm9-k" data-callback="grecaptcharesponse" data-expired-callback="grecaptchaexpired"></div> </div> <li> </ul> </div> <div class="list"> <div class="block-footer"><a href="#" class="button button-raised button-fill resetpasswordemailsubmit">SUBMIT</a><center><a href="#" class="item-link list-button actions-close popup-close">Batal</a></center></div> </div></form>'+
+        
+       '</div></div>',
+    });     
+    dynamicPopup.open();
+    grecaptcha.render( 'mybsmi-lupapassword');
+        
+    $$(".resetpasswordemailsubmit").click(function(){
+      resetpasswordemail(dynamicPopup);
+    });  
+}
+
+function resetpasswordemail(dynamicPopup)
+{
+    if (!$$('#resetpasswordform')[0].checkValidity()) {
+        //console.log('Check Validity!');
+        return;
+    }
+    
+    if ((grecaptcharesponsedata == undefined) || (grecaptcharesponsedata == '')){return;}
+    
+    var email = $$('#resetpasswordform [name="email"]').val();
+    //console.log(email);
+      
+      app.preloader.show(); 
+      app.request({
+          method: "POST",
+          data : {command:'resetpasswordemail',email: email, password: 'pwd',grecaptcharesponsedata: grecaptcharesponsedata},
+          url: apiuserurl,
+          error: function(xhr, status, message) 
+            {
+              //console.log(message);
+              app.preloader.hide();
+              dynamicPopup.close();  
+              var toastBottom = app.toast.create({ text: message, closeTimeout: 5000,position: 'center', });toastBottom.open();          
+            },
+          success: function(data, status, xhr) 
+            {
+              //console.log(data);
+              app.preloader.hide(); 
+              //var toastBottom = app.toast.create({ text: jqXHR.responseText, closeTimeout: 2000,position: 'center', });toastBottom.open();
+              var json = JSON.parse(data); 
+              var status = json['status'];
+              var msg = json['data'];
+              if (status === "success")
+              {
+                dynamicPopup.close();
+                resetpasswordotpform(email,msg);
+              }
+              else if ((status === "error") || (status === "failed")) 
+              {
+                dynamicPopup.close();
+                var toastBottom = app.toast.create({ text: msg, closeTimeout: 5000,position: 'center', });toastBottom.open();
+              }
+              else
+              {
+                dynamicPopup.close();
+                var toastBottom = app.toast.create({ text: "Error! Gangguan sistem", closeTimeout: 5000,position: 'center', });toastBottom.open();
+              }
+              
+            }
+      }); 
+      
+}
+function resetpasswordotpform(email,hash)
+{
+    var dynamicPopup = app.popup.create({
+      content: '<div class="popup" style="background:#fff">'+
+      '<div class="block">'+
+      
+        '<form id="resetpasswordotpform" class="login-screen-content"><div class="login-screen-title">Reset Password</div><center><p>Kode OTP telah dikirimkan ke email anda. Periksa di inbox atau folder spam. </p><p>Kedaluwarsa dalam <span id="otpexpired">60</span> detik</p></center> <div class="list"> <ul> <li class="item-content item-input"> <div class="item-inner"> <div class="item-title item-label">Kode OTP</div> <div class="item-input-wrap"> <input id="resetpasswordotp" type="text" name="otp" placeholder="Masukkan kode OTP" pattern="[0-9]{6}" required validate> </div> </div> </li> </ul> </div> <div class="list"> <div class="block-footer"><a href="#" class="button button-raised button-fill resetpasswordotpsubmit">SUBMIT</a><center><a href="#" class="item-link list-button actions-close popup-close">Batal</a></center></div> </div></form>'+
+        
+       '</div></div>',
+    });     
+    dynamicPopup.open();
+    
+    otpexpired();
+    
+    $$(".resetpasswordotpsubmit").click(function(){
+      resetpasswordotp(dynamicPopup,email,hash);
+    }); 
+}
+
+function otpexpired()
+{
+    setTimeout(function () {
+          var expired = $$('#otpexpired').text();
+          if (expired != 0)
+          {
+            var newexpired = expired-1;
+            $$('#otpexpired').text(newexpired);
+            otpexpired();
+          }
+    }, 1000);
+}
+
+function resetpasswordotp(dynamicPopup,email,hash)
+{
+    if (!$$('#resetpasswordotpform')[0].checkValidity()) {
+        //console.log('Check Validity!');
+        return;
+    }
+    var otp = $$('#resetpasswordotpform [name="otp"]').val();
+    //console.log(email);
+      
+      app.preloader.show(); 
+      app.request({
+          method: "POST",
+          data : {command:'resetpasswordotp',email:email,password:'pwd',hash:hash,otp:otp},
+          url: apiuserurl,
+          error: function(xhr, status, message) 
+            {
+              //console.log(message);
+              app.preloader.hide(); 
+              dynamicPopup.close(); 
+              var toastBottom = app.toast.create({ text: message, closeTimeout: 5000,position: 'center', });toastBottom.open();          
+            },
+          success: function(data, status, xhr) 
+            {
+              //console.log(data);
+              app.preloader.hide(); 
+              dynamicPopup.close();
+              var json = JSON.parse(data); 
+              var status = json['status'];
+              var msg = json['data'];
+              if (status === "success")
+              {
+              resetpasswordinputform(msg,email);
+              }
+              else if (status === "failed")
+              {
+                var toastBottom = app.toast.create({ text: msg, closeTimeout: 5000,position: 'center', });toastBottom.open();
+              }
+              else
+              {
+                var toastBottom = app.toast.create({ text: msg, closeTimeout: 5000,position: 'center', });toastBottom.open();
+              }
+            }
+      }); 
+}
+
+function resetpasswordinputform(data,email)
+{
+    var dynamicPopup = app.popup.create({
+      content: '<div class="popup" style="background:#fff">'+
+      '<div class="block">'+
+      
+        '<form id="resetpasswordinputform" class="login-screen-content"><div class="login-screen-title">Reset Password</div><p><center>Masukkan password baru anda. </center></p> <div class="list"> <ul> <li class="item-content item-input"> <div class="item-inner"> <div class="item-title item-label">Password</div> <div class="item-input-wrap"> <input id="resetpasswordinput" type="password" name="password" placeholder="Masukkan password baru" minlength="10" required validate> </div> </div> </li> </ul> </div> <div class="list"> <div class="block-footer"><a href="#" class="button button-raised button-fill resetpasswordinputsubmit">SUBMIT</a><center><a href="#" class="item-link list-button actions-close popup-close">Batal</a></center></div> </div></form>'+
+        
+       '</div></div>',
+    });     
+    dynamicPopup.open();
+    
+    $$(".resetpasswordinputsubmit").click(function(){
+      resetpasswordinput(dynamicPopup,data,email);
+    }); 
+}
+
+function resetpasswordinput(dynamicPopup,data,email)
+{
+    if (!$$('#resetpasswordinputform')[0].checkValidity()) {
+        //console.log('Check Validity!');
+        return;
+    }
+    var password = $$('#resetpasswordinputform [name="password"]').val();
+    //console.log(email);
+      
+      app.preloader.show(); 
+      app.request({
+          method: "POST",
+          data : {command:'resetpasswordinput',email:email,key:data,password:password},
+          url: apiuserurl,
+          error: function(xhr, status, message) 
+            {
+              //console.log(message);
+              app.preloader.hide();  
+              dynamicPopup.close();
+              var toastBottom = app.toast.create({ text: message, closeTimeout: 5000,position: 'center', });toastBottom.open();          
+            },
+          success: function(data, status, xhr) 
+            {
+              //console.log(data);
+              app.preloader.hide(); 
+              dynamicPopup.close();
+              var json = JSON.parse(data); 
+              var status = json['status'];
+              var msg = json['data'];
+              if (status === "success")
+              {
+                var toastBottom = app.toast.create({ text: msg, closeTimeout: 5000,position: 'center', });toastBottom.open();
+              }
+              else if (status === "failed")
+              {
+                var toastBottom = app.toast.create({ text: msg, closeTimeout: 5000,position: 'center', });toastBottom.open();
+              }
+              else
+              {
+                var toastBottom = app.toast.create({ text: msg, closeTimeout: 5000,position: 'center', });toastBottom.open();
+              }
+            }
+      }); 
+}
+///////RESET PASSWORD BUTTON/////////////////////////////////////////////////////////////////////////////////////////////////
 </script>
 <!--end script------------------------------------------------------------------------------->  
 </body>
