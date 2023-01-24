@@ -166,22 +166,22 @@
               </li>
             </ul>
           </div>
-<!--
+
           <div class="list">
             <ul>
               <li>
-                <a href="/kartuanggota/" class="item-content item-link panel-close mybsmi-kartuanggota">
+                <a href="/ekta/" class="item-content item-link panel-close mybsmi-ekta">
                   <div class="item-media">
                     <i class="icon f7-icons">creditcard_fill</i>
                   </div>
                   <div class="item-inner">
-                    <div class="item-title">Kartu Anggota</div>
+                    <div class="item-title">e-KTA</div>
                   </div>
                 </a>
               </li>
             </ul>
           </div>
--->
+
 <!--
           <div class="list">
             <ul>
@@ -1349,7 +1349,7 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 var $$ = Dom7;
-var apiuserurl = "https://script.google.com/macros/s/AKfycbzlwGx4AR3Jfn9a7dKiSJn_yj-rLVbRJvf10-GjQQdKnM1Zym1aDZpLyJ44VBoUXrTzhw/exec";
+var apiuserurl = "https://script.google.com/macros/s/AKfycbzyFPQfu-BkrihZ7eeDWnN0nJ7hJNGwzSr_hznMN1RqPmbSde_kJ_QZdNDXXt8LArfzaw/exec";
 var apidataurl = "https://script.google.com/macros/s/AKfycbxpzYlnvEV8P0vKow7FSqnCFKT0KNA_SduKsw4FYpG_76FWKvh-Gp82u3ZIWEk6oGXF/exec";
 var mybsmiaktivasi = 'd426d702f89bac9fb66b22ede9593b62a447bf4154dfac317a72fcf4f168172a';
 var grecaptcharesponsedata = '';
@@ -1388,26 +1388,25 @@ routes: [
       },
     },
     beforeEnter: function ({ resolve, reject }) {
-        fperiksauserstatus({ resolve, reject })
+        fperiksauserdata({ resolve, reject })
     },
   },
   {
-    path: '/kartuanggota/',
+    path: '/ekta/',
     //url: 'biodata.html',
     on: {
       pageAfterIn: function test (e, page) {
-        app.dialog.alert('Cooming Soon','MyBSMI');
+        fpageekta();
       },
     },
     beforeEnter: function ({ resolve, reject }) {
-      app.dialog.alert('Cooming Soon','MyBSMI');
-      resolve();
+        fperiksauserstatus({ resolve, reject })
     },
   },
 ],
 });
 
-function fperiksauserstatus({ resolve, reject })
+function fperiksauserdata({ resolve, reject })
 {
       if (dashboarddata.user.userphoto !== '')
       {
@@ -1419,6 +1418,22 @@ function fperiksauserstatus({ resolve, reject })
         reject();
       }
 
+}
+
+function fperiksauserstatus({ resolve, reject })
+{
+       if (dashboarddata.user.userstatus === 'Terverifikasi')
+       {
+          fperiksauserdata({ resolve, reject })
+       }
+       else if (dashboarddata.user.userstatus === 'Terbatas')
+       {
+          reject();
+       }
+       else
+       {
+          reject();
+       }
 }
 
 app.on('pageInit', function (page) {
@@ -1850,7 +1865,7 @@ function getdefaultdata()
         var content = JSON.parse(data).data;
         if (status == "success")
         {
-          console.log(content);
+          //console.log(content);
           getdefaultdatarun(content)
           window.dashboarddata = content;
         }
@@ -2046,11 +2061,12 @@ function resetpasswordotpform(email,hash)
       content: '<div class="popup" style="background:#fff">'+
       '<div class="block">'+
       
-        '<form id="resetpasswordotpform" class="login-screen-content"><div class="login-screen-title">Reset Password</div><center><p>Kode OTP telah dikirimkan ke email anda. Periksa di inbox atau folder spam. </p><p>Kedaluwarsa dalam <span id="otpexpired">60</span> detik</p></center> <div class="list"> <ul> <li class="item-content item-input"> <div class="item-inner"> <div class="item-title item-label">Kode OTP</div> <div class="item-input-wrap"> <input id="resetpasswordotp" type="text" name="otp" placeholder="Masukkan kode OTP" pattern="[0-9]{6}" required validate> </div> </div> </li> </ul> </div> <div class="list"> <div class="block-footer"><a href="#" class="button button-raised button-fill resetpasswordotpsubmit">SUBMIT</a><center><a href="#" class="item-link list-button actions-close popup-close">Batal</a></center></div> </div></form>'+
+        '<form id="resetpasswordotpform" class="login-screen-content"><div class="login-screen-title">Reset Password</div><center><p>Kode OTP telah dikirimkan ke email anda. Periksa di inbox atau folder spam. </p><p>Kedaluwarsa dalam <span id="otpexpired">120</span> detik</p></center> <div class="list"> <ul> <li class="item-content item-input"> <div class="item-inner"> <div class="item-title item-label">Kode OTP</div> <div class="item-input-wrap"> <input id="resetpasswordotp" type="text" name="otp" placeholder="Masukkan kode OTP" pattern="[0-9]{6}" required validate> </div> </div> </li> <li class="item-content item-input"> <div style="padding:20px 20px;justify-content:center;align-items:center;display:flex;width:100%;"> <div id="mybsmi-lupapasswordotp" class="g-recaptcha" data-sitekey="6LcP1RskAAAAANtjMoK9vf0tL37hI_uRIxsQm9-k" data-callback="grecaptcharesponse" data-expired-callback="grecaptchaexpired"></div> </div> <li></ul> </div> <div class="list"> <div class="block-footer"><a href="#" class="button button-raised button-fill resetpasswordotpsubmit">SUBMIT</a><center><a href="#" class="item-link list-button actions-close popup-close">Batal</a></center></div> </div></form>'+
         
        '</div></div>',
     });     
     dynamicPopup.open();
+    grecaptcha.render( 'mybsmi-lupapasswordotp');
     
     otpexpired();
     
@@ -2078,13 +2094,16 @@ function resetpasswordotp(dynamicPopup,email,hash)
         //console.log('Check Validity!');
         return;
     }
+    
+    if ((grecaptcharesponsedata == undefined) || (grecaptcharesponsedata == '')){return;}
+    
     var otp = $$('#resetpasswordotpform [name="otp"]').val();
     //console.log(email);
       
       app.preloader.show(); 
       app.request({
           method: "POST",
-          data : {command:'resetpasswordotp',email:email,password:'pwd',hash:hash,otp:otp},
+          data : {command:'resetpasswordotp',email:email,password:'pwd',hash:hash,otp:otp,grecaptcharesponsedata: grecaptcharesponsedata},
           url: apiuserurl,
           error: function(xhr, status, message) 
             {
@@ -2284,7 +2303,7 @@ function flengkapiphoto()
 
 function fuploadphoto(dialog,obj)
 {
-  console.log(obj);
+  //console.log(obj);
   var data = JSON.stringify(obj);
   app.preloader.show();
   app.request({
@@ -2300,9 +2319,8 @@ function fuploadphoto(dialog,obj)
         var content = JSON.parse(data).data;
         if (status == "success")
         {
-          console.log(content);
-          getdefaultdatarun(content)
-          window.dashboarddata = content;
+          //console.log(content);
+          getdefaultdata();
         }
         else if (status == "failed")
         {
@@ -2325,6 +2343,14 @@ function fuploadphoto(dialog,obj)
   });
 }
 ///////////////////////////////////////////////////////
+
+
+
+//////fpageekta///////////////////////////////////////////////////
+function fpageekta()
+{
+}
+//////fpageekta///////////////////////////////////////////////////
 </script>
 <!--end script------------------------------------------------------------------------------->  
 </body>
