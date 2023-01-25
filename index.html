@@ -1229,7 +1229,7 @@
                                     <option value="Bidan">Bidan</option>
                                     <option value="Perawat">Perawat</option>
                                     <option value="Apoteker">Apoteker</option>
-                                    <option value="Umum">Umum/Non Medis</option>
+                                    <option value="Umum">Umum</option>
                                   </select>
                     </div>
                   </div>
@@ -1366,7 +1366,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 var $$ = Dom7;
 var apiuserurl = "https://script.google.com/macros/s/AKfycbycq0ASyka47nBcEl9qtknDV62DmPElA79NurMm28G602L3NkzeU9qpSL6YUSr2D3xo4A/exec";
-var apidataurl = "https://script.google.com/macros/s/AKfycbxuZ6AtEBJL7SI2u2f2OcLm055mT1-YSM_G7RbgU2taFTNV2IYoJDp6yytBGth9nTI/exec";
+var apidataurl = "https://script.google.com/macros/s/AKfycbw_HP0Pwp5n6FRMD85SOf-MbWh4PCjyI6kQgFgP1EZlsa0VVkjRtBam-Y8TmHl2lqeN/exec";
 var mybsmiaktivasi = 'd426d702f89bac9fb66b22ede9593b62a447bf4154dfac317a72fcf4f168172a';
 var grecaptcharesponsedata = '';
 
@@ -2636,6 +2636,128 @@ function fkirimverifikasiidentitas(dialog,obj)
 //////fpageekta///////////////////////////////////////////////////
 function fpageekta()
 {
+    let data = JSON.parse(dashboarddata.user.usermydata)
+    if (data.ekta)
+    {
+        fgetekta();
+    }
+    else
+    {
+      $$('.mybsmi-ektabsmi').append('<a class="button button-fill">BUAT e-KTA</a>');
+      $$('.mybsmi-ektabsmi a').on('click', function () {
+            
+            app.dialog.confirm('Pembuatan e-KTA memerlukan waktu 2-4 menit.', 'Pemberitahuan', function (){fbuatekta();})
+      });
+    }
+}
+
+function fbuatekta()
+{
+  app.preloader.show();
+  app.request({
+    url: apidataurl,
+    method: 'POST',
+    cache: false,
+    data : { token:mybsmiusertoken, command: 'buatekta'}, 
+    success: function (data, status, xhr)
+      {
+        app.preloader.hide();
+        var status = JSON.parse(data).status;
+        var content = JSON.parse(data).data;
+        if (status == "success")
+        {
+          //console.log(content);
+          convertekta();
+        }
+        else if (status == "failed")
+        {
+          //console.log("failed");
+        }
+        else
+        {
+          //console.log("failed");
+        }
+      },
+    error: function (xhr, status, message)
+      {
+        //console.log(message);
+        app.dialog.alert("Server tidak dapat merespon",'Terjadi Kesalahan');
+        app.preloader.hide();
+      },
+  })
+}
+
+function convertekta()
+{
+  app.preloader.show();
+  app.request({
+    url: apidataurl,
+    method: 'POST',
+    cache: false,
+    data : { token:mybsmiusertoken, command: 'convertekta'}, 
+    success: function (data, status, xhr)
+      {
+        app.preloader.hide();
+        var status = JSON.parse(data).status;
+        var content = JSON.parse(data).data;
+        if (status == "success")
+        {
+          //console.log(content);
+          fgetekta();
+          getdefaultdata();
+        }
+        else if (status == "failed")
+        {
+          //console.log("failed");
+        }
+        else
+        {
+          //console.log("failed");
+        }
+      },
+    error: function (xhr, status, message)
+      {
+        //console.log(message);
+        app.dialog.alert("Server tidak dapat merespon",'Terjadi Kesalahan');
+        app.preloader.hide();
+      },
+  })
+}
+
+function fgetekta()
+{
+  app.preloader.show();
+  app.request({
+    url: apidataurl,
+    method: 'POST',
+    cache: false,
+    data : { token:mybsmiusertoken, command: 'getekta'}, 
+    success: function (data, status, xhr)
+      {
+        app.preloader.hide();
+        var status = JSON.parse(data).status;
+        var content = JSON.parse(data).data;
+        if (status == "success")
+        {
+          //console.log(content);
+          $$('.mybsmi-ektabsmi').html('<img src="https://drive.google.com/uc?export=view&id='+content+'" style="width:100%;max-width:200px;">');
+        }
+        else if (status == "failed")
+        {
+          //console.log("failed");
+        }
+        else
+        {
+          //console.log("failed");
+        }
+      },
+    error: function (xhr, status, message)
+      {
+        //console.log(message);
+        app.dialog.alert("Server tidak dapat merespon",'Terjadi Kesalahan');
+        app.preloader.hide();
+      },
+  })
 }
 //////fpageekta///////////////////////////////////////////////////
 
