@@ -1350,7 +1350,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 var $$ = Dom7;
 var apiuserurl = "https://script.google.com/macros/s/AKfycbyVzBtjs1KmhMgznpCvr7BUijJrUXMSXG222O6HuoYvqQjMdJEr9GIcpcLuTV2pj395_w/exec";
-var apidataurl = "https://script.google.com/macros/s/AKfycbxTfXBqC2yzm1b73t-ed5q1j6DlLZ4NDnXckV9m241p1xyKwYNtvQ4yRicfgbKBfy_W/exec";
+var apidataurl = "https://script.google.com/macros/s/AKfycbyp3Cf0QfMc715Fg8yae_184TsZMI9plWcZVAytHsxifB4mqkYAZwz_B8yUWFfEE10E/exec";
 var mybsmiaktivasi = 'd426d702f89bac9fb66b22ede9593b62a447bf4154dfac317a72fcf4f168172a';
 var grecaptcharesponsedata = '';
 
@@ -1428,14 +1428,36 @@ function fperiksauserstatus({ resolve, reject })
        }
        else if (dashboarddata.user.userstatus === 'Terbatas')
        {
-          fverifikasidata();
-          reject();
+
+          if (dashboarddata.user.userphoto !== '')
+          {
+
+            let data = JSON.parse(dashboarddata.user.usermydata)
+            if (data.verifikasiidentitas)
+            {
+              app.dialog.alert('Menunggu verifikasi', 'Status')
+              reject();
+            }
+            else
+            {
+              fverifikasidata();
+              reject();
+            }
+
+          }
+          else
+          {
+            flengkapidata();
+            reject();
+          }
+
        }
        else
        {
           reject();
        }
 }
+
 
 app.on('pageInit', function (page) {
   //console.log('Page is now pageInit');
@@ -2388,12 +2410,12 @@ function fverifikasidata()
 function fverifikasiidentitas()
 {
   var dialog = app.dialog.create({
-    title: 'Verifikasi Identitas',
+    title: 'Permintaan Verifikasi',
     closeByBackdropClick: false,
     destroyOnClose: true,
     content: '<div style="width:100%;height:60vh;overflow:auto;">'
       +'<form id="mybsmi-formverifikasiidentitas" runat="server" style="display:flex;flex-direction:column;align-items:center;justify-content: center;">'
-      +'  <img id="mybsmiuploadphotopreview" src="ktpplaceholder.png" style="width:300px;height:150px;margin: 10px 10px;object-fit: contain;">'
+      +'  <img id="mybsmiuploadphotopreview" src="ktpplaceholder.png" style="width:200px;height:150px;margin: 10px 10px;object-fit: contain;">'
       +'  <input accept="image/jpeg" type="file" name="mybsmiuploadphoto" id="mybsmiuploadphoto" required validate/>'
       +'  <div class="list no-hairlines-md">'
       +'    <ul>'
@@ -2551,8 +2573,8 @@ function fkirimverifikasiidentitas(dialog,obj)
         var content = JSON.parse(data).data;
         if (status == "success")
         {
-          console.log(content);
-          //getdefaultdata();
+          //console.log(content);
+          getdefaultdata();
         }
         else if (status == "failed")
         {
