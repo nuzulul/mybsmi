@@ -1393,7 +1393,7 @@ routes: [
   },
   {
     path: '/ekta/',
-    //url: 'biodata.html',
+    url: 'ekta.html',
     on: {
       pageAfterIn: function test (e, page) {
         fpageekta();
@@ -2378,7 +2378,8 @@ function fuploadphoto(dialog,obj)
 function fverifikasidata()
 {
   var dialog = app.dialog.create({
-    text: 'Penerbitan e-KTA Relawan BSMI membutuhkan verifikasi secara manual oleh pengurus. Verifikasi bisa membutuhkan waktu dalam beberapa hari.',
+    title: 'Permintaan Verifikasi',
+    text: 'Silahkan verifikasi identitas Anda untuk membuka fitur ini.',
     closeByBackdropClick: false,
     destroyOnClose: true,
     on: {
@@ -2574,6 +2575,7 @@ function fkirimverifikasiidentitas(dialog,obj)
         if (status == "success")
         {
           //console.log(content);
+          app.dialog.alert("Permintaan verifikasi telah terkirim. Proses verifikasi bisa membutuhkan beberapa hari. Terima kasih.",'Permintaan Verifikasi');
           getdefaultdata();
         }
         else if (status == "failed")
