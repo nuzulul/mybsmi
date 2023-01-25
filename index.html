@@ -296,7 +296,7 @@
             <div class="right">
               <a class="link popover-open" data-popover=".profile-popover">
                 <span class="margin-right-half"></span>
-                <img src="avatar.png" class="avatar mybsmi-avatar">
+                <img src="avatar.png" class="avatar mybsmi-avatar"><span class="badge color-blue mybsmi-avatar-badge" style="left:-8px;bottom:-5px;display:none;"><i class="icon f7-icons" style="font-size:12px;">checkmark_seal</i></span>
               </a>
             </div>
             <div class="title-large">
@@ -1913,6 +1913,7 @@ function getdefaultdatarun(data)
 {
   $$('.mybsmi-currentusernama').text(data.user.usernama);
   if (data.user.userphoto !== '') {$$('.mybsmi-avatar').attr('src','https://drive.google.com/uc?export=view&id='+data.user.userphoto);}
+  if (data.user.userstatus === "Terverifikasi"){$$('.mybsmi-avatar-badge').css('display','flex');};
   flogout();
   
   var relawan = 0;
@@ -1992,6 +1993,7 @@ function fpagebiodata()
     $$('.mybsmi-biodata .mybsmi-usernohp').text(data.userhp);
     $$('.mybsmi-biodata .mybsmi-usercabang').text(data.usercabang);
     $$('.mybsmi-biodata .mybsmi-usertahunbergabung').text(data.usertahunbergabung);
+    if (data.userstatus === "Terverifikasi"){$$('.mybsmi-avatar-badge').css('display','flex');};
 }
 ////fpagebiodata////////////////////////////
 
