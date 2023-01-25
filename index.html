@@ -1349,8 +1349,8 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 var $$ = Dom7;
-var apiuserurl = "https://script.google.com/macros/s/AKfycbwCHgk_7aobvshaKL1eq2ktfXtxES9iESa91Caax7Nb2fotNW46LkvKea7hE-O2jjkKvg/exec";
-var apidataurl = "https://script.google.com/macros/s/AKfycbxpzYlnvEV8P0vKow7FSqnCFKT0KNA_SduKsw4FYpG_76FWKvh-Gp82u3ZIWEk6oGXF/exec";
+var apiuserurl = "https://script.google.com/macros/s/AKfycbyVzBtjs1KmhMgznpCvr7BUijJrUXMSXG222O6HuoYvqQjMdJEr9GIcpcLuTV2pj395_w/exec";
+var apidataurl = "https://script.google.com/macros/s/AKfycbxTfXBqC2yzm1b73t-ed5q1j6DlLZ4NDnXckV9m241p1xyKwYNtvQ4yRicfgbKBfy_W/exec";
 var mybsmiaktivasi = 'd426d702f89bac9fb66b22ede9593b62a447bf4154dfac317a72fcf4f168172a';
 var grecaptcharesponsedata = '';
 
@@ -1428,6 +1428,7 @@ function fperiksauserstatus({ resolve, reject })
        }
        else if (dashboarddata.user.userstatus === 'Terbatas')
        {
+          fverifikasidata();
           reject();
        }
        else
@@ -2257,11 +2258,16 @@ function flengkapiphoto()
                 //app.dialog.alert('File tidak boleh lebih dari 500 KB','Terjadi Kesalahan');
                 var toastBottom = app.toast.create({ text: 'File tidak boleh lebih dari 500 KB', closeTimeout: 5000,position: 'center', });toastBottom.open();
                 mybsmiuploadphoto.value = '';
+                mybsmiuploadphotopreview.src = 'avatar.png'
               }
               else
               {
                 mybsmiuploadphotopreview.src = URL.createObjectURL(file)
               }
+            }
+            else
+            {
+              mybsmiuploadphotopreview.src = 'avatar.png'
             }
           }
       }
@@ -2337,12 +2343,240 @@ function fuploadphoto(dialog,obj)
       {
         //console.log(message);
         app.preloader.hide();
-        dialog.close();
+        dialog.close();dialog.destroy();
         app.dialog.alert("Server tidak dapat merespon",'Terjadi Kesalahan');
       },
   });
 }
-///////////////////////////////////////////////////////
+//////lengkapi data/////////////////////////////////////////////////
+
+
+
+///////verifikasi data///////////////////////////////////////////////
+function fverifikasidata()
+{
+  var dialog = app.dialog.create({
+    text: 'Penerbitan e-KTA Relawan BSMI membutuhkan verifikasi secara manual oleh pengurus. Verifikasi bisa membutuhkan waktu dalam beberapa hari.',
+    closeByBackdropClick: false,
+    destroyOnClose: true,
+    on: {
+      opened: function () {
+        //console.log('Dialog opened')
+      }
+    },
+    buttons: [
+      {
+        text: 'Nanti Saja',
+        close:true,
+        onClick: function(dialog, e)
+          {
+          }
+      },
+      {
+        text: 'Verifikasi',
+        close:true,
+        onClick: function(dialog, e)
+          {
+            fverifikasiidentitas();
+          }
+      },
+    ]
+  });
+  dialog.open();
+}
+
+function fverifikasiidentitas()
+{
+  var dialog = app.dialog.create({
+    title: 'Verifikasi Identitas',
+    closeByBackdropClick: false,
+    destroyOnClose: true,
+    content: '<div style="width:100%;height:60vh;overflow:auto;">'
+      +'<form id="mybsmi-formverifikasiidentitas" runat="server" style="display:flex;flex-direction:column;align-items:center;justify-content: center;">'
+      +'  <img id="mybsmiuploadphotopreview" src="ktpplaceholder.png" style="width:300px;height:150px;margin: 10px 10px;object-fit: contain;">'
+      +'  <input accept="image/jpeg" type="file" name="mybsmiuploadphoto" id="mybsmiuploadphoto" required validate/>'
+      +'  <div class="list no-hairlines-md">'
+      +'    <ul>'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-input-wrap">'
+      +'            <input type="text" name="nik" placeholder="NIK" required validate/>'
+      +'            <span class="input-clear-button"></span>'
+      +'            </div></div>'
+      +'        </li>'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-input-wrap">'
+      +'            <input type="text" name="nama" placeholder="Nama" required validate/>'
+      +'            <span class="input-clear-button"></span>'
+      +'            </div></div>'
+      +'        </li>'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-input-wrap">'
+      +'            <input type="text" name="ttl" placeholder="Tempat/Tgl Lahir" required validate/>'
+      +'            <span class="input-clear-button"></span>'
+      +'            </div></div>'
+      +'        </li>'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-input-wrap">'
+      +'            <input type="text" name="jeniskelamin" placeholder="Jenis Kelamin" required validate/>'
+      +'            <span class="input-clear-button"></span>'
+      +'            </div></div>'
+      +'        </li>'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-input-wrap">'
+      +'            <input type="text" name="alamat" placeholder="Alamat" required validate/>'
+      +'            <span class="input-clear-button"></span>'
+      +'            </div></div>'
+      +'        </li>'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-input-wrap">'
+      +'            <input type="text" name="rtrw" placeholder="RT/RW" required validate/>'
+      +'            <span class="input-clear-button"></span>'
+      +'            </div></div>'
+      +'        </li>'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-input-wrap">'
+      +'            <input type="text" name="keldesa" placeholder="Kel/Desa" required validate/>'
+      +'            <span class="input-clear-button"></span>'
+      +'            </div></div>'
+      +'        </li>'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-input-wrap">'
+      +'            <input type="text" name="kecamatan" placeholder="Kecamatan" required validate/>'
+      +'            <span class="input-clear-button"></span>'
+      +'            </div></div>'
+      +'        </li>'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-input-wrap">'
+      +'            <input type="text" name="agama" placeholder="Agama" required validate/>'
+      +'            <span class="input-clear-button"></span>'
+      +'            </div></div>'
+      +'        </li>'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-input-wrap">'
+      +'            <input type="text" name="statusperkawinan" placeholder="Status Perkawinan" required validate/>'
+      +'            <span class="input-clear-button"></span>'
+      +'            </div></div>'
+      +'        </li>'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-input-wrap">'
+      +'            <input type="text" name="pekerjaan" placeholder="Pekerjaan" required validate/>'
+      +'            <span class="input-clear-button"></span>'
+      +'            </div></div>'
+      +'        </li>'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-input-wrap">'
+      +'            <input type="text" name="kewarganegaraan" placeholder="Kewarganegaraan" required validate/>'
+      +'            <span class="input-clear-button"></span>'
+      +'            </div></div>'
+      +'        </li>'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-input-wrap">'
+      +'            <input type="text" name="berlakuhingga" placeholder="Berlaku Hingga" required validate/>'
+      +'            <span class="input-clear-button"></span>'
+      +'            </div></div>'
+      +'        </li>'
+      +'    </ul>'
+      +'  </div>'
+      +'</form>'
+      +'</div>',
+    on: {
+      opened: function () {
+          mybsmiuploadphoto.onchange = evt => {
+            const [file] = mybsmiuploadphoto.files
+            if (file) {
+              if (file.size > 524288)
+              {
+                //app.dialog.alert('File tidak boleh lebih dari 500 KB','Terjadi Kesalahan');
+                var toastBottom = app.toast.create({ text: 'File tidak boleh lebih dari 500 KB', closeTimeout: 5000,position: 'center', });toastBottom.open();
+                mybsmiuploadphoto.value = '';
+                mybsmiuploadphotopreview.src = 'ktpplaceholder.png'
+              }
+              else
+              {
+                mybsmiuploadphotopreview.src = URL.createObjectURL(file)
+              }
+            }
+            else
+            {
+              mybsmiuploadphotopreview.src = 'ktpplaceholder.png'
+            }
+          }
+      }
+    },
+    buttons: [
+      {
+        text: 'Cancel',
+        close:true,
+        onClick: function(dialog, e)
+          {
+          }
+      },
+      {
+        text: 'Verifikasi',
+        close:false,
+        onClick: function(dialog, e)
+          {            
+            const [file] = mybsmiuploadphoto.files
+            if (file) {
+              if (!$$('#mybsmi-formverifikasiidentitas')[0].checkValidity()) {
+                    //console.log('Check Validity!');
+                    return;
+              }
+              var dataform = JSON.stringify(app.form.convertToData('#mybsmi-formverifikasiidentitas'));//console.log(dataform);
+              const fr = new FileReader();
+              fr.onload = function(e) {
+                const obj = {
+                  filename: file.name,
+                  mimeType: file.type,
+                  bytes: [...new Int8Array(e.target.result)],
+                  ktp: dataform
+                };
+                fkirimverifikasiidentitas(dialog,obj);
+              };
+              fr.readAsArrayBuffer(file);
+            }
+            else
+            {
+              var toastBottom = app.toast.create({ text: 'Pilih file KTP', closeTimeout: 5000,position: 'center', });toastBottom.open();
+            }
+          }
+      },
+    ]
+  });
+  dialog.open();
+}
+
+function fkirimverifikasiidentitas(dialog,obj)
+{
+  //console.log(obj);
+  var data = JSON.stringify(obj);
+  app.preloader.show();
+  app.request({
+    url: apidataurl,
+    method: 'POST',
+    cache: false,
+    data : { token:mybsmiusertoken, command: 'verifikasiidentitas', data: data}, 
+    success: function (data, status, xhr)
+      {
+        app.preloader.hide();
+        dialog.close();
+        var status = JSON.parse(data).status;
+        var content = JSON.parse(data).data;
+        if (status == "success")
+        {
+          console.log(content);
+          //getdefaultdata();
+        }
+        else if (status == "failed")
+        {
+          //console.log("failed");
+          app.dialog.alert(content,'Terjadi Kesalahan');
+        }
+        else
+        {
+          //console.log("failed");
+          app.dialog.alert(content,'Terjadi Kesalahan');
+        }
+      },
+    error: function (xhr, status, message)
+      {
+        //console.log(message);
+        app.preloader.hide();
+        dialog.close();dialog.destroy();
+        app.dialog.alert("Server tidak dapat merespon",'Terjadi Kesalahan');
+      },
+  });
+}
+///////verifikasi data///////////////////////////////////////////////
+
+
 
 
 
