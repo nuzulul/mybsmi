@@ -1606,18 +1606,18 @@ $$('#my-aktivasi-screen .register-button').on('click', function () {
   
   if ((grecaptcharesponsedata == undefined) || (grecaptcharesponsedata == '')){return;}
 
-  var email = $$('#my-aktivasi-screen [name="email"]').val();
+  var email = "'"+$$('#my-aktivasi-screen [name="email"]').val();
   var password = $$('#my-aktivasi-screen [name="password"]').val();
   var konfirmpassword = $$('#my-aktivasi-screen [name="konfirmpassword"]').val();
-  var nama = $$('#my-aktivasi-screen [name="nama"]').val();
-  var jeniskelamin = $$('#my-aktivasi-screen [name="jeniskelamin"]').val();
-  var tanggallahir = $$('#my-aktivasi-screen [name="tanggallahir"]').val();
-  var alamatdomisili = $$('#my-aktivasi-screen [name="alamatdomisili"]').val();
-  var profesi = $$('#my-aktivasi-screen [name="profesi"]').val();
-  var golongandarah = $$('#my-aktivasi-screen [name="golongandarah"]').val();
-  var nohp = $$('#my-aktivasi-screen [name="nohp"]').val();
-  var cabang = $$('#my-aktivasi-screen [name="cabang"]').val();
-  var tahun = $$('#my-aktivasi-screen [name="tahun"]').val();
+  var nama = "'"+$$('#my-aktivasi-screen [name="nama"]').val();
+  var jeniskelamin = "'"+$$('#my-aktivasi-screen [name="jeniskelamin"]').val();
+  var tanggallahir = "'"+$$('#my-aktivasi-screen [name="tanggallahir"]').val();
+  var alamatdomisili = "'"+$$('#my-aktivasi-screen [name="alamatdomisili"]').val();
+  var profesi = "'"+$$('#my-aktivasi-screen [name="profesi"]').val();
+  var golongandarah = "'"+$$('#my-aktivasi-screen [name="golongandarah"]').val();
+  var nohp = "'"+$$('#my-aktivasi-screen [name="nohp"]').val();
+  var cabang = "'"+$$('#my-aktivasi-screen [name="cabang"]').val();
+  var tahun = "'"+$$('#my-aktivasi-screen [name="tahun"]').val();
   
   if(password != konfirmpassword) 
   {
@@ -1957,7 +1957,7 @@ $$('.my-logout').on('click', function () {
 
 
 ////start getdefaultdata///////////////////////////
-function getdefaultdata()
+function getdefaultdata(render=true)
 {
   app.preloader.show();
   app.request({
@@ -1973,7 +1973,7 @@ function getdefaultdata()
         if (status == "success")
         {
           //console.log(content);
-          getdefaultdatarun(content)
+          if (render){getdefaultdatarun(content)}
           window.dashboarddata = content;
         }
         else if (status == "failed")
@@ -2333,6 +2333,7 @@ function flengkapidata()
       {
         text: 'Nanti Saja',
         close:true,
+        color: 'gray',
         onClick: function(dialog, e)
           {
           }
@@ -2390,6 +2391,7 @@ function flengkapiphoto()
       {
         text: 'Cancel',
         close:true,
+        color: 'gray',
         onClick: function(dialog, e)
           {
           }
@@ -2483,6 +2485,7 @@ function fverifikasidata()
       {
         text: 'Nanti Saja',
         close:true,
+        color: 'gray',
         onClick: function(dialog, e)
           {
           }
@@ -2608,6 +2611,7 @@ function fverifikasiidentitas()
       {
         text: 'Cancel',
         close:true,
+        color: 'gray',
         onClick: function(dialog, e)
           {
           }
@@ -2766,7 +2770,7 @@ function convertekta()
         {
           //console.log(content);
           fgetekta();
-          getdefaultdata();
+          getdefaultdata(false);
         }
         else if (status == "failed")
         {
@@ -3029,7 +3033,7 @@ function fpageverifikatoridentitasrun(base64,content)
           }
       },
       {
-        text: 'Perlu Diperbaiki',
+        text: 'Tolak',
         close:true,
         onClick: function(dialog, e)
           {
