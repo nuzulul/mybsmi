@@ -213,6 +213,21 @@
           </div>
 
 
+          <div class="list mybsmi-verifikatormenu" style="display:none">
+            <ul>
+              <li>
+                <a href="/verifikator/" class="item-content item-link panel-close">
+                  <div class="item-media">
+                    <i class="icon f7-icons">checkmark_2</i>
+                  </div>
+                  <div class="item-inner">
+                    <div class="item-title">Verifikator</div>
+                  </div>
+                </a>
+              </li>
+            </ul>
+          </div>
+
 <!--
           <div class="list">
             <ul>
@@ -1380,8 +1395,8 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 var $$ = Dom7;
-var apiuserurl = "https://script.google.com/macros/s/AKfycbycq0ASyka47nBcEl9qtknDV62DmPElA79NurMm28G602L3NkzeU9qpSL6YUSr2D3xo4A/exec";
-var apidataurl = "https://script.google.com/macros/s/AKfycbw_HP0Pwp5n6FRMD85SOf-MbWh4PCjyI6kQgFgP1EZlsa0VVkjRtBam-Y8TmHl2lqeN/exec";
+var apiuserurl = "https://script.google.com/macros/s/AKfycbx_lsbdEuP1BtjCXwgMK9_8NTxGumRan9kYO9q6_5gntGrI-bNiyfM-soTQj2ZVtbEZrQ/exec";
+var apidataurl = "https://script.google.com/macros/s/AKfycbzKpcK0TIJw7VLk4cqokcC9bkObPPHnRvByMOciktv9IP89di3gLOojYHwAToy_cLwE/exec";
 var mybsmiaktivasi = 'd426d702f89bac9fb66b22ede9593b62a447bf4154dfac317a72fcf4f168172a';
 var grecaptcharesponsedata = '';
 
@@ -1446,6 +1461,27 @@ routes: [
         resolve();
     },
   },
+  {
+    path: '/verifikator/',
+    url: 'verifikator.html',
+    on: {
+      pageAfterIn: function test (e, page) {
+        fpageverifikator();
+      },
+    },
+    beforeEnter: function ({ resolve, reject }) {
+            let data = JSON.parse(dashboarddata.user.usermydata)
+            if (data.verifikator)
+            {
+                resolve();
+            }
+            else
+            {
+                app.dialog.alert('Tidak berhak', 'Status')
+                reject();
+            }
+    },
+  },
 ],
 });
 
@@ -1494,6 +1530,11 @@ function fperiksauserstatus({ resolve, reject })
             reject();
           }
 
+       }
+       else if (dashboarddata.user.userstatus === 'Tertolak')
+       {
+          app.dialog.alert('Verifikasi gagal hubungi admin', 'Status')
+          reject();
        }
        else
        {
@@ -1995,7 +2036,13 @@ function getdefaultdatarun(data)
     el: '#mybsmi-cabang',
     value: ratiocabang,
     valueText: cabang,
-  })  
+  })
+  
+  let ver = JSON.parse(data.user.usermydata)
+  if (ver.verifikator)
+  {
+    $$('.mybsmi-verifikatormenu').show();
+  }  
   
 }
 ///end getdefaultdata//////////////////////////////
@@ -2826,6 +2873,218 @@ function getriwayatdatarun(content)
   $$('.mybsmi-riwayat').html(data);
 }
 /////fpageriwayat////////////////////////////////////////////
+
+
+//////////fpageverifikator////////////////////////////////////////////
+function fpageverifikator()
+{
+  app.preloader.show();
+  app.request({
+    url: apidataurl,
+    method: 'POST',
+    cache: false,
+    data : { token:mybsmiusertoken, command: 'getverifikatordata'}, 
+    success: function (data, status, xhr)
+      {
+        app.preloader.hide();
+        var status = JSON.parse(data).status;
+        var content = JSON.parse(data).data;
+        if (status == "success")
+        {
+          
+          fpageverifikatorrun(content);
+        }
+        else if (status == "failed")
+        {
+          //console.log("failed");
+        }
+        else
+        {
+          //console.log("failed");
+        }
+      },
+    error: function (xhr, status, message)
+      {
+        console.log(message);
+        app.preloader.hide();
+      },
+  })
+}
+
+function fpageverifikatorrun(content)
+{
+  var data = '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th>Nama</th><th>Email</th><th>Cabang</th><th></th></tr></thead><tbody>';
+  for (i=0;i<content.length;i++)
+  {
+      data += '<tr><td data-collapsible-title="Nama">'+content[i][4]+'</td><td data-collapsible-title="Email">'+content[i][2]+'</td><td data-collapsible-title="Cabang">'+content[i][11]+'</td><td><a class="button button-fill mybsmi-verifikatoraction" data-user="'+btoa(JSON.stringify(content[i]))+'">Periksa</a></td></tr>';
+  }
+  data += '</tbody></table></div>';
+  $$('.mybsmi-verifikator').html(data);
+
+  $$('.mybsmi-verifikator a').on('click', function (e) {
+        
+        //app.dialog.confirm('Pembuatan e-KTA memerlukan waktu 2-4 menit.', 'Pemberitahuan', function (){fbuatekta();})
+        var base64 = this.attributes["data-user"].value;
+        fpageverifikatoridentitas(base64)
+  });
+}
+
+function fpageverifikatoridentitas(base64)
+{
+  var data = atob(base64);data = JSON.parse(data);
+  var uid = data[1];
+  app.preloader.show();
+  app.request({
+    url: apidataurl,
+    method: 'POST',
+    cache: false,
+    data : { token:mybsmiusertoken, command: 'getverifikatoridentitasdata', uid:uid}, 
+    success: function (data, status, xhr)
+      {
+        app.preloader.hide();
+        var status = JSON.parse(data).status;
+        var content = JSON.parse(data).data;
+        if (status == "success")
+        {
+          
+          fpageverifikatoridentitasrun(base64,content);
+        }
+        else if (status == "failed")
+        {
+          //console.log("failed");
+        }
+        else
+        {
+          //console.log("failed");
+        }
+      },
+    error: function (xhr, status, message)
+      {
+        console.log(message);
+        app.preloader.hide();
+      },
+  })
+}
+
+function fpageverifikatoridentitasrun(base64,content)
+{
+  var data = atob(base64);data = JSON.parse(data);
+  var dialog = app.dialog.create({
+    title: 'Verifikasi Akun Relawan',
+    content:''
+      +'<div style="width:100%;height:50vh;overflow:auto;">'
+      +'  <div style="display:flex;flex-direction:column;align-items:center;justify-content: center;">'
+      +'      <img src="https://drive.google.com/uc?export=view&id='+data[13]+'" style="width:150px;height:150px;margin: 10px 10px;border-radius: 50%;object-fit: cover;">'
+      +'      <p style="font-weight:bold;">Data Akun</p>'
+      +'      <div class="data-table"><table><tbody>'
+      +'          <tr><td>Nama</td><td>'+data[4]+'</td></tr>'
+      +'          <tr><td>Email</td><td>'+data[2]+'</td></tr>'
+      +'          <tr><td>Nama</td><td>'+data[11]+'</td></tr>'
+      +'          <tr><td>Jenis Kelamin</td><td>'+data[5]+'</td></tr>'
+      +'          <tr><td>Alamat</td><td>'+data[7]+'</td></tr>'
+      +'          <tr><td>Profesi</td><td>'+data[8]+'</td></tr>'
+      +'          <tr><td>Golongan Darah</td><td>'+data[9]+'</td></tr>'
+      +'          <tr><td>No HP</td><td>'+data[10]+'</td></tr>'
+      +'          <tr><td>Tahun Bergabung</td><td>'+data[12]+'</td></tr>'
+      +'      </tbody></table></div>'
+
+      +'      <p style="font-weight:bold;">Data Sesuai Identitas</p>'
+      +'      <div class="data-table"><table><tbody>'
+      +'          <tr><td>NIK</td><td>'+content[0][4]+'</td></tr>'
+      +'          <tr><td>Nama</td><td>'+content[0][5]+'</td></tr>'
+      +'          <tr><td>TTL</td><td>'+content[0][6]+'</td></tr>'
+      +'          <tr><td>Jenis Kelamin</td><td>'+content[0][7]+'</td></tr>'
+      +'          <tr><td>Alamat</td><td>'+content[0][8]+'</td></tr>'
+      +'          <tr><td>RT/RW</td><td>'+content[0][9]+'</td></tr>'
+      +'          <tr><td>Desa/Kelurahan</td><td>'+content[0][10]+'</td></tr>'
+      +'          <tr><td>Kecamatan</td><td>'+content[0][11]+'</td></tr>'
+      +'          <tr><td>Kabupaten</td><td>'+content[0][12]+'</td></tr>'
+      +'          <tr><td>Provinsi</td><td>'+content[0][13]+'</td></tr>'
+      +'          <tr><td>Agama</td><td>'+content[0][14]+'</td></tr>'
+      +'          <tr><td>Status Perkawinan</td><td>'+content[0][15]+'</td></tr>'
+      +'          <tr><td>Pekerjaan</td><td>'+content[0][16]+'</td></tr>'
+      +'          <tr><td>Kewarganegaraan</td><td>'+content[0][17]+'</td></tr>'
+      +'      </tbody></table></div>'
+      +'  </div>'
+      +'</div>',
+    closeByBackdropClick: false,
+    destroyOnClose: true,
+    verticalButtons: true,
+    on: {
+      opened: function () {
+        //console.log('Dialog opened')
+      }
+    },
+    buttons: [
+      {
+        text: 'Disetujui',
+        close:true,
+        color: 'green',
+        onClick: function(dialog, e)
+          {
+            app.dialog.confirm('Apakah Anda yakin menyetujui permintaan verifikasi dari'+data[11], 'Konfirmasi', function (){fpageverifikatorkeputusan(data[1],'disetujui');})
+          }
+      },
+      {
+        text: 'Perlu Diperbaiki',
+        close:true,
+        onClick: function(dialog, e)
+          {
+            app.dialog.confirm('Apakah Anda yakin menolak permintaan verifikasi dari'+data[11], 'Konfirmasi', function (){fpageverifikatorkeputusan(data[1],'ditolak');})
+          }
+      },
+      {
+        text: 'Cancel',
+        close:true,
+        color: 'gray',
+        onClick: function(dialog, e)
+          {
+
+          }
+      },
+    ]
+  });
+  dialog.open();
+}
+
+function fpageverifikatorkeputusan(uid,hasil)
+{
+  var data = atob(base64);data = JSON.parse(data);
+  var verivikator = 'verifikator-nama:'+dashboarddata.user.usernama+',email:'+dashboarddata.user.useremail+',uid:'+dashboarddata.user.useruid;
+  var uid = data[1];
+  app.preloader.show();
+  app.request({
+    url: apidataurl,
+    method: 'POST',
+    cache: false,
+    data : { token:mybsmiusertoken, command: 'verifikatoridentitaskeputusan', uid:uid,hasil:hasil,verifikator:verifikator}, 
+    success: function (data, status, xhr)
+      {
+        app.preloader.hide();
+        var status = JSON.parse(data).status;
+        var content = JSON.parse(data).data;
+        if (status == "success")
+        {
+          
+          console.log(content);
+        }
+        else if (status == "failed")
+        {
+          //console.log("failed");
+        }
+        else
+        {
+          //console.log("failed");
+        }
+      },
+    error: function (xhr, status, message)
+      {
+        console.log(message);
+        app.preloader.hide();
+      },
+  })
+}
+////////fpageverifikator//////////////////////////////////////////////
 </script>
 <!--end script------------------------------------------------------------------------------->  
 </body>
