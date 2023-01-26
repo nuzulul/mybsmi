@@ -1606,7 +1606,7 @@ $$('#my-aktivasi-screen .register-button').on('click', function () {
   
   if ((grecaptcharesponsedata == undefined) || (grecaptcharesponsedata == '')){return;}
 
-  var email = "'"+$$('#my-aktivasi-screen [name="email"]').val();
+  var email = $$('#my-aktivasi-screen [name="email"]').val();
   var password = $$('#my-aktivasi-screen [name="password"]').val();
   var konfirmpassword = $$('#my-aktivasi-screen [name="konfirmpassword"]').val();
   var nama = "'"+$$('#my-aktivasi-screen [name="nama"]').val();
