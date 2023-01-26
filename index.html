@@ -1353,7 +1353,7 @@
                 </li>
                 <li class="item-content item-input">
                   <div style="padding:20px 20px;justify-content:center;align-items:center;display:flex;width:100%;">
-                  <div class="g-recaptcha" data-sitekey="6LcP1RskAAAAANtjMoK9vf0tL37hI_uRIxsQm9-k" data-callback="grecaptcharesponse" data-expired-callback="grecaptchaexpired"></div>
+                  <div id="mybsmi-grecaptchaaktivasi" class="g-recaptcha1" data-sitekey="6LcP1RskAAAAANtjMoK9vf0tL37hI_uRIxsQm9-k" data-callback="grecaptcharesponse" data-expired-callback="grecaptchaexpired"></div>
                   </div>
                 <li>
               </ul>
@@ -1592,6 +1592,7 @@ $$('.mybsmi-aktivasiscreen').on('click', function () {
     if (pinhash === mybsmiaktivasi)
     {
       app.loginScreen.open('#my-aktivasi-screen');
+      window.grecaptchaid = grecaptcha.render( 'mybsmi-grecaptchaaktivasi');
     }
   }
   )
@@ -1660,7 +1661,7 @@ $$('#my-aktivasi-screen .register-button').on('click', function () {
         app.dialog.alert('Tidak dapat memproses data','Terjadi Kesalahan');
       },
   })
-  grecaptcha.reset();grecaptcharesponsedata = '';
+  grecaptcha.reset(grecaptchaid);grecaptcharesponsedata = '';
 });
 //end form aktivasi//////////////////////////
 
