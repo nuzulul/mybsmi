@@ -1396,7 +1396,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 var $$ = Dom7;
 var apiuserurl = "https://script.google.com/macros/s/AKfycbx_lsbdEuP1BtjCXwgMK9_8NTxGumRan9kYO9q6_5gntGrI-bNiyfM-soTQj2ZVtbEZrQ/exec";
-var apidataurl = "https://script.google.com/macros/s/AKfycbyjogDk59PVctJm2i7p5W7GMspSIUFm-OBprG2cjHV4B6LyOGjbQCkfiIwFq669yWX4/exec";
+var apidataurl = "https://script.google.com/macros/s/AKfycbwFSwBcUZR_GAFX706zoikSQP6ip7muj2i1jLcSzC3QFtz0_uiLTUBSf-lKJSJk6dJj/exec";
 var mybsmiaktivasi = 'd426d702f89bac9fb66b22ede9593b62a447bf4154dfac317a72fcf4f168172a';
 var grecaptcharesponsedata = '';
 
@@ -1885,6 +1885,69 @@ if (code !== undefined)
 //endverifikasiemail/////////////////////////
 
 
+
+
+
+////pencarian///////////////////////////////////////////////
+var params = getParams(window.location.href);
+var cari = params.cari;
+if (cari !== undefined)
+{
+  app.preloader.show();
+  app.request({
+    url: apidataurl,
+    method: 'GET',
+    cache: false,
+    data : { command: 'pencarian', cari: cari}, 
+    success: function (data, status, xhr)
+      {
+        //console.log(data);
+        app.preloader.hide();
+
+        var status = JSON.parse(data).status;
+        var data = JSON.parse(data).data;
+        if (status == "success")
+        {
+            //console.log(data);
+            var dialog = app.dialog.create({
+              title: 'Data ditemukan',
+              content: '<p>NIB : '+cari+'</p><p>Nama : '+data.nama+'</p><p>Cabang : '+data.cabang+'</p>',
+              on: {
+                opened: function () {
+                  //console.log('Dialog opened')
+                }
+              },
+              buttons: [
+                {
+                  text: 'OK',
+                  close:true,
+                  onClick: function(dialog, e)
+                    {
+                      window.location.href = 'https://mybsmi.bsmijatim.org';
+                    }
+                }
+              ]
+            })
+            dialog.open();
+        }
+        else if (status == "failed")
+        {
+          app.dialog.alert(data,'Terjadi Kesalahan');
+        }
+        else
+        {
+          app.dialog.alert('Tidak dapat memproses data','Terjadi Kesalahan');
+        }
+      },
+    error: function (xhr, status, message)
+      {
+        //console.log(message);
+        app.preloader.hide();
+        app.dialog.alert('Tidak dapat memproses data','Terjadi Kesalahan');
+      },
+  })
+}
+////pencarian//////////////////////////////////////////////
 
 
 
