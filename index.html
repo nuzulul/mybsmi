@@ -1647,7 +1647,7 @@ $$('#my-aktivasi-screen .register-button').on('click', function () {
         }
         else if (status == "failed")
         {
-          app.dialog.alert(data,'Terjadi Kesalahan');
+          app.dialog.alert(data,'Terjadi Kesalahan');///////////////////////////////////////////////////////////////////////////////////////
         }
         else
         {
@@ -1708,7 +1708,7 @@ $$('#my-login-screen .login-button').on('click', function () {
         }
         else if (status == "failed")
         {
-          app.dialog.alert(data,'Terjadi Kesalahan');
+          app.dialog.alert(data,'Terjadi Kesalahan');///////////////////////////////////////////////////////////////////////////////////////
           $$('#my-login-screen')[0].reset();
         }
         else if (status == "verifikasiemail")
@@ -1749,7 +1749,7 @@ $$('#my-login-screen .login-button').on('click', function () {
                               }
                               else if (status == "failed")
                               {
-                                app.dialog.alert(data,'Terjadi Kesalahan');
+                                app.dialog.alert(data,'Terjadi Kesalahan');/////////////////////////////////////////////////////////
                               }
                               else if (status == "dayliquotalimit")
                               {
@@ -1780,7 +1780,7 @@ $$('#my-login-screen .login-button').on('click', function () {
         }
         else if (status == "suspen")
         {
-          app.dialog.alert(data,'Pemberitahuan');
+          app.dialog.alert(data,'Pemberitahuan');///////////////////////////////////////////////////////////////////////////////////////
           $$('#my-login-screen')[0].reset();
         }
         else
@@ -1911,7 +1911,7 @@ if (cari !== undefined)
             //console.log(data);
             var dialog = app.dialog.create({
               title: 'Data ditemukan',
-              content: '<p>NIB : '+cari+'</p><p>Nama : '+data.nama+'</p><p>Cabang : '+data.cabang+'</p>',
+              content: '<p>NIB : '+cari+'</p><p>Nama : '+data.nama+'</p><p>Cabang : '+data.cabang+'</p>',////////////////////////////////////////////
               on: {
                 opened: function () {
                   //console.log('Dialog opened')
@@ -1932,7 +1932,7 @@ if (cari !== undefined)
         }
         else if (status == "failed")
         {
-          app.dialog.alert(data,'Terjadi Kesalahan');
+          app.dialog.alert(data,'Terjadi Kesalahan');///////////////////////////////////////////////////////////////////////////////////////
         }
         else
         {
@@ -2059,8 +2059,8 @@ function getdefaultdata(render=true)
 
 function getdefaultdatarun(data)
 {
-  $$('.mybsmi-currentusernama').text(data.user.usernama);
-  if (data.user.userphoto !== '') {$$('.mybsmi-avatar').attr('src','https://drive.google.com/uc?export=view&id='+data.user.userphoto);}
+  $$('.mybsmi-currentusernama').text(data.user.usernama);///////////////////////////////////////////////////////////////////////////////////////
+  if (data.user.userphoto !== '') {$$('.mybsmi-avatar').attr('src','https://drive.google.com/uc?export=view&id='+data.user.userphoto);}/////////////
   if (data.user.userstatus === "Terverifikasi"){$$('.mybsmi-avatar-badge').css('display','flex');};
   flogout();
   
@@ -2073,11 +2073,11 @@ function getdefaultdatarun(data)
   for(i=0;i<datacabang.length;i++)
   {
     if (datacabang[i].cabang == 'BSMI Jawa Timur')
-    {
+    {///////////////////////////////////////////////////////////////////////////////////////
       rekapitulasiprov += '<tr> <td class="label-cell">'+datacabang[i].cabang+'</td> <td class="numeric-cell">'+datacabang[i].relawan+'</td> </tr>';
     }
     else
-    {
+    {///////////////////////////////////////////////////////////////////////////////////////
     rekapitulasicabang += '<tr> <td class="label-cell">'+datacabang[i].cabang+'</td> <td class="numeric-cell">'+datacabang[i].relawan+'</td> </tr>';
     cabang = cabang+1;
     }
@@ -2135,7 +2135,7 @@ function grecaptchaexpired()
 ////fpagebiodata////////////////////////////
 function fpagebiodata()
 {
-    var data = dashboarddata.user;
+    var data = dashboarddata.user;///////////////////////////////////////////////////////////////////////////////////////
     $$('.mybsmi-biodata .mybsmi-userphoto').attr('src','https://drive.google.com/uc?export=view&id='+data.userphoto);
     $$('.mybsmi-biodata .mybsmi-usernama').text(data.usernama);
     $$('.mybsmi-biodata .mybsmi-userjeniskelamin').text(data.userjeniskelamin);
@@ -2856,38 +2856,47 @@ function convertekta()
 
 function fgetekta()
 {
-  app.preloader.show();
-  app.request({
-    url: apidataurl,
-    method: 'POST',
-    cache: false,
-    data : { token:mybsmiusertoken, command: 'getekta'}, 
-    success: function (data, status, xhr)
-      {
-        app.preloader.hide();
-        var status = JSON.parse(data).status;
-        var content = JSON.parse(data).data;
-        if (status == "success")
-        {
-          //console.log(content);
-          $$('.mybsmi-ektabsmi').html('<img src="https://drive.google.com/uc?export=view&id='+content+'" style="width:100%;max-width:200px;cursor:pointer;" onclick="javascript:myimage(this)">');
-        }
-        else if (status == "failed")
-        {
-          //console.log("failed");
-        }
-        else
-        {
-          //console.log("failed");
-        }
-      },
-    error: function (xhr, status, message)
-      {
-        //console.log(message);
-        app.dialog.alert("Server tidak dapat merespon",'Terjadi Kesalahan');
-        app.preloader.hide();
-      },
-  })
+
+  if (typeof mybsmiekta === 'undefined' || mybsmiekta === null)
+  {
+      app.preloader.show();
+      app.request({
+        url: apidataurl,
+        method: 'POST',
+        cache: false,
+        data : { token:mybsmiusertoken, command: 'getekta'}, 
+        success: function (data, status, xhr)
+          {
+            app.preloader.hide();
+            var status = JSON.parse(data).status;
+            var content = JSON.parse(data).data;
+            if (status == "success")
+            {
+              //console.log(content);
+              window.mybsmiekta = content;
+              $$('.mybsmi-ektabsmi').html('<img src="https://drive.google.com/uc?export=view&id='+content+'" style="width:100%;max-width:200px;cursor:pointer;" onclick="javascript:myimage(this)">');///////////////////////////////////////
+            }
+            else if (status == "failed")
+            {
+              //console.log("failed");
+            }
+            else
+            {
+              //console.log("failed");
+            }
+          },
+        error: function (xhr, status, message)
+          {
+            //console.log(message);
+            app.dialog.alert("Server tidak dapat merespon",'Terjadi Kesalahan');
+            app.preloader.hide();
+          },
+      })
+  }
+  else
+  {
+        $$('.mybsmi-ektabsmi').html('<img src="https://drive.google.com/uc?export=view&id='+mybsmiekta+'" style="width:100%;max-width:200px;cursor:pointer;" onclick="javascript:myimage(this)">');///////////////////////////////////////
+  }
 }
 //////fpageekta///////////////////////////////////////////////////
 
@@ -2896,37 +2905,45 @@ function fgetekta()
 /////fpageriwayat////////////////////////////////////////////
 function fpageriwayat()
 {
-  app.preloader.show();
-  app.request({
-    url: apidataurl,
-    method: 'POST',
-    cache: false,
-    data : { token:mybsmiusertoken, command: 'getriwayatdata'}, 
-    success: function (data, status, xhr)
-      {
-        app.preloader.hide();
-        var status = JSON.parse(data).status;
-        var content = JSON.parse(data).data;
-        if (status == "success")
-        {
-          //console.log(content);
-          getriwayatdatarun(content)
-        }
-        else if (status == "failed")
-        {
-          //console.log("failed");
-        }
-        else
-        {
-          //console.log("failed");
-        }
-      },
-    error: function (xhr, status, message)
-      {
-        console.log(message);
-        app.preloader.hide();
-      },
-  })
+  if (typeof mybsmiriwayat === 'undefined' || mybsmiriwayat === null)
+  {
+      app.preloader.show();
+      app.request({
+        url: apidataurl,
+        method: 'POST',
+        cache: false,
+        data : { token:mybsmiusertoken, command: 'getriwayatdata'}, 
+        success: function (data, status, xhr)
+          {
+            app.preloader.hide();
+            var status = JSON.parse(data).status;
+            var content = JSON.parse(data).data;
+            if (status == "success")
+            {
+              //console.log(content);
+              window.mybsmiriwayat = content;
+              getriwayatdatarun(content)
+            }
+            else if (status == "failed")
+            {
+              //console.log("failed");
+            }
+            else
+            {
+              //console.log("failed");
+            }
+          },
+        error: function (xhr, status, message)
+          {
+            console.log(message);
+            app.preloader.hide();
+          },
+      })
+  }
+  else
+  {
+    getriwayatdatarun(mybsmiriwayat)
+  }
 }
 
 function getriwayatdatarun(content)
@@ -2946,36 +2963,48 @@ function getriwayatdatarun(content)
 //////////fpageverifikator////////////////////////////////////////////
 function fpageverifikator()
 {
-  app.preloader.show();
-  app.request({
-    url: apidataurl,
-    method: 'POST',
-    cache: false,
-    data : { token:mybsmiusertoken, command: 'getverifikatordata'}, 
-    success: function (data, status, xhr)
-      {
-        app.preloader.hide();
-        var status = JSON.parse(data).status;
-        var content = JSON.parse(data).data;
-        if (status == "success")
-        {
-          
-          fpageverifikatorrun(content);
-        }
-        else if (status == "failed")
-        {
-          //console.log("failed");
-        }
-        else
-        {
-          //console.log("failed");
-        }
-      },
-    error: function (xhr, status, message)
-      {
-        console.log(message);
-        app.preloader.hide();
-      },
+  if (typeof mybsmiverifikatordata === 'undefined' || mybsmiverifikatordata === null)
+  {
+      app.preloader.show();
+      app.request({
+        url: apidataurl,
+        method: 'POST',
+        cache: false,
+        data : { token:mybsmiusertoken, command: 'getverifikatordata'}, 
+        success: function (data, status, xhr)
+          {
+            app.preloader.hide();
+            var status = JSON.parse(data).status;
+            var content = JSON.parse(data).data;
+            if (status == "success")
+            {
+              window.mybsmiverifikatordata = content;
+              fpageverifikatorrun(content);
+            }
+            else if (status == "failed")
+            {
+              //console.log("failed");
+            }
+            else
+            {
+              //console.log("failed");
+            }
+          },
+        error: function (xhr, status, message)
+          {
+            console.log(message);
+            app.preloader.hide();
+          },
+      })
+  }
+  else
+  {
+    fpageverifikatorrun(mybsmiverifikatordata);
+  }
+
+  $$('.mybsmi-verifikatorrefresh').on('click', function () {
+    mybsmiverifikatordata = null
+    fpageverifikator()
   })
 }
 
@@ -2984,7 +3013,7 @@ function fpageverifikatorrun(content)
   var data = '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th>Nama</th><th>Email</th><th>Cabang</th><th></th></tr></thead><tbody>';
   for (i=0;i<content.length;i++)
   {
-      data += '<tr><td data-collapsible-title="Nama">'+content[i][4]+'</td><td data-collapsible-title="Email">'+content[i][2]+'</td><td data-collapsible-title="Cabang">'+content[i][11]+'</td><td><a class="button button-fill mybsmi-verifikatoraction" data-user="'+btoa(JSON.stringify(content[i]))+'">Periksa</a></td></tr>';
+      data += '<tr><td data-collapsible-title="Nama">'+content[i][4]+'</td><td data-collapsible-title="Email">'+content[i][2]+'</td><td data-collapsible-title="Cabang">'+content[i][11]+'</td><td><a class="button button-fill mybsmi-verifikatoraction" data-user="'+btoa(JSON.stringify(content[i]))+'">Periksa</a></td></tr>';///////////////////////////////////////////////////////////////////////////////////////
   }
   data += '</tbody></table></div>';
   $$('.mybsmi-verifikator').html(data);
@@ -3039,7 +3068,7 @@ function fpageverifikatoridentitasrun(base64,content)
   var data = atob(base64);data = JSON.parse(data);
   var dialog = app.dialog.create({
     title: 'Verifikasi Akun Relawan',
-    content:''
+    content:''////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       +'<div style="width:100%;height:50vh;overflow:auto;">'
       +'  <div style="display:flex;flex-direction:column;align-items:center;justify-content: center;">'
       +'      <img src="https://drive.google.com/uc?export=view&id='+data[13]+'" style="width:150px;height:150px;margin: 10px 10px;border-radius: 50%;object-fit: cover;">'
@@ -3074,7 +3103,7 @@ function fpageverifikatoridentitasrun(base64,content)
       +'          <tr><td>Kewarganegaraan</td><td>'+content[0][17]+'</td></tr>'
       +'      </tbody></table></div>'
       +'  </div>'
-      +'</div>',
+      +'</div>',//////////////////////////////////////////////////////////////////////////////////////////////////
     closeByBackdropClick: false,
     destroyOnClose: true,
     verticalButtons: true,
@@ -3089,7 +3118,7 @@ function fpageverifikatoridentitasrun(base64,content)
         close:true,
         color: 'green',
         onClick: function(dialog, e)
-          {
+          {///////////////////////////////////////////////////////////////////////////////////////
             app.dialog.confirm('Apakah Anda yakin menyetujui permintaan verifikasi dari '+data[11], 'Konfirmasi', function ()
             {
               fpageverifikatorkeputusan(data[1],'disetujui','');              
@@ -3100,7 +3129,7 @@ function fpageverifikatoridentitasrun(base64,content)
         text: 'Tolak',
         close:true,
         onClick: function(dialog, e)
-          {
+          {///////////////////////////////////////////////////////////////////////////////////////
             app.dialog.confirm('Apakah Anda yakin menolak permintaan verifikasi dari '+data[11], 'Konfirmasi', function ()
             {
               app.dialog.prompt('', 'Tambahkan Catatan', function (catatan){fpageverifikatorkeputusan(data[1],'ditolak',catatan);})
