@@ -1420,6 +1420,10 @@ el: '#app',
 theme: 'aurora',
 name: 'MyBSMI',
 id: 'mybsmi.bsmijatim.org',
+view: {
+  browserHistory: true,
+  browserHistorySeparator: '#page',
+},
 routes: [
   {
     path: '/',
@@ -1439,8 +1443,8 @@ routes: [
         fpagebiodata();
       },
     },
-    beforeEnter: function ({ resolve, reject }) {
-        fperiksauserdata({ resolve, reject })
+    beforeEnter: function ({ resolve, reject }) {          
+          fperiksauserdata({ resolve, reject })
     },
   },
   {
@@ -1476,6 +1480,13 @@ routes: [
       },
     },
     beforeEnter: function ({ resolve, reject }) {
+      function fperiksakesiapan({ resolve, reject })
+      {
+          if (typeof dashboarddata === 'undefined' || dashboarddata === null) {
+            // variable is undefined or null
+            setTimeout(function(){ fperiksakesiapan({ resolve, reject }); }, 1000);
+            return;
+          }
             let data = JSON.parse(dashboarddata.user.usermydata)
             if (data.verifikator)
             {
@@ -1486,6 +1497,8 @@ routes: [
                 app.dialog.alert('Tidak punya izin', 'Status')
                 reject();
             }
+      }
+      fperiksakesiapan({ resolve, reject })
     },
   },
 ],
@@ -1493,6 +1506,12 @@ routes: [
 
 function fperiksauserdata({ resolve, reject })
 {
+    if (typeof dashboarddata === 'undefined' || dashboarddata === null) {
+      // variable is undefined or null
+      setTimeout(function(){ fperiksauserdata({ resolve, reject }); }, 1000);
+      return;
+    }
+
       if (dashboarddata.user.userphoto !== '')
       {
         resolve();
@@ -1507,6 +1526,12 @@ function fperiksauserdata({ resolve, reject })
 
 function fperiksauserstatus({ resolve, reject })
 {
+    if (typeof dashboarddata === 'undefined' || dashboarddata === null) {
+      // variable is undefined or null
+      setTimeout(function(){ fperiksauserstatus({ resolve, reject }); }, 1000);
+      return;
+    }
+    
        if (dashboarddata.user.userstatus === 'Terverifikasi')
        {
           fperiksauserdata({ resolve, reject })
@@ -1551,14 +1576,14 @@ function fperiksauserstatus({ resolve, reject })
 
 app.on('pageInit', function (page) {
   //console.log('Page is now pageInit');
-  app.preloader.show();
-  setTimeout(function () {app.preloader.hide();}, 2000);
+  let mypreloader = app.dialog.preloader();
+  setTimeout(function () {mypreloader.close();}, 2000);
   
 });
 
 app.on('pageAfterIn', function (page) {
   //console.log('Page is pageAfterIn');
-  app.preloader.hide();
+  mypreloader.close();
 });
 
 // Fix col sizes
@@ -1631,7 +1656,7 @@ $$('#my-aktivasi-screen .register-button').on('click', function () {
     app.dialog.alert('Password dan Konfirm Password Harus Sama','Terjadi Kesalahan');
     return;
   }
-  app.preloader.show();
+  let mypreloader = app.dialog.preloader();
   app.request({
     url: apiuserurl,
     method: 'POST',
@@ -1640,7 +1665,7 @@ $$('#my-aktivasi-screen .register-button').on('click', function () {
     success: function (data, status, xhr)
       {
         //console.log(data);
-        app.preloader.hide();
+        mypreloader.close();
 
         var status = JSON.parse(data).status;
         var data = JSON.parse(data).data;
@@ -1663,7 +1688,7 @@ $$('#my-aktivasi-screen .register-button').on('click', function () {
     error: function (xhr, status, message)
       {
         //console.log(message);
-        app.preloader.hide();
+        mypreloader.close();
         app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
       },
   })
@@ -1688,7 +1713,7 @@ $$('#my-login-screen .login-button').on('click', function () {
   
   var email = $$('#my-login-screen [name="email"]').val();
   var password = $$('#my-login-screen [name="password"]').val();
-  app.preloader.show();
+  let mypreloader = app.dialog.preloader();
   app.request({
     url: apiuserurl,
     method: 'POST',
@@ -1697,7 +1722,7 @@ $$('#my-login-screen .login-button').on('click', function () {
     success: function (data, status, xhr)
       {
         //console.log(data);
-        app.preloader.hide();
+        mypreloader.close();
                 
         var status = JSON.parse(data).status;
         var data = JSON.parse(data).data;
@@ -1735,7 +1760,7 @@ $$('#my-login-screen .login-button').on('click', function () {
                   close:false,
                   onClick: function(dialog, e)
                     {
-                        app.preloader.show();
+                        let mypreloader = app.dialog.preloader();
                         app.request({
                           url: apiuserurl,
                           method: 'POST',
@@ -1744,7 +1769,7 @@ $$('#my-login-screen .login-button').on('click', function () {
                           success: function (data, status, xhr)
                             {
                               //console.log(data);
-                              app.preloader.hide();
+                              mypreloader.close();
 
                               var status = JSON.parse(data).status;
                               var data = JSON.parse(data).data;
@@ -1769,7 +1794,7 @@ $$('#my-login-screen .login-button').on('click', function () {
                           error: function (xhr, status, message)
                             {
                               //console.log(message);
-                              app.preloader.hide();
+                              mypreloader.close();
                               app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
                             },
                         })
@@ -1798,7 +1823,7 @@ $$('#my-login-screen .login-button').on('click', function () {
     error: function (xhr, status, message)
       {
         //console.log(message);
-        app.preloader.hide();
+        mypreloader.close();
         app.dialog.alert('Server sedang sibuk','Terjadi Kesalahan');
       },
   })
@@ -1835,7 +1860,7 @@ var code = params.verifikasi;//console.log(code);
 
 if (code !== undefined)
 {
-  app.preloader.show();
+  let mypreloader = app.dialog.preloader();
   app.request({
     url: apiuserurl,
     method: 'GET',
@@ -1844,7 +1869,7 @@ if (code !== undefined)
     success: function (data, status, xhr)
       {
         //console.log(data);
-        app.preloader.hide();
+        mypreloader.close();
 
         var status = JSON.parse(data).status;
         var data = JSON.parse(data).data;
@@ -1882,7 +1907,7 @@ if (code !== undefined)
     error: function (xhr, status, message)
       {
         //console.log(message);
-        app.preloader.hide();
+        mypreloader.close();
         app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
       },
   })
@@ -1899,7 +1924,7 @@ var params = getParams(window.location.href);
 var cari = params.cari;
 if (cari !== undefined)
 {
-  app.preloader.show();
+  let mypreloader = app.dialog.preloader();
   app.request({
     url: apidataurl,
     method: 'GET',
@@ -1908,7 +1933,7 @@ if (cari !== undefined)
     success: function (data, status, xhr)
       {
         //console.log(data);
-        app.preloader.hide();
+        mypreloader.close();
 
         var status = JSON.parse(data).status;
         var data = JSON.parse(data).data;
@@ -1948,7 +1973,7 @@ if (cari !== undefined)
     error: function (xhr, status, message)
       {
         //console.log(message);
-        app.preloader.hide();
+        mypreloader.close();
         app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
       },
   })
@@ -1964,7 +1989,7 @@ if (localStorage.getItem("mybsmiuser") !== null) {
   var json = window.localStorage["mybsmiuser"];
   var email = JSON.parse(json).email;
   var token = JSON.parse(json).token
-  app.preloader.show();
+  let mypreloader = app.dialog.preloader();
   app.request({
     url: apiuserurl,
     method: 'POST',
@@ -1973,7 +1998,7 @@ if (localStorage.getItem("mybsmiuser") !== null) {
     success: function (data, status, xhr)
       {
         //console.log(data);
-        app.preloader.hide();
+        mypreloader.close();
                 
         var status = JSON.parse(data).status;
         var data = JSON.parse(data).data;
@@ -1995,7 +2020,7 @@ if (localStorage.getItem("mybsmiuser") !== null) {
     error: function (xhr, status, message)
       {
         //console.log(message);
-        app.preloader.hide();
+        mypreloader.close();
       },
   })
 } 
@@ -2015,7 +2040,7 @@ $$('.my-logout').on('click', function () {
   window.mybsmiusertoken = '';
   app.popover.close('.profile-popover', false);
   $$('#overlay-welcome').css('display','flex');
-  //app.preloader.show();
+  //let mypreloader = app.dialog.preloader();
   window.location.href = 'https://bsmijatim.org'
 });
 }
@@ -2029,7 +2054,7 @@ $$('.my-logout').on('click', function () {
 ////start getdefaultdata///////////////////////////
 function getdefaultdata(render=true)
 {
-  app.preloader.show();
+  let mypreloader = app.dialog.preloader();
   app.request({
     url: apidataurl,
     method: 'POST',
@@ -2037,7 +2062,7 @@ function getdefaultdata(render=true)
     data : { token:mybsmiusertoken, command: 'getdefaultdata'}, 
     success: function (data, status, xhr)
       {
-        app.preloader.hide();
+        mypreloader.close();
         var status = JSON.parse(data).status;
         var content = JSON.parse(data).data;
         if (status == "success")
@@ -2060,7 +2085,7 @@ function getdefaultdata(render=true)
     error: function (xhr, status, message)
       {
         console.log(message);
-        app.preloader.hide();
+        mypreloader.close();
         app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
       },
   })
@@ -2203,7 +2228,7 @@ function resetpasswordemail(dynamicPopup)
     var email = $$('#resetpasswordform [name="email"]').val();
     //console.log(email);
       
-      app.preloader.show(); 
+      let mypreloader = app.dialog.preloader(); 
       app.request({
           method: "POST",
           data : {command:'resetpasswordemail',email: email, password: 'pwd',grecaptcharesponsedata: grecaptcharesponsedata},
@@ -2211,14 +2236,14 @@ function resetpasswordemail(dynamicPopup)
           error: function(xhr, status, message) 
             {
               //console.log(message);
-              app.preloader.hide();
+              mypreloader.close();
               dynamicPopup.close();  
               var toastBottom = app.toast.create({ text: 'Server sedang sibuk', closeTimeout: 5000,position: 'center', });toastBottom.open();          
             },
           success: function(data, status, xhr) 
             {
               //console.log(data);
-              app.preloader.hide(); 
+              mypreloader.close(); 
               //var toastBottom = app.toast.create({ text: jqXHR.responseText, closeTimeout: 2000,position: 'center', });toastBottom.open();
               var json = JSON.parse(data); 
               var status = json['status'];
@@ -2288,7 +2313,7 @@ function resetpasswordotp(dynamicPopup,email,hash)
     var otp = $$('#resetpasswordotpform [name="otp"]').val();
     //console.log(email);
       
-      app.preloader.show(); 
+      let mypreloader = app.dialog.preloader(); 
       app.request({
           method: "POST",
           data : {command:'resetpasswordotp',email:email,password:'pwd',hash:hash,otp:otp,grecaptcharesponsedata: grecaptcharesponsedata},
@@ -2296,14 +2321,14 @@ function resetpasswordotp(dynamicPopup,email,hash)
           error: function(xhr, status, message) 
             {
               //console.log(message);
-              app.preloader.hide(); 
+              mypreloader.close(); 
               dynamicPopup.close(); 
               var toastBottom = app.toast.create({ text: 'Server sedang sibuk', closeTimeout: 5000,position: 'center', });toastBottom.open();          
             },
           success: function(data, status, xhr) 
             {
               //console.log(data);
-              app.preloader.hide(); 
+              mypreloader.close(); 
               dynamicPopup.close();
               var json = JSON.parse(data); 
               var status = json['status'];
@@ -2350,7 +2375,7 @@ function resetpasswordinput(dynamicPopup,data,email)
     var password = $$('#resetpasswordinputform [name="password"]').val();
     //console.log(email);
       
-      app.preloader.show(); 
+      let mypreloader = app.dialog.preloader(); 
       app.request({
           method: "POST",
           data : {command:'resetpasswordinput',email:email,key:data,password:password},
@@ -2358,14 +2383,14 @@ function resetpasswordinput(dynamicPopup,data,email)
           error: function(xhr, status, message) 
             {
               //console.log(message);
-              app.preloader.hide();  
+              mypreloader.close();  
               dynamicPopup.close();
               var toastBottom = app.toast.create({ text: 'Server sedang sibuk', closeTimeout: 5000,position: 'center', });toastBottom.open();          
             },
           success: function(data, status, xhr) 
             {
               //console.log(data);
-              app.preloader.hide(); 
+              mypreloader.close(); 
               dynamicPopup.close();
               var json = JSON.parse(data); 
               var status = json['status'];
@@ -2500,7 +2525,7 @@ function fuploadphoto(dialog,obj)
 {
   //console.log(obj);
   var data = JSON.stringify(obj);
-  app.preloader.show();
+  let mypreloader = app.dialog.preloader();
   app.request({
     url: apidataurl,
     method: 'POST',
@@ -2508,7 +2533,7 @@ function fuploadphoto(dialog,obj)
     data : { token:mybsmiusertoken, command: 'uploaduserphoto', data: data}, 
     success: function (data, status, xhr)
       {
-        app.preloader.hide();
+        mypreloader.close();
         dialog.close();
         var status = JSON.parse(data).status;
         var content = JSON.parse(data).data;
@@ -2531,7 +2556,7 @@ function fuploadphoto(dialog,obj)
     error: function (xhr, status, message)
       {
         //console.log(message);
-        app.preloader.hide();
+        mypreloader.close();
         dialog.close();dialog.destroy();
         app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
       },
@@ -2728,7 +2753,7 @@ function fkirimverifikasiidentitas(dialog,obj)
 {
   //console.log(obj);
   var data = JSON.stringify(obj);
-  app.preloader.show();
+  let mypreloader = app.dialog.preloader();
   app.request({
     url: apidataurl,
     method: 'POST',
@@ -2736,7 +2761,7 @@ function fkirimverifikasiidentitas(dialog,obj)
     data : { token:mybsmiusertoken, command: 'verifikasiidentitas', data: data}, 
     success: function (data, status, xhr)
       {
-        app.preloader.hide();
+        mypreloader.close();
         dialog.close();
         var status = JSON.parse(data).status;
         var content = JSON.parse(data).data;
@@ -2760,7 +2785,7 @@ function fkirimverifikasiidentitas(dialog,obj)
     error: function (xhr, status, message)
       {
         //console.log(message);
-        app.preloader.hide();
+        mypreloader.close();
         dialog.close();dialog.destroy();
         app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
       },
@@ -2792,7 +2817,7 @@ function fpageekta()
 
 function fbuatekta()
 {
-  app.preloader.show();
+  let mypreloader = app.dialog.preloader();
   app.request({
     url: apidataurl,
     method: 'POST',
@@ -2800,7 +2825,7 @@ function fbuatekta()
     data : { token:mybsmiusertoken, command: 'buatekta'}, 
     success: function (data, status, xhr)
       {
-        app.preloader.hide();
+        mypreloader.close();
         var status = JSON.parse(data).status;
         var content = JSON.parse(data).data;
         if (status == "success")
@@ -2823,14 +2848,14 @@ function fbuatekta()
       {
         //console.log(message);
         app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
-        app.preloader.hide();
+        mypreloader.close();
       },
   })
 }
 
 function convertekta()
 {
-  app.preloader.show();
+  let mypreloader = app.dialog.preloader();
   app.request({
     url: apidataurl,
     method: 'POST',
@@ -2838,7 +2863,7 @@ function convertekta()
     data : { token:mybsmiusertoken, command: 'convertekta'}, 
     success: function (data, status, xhr)
       {
-        app.preloader.hide();
+        mypreloader.close();
         var status = JSON.parse(data).status;
         var content = JSON.parse(data).data;
         if (status == "success")
@@ -2862,7 +2887,7 @@ function convertekta()
       {
         //console.log(message);
         app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
-        app.preloader.hide();
+        mypreloader.close();
       },
   })
 }
@@ -2872,7 +2897,7 @@ function fgetekta()
 
   if (typeof mybsmiekta === 'undefined' || mybsmiekta === null)
   {
-      app.preloader.show();
+      let mypreloader = app.dialog.preloader();
       app.request({
         url: apidataurl,
         method: 'POST',
@@ -2880,7 +2905,7 @@ function fgetekta()
         data : { token:mybsmiusertoken, command: 'getekta'}, 
         success: function (data, status, xhr)
           {
-            app.preloader.hide();
+            mypreloader.close();
             var status = JSON.parse(data).status;
             var content = JSON.parse(data).data;
             if (status == "success")
@@ -2904,7 +2929,7 @@ function fgetekta()
           {
             //console.log(message);
             app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
-            app.preloader.hide();
+            mypreloader.close();
           },
       })
   }
@@ -2922,7 +2947,7 @@ function fpageriwayat()
 {
   if (typeof mybsmiriwayat === 'undefined' || mybsmiriwayat === null)
   {
-      app.preloader.show();
+      let mypreloader = app.dialog.preloader();
       app.request({
         url: apidataurl,
         method: 'POST',
@@ -2930,7 +2955,7 @@ function fpageriwayat()
         data : { token:mybsmiusertoken, command: 'getriwayatdata'}, 
         success: function (data, status, xhr)
           {
-            app.preloader.hide();
+            mypreloader.close();
             var status = JSON.parse(data).status;
             var content = JSON.parse(data).data;
             if (status == "success")
@@ -2953,7 +2978,7 @@ function fpageriwayat()
         error: function (xhr, status, message)
           {
             //console.log(message);
-            app.preloader.hide();
+            mypreloader.close();
             app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
           },
       })
@@ -2983,7 +3008,7 @@ function fpageverifikator()
 {
   if (typeof mybsmiverifikatordata === 'undefined' || mybsmiverifikatordata === null)
   {
-      app.preloader.show();
+      let mypreloader = app.dialog.preloader();
       app.request({
         url: apidataurl,
         method: 'POST',
@@ -2991,7 +3016,7 @@ function fpageverifikator()
         data : { token:mybsmiusertoken, command: 'getverifikatordata'}, 
         success: function (data, status, xhr)
           {
-            app.preloader.hide();
+            mypreloader.close();
             var status = JSON.parse(data).status;
             var content = JSON.parse(data).data;
             if (status == "success")
@@ -3013,7 +3038,7 @@ function fpageverifikator()
         error: function (xhr, status, message)
           {
             //console.log(message);
-            app.preloader.hide();
+            mypreloader.close();
             app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
           },
       })
@@ -3055,7 +3080,7 @@ function fpageverifikatoridentitas(base64)
 {
   var data = atob(base64);data = JSON.parse(data);
   var uid = data[1];
-  app.preloader.show();
+  let mypreloader = app.dialog.preloader();
   app.request({
     url: apidataurl,
     method: 'POST',
@@ -3063,7 +3088,7 @@ function fpageverifikatoridentitas(base64)
     data : { token:mybsmiusertoken, command: 'getverifikatoridentitasdata', uid:uid}, 
     success: function (data, status, xhr)
       {
-        app.preloader.hide();
+        mypreloader.close();
         var status = JSON.parse(data).status;
         var content = JSON.parse(data).data;
         if (status == "success")
@@ -3086,7 +3111,7 @@ function fpageverifikatoridentitas(base64)
       {
         //console.log(message);
         app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
-        app.preloader.hide();
+        mypreloader.close();
       },
   })
 }
@@ -3183,7 +3208,7 @@ function fpageverifikatorkeputusan(uid,hasil,catatan)
 
   var verifikator = JSON.stringify({nama:dashboarddata.user.usernama,email:dashboarddata.user.useremail,uid:dashboarddata.user.useruid,catatan:catatan});
 
-  app.preloader.show();
+  let mypreloader = app.dialog.preloader();
   app.request({
     url: apidataurl,
     method: 'POST',
@@ -3191,7 +3216,7 @@ function fpageverifikatorkeputusan(uid,hasil,catatan)
     data : { token:mybsmiusertoken, command: 'verifikatoridentitaskeputusan', uid:uid,hasil:hasil,verifikator:verifikator}, 
     success: function (data, status, xhr)
       {
-        app.preloader.hide();
+        mypreloader.close();
         var status = JSON.parse(data).status;
         var content = JSON.parse(data).data;
         if (status == "success")
@@ -3215,7 +3240,7 @@ function fpageverifikatorkeputusan(uid,hasil,catatan)
       {
         //console.log(message);
         app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
-        app.preloader.hide();
+        mypreloader.close();
       },
   })
 }
