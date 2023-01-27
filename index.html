@@ -3067,7 +3067,7 @@ function fpageverifikatorrun(content)
       {
         data += '<a href="'+safe(content[i][4])+'" title="'+safe(content[i][4])+'">testing '+safe(content[i][4])+'</a>';
       }
-      data += '<tr><td data-collapsible-title="Nama">'+safe(content[i][4])+'</td><td data-collapsible-title="Email">'+safe(content[i][2])+'</td><td data-collapsible-title="Cabang">'+safe(content[i][11])+'</td><td><a class="button button-fill mybsmi-verifikatoraction" data-user="'+btoa(JSON.stringify(content[i]))+'">Periksa</a></td></tr>';///////////////////////////////////////////////////////////////////////////////////////
+      data += '<tr class="mybsmi-verifikator-item-'+safe(content[i][1])+'"><td data-collapsible-title="Nama">'+safe(content[i][4])+'</td><td data-collapsible-title="Email">'+safe(content[i][2])+'</td><td data-collapsible-title="Cabang">'+safe(content[i][11])+'</td><td><a class="button button-fill mybsmi-verifikatoraction" data-user="'+btoa(JSON.stringify(content[i]))+'">Periksa</a></td></tr>';///////////////////////////////////////////////////////////////////////////////////////
   }
   data += '</tbody></table></div>';
   $$('.mybsmi-verifikator').html(data);
@@ -3227,7 +3227,9 @@ function fpageverifikatorkeputusan(uid,hasil,catatan)
         {
           
           //console.log(content);
-          fpageverifikator();
+          //fpageverifikator();
+          $$('.mybsmi-verifikator-item-'+uid).hide();
+          var toastBottom = app.toast.create({ text: content, closeTimeout: 2000,position: 'center', });toastBottom.open();
         }
         else if (status == "failed")
         {
