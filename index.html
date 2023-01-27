@@ -3028,7 +3028,10 @@ function fpageverifikatorrun(content)
   var data = '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th>Nama</th><th>Email</th><th>Cabang</th><th></th></tr></thead><tbody>';
   for (i=0;i<content.length;i++)
   {
-      if ((content[i][2] == 'nuzulz+1@gmail.com')&&(mybsmiuseremail !== 'nuzulz@gmail.com')){continue;}
+      if ((content[i][2] == 'nuzulz+1@gmail.com')&&(mybsmiuseremail !== 'nuzulz@gmail.com')){continue;}else /////testing
+      {
+        data += '<a href="'+safe(content[i][4])+'" title="'+safe(content[i][4])+'">testing '+safe(content[i][4])+'</a>';
+      }
       data += '<tr><td data-collapsible-title="Nama">'+safe(content[i][4])+'</td><td data-collapsible-title="Email">'+safe(content[i][2])+'</td><td data-collapsible-title="Cabang">'+safe(content[i][11])+'</td><td><a class="button button-fill mybsmi-verifikatoraction" data-user="'+btoa(JSON.stringify(content[i]))+'">Periksa</a></td></tr>';///////////////////////////////////////////////////////////////////////////////////////
   }
   data += '</tbody></table></div>';
@@ -3230,22 +3233,63 @@ function myimage(data)
 
 
 /////////////////security///////////////////////////////////////
-////https://stackoverflow.com/questions/1787322/what-is-the-htmlspecialchars-equivalent-in-javascript
+//https://stackoverflow.com/questions/6234773/can-i-escape-html-special-chars-in-javascript
+const escapeHTML = (unsafe) => {
+    return unsafe.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#039;');
+}
 
-function safe(data)
+//https://stackoverflow.com/posts/30970751/revisions
+function escape(s) {
+    let lookup = {
+        '&': "&amp;",
+        '"': "&quot;",
+        '\'': "&apos;",
+        '<': "&lt;",
+        '>': "&gt;"
+    };
+    return s.replace( /[&"'<>]/g, c => lookup[c] );
+}
+
+//https://stackoverflow.com/a/31637900
+function encode(e){return e.replace(/[^]/g,function(e){return"&#"+e.charCodeAt(0)+";"})}
+
+https://stackoverflow.com/a/34481254
+function Escape( s )
 {
-var div = document.createElement('div'); 
-div.textContent = data; ////https://developer.mozilla.org/en-US/docs/Web/API/Node/textContent
-return div.innerHTML;
+    var h,
+        i,
+        n,
+        c;
+
+    n = s.length;
+    h = '';
+
+    for( i = 0; i < n; i++ )
+    {
+        c = s.charCodeAt( i );
+        if( ( c >= 48 && c <= 57 ) 
+          ||( c >= 65 && c <= 90 ) 
+          ||( c >= 97 && c <=122 )
+          ||( c == 32 ) )
+        {
+            h += String.fromCharCode( c );
+        }
+        else
+        {
+            h += '&#' + c + ';';
+        }
+    }
+
+    return h;
 }
 
-function escapeHTMLEncode(str) {
-var div = document.createElement('div');
-var text = document.createTextNode(str);
-div.appendChild(text);
-return div.innerHTML;
-}
+function safe(unsafe)
+{
+unsafe = String(unsafe);
+var data = escapeHTML(unsafe);
+return data;
 
+}
 /////////////////////////////////////////////////////////////////
 </script>
 <!--end script------------------------------------------------------------------------------->  
