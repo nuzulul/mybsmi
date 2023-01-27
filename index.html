@@ -1477,7 +1477,7 @@ routes: [
             }
             else
             {
-                app.dialog.alert('Tidak berhak', 'Status')
+                app.dialog.alert('Tidak punya izin', 'Status')
                 reject();
             }
     },
@@ -1647,11 +1647,11 @@ $$('#my-aktivasi-screen .register-button').on('click', function () {
         }
         else if (status == "failed")
         {
-          app.dialog.alert(data,'Terjadi Kesalahan');///////////////////////////////////////////////////////////////////////////////////////
+          app.dialog.alert(data,'Terjadi Kesalahan');
         }
         else
         {
-          app.dialog.alert('Server tidak dapat memproses data','Terjadi Kesalahan');
+          app.dialog.alert(data,'Terjadi Kesalahan');
         }
       },
     error: function (xhr, status, message)
@@ -1708,7 +1708,7 @@ $$('#my-login-screen .login-button').on('click', function () {
         }
         else if (status == "failed")
         {
-          app.dialog.alert(data,'Terjadi Kesalahan');///////////////////////////////////////////////////////////////////////////////////////
+          app.dialog.alert(data,'Terjadi Kesalahan');
           $$('#my-login-screen')[0].reset();
         }
         else if (status == "verifikasiemail")
@@ -1749,7 +1749,7 @@ $$('#my-login-screen .login-button').on('click', function () {
                               }
                               else if (status == "failed")
                               {
-                                app.dialog.alert(data,'Terjadi Kesalahan');/////////////////////////////////////////////////////////
+                                app.dialog.alert(data,'Terjadi Kesalahan');
                               }
                               else if (status == "dayliquotalimit")
                               {
@@ -1793,7 +1793,7 @@ $$('#my-login-screen .login-button').on('click', function () {
       {
         //console.log(message);
         app.preloader.hide();
-        app.dialog.alert('Tidak dapat memproses data','Terjadi Kesalahan');
+        app.dialog.alert('Server sedang sibuk','Terjadi Kesalahan');
       },
   })
   grecaptcha.reset();grecaptcharesponsedata = '';
@@ -1870,7 +1870,7 @@ if (code !== undefined)
         }
         else
         {
-          app.dialog.alert('Tidak dapat memproses data','Terjadi Kesalahan');
+          app.dialog.alert(data,'Terjadi Kesalahan');
         }
       },
     error: function (xhr, status, message)
@@ -1911,7 +1911,7 @@ if (cari !== undefined)
             //console.log(data);
             var dialog = app.dialog.create({
               title: 'Data ditemukan',
-              content: '<p>NIB : '+cari+'</p><p>Nama : '+data.nama+'</p><p>Cabang : '+data.cabang+'</p>',////////////////////////////////////////////
+              content: '<p>NIB : '+safe(cari)+'</p><p>Nama : '+safe(data.nama)+'</p><p>Cabang : '+safe(data.cabang)+'</p>',
               on: {
                 opened: function () {
                   //console.log('Dialog opened')
@@ -1932,11 +1932,11 @@ if (cari !== undefined)
         }
         else if (status == "failed")
         {
-          app.dialog.alert(data,'Terjadi Kesalahan');///////////////////////////////////////////////////////////////////////////////////////
+          app.dialog.alert(data,'Terjadi Kesalahan');
         }
         else
         {
-          app.dialog.alert('Tidak dapat memproses data','Terjadi Kesalahan');
+          app.dialog.alert(data,'Terjadi Kesalahan');
         }
       },
     error: function (xhr, status, message)
@@ -2062,8 +2062,8 @@ function getdefaultdata(render=true)
 
 function getdefaultdatarun(data)
 {
-  $$('.mybsmi-currentusernama').text(data.user.usernama);///////////////////////////////////////////////////////////////////////////////////////
-  if (data.user.userphoto !== '') {$$('.mybsmi-avatar').attr('src','https://drive.google.com/uc?export=view&id='+data.user.userphoto);}/////////////
+  $$('.mybsmi-currentusernama').text(safe(data.user.usernama));
+  if (data.user.userphoto !== '') {$$('.mybsmi-avatar').attr('src','https://drive.google.com/uc?export=view&id='+safe(data.user.userphoto));}
   if (data.user.userstatus === "Terverifikasi"){$$('.mybsmi-avatar-badge').css('display','flex');};
   flogout();
   
@@ -2076,12 +2076,12 @@ function getdefaultdatarun(data)
   for(i=0;i<datacabang.length;i++)
   {
     if (datacabang[i].cabang == 'BSMI Jawa Timur')
-    {///////////////////////////////////////////////////////////////////////////////////////
-      rekapitulasiprov += '<tr> <td class="label-cell">'+datacabang[i].cabang+'</td> <td class="numeric-cell">'+datacabang[i].relawan+'</td> </tr>';
+    {
+      rekapitulasiprov += '<tr> <td class="label-cell">'+safe(datacabang[i].cabang)+'</td> <td class="numeric-cell">'+safe(datacabang[i].relawan)+'</td> </tr>';
     }
     else
-    {///////////////////////////////////////////////////////////////////////////////////////
-    rekapitulasicabang += '<tr> <td class="label-cell">'+datacabang[i].cabang+'</td> <td class="numeric-cell">'+datacabang[i].relawan+'</td> </tr>';
+    {
+    rekapitulasicabang += '<tr> <td class="label-cell">'+safe(datacabang[i].cabang)+'</td> <td class="numeric-cell">'+safe(datacabang[i].relawan)+'</td> </tr>';
     cabang = cabang+1;
     }
     relawan = relawan+datacabang[i].relawan;
@@ -2138,18 +2138,18 @@ function grecaptchaexpired()
 ////fpagebiodata////////////////////////////
 function fpagebiodata()
 {
-    var data = dashboarddata.user;///////////////////////////////////////////////////////////////////////////////////////
-    $$('.mybsmi-biodata .mybsmi-userphoto').attr('src','https://drive.google.com/uc?export=view&id='+data.userphoto);
-    $$('.mybsmi-biodata .mybsmi-usernama').text(data.usernama);
-    $$('.mybsmi-biodata .mybsmi-userjeniskelamin').text(data.userjeniskelamin);
-    $$('.mybsmi-biodata .mybsmi-usertanggallahir').text(data.usertanggallahir);
-    $$('.mybsmi-biodata .mybsmi-userprofesi').text(data.userprofesi);
-    $$('.mybsmi-biodata .mybsmi-usergolongandarah').text(data.usergolongandarah);
-    $$('.mybsmi-biodata .mybsmi-useralamatdomisili').text(data.useralamatdomisili);
-    $$('.mybsmi-biodata .mybsmi-useremail').text(data.useremail);
-    $$('.mybsmi-biodata .mybsmi-usernohp').text(data.userhp);
-    $$('.mybsmi-biodata .mybsmi-usercabang').text(data.usercabang);
-    $$('.mybsmi-biodata .mybsmi-usertahunbergabung').text(data.usertahunbergabung);
+    var data = dashboarddata.user;
+    $$('.mybsmi-biodata .mybsmi-userphoto').attr('src','https://drive.google.com/uc?export=view&id='+safe(data.userphoto));
+    $$('.mybsmi-biodata .mybsmi-usernama').text(safe(data.usernama));
+    $$('.mybsmi-biodata .mybsmi-userjeniskelamin').text(safe(data.userjeniskelamin));
+    $$('.mybsmi-biodata .mybsmi-usertanggallahir').text(safe(data.usertanggallahir));
+    $$('.mybsmi-biodata .mybsmi-userprofesi').text(safe(data.userprofesi));
+    $$('.mybsmi-biodata .mybsmi-usergolongandarah').text(safe(data.usergolongandarah));
+    $$('.mybsmi-biodata .mybsmi-useralamatdomisili').text(safe(data.useralamatdomisili));
+    $$('.mybsmi-biodata .mybsmi-useremail').text(safe(data.useremail));
+    $$('.mybsmi-biodata .mybsmi-usernohp').text(safe(data.userhp));
+    $$('.mybsmi-biodata .mybsmi-usercabang').text(safe(data.usercabang));
+    $$('.mybsmi-biodata .mybsmi-usertahunbergabung').text(safe(data.usertahunbergabung));
     if (data.userstatus === "Terverifikasi"){$$('.mybsmi-avatar-badge').css('display','flex');};
 }
 ////fpagebiodata////////////////////////////
@@ -2230,7 +2230,7 @@ function resetpasswordemail(dynamicPopup)
               else
               {
                 dynamicPopup.close();
-                var toastBottom = app.toast.create({ text: "Error! Gangguan sistem", closeTimeout: 5000,position: 'center', });toastBottom.open();
+                var toastBottom = app.toast.create({ text: msg, closeTimeout: 5000,position: 'center', });toastBottom.open();
               }
               
             }
@@ -2881,7 +2881,7 @@ function fgetekta()
             {
               //console.log(content);
               window.mybsmiekta = content;
-              $$('.mybsmi-ektabsmi').html('<img src="https://drive.google.com/uc?export=view&id='+content+'" style="width:100%;max-width:200px;cursor:pointer;" onclick="javascript:myimage(this)">');///////////////////////////////////////
+              $$('.mybsmi-ektabsmi').html('<img src="https://drive.google.com/uc?export=view&id='+safe(content)+'" style="width:100%;max-width:200px;cursor:pointer;" onclick="javascript:myimage(this)">');///////////////////////////////////////
             }
             else if (status == "failed")
             {
@@ -2904,7 +2904,7 @@ function fgetekta()
   }
   else
   {
-        $$('.mybsmi-ektabsmi').html('<img src="https://drive.google.com/uc?export=view&id='+mybsmiekta+'" style="width:100%;max-width:200px;cursor:pointer;" onclick="javascript:myimage(this)">');///////////////////////////////////////
+        $$('.mybsmi-ektabsmi').html('<img src="https://drive.google.com/uc?export=view&id='+safe(mybsmiekta)+'" style="width:100%;max-width:200px;cursor:pointer;" onclick="javascript:myimage(this)">');///////////////////////////////////////
   }
 }
 //////fpageekta///////////////////////////////////////////////////
@@ -2965,7 +2965,7 @@ function getriwayatdatarun(content)
   {
     //let date = new Date(content[i][0]).toLocaleString('en-US', { timeZone: 'Asia/Jakarta' });
     let date = new Intl.DateTimeFormat("id-ID", { hour12:false,dateStyle: "long" , timeStyle: "short",  timeZone: "Asia/Jakarta"}).format(new Date(content[i][0]));
-    data += '<div class="timeline-item"><div class="timeline-item-date"><small>'+date+'</small></div><div class="timeline-item-divider"></div><div class="timeline-item-content"><div class="timeline-item-inner"><div class="timeline-item-time"></div><div class="timeline-item-text">'+content[i][5]+'</div></div></div></div>';
+    data += '<div class="timeline-item"><div class="timeline-item-date"><small>'+date+'</small></div><div class="timeline-item-divider"></div><div class="timeline-item-content"><div class="timeline-item-inner"><div class="timeline-item-time"></div><div class="timeline-item-text">'+safe(content[i][5])+'</div></div></div></div>';
   }
   $$('.mybsmi-riwayat').html(data);
 }
@@ -3028,7 +3028,7 @@ function fpageverifikatorrun(content)
   var data = '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th>Nama</th><th>Email</th><th>Cabang</th><th></th></tr></thead><tbody>';
   for (i=0;i<content.length;i++)
   {
-      data += '<tr><td data-collapsible-title="Nama">'+content[i][4]+'</td><td data-collapsible-title="Email">'+content[i][2]+'</td><td data-collapsible-title="Cabang">'+content[i][11]+'</td><td><a class="button button-fill mybsmi-verifikatoraction" data-user="'+btoa(JSON.stringify(content[i]))+'">Periksa</a></td></tr>';///////////////////////////////////////////////////////////////////////////////////////
+      data += '<tr><td data-collapsible-title="Nama">'+safe(content[i][4])+'</td><td data-collapsible-title="Email">'+safe(content[i][2])+'</td><td data-collapsible-title="Cabang">'+safe(content[i][11])+'</td><td><a class="button button-fill mybsmi-verifikatoraction" data-user="'+btoa(JSON.stringify(content[i]))+'">Periksa</a></td></tr>';///////////////////////////////////////////////////////////////////////////////////////
   }
   data += '</tbody></table></div>';
   $$('.mybsmi-verifikator').html(data);
@@ -3089,36 +3089,36 @@ function fpageverifikatoridentitasrun(base64,content)
     content:''////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       +'<div style="width:100%;height:50vh;overflow:auto;">'
       +'  <div style="display:flex;flex-direction:column;align-items:center;justify-content: center;">'
-      +'      <img src="https://drive.google.com/uc?export=view&id='+data[13]+'" style="width:150px;height:150px;margin: 10px 10px;border-radius: 50%;object-fit: cover;">'
+      +'      <img src="https://drive.google.com/uc?export=view&id='+safe(data[13])+'" style="width:150px;height:150px;margin: 10px 10px;border-radius: 50%;object-fit: cover;">'
       +'      <p style="font-weight:bold;">Data Akun</p>'
       +'      <div class="data-table"><table><tbody>'
-      +'          <tr><td>Nama</td><td>'+data[4]+'</td></tr>'
-      +'          <tr><td>Email</td><td>'+data[2]+'</td></tr>'
-      +'          <tr><td>Nama</td><td>'+data[11]+'</td></tr>'
-      +'          <tr><td>Jenis Kelamin</td><td>'+data[5]+'</td></tr>'
-      +'          <tr><td>Alamat</td><td>'+data[7]+'</td></tr>'
-      +'          <tr><td>Profesi</td><td>'+data[8]+'</td></tr>'
-      +'          <tr><td>Golongan Darah</td><td>'+data[9]+'</td></tr>'
-      +'          <tr><td>No HP</td><td>'+data[10]+'</td></tr>'
-      +'          <tr><td>Tahun Bergabung</td><td>'+data[12]+'</td></tr>'
+      +'          <tr><td>Nama</td><td>'+safe(data[4])+'</td></tr>'
+      +'          <tr><td>Email</td><td>'+safe(data[2])+'</td></tr>'
+      +'          <tr><td>Nama</td><td>'+safe(data[11])+'</td></tr>'
+      +'          <tr><td>Jenis Kelamin</td><td>'+safe(data[5])+'</td></tr>'
+      +'          <tr><td>Alamat</td><td>'+safe(data[7])+'</td></tr>'
+      +'          <tr><td>Profesi</td><td>'+safe(data[8])+'</td></tr>'
+      +'          <tr><td>Golongan Darah</td><td>'+safe(data[9])+'</td></tr>'
+      +'          <tr><td>No HP</td><td>'+safe(data[10])+'</td></tr>'
+      +'          <tr><td>Tahun Bergabung</td><td>'+safe(data[12])+'</td></tr>'
       +'      </tbody></table></div>'
 
       +'      <p style="font-weight:bold;">Data Sesuai Identitas</p>'
       +'      <div class="data-table"><table><tbody>'
-      +'          <tr><td>NIK</td><td>'+content[0][4]+'</td></tr>'
-      +'          <tr><td>Nama</td><td>'+content[0][5]+'</td></tr>'
-      +'          <tr><td>TTL</td><td>'+content[0][6]+'</td></tr>'
-      +'          <tr><td>Jenis Kelamin</td><td>'+content[0][7]+'</td></tr>'
-      +'          <tr><td>Alamat</td><td>'+content[0][8]+'</td></tr>'
-      +'          <tr><td>RT/RW</td><td>'+content[0][9]+'</td></tr>'
-      +'          <tr><td>Desa/Kelurahan</td><td>'+content[0][10]+'</td></tr>'
-      +'          <tr><td>Kecamatan</td><td>'+content[0][11]+'</td></tr>'
-      +'          <tr><td>Kabupaten</td><td>'+content[0][12]+'</td></tr>'
-      +'          <tr><td>Provinsi</td><td>'+content[0][13]+'</td></tr>'
-      +'          <tr><td>Agama</td><td>'+content[0][14]+'</td></tr>'
-      +'          <tr><td>Status Perkawinan</td><td>'+content[0][15]+'</td></tr>'
-      +'          <tr><td>Pekerjaan</td><td>'+content[0][16]+'</td></tr>'
-      +'          <tr><td>Kewarganegaraan</td><td>'+content[0][17]+'</td></tr>'
+      +'          <tr><td>NIK</td><td>'+safe(content[0][4])+'</td></tr>'
+      +'          <tr><td>Nama</td><td>'+safe(content[0][5])+'</td></tr>'
+      +'          <tr><td>TTL</td><td>'+safe(content[0][6])+'</td></tr>'
+      +'          <tr><td>Jenis Kelamin</td><td>'+safe(content[0][7])+'</td></tr>'
+      +'          <tr><td>Alamat</td><td>'+safe(content[0][8])+'</td></tr>'
+      +'          <tr><td>RT/RW</td><td>'+safe(content[0][9])+'</td></tr>'
+      +'          <tr><td>Desa/Kelurahan</td><td>'+safe(content[0][10])+'</td></tr>'
+      +'          <tr><td>Kecamatan</td><td>'+safe(content[0][11])+'</td></tr>'
+      +'          <tr><td>Kabupaten</td><td>'+safe(content[0][12])+'</td></tr>'
+      +'          <tr><td>Provinsi</td><td>'+safe(content[0][13])+'</td></tr>'
+      +'          <tr><td>Agama</td><td>'+safe(content[0][14])+'</td></tr>'
+      +'          <tr><td>Status Perkawinan</td><td>'+safe(content[0][15])+'</td></tr>'
+      +'          <tr><td>Pekerjaan</td><td>'+safe(content[0][16])+'</td></tr>'
+      +'          <tr><td>Kewarganegaraan</td><td>'+safe(content[0][17])+'</td></tr>'
       +'      </tbody></table></div>'
       +'  </div>'
       +'</div>',//////////////////////////////////////////////////////////////////////////////////////////////////
@@ -3137,7 +3137,7 @@ function fpageverifikatoridentitasrun(base64,content)
         color: 'green',
         onClick: function(dialog, e)
           {///////////////////////////////////////////////////////////////////////////////////////
-            app.dialog.confirm('Apakah Anda yakin menyetujui permintaan verifikasi dari '+data[11], 'Konfirmasi', function ()
+            app.dialog.confirm('Apakah Anda yakin menyetujui permintaan verifikasi dari '+safe(data[11]), 'Konfirmasi', function ()
             {
               fpageverifikatorkeputusan(data[1],'disetujui','');              
             })
@@ -3148,7 +3148,7 @@ function fpageverifikatoridentitasrun(base64,content)
         close:true,
         onClick: function(dialog, e)
           {///////////////////////////////////////////////////////////////////////////////////////
-            app.dialog.confirm('Apakah Anda yakin menolak permintaan verifikasi dari '+data[11], 'Konfirmasi', function ()
+            app.dialog.confirm('Apakah Anda yakin menolak permintaan verifikasi dari '+safe(data[11]), 'Konfirmasi', function ()
             {
               app.dialog.prompt('', 'Tambahkan Catatan', function (catatan){fpageverifikatorkeputusan(data[1],'ditolak',catatan);})
             })
@@ -3226,6 +3226,26 @@ function myimage(data)
 
 }
 ///////////myimage/////////////////////////////////////
+
+
+/////////////////security///////////////////////////////////////
+////https://stackoverflow.com/questions/1787322/what-is-the-htmlspecialchars-equivalent-in-javascript
+
+function safe(data)
+{
+var div = document.createElement('div'); 
+div.textContent = data; ////https://developer.mozilla.org/en-US/docs/Web/API/Node/textContent
+return div.innerHTML;
+}
+
+function escapeHTMLEncode(str) {
+var div = document.createElement('div');
+var text = document.createTextNode(str);
+div.appendChild(text);
+return div.innerHTML;
+}
+
+/////////////////////////////////////////////////////////////////
 </script>
 <!--end script------------------------------------------------------------------------------->  
 </body>
