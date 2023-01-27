@@ -128,7 +128,13 @@
       border-radius: 2px;
       background: var(--f7-theme-color);
     }
-
+    
+    img {
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg width='1200' height='630' viewBox='0 0 1200 630' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='1200' height='630' fill='%23DFE5EC' fill-opacity='0.5'/%3e%3cpath d='M760 175H440C428.94 175 420 183.94 420 195V435C420 446.039 428.94 455 440 455H760C771.06 455 780 446.04 780 435V195C780 183.961 771.06 175 760 175V175ZM664.999 245.003C678.799 245.003 689.999 256.203 689.999 270.003C689.999 283.803 678.799 295.002 664.999 295.002C651.199 295.002 639.999 283.803 639.999 270.003C639.999 256.203 651.199 245.003 664.999 245.003ZM479.998 395.007L546.278 242.627L621.657 364.666L686.277 332.565L719.997 395.006H479.999L479.998 395.007Z' fill='%23ACBCCD' fill-opacity='0.5'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    }
 
   </style>
 </head>
@@ -1371,7 +1377,7 @@
 <!--start overlay------------------------------------------------------------------------------->          
 <div id="overlay-welcome" style="background: rgba(0, 0, 0, 0.8);position: fixed;z-index: 10000;align-items: center;justify-content: center;display: flex;bottom: 0;left: 0;right: 0;top: 0;    background-image: url();background-size: cover;background-position: center top;">
   <div style="background:#fff;display: flex;flex-direction:column;margin: auto;align-items: center;justify-content: center;padding:20px 20px;">
-    <img src="https://1.bp.blogspot.com/-I9V1NyLtG68/XmJRZ_RhTJI/AAAAAAAADgI/wJiuL0Wnjvc2jyoV8AMRsIp1YvSQs1QXwCLcBGAsYHQ/s1600/Logo%2BBSMI%2B%2528vector%2529.png" style="width:200px;height:300px;object-fit: contain;">
+    <img src="https://1.bp.blogspot.com/-I9V1NyLtG68/XmJRZ_RhTJI/AAAAAAAADgI/wJiuL0Wnjvc2jyoV8AMRsIp1YvSQs1QXwCLcBGAsYHQ/s1600/Logo%2BBSMI%2B%2528vector%2529.png" style="width:200px;height:300px;object-fit: contain;background-image:none;">
     <p style="font-size:16px;font-weight:bold;text-align:center;width:300px;margin-top:15px;margin-bottom:2px;">MyBSMI</p>
     <p style="font-size:14px;font-weight:normal;text-align:center;width:300px;margin-top:0px;margin-bottom:15px;">Selamat Datang</br>Relawan BSMI Jawa Timur</p>
     <button class="button button-fill login-screen-open" data-login-screen="#my-login-screen" style="width:100px;">LOGIN</button>
@@ -3098,7 +3104,7 @@ function fpageverifikatoridentitasrun(base64,content)
       +'      <div class="data-table"><table><tbody>'
       +'          <tr><td>Nama</td><td>'+safe(data[4])+'</td></tr>'
       +'          <tr><td>Email</td><td>'+safe(data[2])+'</td></tr>'
-      +'          <tr><td>Nama</td><td>'+safe(data[11])+'</td></tr>'
+      +'          <tr><td>Cabang</td><td>'+safe(data[11])+'</td></tr>'
       +'          <tr><td>Jenis Kelamin</td><td>'+safe(data[5])+'</td></tr>'
       +'          <tr><td>Alamat</td><td>'+safe(data[7])+'</td></tr>'
       +'          <tr><td>Profesi</td><td>'+safe(data[8])+'</td></tr>'
@@ -3141,7 +3147,7 @@ function fpageverifikatoridentitasrun(base64,content)
         color: 'green',
         onClick: function(dialog, e)
           {///////////////////////////////////////////////////////////////////////////////////////
-            app.dialog.confirm('Apakah Anda yakin menyetujui permintaan verifikasi dari '+safe(data[11]), 'Konfirmasi', function ()
+            app.dialog.confirm('Apakah Anda yakin menyetujui permintaan verifikasi dari '+safe(data[4]), 'Konfirmasi', function ()
             {
               fpageverifikatorkeputusan(data[1],'disetujui','');              
             })
@@ -3152,7 +3158,7 @@ function fpageverifikatoridentitasrun(base64,content)
         close:true,
         onClick: function(dialog, e)
           {///////////////////////////////////////////////////////////////////////////////////////
-            app.dialog.confirm('Apakah Anda yakin menolak permintaan verifikasi dari '+safe(data[11]), 'Konfirmasi', function ()
+            app.dialog.confirm('Apakah Anda yakin menolak permintaan verifikasi dari '+safe(data[4]), 'Konfirmasi', function ()
             {
               app.dialog.prompt('', 'Tambahkan Catatan', function (catatan){fpageverifikatorkeputusan(data[1],'ditolak',catatan);})
             })
