@@ -196,7 +196,7 @@
               </li>
             </ul>
           </div>
-
+<!--
           <div class="list">
             <ul>
               <li>
@@ -211,7 +211,7 @@
               </li>
             </ul>
           </div>
-
+-->
 
           <div class="list mybsmi-verifikatormenu" style="display:none">
             <ul>
@@ -1651,14 +1651,14 @@ $$('#my-aktivasi-screen .register-button').on('click', function () {
         }
         else
         {
-          app.dialog.alert('Tidak dapat memproses data','Terjadi Kesalahan');
+          app.dialog.alert('Server tidak dapat memproses data','Terjadi Kesalahan');
         }
       },
     error: function (xhr, status, message)
       {
         //console.log(message);
         app.preloader.hide();
-        app.dialog.alert('Tidak dapat memproses data','Terjadi Kesalahan');
+        app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
       },
   })
   grecaptcha.reset(grecaptchaid);grecaptcharesponsedata = '';
@@ -1764,7 +1764,7 @@ $$('#my-login-screen .login-button').on('click', function () {
                             {
                               //console.log(message);
                               app.preloader.hide();
-                              app.dialog.alert('Tidak dapat memproses data','Terjadi Kesalahan');
+                              app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
                             },
                         })
                     }
@@ -1877,7 +1877,7 @@ if (code !== undefined)
       {
         //console.log(message);
         app.preloader.hide();
-        app.dialog.alert('Tidak dapat memproses data','Terjadi Kesalahan');
+        app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
       },
   })
 }
@@ -1943,7 +1943,7 @@ if (cari !== undefined)
       {
         //console.log(message);
         app.preloader.hide();
-        app.dialog.alert('Tidak dapat memproses data','Terjadi Kesalahan');
+        app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
       },
   })
 }
@@ -2043,16 +2043,19 @@ function getdefaultdata(render=true)
         else if (status == "failed")
         {
           //console.log("failed");
+          app.dialog.alert(content,'Terjadi Kesalahan');
         }
         else
         {
           //console.log("failed");
+          app.dialog.alert(content,'Terjadi Kesalahan');
         }
       },
     error: function (xhr, status, message)
       {
         console.log(message);
         app.preloader.hide();
+        app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
       },
   })
 }
@@ -2204,7 +2207,7 @@ function resetpasswordemail(dynamicPopup)
               //console.log(message);
               app.preloader.hide();
               dynamicPopup.close();  
-              var toastBottom = app.toast.create({ text: message, closeTimeout: 5000,position: 'center', });toastBottom.open();          
+              var toastBottom = app.toast.create({ text: 'Server sedang sibuk', closeTimeout: 5000,position: 'center', });toastBottom.open();          
             },
           success: function(data, status, xhr) 
             {
@@ -2289,7 +2292,7 @@ function resetpasswordotp(dynamicPopup,email,hash)
               //console.log(message);
               app.preloader.hide(); 
               dynamicPopup.close(); 
-              var toastBottom = app.toast.create({ text: message, closeTimeout: 5000,position: 'center', });toastBottom.open();          
+              var toastBottom = app.toast.create({ text: 'Server sedang sibuk', closeTimeout: 5000,position: 'center', });toastBottom.open();          
             },
           success: function(data, status, xhr) 
             {
@@ -2351,7 +2354,7 @@ function resetpasswordinput(dynamicPopup,data,email)
               //console.log(message);
               app.preloader.hide();  
               dynamicPopup.close();
-              var toastBottom = app.toast.create({ text: message, closeTimeout: 5000,position: 'center', });toastBottom.open();          
+              var toastBottom = app.toast.create({ text: 'Server sedang sibuk', closeTimeout: 5000,position: 'center', });toastBottom.open();          
             },
           success: function(data, status, xhr) 
             {
@@ -2524,7 +2527,7 @@ function fuploadphoto(dialog,obj)
         //console.log(message);
         app.preloader.hide();
         dialog.close();dialog.destroy();
-        app.dialog.alert("Server tidak dapat merespon",'Terjadi Kesalahan');
+        app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
       },
   });
 }
@@ -2753,7 +2756,7 @@ function fkirimverifikasiidentitas(dialog,obj)
         //console.log(message);
         app.preloader.hide();
         dialog.close();dialog.destroy();
-        app.dialog.alert("Server tidak dapat merespon",'Terjadi Kesalahan');
+        app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
       },
   });
 }
@@ -2802,16 +2805,18 @@ function fbuatekta()
         else if (status == "failed")
         {
           //console.log("failed");
+          app.dialog.alert(content,'Terjadi Kesalahan');
         }
         else
         {
           //console.log("failed");
+          app.dialog.alert(content,'Terjadi Kesalahan');
         }
       },
     error: function (xhr, status, message)
       {
         //console.log(message);
-        app.dialog.alert("Server tidak dapat merespon",'Terjadi Kesalahan');
+        app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
         app.preloader.hide();
       },
   })
@@ -2839,16 +2844,18 @@ function convertekta()
         else if (status == "failed")
         {
           //console.log("failed");
+          app.dialog.alert(content,'Terjadi Kesalahan');
         }
         else
         {
           //console.log("failed");
+          app.dialog.alert(content,'Terjadi Kesalahan');
         }
       },
     error: function (xhr, status, message)
       {
         //console.log(message);
-        app.dialog.alert("Server tidak dapat merespon",'Terjadi Kesalahan');
+        app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
         app.preloader.hide();
       },
   })
@@ -2879,16 +2886,18 @@ function fgetekta()
             else if (status == "failed")
             {
               //console.log("failed");
+              app.dialog.alert(content,'Terjadi Kesalahan');
             }
             else
             {
               //console.log("failed");
+              app.dialog.alert(content,'Terjadi Kesalahan');
             }
           },
         error: function (xhr, status, message)
           {
             //console.log(message);
-            app.dialog.alert("Server tidak dapat merespon",'Terjadi Kesalahan');
+            app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
             app.preloader.hide();
           },
       })
@@ -2927,16 +2936,19 @@ function fpageriwayat()
             else if (status == "failed")
             {
               //console.log("failed");
+              app.dialog.alert(content,'Terjadi Kesalahan');
             }
             else
             {
               //console.log("failed");
+              app.dialog.alert(content,'Terjadi Kesalahan');
             }
           },
         error: function (xhr, status, message)
           {
-            console.log(message);
+            //console.log(message);
             app.preloader.hide();
+            app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
           },
       })
   }
@@ -2984,16 +2996,19 @@ function fpageverifikator()
             else if (status == "failed")
             {
               //console.log("failed");
+              app.dialog.alert(content,'Terjadi Kesalahan');
             }
             else
             {
               //console.log("failed");
+              app.dialog.alert(content,'Terjadi Kesalahan');
             }
           },
         error: function (xhr, status, message)
           {
-            console.log(message);
+            //console.log(message);
             app.preloader.hide();
+            app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
           },
       })
   }
@@ -3049,15 +3064,18 @@ function fpageverifikatoridentitas(base64)
         else if (status == "failed")
         {
           //console.log("failed");
+          app.dialog.alert(content,'Terjadi Kesalahan');
         }
         else
         {
           //console.log("failed");
+          app.dialog.alert(content,'Terjadi Kesalahan');
         }
       },
     error: function (xhr, status, message)
       {
-        console.log(message);
+        //console.log(message);
+        app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
         app.preloader.hide();
       },
   })
@@ -3175,15 +3193,18 @@ function fpageverifikatorkeputusan(uid,hasil,catatan)
         else if (status == "failed")
         {
           //console.log("failed");
+          app.dialog.alert(content,'Terjadi Kesalahan');
         }
         else
         {
           //console.log("failed");
+          app.dialog.alert(content,'Terjadi Kesalahan');
         }
       },
     error: function (xhr, status, message)
       {
-        console.log(message);
+        //console.log(message);
+        app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
         app.preloader.hide();
       },
   })
