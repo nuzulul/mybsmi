@@ -1581,13 +1581,13 @@ function fperiksauserstatus({ resolve, reject })
 app.on('pageInit', function (page) {
   //console.log('Page is now pageInit');
   let mypreloader = app.dialog.preloader();
-  setTimeout(function () {mypreloader.close();}, 2000);
+  setTimeout(function () {mypreloader.close();}, 1000);
   
 });
 
 app.on('pageAfterIn', function (page) {
   //console.log('Page is pageAfterIn');
-  mypreloader.close();
+  //mypreloader.close();
 });
 
 // Fix col sizes
@@ -3072,7 +3072,7 @@ function fpageverifikatorrun(content)
   data += '</tbody></table></div>';
   $$('.mybsmi-verifikator').html(data);
 
-  $$('.mybsmi-verifikator a').on('click', function (e) {
+  $$('.mybsmi-verifikator a.mybsmi-verifikatoraction').on('click', function (e) {
         
         //app.dialog.confirm('Pembuatan e-KTA memerlukan waktu 2-4 menit.', 'Pemberitahuan', function (){fbuatekta();})
         var base64 = this.attributes["data-user"].value;
