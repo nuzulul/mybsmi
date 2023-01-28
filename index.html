@@ -234,6 +234,21 @@
             </ul>
           </div>
 
+          <div class="list mybsmi-adminmenu" style="display:none">
+            <ul>
+              <li>
+                <a href="/admin/" class="item-content item-link panel-close">
+                  <div class="item-media">
+                    <i class="icon f7-icons">chart_pie_fill</i>
+                  </div>
+                  <div class="item-inner">
+                    <div class="item-title">Admin</div>
+                  </div>
+                </a>
+              </li>
+            </ul>
+          </div>
+
 <!--
           <div class="list">
             <ul>
@@ -1401,14 +1416,16 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 var $$ = Dom7;
-var apiuserurl = "https://script.google.com/macros/s/AKfycbx_lsbdEuP1BtjCXwgMK9_8NTxGumRan9kYO9q6_5gntGrI-bNiyfM-soTQj2ZVtbEZrQ/exec";
-var apidataurl = "https://script.google.com/macros/s/AKfycbxa5YmoXZI5dlqvh99TWYkzJ7SNYovqvxRFawvv_oc60Nb0UJAdi7deH3c18wLTV9rU/exec";
+var apiuserurl = "https://script.google.com/macros/s/AKfycbys-GEdilEu0nqdjDRUlEExkamYVIRsplNMEnLl2WiQQy3DxZoikpts7bnLotnT5IcwzQ/exec";
+var apidataurl = "https://script.google.com/macros/s/AKfycbyyPrApY4R8xv-_m8LUz9XHhkdYeTPMovm8MkBXgTXlojx31nHz9GVdGa4Ikw8cELMN/exec";
 var mybsmiaktivasi = 'd426d702f89bac9fb66b22ede9593b62a447bf4154dfac317a72fcf4f168172a';
 var grecaptcharesponsedata = '';
+var isLocal = false;
 
-if (window.location.href.indexOf("127.0.0.1") > -1) 
+if ((window.location.href.indexOf("localhost") > -1)||(window.location.href.indexOf("127.0.0.1") > -1)) 
 {
-  console.log('local development:127.0.0.1');
+  console.log('local development');
+  isLocal = true;
 }
 else
 {
@@ -1489,6 +1506,36 @@ routes: [
           }
             let data = JSON.parse(dashboarddata.user.usermydata)
             if (data.verifikator)
+            {
+                resolve();
+            }
+            else
+            {
+                app.dialog.alert('Tidak punya izin', 'Status')
+                reject();
+            }
+      }
+      fperiksakesiapan({ resolve, reject })
+    },
+  },
+  {
+    path: '/admin/',
+    url: 'admin.html',
+    on: {
+      pageAfterIn: function test (e, page) {
+        fpageadmin();
+      },
+    },
+    beforeEnter: function ({ resolve, reject }) {
+      function fperiksakesiapan({ resolve, reject })
+      {
+          if (typeof dashboarddata === 'undefined' || dashboarddata === null) {
+            // variable is undefined or null
+            setTimeout(function(){ fperiksakesiapan({ resolve, reject }); }, 1000);
+            return;
+          }
+            let data = JSON.parse(dashboarddata.user.usermydata)
+            if (data.admin)
             {
                 resolve();
             }
@@ -2144,6 +2191,10 @@ function getdefaultdatarun(data)
   if (ver.verifikator)
   {
     $$('.mybsmi-verifikatormenu').show();
+  }  
+  if (ver.admin)
+  {
+    $$('.mybsmi-adminmenu').show();
   }  
   
 }
@@ -3063,7 +3114,7 @@ function fpageverifikatorrun(content)
   var data = '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th>Nama</th><th>Email</th><th>Cabang</th><th></th></tr></thead><tbody>';
   for (i=0;i<content.length;i++)
   {
-      if ((content[i][2] == 'nuzulz+1@gmail.com')&&(mybsmiuseremail !== 'nuzulz@gmail.com')){continue;}else /////testing
+      if ((content[i][2] == 'nuzulz+1@gmail.com')&&(mybsmiuseremail !== 'nuzulz@gmail.com')&&(isLocal==true)){continue;}else /////testing
       {
         data += '<a href="'+safe(content[i][4])+'" title="'+safe(content[i][4])+'">testing '+safe(content[i][4])+'</a>';
       }
@@ -3270,13 +3321,15 @@ function myimage(data)
 
 
 /////////////////security///////////////////////////////////////
+//https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html
+
 //https://stackoverflow.com/questions/6234773/can-i-escape-html-special-chars-in-javascript
 const escapeHTML = (unsafe) => {
     return unsafe.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#039;');
 }
 
 //https://stackoverflow.com/posts/30970751/revisions
-function escape(s) {
+function escapehtmloldbrowser(s) {
     let lookup = {
         '&': "&amp;",
         '"': "&quot;",
@@ -3288,10 +3341,12 @@ function escape(s) {
 }
 
 //https://stackoverflow.com/a/31637900
-function encode(e){return e.replace(/[^]/g,function(e){return"&#"+e.charCodeAt(0)+";"})}
+//encode all
+function encodeall(e){return e.replace(/[^]/g,function(e){return"&#"+e.charCodeAt(0)+";"})}
 
-https://stackoverflow.com/a/34481254
-function Escape( s )
+//https://stackoverflow.com/a/34481254
+//encode non alphanumeric
+function encodenonalphanumeric( s )
 {
     var h,
         i,
@@ -3327,7 +3382,141 @@ var data = escapeHTML(unsafe);
 return data;
 
 }
+
+function safegetparam(unsafe)
+{
+var data = encodeURIComponent(unsafe)
+return data;
+}
 /////////////////////////////////////////////////////////////////
+
+
+
+
+
+///////fpageadmin();///////////////////////////////////////////
+function fpageadmin()
+{
+  if (typeof mybsmiadmindata === 'undefined' || mybsmiadmindata === null)
+  {
+      let mypreloader = app.dialog.preloader();
+      app.request({
+        url: apidataurl,
+        method: 'POST',
+        cache: false,
+        data : { token:mybsmiusertoken, command: 'getadmindata'}, 
+        success: function (data, status, xhr)
+          {
+            mypreloader.close();
+            var status = JSON.parse(data).status;
+            var content = JSON.parse(data).data;
+            if (status == "success")
+            {
+              console.log(content);
+              window.mybsmiadmindata = content;
+              fpageadminrun(content);
+            }
+            else if (status == "failed")
+            {
+              //console.log("failed");
+              app.dialog.alert(content,'Terjadi Kesalahan');
+            }
+            else
+            {
+              //console.log("failed");
+              app.dialog.alert(content,'Terjadi Kesalahan');
+            }
+          },
+        error: function (xhr, status, message)
+          {
+            //console.log(message);
+            mypreloader.close();
+            app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
+          },
+      })
+  }
+  else
+  {
+    fpageadminrun(mybsmiadmindata);
+  }
+
+  $$('.mybsmi-adminrefresh').on('click', function () {
+    //mybsmiadmindata = null
+    //fpageadmin()
+  })
+}
+
+function fpageadminrun(content)
+{
+  var data = '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th>Nama</th><th>Email</th><th>Cabang</th><th></th></tr></thead><tbody>';
+  for (i=0;i<content.length;i++)
+  {
+      if ((content[i][2] == 'nuzulz+1@gmail.com')&&(mybsmiuseremail !== 'nuzulz@gmail.com')&&(isLocal==true)){continue;}else /////testing
+      {
+        //data += '<a href="'+safe(content[i][4])+'" title="'+safe(content[i][4])+'">testing '+safe(content[i][4])+'</a>';
+      }
+      
+      if ((content[i][3] === 'Terbatas')||(content[i][3] === 'Terverifikasi')||(content[i][3] === 'Tertolak')){}else{continue;}
+      
+      data += '<tr class="mybsmi-admin-item-'+safe(content[i][1])+'"><td data-collapsible-title="Nama">'+safe(content[i][4])+'</td><td data-collapsible-title="Email">'+safe(content[i][2])+'</td><td data-collapsible-title="Cabang">'+safe(content[i][11])+'</td><td><a class="button button-fill mybsmi-adminaction" data-user="'+btoa(JSON.stringify(content[i]))+'">Detail</a></td></tr>';
+  }
+  data += '</tbody></table></div>';
+  $$('.mybsmi-admin').html(data);
+
+  $$('.mybsmi-admin a.mybsmi-adminaction').on('click', function (e) {
+        
+        //app.dialog.confirm('Pembuatan e-KTA memerlukan waktu 2-4 menit.', 'Pemberitahuan', function (){fbuatekta();})
+        var base64 = this.attributes["data-user"].value;
+        fpageadminidentitas(base64)
+  });
+}
+
+function fpageadminidentitas(base64)
+{
+  var data = atob(base64);data = JSON.parse(data);
+  var dialog = app.dialog.create({
+    title: 'Data Relawan',
+    content:''////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      +'<div style="width:100%;height:50vh;overflow:auto;">'
+      +'  <div style="display:flex;flex-direction:column;align-items:center;justify-content: center;">'
+      +'      <img src="https://drive.google.com/uc?export=view&id='+safe(data[13])+'" style="width:150px;height:150px;margin: 10px 10px;border-radius: 50%;object-fit: cover;">'
+      +'      <p style="font-weight:bold;"></p>'
+      +'      <div class="data-table"><table><tbody>'
+      +'          <tr><td>Nama</td><td>'+safe(data[4])+'</td></tr>'
+      +'          <tr><td>Email</td><td>'+safe(data[2])+'</td></tr>'
+      +'          <tr><td>Cabang</td><td>'+safe(data[11])+'</td></tr>'
+      +'          <tr><td>Jenis Kelamin</td><td>'+safe(data[5])+'</td></tr>'
+      +'          <tr><td>Alamat</td><td>'+safe(data[7])+'</td></tr>'
+      +'          <tr><td>Profesi</td><td>'+safe(data[8])+'</td></tr>'
+      +'          <tr><td>Golongan Darah</td><td>'+safe(data[9])+'</td></tr>'
+      +'          <tr><td>No HP</td><td>'+safe(data[10])+'</td></tr>'
+      +'          <tr><td>Tahun Bergabung</td><td>'+safe(data[12])+'</td></tr>'
+      +'      </tbody></table></div>'
+      +'  </div>'
+      +'</div>',//////////////////////////////////////////////////////////////////////////////////////////////////
+    closeByBackdropClick: false,
+    destroyOnClose: true,
+    verticalButtons: true,
+    on: {
+      opened: function () {
+        //console.log('Dialog opened')
+      }
+    },
+    buttons: [
+      {
+        text: 'Tutup',
+        close:true,
+        color: 'gray',
+        onClick: function(dialog, e)
+          {
+
+          }
+      },
+    ]
+  });
+  dialog.open();
+}
+///////fpageadmin////////////////////////////////////////////////////////
 </script>
 <!--end script------------------------------------------------------------------------------->  
 </body>
