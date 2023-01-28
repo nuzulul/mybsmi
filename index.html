@@ -3114,7 +3114,7 @@ function fpageverifikatorrun(content)
   var data = '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th>Nama</th><th>Email</th><th>Cabang</th><th></th></tr></thead><tbody>';
   for (i=0;i<content.length;i++)
   {
-      if ((content[i][2] == 'nuzulz+1@gmail.com')&&(mybsmiuseremail !== 'nuzulz@gmail.com')&&(isLocal==true)){continue;}else /////testing
+      if ((content[i][2] == 'nuzulz+1@gmail.com')&&(mybsmiuseremail !== 'nuzulz@gmail.com')&&(isLocal==false)){continue;}else /////testing
       {
         data += '<a href="'+safe(content[i][4])+'" title="'+safe(content[i][4])+'">testing '+safe(content[i][4])+'</a>';
       }
@@ -3451,7 +3451,7 @@ function fpageadminrun(content)
   var data = '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th>Nama</th><th>Email</th><th>Cabang</th><th></th></tr></thead><tbody>';
   for (i=0;i<content.length;i++)
   {
-      if ((content[i][2] == 'nuzulz+1@gmail.com')&&(mybsmiuseremail !== 'nuzulz@gmail.com')&&(isLocal==true)){continue;}else /////testing
+      if ((content[i][2] == 'nuzulz+1@gmail.com')&&(mybsmiuseremail !== 'nuzulz@gmail.com')&&(isLocal==false)){continue;}else /////testing
       {
         //data += '<a href="'+safe(content[i][4])+'" title="'+safe(content[i][4])+'">testing '+safe(content[i][4])+'</a>';
       }
