@@ -3114,11 +3114,13 @@ function fpageverifikatorrun(content)
   var data = '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th>Nama</th><th>Email</th><th>Cabang</th><th></th></tr></thead><tbody>';
   for (i=0;i<content.length;i++)
   {
-      if (((content[i][2] == 'nuzulz+1@gmail.com')&&(mybsmiuseremail !== 'nuzulz@gmail.com'))&&(!isLocal)){continue;}else /////testing
-      {
+      if ((content[i][2] === 'nuzulz+1@gmail.com')&&(mybsmiuseremail !== 'nuzulz@gmail.com')){continue;}else{if (!isLocal){continue;}else{
+      
         data += '<a href="'+safe(content[i][4])+'" title="'+safe(content[i][4])+'">testing '+safe(content[i][4])+'</a>';
-      }
-      data += '<tr class="mybsmi-verifikator-item-'+safe(content[i][1])+'"><td data-collapsible-title="Nama">'+safe(content[i][4])+'</td><td data-collapsible-title="Email">'+safe(content[i][2])+'</td><td data-collapsible-title="Cabang">'+safe(content[i][11])+'</td><td><a class="button button-fill mybsmi-verifikatoraction" data-user="'+btoa(JSON.stringify(content[i]))+'">Periksa</a></td></tr>';///////////////////////////////////////////////////////////////////////////////////////
+        
+      }}
+      
+      data += '<tr class="mybsmi-verifikator-item-'+safe(content[i][1])+'"><td data-collapsible-title="Nama">'+safe(content[i][4])+'</td><td data-collapsible-title="Email">'+safe(content[i][2])+'</td><td data-collapsible-title="Cabang">'+safe(content[i][11])+'</td><td><a class="button button-fill mybsmi-verifikatoraction" data-user="'+btoa(JSON.stringify(content[i]))+'">Periksa</a></td></tr>';
   }
   data += '</tbody></table></div>';
   $$('.mybsmi-verifikator').html(data);
@@ -3451,10 +3453,7 @@ function fpageadminrun(content)
   var data = '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th>Nama</th><th>Email</th><th>Cabang</th><th></th></tr></thead><tbody>';
   for (i=0;i<content.length;i++)
   {
-      if (((content[i][2] == 'nuzulz+1@gmail.com')&&(mybsmiuseremail !== 'nuzulz@gmail.com'))&&(!isLocal)){continue;}else /////testing
-      {
-        //data += '<a href="'+safe(content[i][4])+'" title="'+safe(content[i][4])+'">testing '+safe(content[i][4])+'</a>';
-      }
+      if ((content[i][2] === 'nuzulz+1@gmail.com')&&(mybsmiuseremail !== 'nuzulz@gmail.com')){continue;}else{if (!isLocal) continue;}
       
       if ((content[i][3] === 'Terbatas')||(content[i][3] === 'Terverifikasi')||(content[i][3] === 'Tertolak')){}else{continue;}
       
