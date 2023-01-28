@@ -2967,7 +2967,9 @@ function fgetekta()
             {
               //console.log(content);
               window.mybsmiekta = content;
-              $$('.mybsmi-ektabsmi').html('<img src="https://drive.google.com/uc?export=view&id='+safe(content)+'" style="width:100%;max-width:200px;cursor:pointer;" onclick="javascript:myimage(this)">');///////////////////////////////////////
+              $$('.mybsmi-ektabsmi').html('<img id="imgekta" src="" style="width:100%;max-width:200px;cursor:pointer;" onclick="javascript:myimage(this)">');
+              let src = "https://drive.google.com/uc?export=view&id="+safe(content);
+              $$('#imgekta').attr('src',src);
             }
             else if (status == "failed")
             {
@@ -2990,7 +2992,9 @@ function fgetekta()
   }
   else
   {
-        $$('.mybsmi-ektabsmi').html('<img src="https://drive.google.com/uc?export=view&id='+safe(mybsmiekta)+'" style="width:100%;max-width:200px;cursor:pointer;" onclick="javascript:myimage(this)">');///////////////////////////////////////
+        $$('.mybsmi-ektabsmi').html('<img id="imgekta" src="" style="width:100%;max-width:200px;cursor:pointer;" onclick="javascript:myimage(this)">');
+        let src = "https://drive.google.com/uc?export=view&id="+safe(mybsmiekta);
+        $$('#imgekta').attr('src',src);
   }
 }
 //////fpageekta///////////////////////////////////////////////////
@@ -3181,7 +3185,7 @@ function fpageverifikatoridentitasrun(base64,content)
     content:''////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       +'<div style="width:100%;height:50vh;overflow:auto;">'
       +'  <div style="display:flex;flex-direction:column;align-items:center;justify-content: center;">'
-      +'      <img src="https://drive.google.com/uc?export=view&id='+safe(data[13])+'" style="width:150px;height:150px;margin: 10px 10px;border-radius: 50%;object-fit: cover;">'
+      +'      <img id="img" src="" style="width:150px;height:150px;margin: 10px 10px;border-radius: 50%;object-fit: cover;">'
       +'      <p style="font-weight:bold;">Data Akun</p>'
       +'      <div class="data-table"><table><tbody>'
       +'          <tr><td>Nama</td><td>'+safe(data[4])+'</td></tr>'
@@ -3220,6 +3224,8 @@ function fpageverifikatoridentitasrun(base64,content)
     on: {
       opened: function () {
         //console.log('Dialog opened')
+        let src = "https://drive.google.com/uc?export=view&id="+safe(data[13]);
+        $$('#img').attr('src',src);
       }
     },
     buttons: [
@@ -3311,12 +3317,14 @@ function myimage(data)
 {
   var src=data.src;
   const para = document.createElement("div");
-  para.innerHTML = '<div style="background: rgba(0, 0, 0, 0.8);position: fixed;z-index: 1000000000000000;align-items: center;justify-content: center;display: flex;bottom: 0;left: 0;right: 0;top: 0;"><img src="'+src+'" style="border-radius: 1em;display: block;margin: auto;height: 90vh;width: 90vw;object-fit: contain;background-image:none;"></div>';
+  para.innerHTML = '<div style="background: rgba(0, 0, 0, 0.8);position: fixed;z-index: 1000000000000000;align-items: center;justify-content: center;display: flex;bottom: 0;left: 0;right: 0;top: 0;"><img id="img" src="" style="border-radius: 1em;display: block;margin: auto;height: 90vh;width: 90vw;object-fit: contain;background-image:none;"></div>';
+  
   para.addEventListener("click",()=>{
     para.remove(); 
   })
 
   document.body.appendChild(para);
+  $$('#img').attr('src',src);
 
 }
 ///////////myimage/////////////////////////////////////
@@ -3478,7 +3486,7 @@ function fpageadminidentitas(base64)
     content:''////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       +'<div style="width:100%;height:50vh;overflow:auto;">'
       +'  <div style="display:flex;flex-direction:column;align-items:center;justify-content: center;">'
-      +'      <img src="https://drive.google.com/uc?export=view&id='+safe(data[13])+'" style="width:150px;height:150px;margin: 10px 10px;border-radius: 50%;object-fit: cover;">'
+      +'      <img id="img" src="" style="width:150px;height:150px;margin: 10px 10px;border-radius: 50%;object-fit: cover;">'
       +'      <p style="font-weight:bold;"></p>'
       +'      <div class="data-table"><table><tbody>'
       +'          <tr><td>Nama</td><td>'+safe(data[4])+'</td></tr>'
@@ -3499,6 +3507,8 @@ function fpageadminidentitas(base64)
     on: {
       opened: function () {
         //console.log('Dialog opened')
+        let src = "https://drive.google.com/uc?export=view&id="+safe(data[13]);
+        $$('#img').attr('src',src);
       }
     },
     buttons: [
