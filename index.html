@@ -2149,7 +2149,7 @@ function getdefaultdatarun(data)
   if (data.user.userstatus === "Terverifikasi"){$$('.mybsmi-avatar-badge').css('display','flex');};
   flogout();
   
-  var relawan = 0;
+  var relawan = -1;
   var cabang = 0;
   var rekapitulasiprov = '';
   var rekapitulasicabang = '';
@@ -2159,7 +2159,7 @@ function getdefaultdatarun(data)
   {
     if (datacabang[i].cabang == 'BSMI Jawa Timur')
     {
-      rekapitulasiprov += '<tr> <td class="label-cell">'+safe(datacabang[i].cabang)+'</td> <td class="numeric-cell">'+safe(datacabang[i].relawan)+'</td> </tr>';
+      rekapitulasiprov += '<tr> <td class="label-cell">'+safe(datacabang[i].cabang)+'</td> <td class="numeric-cell">'+safe(datacabang[i].relawan-1)+'</td> </tr>';
     }
     else
     {
@@ -3414,7 +3414,7 @@ function fpageadmin()
             var content = JSON.parse(data).data;
             if (status == "success")
             {
-              console.log(content);
+              //console.log(content);
               window.mybsmiadmindata = content;
               fpageadminrun(content);
             }
