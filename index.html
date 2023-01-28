@@ -1635,6 +1635,16 @@ app.on('pageInit', function (page) {
 app.on('pageAfterIn', function (page) {
   //console.log('Page is pageAfterIn');
   //mypreloader.close();
+
+let myprofile = ''
++'      <div class="right">'
++'        <a class="link popover-open" data-popover=".profile-popover">'
++'          <span class="margin-right-half"></span>'
++'          <img src="avatar.png" class="avatar mybsmi-avatar"><span class="badge color-blue mybsmi-avatar-badge" style="left:-8px;bottom:-5px;display:none;"><i class="icon f7-icons" style="font-size:12px;">checkmark_seal</i></span>'
++'        </a>'
++'      </div>'
+
+  //$$('.navbar-inner .title').append(myprofile);
 });
 
 // Fix col sizes
