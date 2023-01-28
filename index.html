@@ -1792,11 +1792,12 @@ $$('#my-login-screen .login-button').on('click', function () {
           app.loginScreen.close('#my-login-screen');
           $$('#my-login-screen')[0].reset();
           $$('#overlay-welcome').hide();
-          var json = {email:email,token:data};
+          var json = {email:email,token:data.token};
           window.mybsmiuseremail = email;
-          window.mybsmiusertoken = data;
+          window.mybsmiusertoken = data.token;
           window.localStorage["mybsmiuser"] = JSON.stringify(json);
-          getdefaultdata();
+          window.dashboarddata = data;
+          getdefaultdatarun(data);
         }
         else if (status == "failed")
         {
@@ -2065,10 +2066,12 @@ if (localStorage.getItem("mybsmiuser") !== null) {
         var data = JSON.parse(data).data;
         if (status == "success")
         {
+          //console.log(data);
           $$('#overlay-welcome').hide();
           window.mybsmiuseremail = email;
           window.mybsmiusertoken = token;
-          getdefaultdata();
+          window.dashboarddata = data;
+          getdefaultdatarun(data);
         }
         else if (status == "failed")
         {
