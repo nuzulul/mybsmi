@@ -1415,21 +1415,41 @@
 <script>
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/////getparams/////////////////////////////////////////////////////////////////////////////
+var getParams = function (url) {
+	var params = {};
+	var parser = document.createElement('a');
+	parser.href = url;
+	var query = parser.search.substring(1);
+	var vars = query.split('&');
+	for (var i = 0; i < vars.length; i++) {
+		var pair = vars[i].split('=');
+		params[pair[0]] = decodeURIComponent(pair[1]);
+	}
+	return params;
+};
+var params = getParams(window.location.href);
+//////////////////////////////////////////////////////////////////////////////
+
 var $$ = Dom7;
-var apiuserurl = "https://script.google.com/macros/s/AKfycbys-GEdilEu0nqdjDRUlEExkamYVIRsplNMEnLl2WiQQy3DxZoikpts7bnLotnT5IcwzQ/exec";
-var apidataurl = "https://script.google.com/macros/s/AKfycbyyPrApY4R8xv-_m8LUz9XHhkdYeTPMovm8MkBXgTXlojx31nHz9GVdGa4Ikw8cELMN/exec";
+
 var mybsmiaktivasi = 'd426d702f89bac9fb66b22ede9593b62a447bf4154dfac317a72fcf4f168172a';
 var grecaptcharesponsedata = '';
 var isLocal = false;
 
 if ((window.location.href.indexOf("localhost") > -1)||(window.location.href.indexOf("127.0.0.1") > -1)) 
 {
-  console.log('local development');
-  isLocal = true;
+console.log('local development');
+isLocal = true;
+var access_token = params.access_token;
+var apiuserurl = "https://script.google.com/macros/s/AKfycbwWFxUmhmfem1mHJT7HDqJoVFNkCmUkInvOOx2K1KZy/dev?access_token="+access_token;
+var apidataurl = "https://script.google.com/macros/s/AKfycbxXCV5_Bj1-IqUtezfR_MPLrc-YRGq0pSWVQwPZ5K0/dev?access_token="+access_token;
 }
 else
 {
-
+var apiuserurl = "https://script.google.com/macros/s/AKfycbys-GEdilEu0nqdjDRUlEExkamYVIRsplNMEnLl2WiQQy3DxZoikpts7bnLotnT5IcwzQ/exec";
+var apidataurl = "https://script.google.com/macros/s/AKfycbyyPrApY4R8xv-_m8LUz9XHhkdYeTPMovm8MkBXgTXlojx31nHz9GVdGa4Ikw8cELMN/exec";
 }
 
 var app = new Framework7({
@@ -1905,19 +1925,7 @@ document.getElementById('my-login-screen').onkeydown = function(e){
 
 
 /////////////verifikasiemail//////////////////
-var getParams = function (url) {
-	var params = {};
-	var parser = document.createElement('a');
-	parser.href = url;
-	var query = parser.search.substring(1);
-	var vars = query.split('&');
-	for (var i = 0; i < vars.length; i++) {
-		var pair = vars[i].split('=');
-		params[pair[0]] = decodeURIComponent(pair[1]);
-	}
-	return params;
-};
-var params = getParams(window.location.href);
+
 var code = params.verifikasi;//console.log(code);
 
 if (code !== undefined)
@@ -1982,7 +1990,7 @@ if (code !== undefined)
 
 
 ////pencarian///////////////////////////////////////////////
-var params = getParams(window.location.href);
+//var params = getParams(window.location.href);
 var cari = params.cari;
 if (cari !== undefined)
 {
@@ -2041,6 +2049,55 @@ if (cari !== undefined)
   })
 }
 ////pencarian//////////////////////////////////////////////
+
+
+
+
+//////dev mode/////////////////////////////////////////////////////////
+if (isLocal)
+{
+  app.dialog.prompt('', 'DEV MODE', function (pwd){fdevmode(pwd);})
+}
+
+function fdevmode(pwd)
+{
+  let mypreloader = app.dialog.preloader();
+  let devmodeurl = 'https://script.google.com/macros/s/AKfycbztYLCDVY-nZyQJFK7QhIRboEcuRUWPIrfkGzbU6bUnTEn909HgWhwc1VadGotPDIkp7Q/exec';
+  app.request({
+    url: devmodeurl,
+    method: 'POST',
+    cache: false,
+    data : { password: pwd}, 
+    success: function (data, status, xhr)
+      {
+        //console.log(data);
+        mypreloader.close();
+
+        var status = JSON.parse(data).status;
+        var data = JSON.parse(data).data;
+        if (status == "success")
+        {
+            //console.log(data);
+            window.location.href = '/?access_token='+data;
+        }
+        else if (status == "failed")
+        {
+          app.dialog.alert(data,'Terjadi Kesalahan');
+        }
+        else
+        {
+          app.dialog.alert(data,'Terjadi Kesalahan');
+        }
+      },
+    error: function (xhr, status, message)
+      {
+        //console.log(message);
+        mypreloader.close();
+        app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
+      },
+  })
+}
+///////dev mode/////////////////////////////////////////////////////////
 
 
 
