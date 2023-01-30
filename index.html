@@ -187,7 +187,7 @@
               </li>
             </ul>
           </div>
-
+<!--
           <div class="list">
             <ul>
               <li>
@@ -202,6 +202,7 @@
               </li>
             </ul>
           </div>
+-->
 <!--
           <div class="list">
             <ul>
@@ -377,19 +378,19 @@
         <div class="popover profile-popover">
           <div class="popover-inner">
             <h3 class="text-align-center mybsmi-currentusernama">User</h3>
-            <!--<div class="list no-hairlines no-hairlines-between">
+            <div class="list no-hairlines no-hairlines-between">
               <ul>
                 <li>
-                  <a href="#" class="item-link item-content">
+                  <a href="/riwayat/" class="item-link item-content link popover-close" data-popover=".profile-popover">
                     <div class="item-media">
-                      <i class="icon f7-icons">person_circle_fill</i>
+                      <i class="icon f7-icons">clock</i>
                     </div>
                     <div class="item-inner">
-                      <div class="item-title">Profile</div>
+                      <div class="item-title">Riwayat</div>
                     </div>
                   </a>
                 </li>
-                <li>
+                <!--<li>
                   <a href="#" class="item-link item-content">
                     <div class="item-media">
                       <i class="icon f7-icons">gear_fill</i>
@@ -398,9 +399,9 @@
                       <div class="item-title">User Settings</div>
                     </div>
                   </a>
-                </li>
+                </li>-->
               </ul>
-            </div>-->
+            </div>
 
             <div class="list no-hairlines no-hairlines-between margin-bottom">
               <ul>
@@ -2012,7 +2013,7 @@ if (cari !== undefined)
             //console.log(data);
             var dialog = app.dialog.create({
               title: 'Data ditemukan',
-              content: '<p>NIB : '+safe(cari)+'</p><p>Nama : '+safe(data.nama)+'</p><p>Cabang : '+safe(data.cabang)+'</p>',
+              content: '<p>Nama : '+safe(data.nama)+'</p><p>Cabang : '+safe(data.cabang)+'</p>',
               on: {
                 opened: function () {
                   //console.log('Dialog opened')
