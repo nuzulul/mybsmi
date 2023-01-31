@@ -3230,7 +3230,7 @@ function fpageverifikator()
 function fpageverifikatorrun(content)
 {
   var data = '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th>Nama</th><th>Email</th><th>Cabang</th><th></th></tr></thead><tbody>';
-  for (i=0;i<content.length;i++)
+  for (i=content.length-1;i>-1;i--)
   {
       if ((content[i][2] === 'nuzulz+1@gmail.com')&&(mybsmiuseremail !== 'nuzulz@gmail.com')){continue;}else{if ((content[i][2] === 'nuzulz+1@gmail.com')&&(!isLocal)){continue;}else{
       
@@ -3573,7 +3573,7 @@ function fpageadmin()
 function fpageadminrun(content)
 {
   var data = '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th>Nama</th><th>Cabang</th><th>Profesi</th><th></th></tr></thead><tbody>';
-  for (i=0;i<content.length;i++)
+  for (i=content.length-1;i>-1;i--)
   {
       if ((content[i][2] === 'nuzulz+1@gmail.com')&&(mybsmiuseremail !== 'nuzulz@gmail.com')){continue;}else{if ((content[i][2] === 'nuzulz+1@gmail.com')&&(!isLocal)) continue;}
       
@@ -3821,6 +3821,7 @@ function fupdatebacapesan(pesanid)
 function fkirimpesan(uid,nama,photo)
 {
   //console.log(uid+nama+photo);
+  if (dashboarddata.user.userphoto === ''){flengkapidata();return;}
   var dialog = app.dialog.create({
     title: 'Tulis Pesan',
     content: ''
@@ -3880,7 +3881,7 @@ function fkirimpesan(uid,nama,photo)
       opened: function () {
         //console.log('Dialog opened')
         $$('.mybsmi-dariphoto').attr('src','https://drive.google.com/uc?export=view&id='+safe(dashboarddata.user.userphoto));
-        $$('.mybsmi-kepadaphoto').attr('src','https://drive.google.com/uc?export=view&id='+safe(photo));
+        if (photo !== '') $$('.mybsmi-kepadaphoto').attr('src','https://drive.google.com/uc?export=view&id='+safe(photo));
       }
     },
     buttons: [
