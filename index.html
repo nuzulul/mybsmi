@@ -420,7 +420,12 @@
 
           </div>
         </div>
-        <div class="page-content">
+        <div class="toolbar toolbar-bottom">
+          <div class="toolbar-inner">
+            2023 &copy; MyBSMI
+          </div>
+        </div>
+        <div class="page-content hide-toolbar-on-scroll">
           <div class="dashboard-cards">
             <div class="row margin-horizontal">
               
@@ -1660,7 +1665,7 @@ function fperiksauserstatus({ resolve, reject })
             let data = JSON.parse(dashboarddata.user.usermydata)
             if (data.verifikasiidentitas)
             {
-              app.dialog.alert('Menunggu verifikasi', 'Status')
+              app.dialog.alert('Proses verifikasi', 'Status')
               reject();
             }
             else
