@@ -146,7 +146,7 @@
           <div class="list">
             <ul>
               <li>
-                <a href="/" class="item-content item-link active-link panel-close">
+                <a href="/" class="item-content item-link panel-close mybsmi-menu">
                   <div class="item-media">
                     <i class="icon f7-icons">square_grid_2x2_fill</i>
                   </div>
@@ -161,7 +161,7 @@
           <div class="list">
             <ul>
               <li>
-                <a href="/biodata/" class="item-content item-link panel-close mybsmi-profile">
+                <a href="/biodata/" class="item-content item-link panel-close mybsmi-menu">
                   <div class="item-media">
                     <i class="icon f7-icons">person_circle_fill</i>
                   </div>
@@ -176,7 +176,7 @@
           <div class="list">
             <ul>
               <li>
-                <a href="/ekta/" class="item-content item-link panel-close mybsmi-ekta">
+                <a href="/ekta/" class="item-content item-link panel-close mybsmi-menu">
                   <div class="item-media">
                     <i class="icon f7-icons">creditcard_fill</i>
                   </div>
@@ -223,7 +223,7 @@
           <div class="list mybsmi-verifikatormenu" style="display:none">
             <ul>
               <li>
-                <a href="/verifikator/" class="item-content item-link panel-close">
+                <a href="/verifikator/" class="item-content item-link panel-close mybsmi-menu">
                   <div class="item-media">
                     <i class="icon f7-icons">checkmark_2</i>
                   </div>
@@ -238,7 +238,7 @@
           <div class="list mybsmi-adminmenu" style="display:none">
             <ul>
               <li>
-                <a href="/admin/" class="item-content item-link panel-close">
+                <a href="/admin/" class="item-content item-link panel-close mybsmi-menu">
                   <div class="item-media">
                     <i class="icon f7-icons">chart_pie_fill</i>
                   </div>
@@ -1297,7 +1297,7 @@
                                     <option value="B">B</option>
                                     <option value="AB">AB</option>
                                     <option value="O">O</option>
-                                    <option value="Tidak Tahu">Tidak Tahu</option>
+                                    <option value="-">-</option>
                                   </select>
                     </div>
                   </div>
@@ -1693,7 +1693,7 @@ app.on('pageInit', function (page) {
   //console.log('Page is now pageInit');
   let mypreloader = app.dialog.preloader();
   setTimeout(function () {mypreloader.close();}, 1000);
-  
+  //console.log(page.router.currentRoute);
 });
 
 app.on('pageAfterIn', function (page) {
@@ -1711,6 +1711,13 @@ let myprofile = ''
   //$$('.navbar-inner .title').append(myprofile);
 });
 
+//console.log(app.views.current);
+//console.log(app.views.current.router.initialUrl);
+var currentrouturl = app.views.current.router.initialUrl;
+var currentmybsmimenu = $$('a[href="'+currentrouturl+'"]');
+currentmybsmimenu.addClass('active-link');
+
+
 // Fix col sizes
 function fixCols() {
 setTimeout(function() {
@@ -1721,6 +1728,13 @@ fixCols();
 $$(window).on('resize', fixCols);
 
 
+
+////////////////////////////////////////////////////
+$$('.mybsmi-menu').on('click', function (e) {
+  $$('.mybsmi-menu').removeClass('active-link');
+  $$(this).addClass('active-link');
+});
+/////////////////////////////////////////////////////
 
 
 
@@ -3764,7 +3778,7 @@ function fpagebacapesan(id)
       $$('.mybsmi-bacapesan .card-header').html(safe(data[7]));
       $$('.mybsmi-bacapesan .card-content').html(pengirim);
       $$('.mybsmi-bacapesan .card-footer').html(safe(data[8]))
-      $$('.mybsmi-bacapesan img').attr('src','https://drive.google.com/uc?export=view&id='+safe(data[4]));
+      if (data[4] !== '') $$('.mybsmi-bacapesan img').attr('src','https://drive.google.com/uc?export=view&id='+safe(data[4]));
       if(data[5] === dashboarddata.user.useruid)
       {
         $$('.mybsmi-bacapesan .item-subtitle').html('kepada saya');
