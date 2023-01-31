@@ -3773,8 +3773,11 @@ function fpagebacapesan(id)
           mybsmipesan[id][9] = 'true';
           fupdatebacapesan(data[1]);
         }
-      }
-      
+        $$('.mybsmi-balaspesan').removeClass('display-none');
+        $$('.mybsmi-balaspesan').on('click', function (e) {
+              fkirimpesan(data[2],data[3],data[4])
+        }); 
+      }     
     }
 }
 
@@ -3810,6 +3813,139 @@ function fupdatebacapesan(pesanid)
           {
             //console.log(message);
             //mypreloader.close();
+            app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
+          },
+      })
+}
+
+function fkirimpesan(uid,nama,photo)
+{
+  //console.log(uid+nama+photo);
+  var dialog = app.dialog.create({
+    title: 'Tulis Pesan',
+    content: ''
++'          <div class="list no-hairlines-md">'
++'              <ul>'
++'                    <li class="item-content item-input">'
++'                          <div class="item-media">'
++'                                <img class="mybsmi-dariphoto" src="avatar.png" style="width:40px;height:40px;margin-right:10px;border-radius:50% 50%;object-fit:cover;">'
++'                          </div>'
++'                          <div class="item-inner">'
++'                                <div class="item-title item-label">Dari</div>'
++'                                <div class="item-input-wrap">'
++'                                      <input type="text" placeholder="" value="'+safe(dashboarddata.user.usernama)+'" readonly="readonly"/>'
++'                                </div>'
++'                          </div>'
++'                    </li>'
++'                    <li class="item-content item-input">'
++'                          <div class="item-media">'
++'                                <img class="mybsmi-kepadaphoto" src="avatar.png" style="width:40px;height:40px;margin-right:10px;border-radius:50% 50%;object-fit:cover;">'
++'                          </div>'
++'                          <div class="item-inner">'
++'                                <div class="item-title item-label">Kepada</div>'
++'                                <div class="item-input-wrap">'
++'                                      <input type="text" placeholder="" value="'+safe(nama)+'" readonly="readonly"/>'
++'                                </div>'
++'                          </div>'
++'                    </li>'
++'                    <li class="item-content item-input">'
++'                          <div class="item-media">'
++'                                <div style="width:40px;height:40px;margin-right:10px;"></div>'
++'                          </div>'
++'                          <div class="item-inner">'
++'                                <div class="item-title item-label">Subjek</div>'
++'                                <div class="item-input-wrap">'
++'                                      <input id="mybsmi-kirimpesan-subjek" type="text" placeholder="Tulis subjek" />'
++'                                </div>'
++'                          </div>'
++'                    </li>'
++'                    <li class="item-content item-input">'
++'                          <div class="item-media">'
++'                                <div style="width:40px;height:40px;margin-right:10px;"></div>'
++'                          </div>'
++'                          <div class="item-inner">'
++'                                <div class="item-title item-label">Pesan</div>'
++'                                <div class="item-input-wrap">'
++'                                      <textarea id="mybsmi-kirimpesan-pesan" placeholder="Tulis pesan" ></textarea>'
++'                                </div>'
++'                          </div>'
++'                    </li>'
++'              </ul>'
++'          </div>'
++'          '
++'          ',
+    closeByBackdropClick: false,
+    destroyOnClose: true,
+    on: {
+      opened: function () {
+        //console.log('Dialog opened')
+        $$('.mybsmi-dariphoto').attr('src','https://drive.google.com/uc?export=view&id='+safe(dashboarddata.user.userphoto));
+        $$('.mybsmi-kepadaphoto').attr('src','https://drive.google.com/uc?export=view&id='+safe(photo));
+      }
+    },
+    buttons: [
+      {
+        text: 'Batal',
+        close:true,
+        color: 'gray',
+        onClick: function(dialog, e)
+          {
+          }
+      },
+      {
+        text: 'Kirim',
+        close:false,
+        onClick: function(dialog, e)
+          {
+            let subjek = $$('#mybsmi-kirimpesan-subjek').val();
+            let pesan = $$('#mybsmi-kirimpesan-pesan').val();
+            if(subjek === ''){var toastBottom = app.toast.create({ text: 'Subjek tidak boleh kosong', closeTimeout: 3000,position: 'center', });toastBottom.open();return;}
+            if(pesan === ''){var toastBottom = app.toast.create({ text: 'Pesan tidak boleh kosong', closeTimeout: 3000,position: 'center', });toastBottom.open();return;}
+            fkirimpesanrun(uid,nama,photo,subjek,pesan,dialog);
+          }
+      },
+    ]
+  });
+  dialog.open();
+}
+
+function fkirimpesanrun(uid,nama,photo,subjek,pesan,dialog)
+{
+  //console.log(uid+subjek+pesan)
+      dialog.close();
+      let mypreloader = app.dialog.preloader();
+      app.request({
+        url: apidataurl,
+        method: 'POST',
+        cache: false,
+        data : { token:mybsmiusertoken, command: 'kirimpesan', uid:uid, subjek:subjek, pesan:pesan}, 
+        success: function (data, status, xhr)
+          {
+            mypreloader.close();
+            var status = JSON.parse(data).status;
+            var content = JSON.parse(data).data;
+            if (status == "success")
+            {
+              //console.log(content);
+              let pesanku = JSON.parse(content);
+              mybsmipesan.push(pesanku);
+              app.dialog.alert("Pesan telah terkirim",'Info');
+            }
+            else if (status == "failed")
+            {
+              //console.log("failed");
+              app.dialog.alert(content,'Terjadi Kesalahan');
+            }
+            else
+            {
+              //console.log("failed");
+              app.dialog.alert(content,'Terjadi Kesalahan');
+            }
+          },
+        error: function (xhr, status, message)
+          {
+            //console.log(message);
+            mypreloader.close();
             app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
           },
       })
