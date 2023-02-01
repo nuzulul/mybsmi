@@ -3154,9 +3154,10 @@ function fgetekta()
             {
               //console.log(content);
               window.mybsmiekta = content;
-              $$('.mybsmi-ektabsmi').html('<img id="imgekta" src="" style="width:100%;max-width:200px;cursor:pointer;" onclick="javascript:myimage(this)">');
-              let src = "https://drive.google.com/uc?export=view&id="+safe(content);
-              $$('#imgekta').attr('src',src);
+              //$$('.mybsmi-ektabsmi').html('<img id="imgekta" src="" style="width:100%;max-width:200px;cursor:pointer;" onclick="javascript:myimage(this)">');
+              //let src = "https://drive.google.com/uc?export=view&id="+safe(content);
+              //$$('#imgekta').attr('src',src);
+              showekta();
             }
             else if (status == "failed")
             {
@@ -3179,9 +3180,19 @@ function fgetekta()
   }
   else
   {
+    showekta();
+  }
+  
+  function showekta()
+  {
         $$('.mybsmi-ektabsmi').html('<img id="imgekta" src="" style="width:100%;max-width:200px;cursor:pointer;" onclick="javascript:myimage(this)">');
         let src = "https://drive.google.com/uc?export=view&id="+safe(mybsmiekta);
         $$('#imgekta').attr('src',src);
+        $$('.mybsmi-ektabsmi-download').html('<a href="#" class="button mybsmi-ektabsmi-download-button">Download</a>');
+        $$('.mybsmi-ektabsmi-download-button').on('click', function () {
+          //fdownloadfile('https://api.allorigins.win/raw?url=https://lh3.googleusercontent.com/d/'+mybsmiekta,'ektabsmi.jpg');
+          fdownloadfile('https://cors.bsmijatim.workers.dev/?https://lh3.googleusercontent.com/d/'+mybsmiekta,'ektabsmi.jpg');
+        })
   }
 }
 //////fpageekta///////////////////////////////////////////////////
@@ -4025,6 +4036,85 @@ function fkirimpesanrun(uid,nama,photo,subjek,pesan,dialog)
       })
 }
 /////fpagepesan//////////////////////////////////////////////////////////////
+
+
+//////fdownloadfile/////////////////////////////////////////////////////////////////////
+//https://itnext.io/how-to-download-files-with-javascript-d5a69b749896
+function fdownloadfile(IMG_URL,FILE_NAME)
+{
+  const startTime = new Date().getTime();
+
+  request = new XMLHttpRequest();
+
+  request.responseType = "blob";
+  request.open("get", IMG_URL, true);
+  request.send();
+  
+  let mypreloader = app.dialog.preloader('Downloading ...');
+
+  request.onreadystatechange = function () {
+
+    if (this.readyState == 4 && this.status == 200) {
+      const imageURL = window.URL.createObjectURL(this.response);
+
+      const anchor = document.createElement("a");
+      anchor.setAttribute('href', imageURL);
+      anchor.setAttribute('target', '_blank');
+      anchor.setAttribute('download', FILE_NAME);
+      anchor.click();
+      mypreloader.close();
+      app.dialog.alert("Download Selesai",'Info');
+    }
+  };
+
+  request.onprogress = function (e) {
+    const percent_complete = Math.floor((e.loaded / e.total) * 100);
+
+    const duration = (new Date().getTime() - startTime) / 1000;
+    const bps = e.loaded / duration;
+
+    const kbps = Math.floor(bps / 1024);
+
+    const time = (e.total - e.loaded) / bps;
+    const seconds = Math.floor(time % 60);
+    const minutes = Math.floor(time / 60);
+
+    console.log(
+      //`${percent_complete}% - ${kbps} Kbps - ${minutes} min ${seconds} sec remaining`
+    );
+  };
+}
+
+async function fdownloadfile1(IMG_URL,FILE_NAME) {
+  const image = await fetch(IMG_URL);
+  const imageBlog = await image.blob();
+  const imageURL = URL.createObjectURL(imageBlog);
+
+  const anchor = document.createElement("a");
+  anchor.setAttribute('download', FILE_NAME);
+  anchor.setAttribute('href', imageURL);
+  anchor.setAttribute('target', '_blank');
+
+  anchor.click();
+
+  URL.revokeObjectURL(imageURL);
+}
+
+
+function fdownloadfile2(url, fileName){
+  fetch(url, { method: 'get'})
+    .then(res => res.blob())
+    .then(res => {
+      const aElement = document.createElement('a');
+      aElement.setAttribute('download', fileName);
+      const href = URL.createObjectURL(res);
+      aElement.setAttribute('href', href);
+      aElement.setAttribute('target', '_blank');
+      aElement.click();
+      URL.revokeObjectURL(href);
+    });
+};
+//////fdownloadfile/////////////////////////////////////////////////////////////////////
 </script>
 <!--end script------------------------------------------------------------------------------->  
 </body>
