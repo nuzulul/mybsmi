@@ -136,6 +136,10 @@
     background-size: cover;
     }
 
+    #my-aktivasi-screen .list .item-after
+    {
+      margin-left:inherit;
+    }
   </style>
 </head>
 <body class="color-theme-red">
@@ -1378,6 +1382,18 @@
                     </div>
                   </div>
                 </li>
+                <li class="item-content item-input">
+                  <div class="item-inner">
+                    <div class="item-input-wrap">
+                      <center><input type="checkbox" name="paraf" value="yes" placeholder="" required validate>Dengan ini saya menyatakan bahwa data yang saya isikan adalah benar</center> 
+                    </div>
+                  </div>
+                </li>
+                <li class="item-content item-input">
+                  <div style="padding:20px 20px;justify-content:center;align-items:center;display:flex;width:100%;">
+                    <p style="text-align:center; border:1px solid gray;padding:10px 10px;color:gray;">Anda tidak dapat melakukan perubahan detail setelah aktivasi. </p>
+                  </div>
+                <li>
                 <li class="item-content item-input">
                   <div style="padding:20px 20px;justify-content:center;align-items:center;display:flex;width:100%;">
                   <div id="mybsmi-grecaptchaaktivasi" class="g-recaptcha1" data-sitekey="6LcP1RskAAAAANtjMoK9vf0tL37hI_uRIxsQm9-k" data-callback="grecaptcharesponse" data-expired-callback="grecaptchaexpired"></div>
@@ -2759,7 +2775,7 @@ function fverifikasidata()
 {
   var dialog = app.dialog.create({
     title: 'Permintaan Verifikasi',
-    text: 'Silahkan verifikasi identitas Anda untuk membuka fitur ini.',
+    text: 'Silahkan verifikasi identitas Anda untuk membuka fitur ini. Anda perlu mengirimkan KTP untuk mengajukan verifikasi.',
     closeByBackdropClick: false,
     destroyOnClose: true,
     on: {
