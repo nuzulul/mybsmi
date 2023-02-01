@@ -3005,13 +3005,23 @@ function fkirimverifikasiidentitas(dialog,obj)
 function fpageekta()
 {
     let data = JSON.parse(dashboarddata.user.usermydata)
-    if (data.ekta)
+    let now  = new Date(); 
+    let ekta = data.ekta;
+    let ektaberlaku = data.ektaberlaku;
+    let ektaberlakucurrent = '31/12/'+now.getFullYear().toString();
+    if ((ekta)&&(ektaberlaku === ektaberlakucurrent))
     {
         fgetekta();
     }
     else
     {
-      $$('.mybsmi-ektabsmi').html('<a class="button button-fill">BUAT e-KTA</a>');
+      let label = 'BUAT e-KTA';
+      if (ekta)
+      {
+        label = 'PERBARUI e-KTA';
+        app.dialog.alert('Masa berlaku e-KTA anda telah habis','Info');
+      }
+      $$('.mybsmi-ektabsmi').html('<a class="button button-fill">'+label+'</a>');
       $$('.mybsmi-ektabsmi a').on('click', function () {
             
             app.dialog.confirm('Pembuatan e-KTA memerlukan waktu 2-4 menit.', 'Pemberitahuan', function (){fbuatekta();})
