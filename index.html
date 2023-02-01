@@ -165,12 +165,12 @@
           <div class="list">
             <ul>
               <li>
-                <a href="/biodata/" class="item-content item-link panel-close mybsmi-menu">
+                <a href="/profilku/" class="item-content item-link panel-close mybsmi-menu">
                   <div class="item-media">
                     <i class="icon f7-icons">person_circle_fill</i>
                   </div>
                   <div class="item-inner">
-                    <div class="item-title">Biodata</div>
+                    <div class="item-title">Profilku</div>
                   </div>
                 </a>
               </li>
@@ -1288,6 +1288,7 @@
                                     <option value="Dokter Umum">Dokter Umum</option>
                                     <option value="Dokter Gigi">Dokter Gigi</option>
                                     <option value="Dokter Hewan">Dokter Hewan</option>
+                                    <option value="Dokter">Dokter</option>
                                     <option value="Bidan">Bidan</option>
                                     <option value="Perawat">Perawat</option>
                                     <option value="Apoteker">Apoteker</option>
@@ -1302,6 +1303,8 @@
                                     <option value="Guru">Guru</option>
                                     <option value="Media">Media</option>
                                     <option value="Wiraswasta">Wiraswasta</option>
+                                    <option value="Rescue">Rescue</option>
+                                    <option value="Relawan">Relawan</option>
                                     <option value="Umum">Umum</option>
                                   </select>
                     </div>
@@ -1507,11 +1510,11 @@ routes: [
     },
   },
   {
-    path: '/biodata/',
-    url: 'biodata.html',
+    path: '/profilku/',
+    url: 'profilku.html',
     on: {
       pageAfterIn: function test (e, page) {
-        fpagebiodata();
+        fpageprofilku();
       },
     },
     beforeEnter: function ({ resolve, reject }) {          
@@ -2382,24 +2385,24 @@ function grecaptchaexpired()
 
 
 
-////fpagebiodata////////////////////////////
-function fpagebiodata()
+////fpageprofilku////////////////////////////
+function fpageprofilku()
 {
     var data = dashboarddata.user;
-    $$('.mybsmi-biodata .mybsmi-userphoto').attr('src','https://drive.google.com/uc?export=view&id='+safe(data.userphoto));
-    $$('.mybsmi-biodata .mybsmi-usernama').text(safe(data.usernama));
-    $$('.mybsmi-biodata .mybsmi-userjeniskelamin').text(safe(data.userjeniskelamin));
-    $$('.mybsmi-biodata .mybsmi-usertanggallahir').text(safe(data.usertanggallahir));
-    $$('.mybsmi-biodata .mybsmi-userprofesi').text(safe(data.userprofesi));
-    $$('.mybsmi-biodata .mybsmi-usergolongandarah').text(safe(data.usergolongandarah));
-    $$('.mybsmi-biodata .mybsmi-useralamatdomisili').text(safe(data.useralamatdomisili));
-    $$('.mybsmi-biodata .mybsmi-useremail').text(safe(data.useremail));
-    $$('.mybsmi-biodata .mybsmi-usernohp').text(safe(data.userhp));
-    $$('.mybsmi-biodata .mybsmi-usercabang').text(safe(data.usercabang));
-    $$('.mybsmi-biodata .mybsmi-usertahunbergabung').text(safe(data.usertahunbergabung));
+    $$('.mybsmi-profilku .mybsmi-userphoto').attr('src','https://drive.google.com/uc?export=view&id='+safe(data.userphoto));
+    $$('.mybsmi-profilku .mybsmi-usernama').text(safe(data.usernama));
+    $$('.mybsmi-profilku .mybsmi-userjeniskelamin').text(safe(data.userjeniskelamin));
+    $$('.mybsmi-profilku .mybsmi-usertanggallahir').text(safe(data.usertanggallahir));
+    $$('.mybsmi-profilku .mybsmi-userprofesi').text(safe(data.userprofesi));
+    $$('.mybsmi-profilku .mybsmi-usergolongandarah').text(safe(data.usergolongandarah));
+    $$('.mybsmi-profilku .mybsmi-useralamatdomisili').text(safe(data.useralamatdomisili));
+    $$('.mybsmi-profilku .mybsmi-useremail').text(safe(data.useremail));
+    $$('.mybsmi-profilku .mybsmi-usernohp').text(safe(data.userhp));
+    $$('.mybsmi-profilku .mybsmi-usercabang').text(safe(data.usercabang));
+    $$('.mybsmi-profilku .mybsmi-usertahunbergabung').text(safe(data.usertahunbergabung));
     if (data.userstatus === "Terverifikasi"){$$('.mybsmi-avatar-badge').css('display','flex');};
 }
-////fpagebiodata////////////////////////////
+////fpageprofilku////////////////////////////
 
 
 
