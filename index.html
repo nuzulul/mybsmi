@@ -1930,7 +1930,7 @@ $$('#my-login-screen .login-button').on('click', function () {
               buttons: [
                 {
                   text: 'Kirim Email',
-                  close:false,
+                  close:true,
                   onClick: function(dialog, e)
                     {
                         let mypreloader = app.dialog.preloader();
@@ -2454,7 +2454,8 @@ function resetpasswordemail(dynamicPopup)
               //console.log(message);
               mypreloader.close();
               dynamicPopup.close();  
-              var toastBottom = app.toast.create({ text: 'Server sedang sibuk', closeTimeout: 5000,position: 'center', });toastBottom.open();          
+              //var toastBottom = app.toast.create({ text: 'Server sedang sibuk', closeTimeout: 5000,position: 'center', });toastBottom.open();  
+              app.dialog.alert('Server sedang sibuk','Terjadi Kesalahan');       
             },
           success: function(data, status, xhr) 
             {
@@ -2472,12 +2473,14 @@ function resetpasswordemail(dynamicPopup)
               else if ((status === "error") || (status === "failed")) 
               {
                 dynamicPopup.close();
-                var toastBottom = app.toast.create({ text: msg, closeTimeout: 5000,position: 'center', });toastBottom.open();
+                //var toastBottom = app.toast.create({ text: msg, closeTimeout: 5000,position: 'center', });toastBottom.open();
+                app.dialog.alert(msg,'Terjadi Kesalahan');
               }
               else
               {
                 dynamicPopup.close();
-                var toastBottom = app.toast.create({ text: msg, closeTimeout: 5000,position: 'center', });toastBottom.open();
+                //var toastBottom = app.toast.create({ text: msg, closeTimeout: 5000,position: 'center', });toastBottom.open();
+                app.dialog.alert(msg,'Terjadi Kesalahan');
               }
               
             }
@@ -2539,7 +2542,8 @@ function resetpasswordotp(dynamicPopup,email,hash)
               //console.log(message);
               mypreloader.close(); 
               dynamicPopup.close(); 
-              var toastBottom = app.toast.create({ text: 'Server sedang sibuk', closeTimeout: 5000,position: 'center', });toastBottom.open();          
+              //var toastBottom = app.toast.create({ text: 'Server sedang sibuk', closeTimeout: 5000,position: 'center', });toastBottom.open();          
+              app.dialog.alert('Server sedang sibuk','Terjadi Kesalahan');
             },
           success: function(data, status, xhr) 
             {
@@ -2555,11 +2559,13 @@ function resetpasswordotp(dynamicPopup,email,hash)
               }
               else if (status === "failed")
               {
-                var toastBottom = app.toast.create({ text: msg, closeTimeout: 5000,position: 'center', });toastBottom.open();
+                //var toastBottom = app.toast.create({ text: msg, closeTimeout: 5000,position: 'center', });toastBottom.open();
+                app.dialog.alert(msg,'Terjadi Kesalahan');
               }
               else
               {
-                var toastBottom = app.toast.create({ text: msg, closeTimeout: 5000,position: 'center', });toastBottom.open();
+                //var toastBottom = app.toast.create({ text: msg, closeTimeout: 5000,position: 'center', });toastBottom.open();
+                app.dialog.alert(msg,'Terjadi Kesalahan');
               }
             }
       }); 
@@ -2601,7 +2607,8 @@ function resetpasswordinput(dynamicPopup,data,email)
               //console.log(message);
               mypreloader.close();  
               dynamicPopup.close();
-              var toastBottom = app.toast.create({ text: 'Server sedang sibuk', closeTimeout: 5000,position: 'center', });toastBottom.open();          
+              //var toastBottom = app.toast.create({ text: 'Server sedang sibuk', closeTimeout: 5000,position: 'center', });toastBottom.open();  
+              app.dialog.alert('Server sedang sibuk','Terjadi Kesalahan');        
             },
           success: function(data, status, xhr) 
             {
@@ -2613,15 +2620,18 @@ function resetpasswordinput(dynamicPopup,data,email)
               var msg = json['data'];
               if (status === "success")
               {
-                var toastBottom = app.toast.create({ text: msg, closeTimeout: 5000,position: 'center', });toastBottom.open();
+                //var toastBottom = app.toast.create({ text: msg, closeTimeout: 5000,position: 'center', });toastBottom.open();
+                app.dialog.alert(msg,'Berhasil');
               }
               else if (status === "failed")
               {
-                var toastBottom = app.toast.create({ text: msg, closeTimeout: 5000,position: 'center', });toastBottom.open();
+                //var toastBottom = app.toast.create({ text: msg, closeTimeout: 5000,position: 'center', });toastBottom.open();
+                app.dialog.alert(msg,'Terjadi Kesalahan');
               }
               else
               {
-                var toastBottom = app.toast.create({ text: msg, closeTimeout: 5000,position: 'center', });toastBottom.open();
+                //var toastBottom = app.toast.create({ text: msg, closeTimeout: 5000,position: 'center', });toastBottom.open();
+                app.dialog.alert(msg,'Terjadi Kesalahan');
               }
             }
       }); 
@@ -2712,7 +2722,7 @@ function flengkapiphoto()
       },
       {
         text: 'Upload',
-        close:true,
+        close:false,
         onClick: function(dialog, e)
           {
             const [file] = mybsmiuploadphoto.files
@@ -2728,6 +2738,10 @@ function flengkapiphoto()
               };
               fr.readAsArrayBuffer(file);
             }
+            else
+            {
+              var toastBottom = app.toast.create({ text: 'Anda belum memilih photo', closeTimeout: 5000,position: 'center', });toastBottom.open();
+            }
           }
       },
     ]
@@ -2741,6 +2755,7 @@ function fuploadphoto(dialog,obj)
 {
   //console.log(obj);
   var data = JSON.stringify(obj);
+  dialog.close();
   let mypreloader = app.dialog.preloader();
   app.request({
     url: apidataurl,
@@ -2749,14 +2764,15 @@ function fuploadphoto(dialog,obj)
     data : { token:mybsmiusertoken, command: 'uploaduserphoto', data: data}, 
     success: function (data, status, xhr)
       {
-        mypreloader.close();
-        dialog.close();
+        mypreloader.close();        
         var status = JSON.parse(data).status;
         var content = JSON.parse(data).data;
         if (status == "success")
         {
           //console.log(content);
+          var toastBottom = app.toast.create({ text: 'Upload photo berhasil', closeTimeout: 5000,position: 'center', });toastBottom.open();
           getdefaultdata();
+          
         }
         else if (status == "failed")
         {
@@ -2932,7 +2948,7 @@ function fverifikasiidentitas()
       },
       {
         text: 'Verifikasi',
-        close:true,
+        close:false,
         onClick: function(dialog, e)
           {            
             const [file] = mybsmiuploadphoto.files
@@ -2969,6 +2985,7 @@ function fkirimverifikasiidentitas(dialog,obj)
 {
   //console.log(obj);
   var data = JSON.stringify(obj);
+  dialog.close();
   let mypreloader = app.dialog.preloader();
   app.request({
     url: apidataurl,
@@ -2977,8 +2994,7 @@ function fkirimverifikasiidentitas(dialog,obj)
     data : { token:mybsmiusertoken, command: 'verifikasiidentitas', data: data}, 
     success: function (data, status, xhr)
       {
-        mypreloader.close();
-        dialog.close();
+        mypreloader.close();        
         var status = JSON.parse(data).status;
         var content = JSON.parse(data).data;
         if (status == "success")
