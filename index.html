@@ -155,7 +155,7 @@
                     <i class="icon f7-icons">square_grid_2x2_fill</i>
                   </div>
                   <div class="item-inner">
-                    <div class="item-title">Dashboard</div>
+                    <div class="item-title">Beranda</div>
                   </div>
                 </a>
               </li>
@@ -186,6 +186,21 @@
                   </div>
                   <div class="item-inner">
                     <div class="item-title">e-KTA</div>
+                  </div>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <div class="list">
+            <ul>
+              <li>
+                <a href="/aktivitas/" class="item-content item-link panel-close mybsmi-menu">
+                  <div class="item-media">
+                    <i class="icon f7-icons">person_2_square_stack_fill</i>
+                  </div>
+                  <div class="item-inner">
+                    <div class="item-title">Aktivitas</div>
                   </div>
                 </a>
               </li>
@@ -364,7 +379,7 @@
                 <i class="icon f7-icons">bars</i>
               </a>
             </div>
-            <div class="title">Dashboard</div>
+            <div class="title">Beranda</div>
             <div class="right">
               <a class="link popover-open" data-popover=".profile-popover">
                 <span class="margin-right-half"></span>
@@ -374,7 +389,7 @@
             <div class="title-large">
               <div class="title-large-text display-flex align-items-center">
                 <i class="icon f7-icons margin-right-half" style="font-size: 24px">square_grid_2x2_fill</i>
-                <span>Dashboard</span>
+                <span>Beranda</span>
               </div>
             </div>
           </div>
@@ -1531,6 +1546,39 @@ routes: [
     },
     beforeEnter: function ({ resolve, reject }) {
         fperiksauserstatus({ resolve, reject })
+    },
+  },
+  {
+    path: '/aktivitas/',
+    url: 'aktivitas.html',
+    on: {
+      pageAfterIn: function test (e, page) {
+        fpageaktivitas();
+      },
+    },
+    beforeEnter: function ({ resolve, reject }) {          
+          fperiksauserdata({ resolve, reject })
+    },
+  },
+  {
+    path: '/twibbon/:aktivitasid',
+    url: 'twibbon.html',
+    on: {
+      pageAfterIn: function test (e, page) {
+        fpagetwibbon(page.route.params.aktivitasid);
+      },
+    },
+    beforeEnter: function ({ resolve, reject }) {
+      function fperiksakesiapan({ resolve, reject })
+      {
+          if (typeof dashboarddata === 'undefined' || dashboarddata === null) {
+            // variable is undefined or null
+            setTimeout(function(){ fperiksakesiapan({ resolve, reject }); }, 1000);
+            return;
+          }
+        resolve();
+      }
+      fperiksakesiapan({ resolve, reject })
     },
   },
   {
@@ -3194,7 +3242,7 @@ function fgetekta()
         $$('.mybsmi-ektabsmi-download').html('<a href="#" class="button mybsmi-ektabsmi-download-button">Download</a>');
         $$('.mybsmi-ektabsmi-download-button').on('click', function () {
           //fdownloadfile('https://api.allorigins.win/raw?url=https://lh3.googleusercontent.com/d/'+mybsmiekta,'ektabsmi.jpg');
-          fdownloadfile('https://cors.bsmijatim.workers.dev/?https://lh3.googleusercontent.com/d/'+mybsmiekta,'ektabsmi.jpg');
+          fdownloadfile('https://cors.bsmijatim.workers.dev/?https://lh3.googleusercontent.com/d/'+mybsmiekta,'ektabsmi');
         })
   }
 }
@@ -4118,6 +4166,348 @@ function fdownloadfile2(url, fileName){
     });
 };
 //////fdownloadfile/////////////////////////////////////////////////////////////////////
+
+
+
+
+
+/////////fpageaktivitas()/////////////////////////////////////////////////////////////
+function fpageaktivitas(run)
+{
+  if (typeof mybsmiaktivitas === 'undefined' || mybsmiaktivitas === null)
+  {
+      let mypreloader = app.dialog.preloader();
+      app.request({
+        url: apidataurl,
+        method: 'POST',
+        cache: false,
+        data : { token:mybsmiusertoken, command: 'getaktivitasdata'}, 
+        success: function (data, status, xhr)
+          {
+            mypreloader.close();
+            var status = JSON.parse(data).status;
+            var content = JSON.parse(data).data;
+            if (status == "success")
+            {
+              //console.log(content);
+              window.mybsmiaktivitas = content;
+              if (!run) getaktivitasdatarun(content);
+            }
+            else if (status == "failed")
+            {
+              //console.log("failed");
+              app.dialog.alert(content,'Terjadi Kesalahan');
+            }
+            else
+            {
+              //console.log("failed");
+              app.dialog.alert(content,'Terjadi Kesalahan');
+            }
+          },
+        error: function (xhr, status, message)
+          {
+            //console.log(message);
+            mypreloader.close();
+            app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
+          },
+      })
+  }
+  else
+  {
+    if (!run) getaktivitasdatarun(mybsmiaktivitas);
+  }
+}
+
+function getaktivitasdatarun(content)
+{
+  $$('.mybsmi-aktivitas').html('');
+  for(i=content.length-1;i>-1;i--)
+  {
+    //let date = new Date(content[i][0]).toLocaleString('en-US', { timeZone: 'Asia/Jakarta' });
+    let date = new Intl.DateTimeFormat("id-ID", { hour12:false,dateStyle: "short" , timeStyle: "short",  timeZone: "Asia/Jakarta"}).format(new Date(content[i][0]));
+    //data += '<div class="timeline-item"><div class="timeline-item-date"><small>'+date+'</small></div><div class="timeline-item-divider"></div><div class="timeline-item-content"><div class="timeline-item-inner"><div class="timeline-item-time"></div><div class="timeline-item-text">'+safe(content[i][5])+'</div></div></div></div>';
+    let data = '<div class="col-100 xsmall-75 small-50 medium-40 large-40 xlarge-33 mybsmi-aktivitas-item-'+safe(content[i][1])+'" data-user="'+btoa(JSON.stringify(content[i]))+'" style="cursor:pointer;"> <div class="card"> <div class="card-header no-padding" style="overflow:hidden;"><img class="poster" src="photo.svg" style="width:100%;aspect-ratio: 1 / 1;object-fit:cover;background-image:none;"></div> <div class="card-content card-content-padding"> <div style="font-weight:bold;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">'+safe(content[i][4])+'</div> <div></div> </div> <div class="card-footer"> <div class="row"> <div class="col-100 margin-bottom margin-top"> <div class="float-left" style="width:3em;"><img src="logo50bulat.png" style="width:1.5em;aspet-ratio 1/1;object-fit:cover;border-radius:50% 50%;overflow:hidden;"></div> <div class="float-left" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">BSMI Jawa Timur</div> </div> <div class="col-100 margin-bottom"> <div class="float-left" style="width:3em;"><i class="icons f7-icons">person_2</i></div> <div class="float-left" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">'+safe(JSON.parse(content[i][10]).length)+' Pendukung</div> </div> <div class="col-100 margin-bottom"> <div class="float-left" style="width:3em;"><i class="icons f7-icons">paperclip</i></div> <div class="float-left" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">'+safe(content[i][3])+'</div> </div><div class="col-100 margin-bottom"> <div class="float-left" style="width:3em;"><i class="icons f7-icons">calendar</i></div> <div class="float-left" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">'+date+'</div> </div> </div>   </div> </div> </div>';
+    $$('.mybsmi-aktivitas').append(data);
+    $$('.mybsmi-aktivitas-item-'+content[i][1]+' img.poster').attr('src','https://drive.google.com/uc?export=view&id='+safe(content[i][6]));
+    $$('.mybsmi-aktivitas-item-'+content[i][1]).on('click', function (e) {
+          let base64 = this.attributes["data-user"].value;
+          let json = atob(base64);
+          let data = JSON.parse(json)
+          let jenis = data[3].toLowerCase();
+          let id = data[1];
+          let url = "/"+jenis+"/"+id;
+          //console.log(url);
+          app.views.main.router.navigate(url);
+    });
+  }
+  
+}
+
+function fpagetwibbon(aktivitasid)
+{
+
+  fpageaktivitas(false);
+  function fperiksakesiapan()
+  {
+      if (typeof mybsmiaktivitas === 'undefined' || mybsmiaktivitas === null) {
+        setTimeout(function(){ fperiksakesiapan(); }, 1000);
+        return;
+      }
+
+      for (var i=0;i<mybsmiaktivitas.length;i++)
+      {
+        if (aktivitasid === mybsmiaktivitas[i][1])
+        {
+          fpagetwibbonrun(mybsmiaktivitas[i]);
+        }
+      }
+  }
+  fperiksakesiapan()
+}
+
+function fpagetwibbonrun(data)
+{
+  //console.log(data);
+  $$('.mybsmi-twibbon-cabang').text(data[2]);
+  $$('.mybsmi-twibbon-judul').text(data[4]);
+  $$('.mybsmi-twibbon-pendukung').text(JSON.parse(data[10]).length);
+  $$('.mybsmi-twibbon-deskripsi').text(data[5]);
+  
+  let date = new Intl.DateTimeFormat("id-ID", { hour12:false,dateStyle: "short" , timeStyle: "short",  timeZone: "Asia/Jakarta"}).format(new Date(data[0]));
+  $$('.mybsmi-twibbon-date').text(date);
+  
+  fjadipendukungrun(data[10])
+
+  let pendukung = JSON.parse(data[10]);
+  let exists = false;
+  for (let i= pendukung.length-1;i>-1;i--)
+  {
+    if (pendukung[i].uid === dashboarddata.user.useruid) exists = true;
+  }
+
+  let IMG_URL = 'https://cors.bsmijatim.workers.dev/?https://lh3.googleusercontent.com/d/'+safe(data[6]);
+  let FILE_NAME = 'test'
+  fdownloadfiletwibbon(IMG_URL,FILE_NAME);
+
+  let output = document.getElementById('mybsmi-twibbon-photo-upload');
+  output.onchange = evt => {
+    const [file] = output.files
+    if (file) {
+        let output = document.getElementById('mybsmi-twibbon-photo');
+        output.src = URL.createObjectURL(file)
+        output.onload = function() {
+          URL.revokeObjectURL(output.src)
+          let canvas = document.getElementById("mybsmi-twibbon-canvas");
+          let context = canvas.getContext("2d");
+          context.clearRect(0, 0, canvas.width, canvas.height);
+          let img = document.getElementById('mybsmi-twibbon-photo');
+          let canvaswidth = canvas.width;
+          let canvasheight = canvas.height;
+          let imgwidth= img.width;
+          let imgheight = img.height;
+          let width = canvaswidth;
+          let height = canvaswidth/imgwidth*imgheight;
+          if (canvasheight > height)
+          {
+            height = canvasheight;
+            width = canvasheight/imgheight*imgwidth;
+          }
+          context.drawImage(img, 0, 0, width, height );
+          let imgposter = document.getElementById('mybsmi-twibbon-poster');
+          context.drawImage(imgposter, 0, 0, canvaswidth, canvasheight );
+          $$('.mybsmi-twibbon-photo-button').hide();
+          $$('.mybsmi-twibbon-photo-download').removeClass('display-none');
+          if (!exists) fjadipendukung(data[1]);
+        }
+
+    }
+  }
+  
+  $$('.mybsmi-twibbon-photo-button').on('click', function (e) {
+    $$('#mybsmi-twibbon-photo-upload').click();
+  });
+  $$('.mybsmi-twibbon-photo-download').on('click', function (e) {
+    let canvas = document.getElementById("mybsmi-twibbon-canvas");
+    fdownloadtwibbon(canvas, data[1]+'.png');
+  });
+}
+
+function fdownloadfiletwibbon(IMG_URL,FILE_NAME)
+{
+  const startTime = new Date().getTime();
+
+  request = new XMLHttpRequest();
+
+  request.responseType = "blob";
+  request.open("get", IMG_URL, true);
+  request.send();
+  
+  let mypreloader = app.dialog.preloader();
+
+  request.onreadystatechange = function () {
+
+    if (this.readyState == 4 && this.status == 200) {
+      const imageURL = window.URL.createObjectURL(this.response);
+
+      mypreloader.close();
+      let output = document.getElementById('mybsmi-twibbon-poster');
+      output.src = imageURL;
+      output.onload = function() {
+      URL.revokeObjectURL(output.src)
+      let canvas = document.getElementById("mybsmi-twibbon-canvas");
+      canvas.width = 1000;
+      canvas.height = 1000;
+      let context = canvas.getContext("2d");
+      let img1 = document.getElementById('mybsmi-twibbon-poster');
+      context.drawImage(img1, 0, 0, canvas.width, canvas.height);
+      }
+
+
+
+      
+    }
+  };
+
+  request.onprogress = function (e) {
+    const percent_complete = Math.floor((e.loaded / e.total) * 100);
+
+    const duration = (new Date().getTime() - startTime) / 1000;
+    const bps = e.loaded / duration;
+
+    const kbps = Math.floor(bps / 1024);
+
+    const time = (e.total - e.loaded) / bps;
+    const seconds = Math.floor(time % 60);
+    const minutes = Math.floor(time / 60);
+
+    console.log(
+      //`${percent_complete}% - ${kbps} Kbps - ${minutes} min ${seconds} sec remaining`
+    );
+  };
+}
+
+function fdownloadtwibbon(canvas, filename) {
+  /// create an "off-screen" anchor tag
+  var lnk = document.createElement('a'), e;
+
+  /// the key here is to set the download attribute of the a tag
+  lnk.download = filename;
+
+  /// convert canvas content to data-uri for link. When download
+  /// attribute is set the content pointed to by link will be
+  /// pushed as "download" in HTML5 capable browsers
+  lnk.href = canvas.toDataURL("image/png;base64");
+
+  /// create a "fake" click-event to trigger the download
+      if (document.createEvent) {
+          e = document.createEvent("MouseEvents");
+          e.initMouseEvent("click", true, true, window,
+                          0, 0, 0, 0, 0, false, false, false,
+                          false, 0, null);
+
+          lnk.dispatchEvent(e);
+      } else if (lnk.fireEvent) {
+          lnk.fireEvent("onclick");
+      }
+}
+
+function fjadipendukung(aktivitasid)
+{
+    //console.log(aktivitasid)
+    let mypreloader = app.dialog.preloader();
+    app.request({
+      url: apidataurl,
+      method: 'POST',
+      cache: false,
+      data : { token:mybsmiusertoken, command: 'jadipendukungaktivitas', aktivitasid:aktivitasid}, 
+      success: function (data, status, xhr)
+        {
+          mypreloader.close();
+          var status = JSON.parse(data).status;
+          var content = JSON.parse(data).data;
+          if (status == "success")
+          {
+            console.log(content);
+            fjadipendukungrun(content);
+          }
+          else if (status == "failed")
+          {
+            //console.log("failed");
+            //app.dialog.alert(content,'Terjadi Kesalahan');
+          }
+          else
+          {
+            //console.log("failed");
+            //app.dialog.alert(content,'Terjadi Kesalahan');
+          }
+        },
+      error: function (xhr, status, message)
+        {
+          //console.log(message);
+          mypreloader.close();
+          app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
+        },
+    })
+}
+
+function fjadipendukungrun(mydata)
+{
+  let pendukung = JSON.parse(mydata);
+  let exists = false;
+  $$('.mybsmi-twibbon-pendukungdetail').html('');
+  $$('.mybsmi-twibbon-pendukung').text(pendukung.length);
+  //console.log(pendukung);
+  for (let i= pendukung.length-1;i>-1;i--)
+  {
+    if (pendukung[i].uid === dashboarddata.user.useruid) exists = true;
+    let data = ''
++'          <div class="col-100 margin-bottom mybsmi-twibbon-pendukungdetail-item-'+pendukung[i].uid+'">'
++'          <div class="float-left" style="width:3em;"><img src="avatar.png" style="width:1.5em;aspet-ratio 1/1;object-fit:cover;border-radius:50% 50%;overflow:hidden;"></div>'
++'          <div class="float-left" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">'+pendukung[i].nama+'</div>'
++'          </div>'
+    $$('.mybsmi-twibbon-pendukungdetail').append(data);
+    $$('.mybsmi-twibbon-pendukungdetail-item-'+pendukung[i].uid+' img').attr('src','https://drive.google.com/uc?export=view&id='+safe(pendukung[i].photo));
+  }
+}
+/////////fpageaktivitas()/////////////////////////////////////////////////////////////
+
+
+
+/////////relative_time/////////////////////////////////////////////////////////////////////////////
+function relative_time(x) {
+        if (!x) {
+            return
+        }
+        var a = x;
+
+        //a = a.trim(a);
+        a = a.replace(/\.\d\d\d+/, "");
+        a = a.replace(/-/, "/").replace(/-/, "/");
+        a = a.replace(/T/, " ").replace(/Z/, " UTC");
+        a = a.replace(/([\+\-]\d\d)\:?(\d\d)/, " $1$2");
+        var b = new Date(a);
+        var c = (arguments.length > 1) ? arguments[1] : new Date();
+        var d = parseInt((c.getTime() - b) / 1000);
+        d = (d < 2) ? 2 : d;
+        var r = '';
+        if (d < 60) {
+            r = 'Baru saja dipublikasikan'
+        } else if (d < 120) {
+            r = '1 menit yang lalu'
+        } else if (d < (45 * 60)) {
+            r = (parseInt(d / 60, 10)).toString() + ' menit yang lalu'
+        } else if (d < (2 * 60 * 60)) {
+            r = '1 jam yang lalu'
+        } else if (d < (24 * 60 * 60)) {
+            r = '' + (parseInt(d / 3600, 10)).toString() + ' jam yang lalu'
+        } else if (d < (48 * 60 * 60)) {
+            r = '1 hari yang lalu'
+        } else {
+            r = (parseInt(d / 86400, 10)).toString() + ' hari yang lalu'
+        }
+        return (r.match('NaN') ? x : r)
+}
+/////////relative_time//////////////////////////////////////////////////////////////////////////////
 </script>
 <!--end script------------------------------------------------------------------------------->  
 </body>
