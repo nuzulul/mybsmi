@@ -4431,10 +4431,46 @@ function fpagetwibbonrun(data)
     var canvasHeight=canvas.height;
     var mx,my,nmyoffsetx,nmyoffsety;
 
+    canvas.ontouchstart=handleTouchStart;
+    canvas.ontouchend=handleTouchEnd;
+    canvas.ontouchmove=handleTouchMove;
     canvas.onmousedown=handleMouseDown;
     canvas.onmousemove=handleMouseMove;
     canvas.onmouseup=handleMouseUp;
     canvas.onmouseout=handleMouseOut;
+    
+    function handleTouchStart(e){
+      e.preventDefault();
+      var touch = e.touches[0];
+      startX=parseInt(touch.clientX-offsetX);
+      startY=parseInt(touch.clientY-offsetY);
+      // set the drag flag
+      isDragging=true;
+    }
+
+    function handleTouchEnd(e){
+      e.preventDefault();
+      var touch = e.touches[0];
+      //canMouseX=parseInt(touch.clientX-offsetX);
+      //canMouseY=parseInt(touch.clientY-offsetY);
+      // clear the drag flag
+      isDragging=false;
+      x = mx;
+      y = my;
+      myoffsetx += nmyoffsetx;
+      myoffsety += nmyoffsety
+    }
+
+    function handleTouchMove(e){
+      e.preventDefault();
+      var touch = e.touches[0];
+      canMouseX=parseInt(touch.clientX-offsetX);
+      canMouseY=parseInt(touch.clientY-offsetY);
+      // if the drag flag is set, clear the canvas and draw the image
+      if(isDragging){
+          redraw(canMouseX,canMouseY);
+      }
+    }
 
     function handleMouseDown(e){
       startX=parseInt(e.clientX-offsetX);
