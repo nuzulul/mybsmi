@@ -4476,8 +4476,8 @@ function fpagetwibbonrun(data)
     function redraw(canMouseX,canMouseY)
     {
 
-          nmyoffsetx = startX-canMouseX;
-          nmyoffsety = startY-canMouseY;
+          nmyoffsetx = (startX-canMouseX)*4;
+          nmyoffsety = (startY-canMouseY)*4;
           
 
           //console.log(startX+' : '+startY);
