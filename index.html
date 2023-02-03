@@ -4285,10 +4285,20 @@ function fpagetwibbonrun(data)
     if (pendukung[i].uid === dashboarddata.user.useruid) exists = true;
   }
 
+  $$('.mybsmi-twibbon-photo-button').on('click', function (e) {
+    $$('#mybsmi-twibbon-photo-upload').click();
+  });
+  $$('.mybsmi-twibbon-photo-download').on('click', function (e) {
+    let canvas = document.getElementById("mybsmi-twibbon-canvas");
+    fdownloadtwibbon(canvas, data[1]+'.png');
+  });
+  
+  ///////////////loadposter/////////////////////////////////////////////
   let IMG_URL = 'https://cors.bsmijatim.workers.dev/?https://lh3.googleusercontent.com/d/'+safe(data[6]);
   let FILE_NAME = 'test'
-  fdownloadfiletwibbon(IMG_URL,FILE_NAME);
+  fdownloadfiletwibbonposter(IMG_URL,FILE_NAME);
 
+   /////////////pilih photo///////////////////////////////////////////////
   let output = document.getElementById('mybsmi-twibbon-photo-upload');
   output.onchange = evt => {
     const [file] = output.files
@@ -4302,23 +4312,26 @@ function fpagetwibbonrun(data)
           canvasphoto.height = 1000;
           let contextphoto = canvasphoto.getContext("2d", { willReadFrequently: true });
           contextphoto.clearRect(0, 0, canvasphoto.width, canvasphoto.height);
-          let img = document.getElementById('mybsmi-twibbon-photo');
-          let canvaswidth = canvasphoto.width;
-          let canvasheight = canvasphoto.height;
-          let imgwidth= img.width;
-          let imgheight = img.height;
-          let width = canvaswidth;
-          let height = canvaswidth/imgwidth*imgheight;
-          if (canvasheight > height)
+          let imgphoto = document.getElementById('mybsmi-twibbon-photo');
+          
+          ratio = imgphoto.width/imgphoto.height;
+          width = canvasphoto.width;
+          height = width/ratio;
+          y = (width-height)/2;
+          x = 0;
+          if (height>width)
           {
-            height = canvasheight;
-            width = canvasheight/imgheight*imgwidth;
-          }
-          contextphoto.drawImage(img, 0, 0, width, height );
+            height = canvasphoto.height;
+            width = height*ratio;
+            x = (height-width)/2;
+            y = 0;
+          }    
+          contextphoto.drawImage(imgphoto, 0, 0, imgphoto.width, imgphoto.height, x, y, width, height);
+          
           let canvas = document.getElementById("mybsmi-twibbon-canvas");
           let context = canvas.getContext("2d", { willReadFrequently: true });
           let imgposter = document.getElementById('mybsmi-twibbon-poster');
-          context.drawImage(img, 0, 0, width, height );
+          context.drawImage(imgphoto, 0, 0, imgphoto.width, imgphoto.height, x, y, width, height);
           context.drawImage(imgposter, 0, 0, canvas.width, canvas.height );
           $$('.mybsmi-twibbon-photo-button').hide();
           $$('.mybsmi-twibbon-photo-download').removeClass('display-none');
@@ -4329,58 +4342,178 @@ function fpagetwibbonrun(data)
     }
   }
   
+  /////////////////////zoom///////////////////////////////////////
   let canvas = document.getElementById("mybsmi-twibbon-canvas");
   let context = canvas.getContext("2d", { willReadFrequently: true });
   let imgposter = document.getElementById('mybsmi-twibbon-poster');
   let canvasphoto = document.getElementById("mybsmi-twibbon-canvas-photo");
   let contextphoto = canvasphoto.getContext("2d", { willReadFrequently: true });
   let imgphoto = document.getElementById('mybsmi-twibbon-photo');
+  let ratio,width,height,y,x,myoffsetx,myoffsety;
+  myoffsetx = 0;
+  myoffsety = 0;
   const slider = document.getElementById('zoom-slider');
   slider.value = 1;
   slider.min = 0.01;
-  slider.max = 2;
+  slider.max = 10;
   slider.step = 'any';
   slider.addEventListener('input', e => {
     //debugger
     contextphoto.clearRect(0, 0, canvasphoto.width, canvasphoto.height);
-    const scale = e.target.value;
-    contextphoto.scale(scale, scale);
-    contextphoto.drawImage(imgphoto, 0, 0);
-    contextphoto.scale(1 / scale, 1 / scale);
+    const scale = e.target.value;//console.log('scale:'+scale);
+
+    //contextphoto.scale(scale, scale); 
+    //contextphoto.drawImage(imgphoto, 0, 0);
+    //contextphoto.scale(1 / scale, 1 / scale);  
     
+    let xsekarang = x;
+    let ysekarang = y;
+
+    ratio = imgphoto.width/imgphoto.height;
+    width = canvasphoto.width;
+    height = width/ratio;
+    y = (width-height)/2;
+    x = 0;
+    if (height>width)
+    {
+      height = canvasphoto.height;
+      width = height*ratio;
+      x = (height-width)/2;
+      y = 0;
+    }
+    
+    
+    width *= scale;
+    height *= scale;
+    
+    let mx = (canvasphoto.width-width)/2-myoffsetx;
+    let my = (canvasphoto.height-height)/2-myoffsety;
+    
+    x = mx;
+    y = my;
+    
+    //console.log(x+ ':'+y);
+           
+    contextphoto.drawImage(imgphoto, 0, 0, imgphoto.width, imgphoto.height, mx, my, width, height);
+        
     context.clearRect(0, 0, canvas.width, canvas.height);
     var imgData = contextphoto.getImageData(0, 0, canvasphoto.width, canvasphoto.height);
     context.putImageData(imgData, 0, 0);
     context.drawImage(imgposter, 0, 0, canvas.width, canvas.height);
   });
 
-  
-  $$('.mybsmi-twibbon-photo-button').on('click', function (e) {
-    $$('#mybsmi-twibbon-photo-upload').click();
-  });
-  $$('.mybsmi-twibbon-photo-download').on('click', function (e) {
+  ///////////////////gesertwibbonphoto//////////////////////////////
+  function fgesertwibbonphoto()
+  {
     let canvas = document.getElementById("mybsmi-twibbon-canvas");
-    fdownloadtwibbon(canvas, data[1]+'.png');
-  });
+    let context = canvas.getContext("2d", { willReadFrequently: true });
+    let imgposter = document.getElementById('mybsmi-twibbon-poster');
+    let canvasphoto = document.getElementById("mybsmi-twibbon-canvas-photo");
+    let contextphoto = canvasphoto.getContext("2d", { willReadFrequently: true });
+    let imgphoto = document.getElementById('mybsmi-twibbon-photo');
+
+
+    function reOffset(){
+        var BB=canvas.getBoundingClientRect();
+        offsetX=BB.left;
+        offsetY=BB.top;        
+    }
+    
+    var offsetX,offsetY;
+    reOffset();
+    window.onscroll=function(e){ reOffset(); }
+    window.onresize=function(e){ reOffset(); }
+    canvas.onresize=function(e){ reOffset(); }
+
+    var isDragging=false;
+    var startX,startY;
+    var canvasWidth=canvas.width;
+    var canvasHeight=canvas.height;
+    var mx,my,nmyoffsetx,nmyoffsety;
+
+    canvas.onmousedown=handleMouseDown;
+    canvas.onmousemove=handleMouseMove;
+    canvas.onmouseup=handleMouseUp;
+    canvas.onmouseout=handleMouseOut;
+
+    function handleMouseDown(e){
+      startX=parseInt(e.clientX-offsetX);
+      startY=parseInt(e.clientY-offsetY);
+      // set the drag flag
+      isDragging=true;
+    }
+
+    function handleMouseUp(e){
+      canMouseX=parseInt(e.clientX-offsetX);
+      canMouseY=parseInt(e.clientY-offsetY);
+      // clear the drag flag
+      isDragging=false;
+      x = mx;
+      y = my;
+      myoffsetx += nmyoffsetx;
+      myoffsety += nmyoffsety
+    }
+
+    function handleMouseOut(e){
+      canMouseX=parseInt(e.clientX-offsetX);
+      canMouseY=parseInt(e.clientY-offsetY);
+      // user has left the canvas, so clear the drag flag
+      //isDragging=false;
+    }
+
+    function handleMouseMove(e){
+      canMouseX=parseInt(e.clientX-offsetX);
+      canMouseY=parseInt(e.clientY-offsetY);
+      // if the drag flag is set, clear the canvas and draw the image
+      if(isDragging){
+          //ctx.clearRect(0,0,canvasWidth,canvasHeight);
+          //ctx.drawImage(img,canMouseX-128/2,canMouseY-120/2,128,120);
+          //console.log(canMouseX+' : '+canMouseY);
+          redraw(canMouseX,canMouseY);
+      }
+    }
+    
+    function redraw(canMouseX,canMouseY)
+    {
+
+          nmyoffsetx = startX-canMouseX;
+          nmyoffsety = startY-canMouseY;
+          
+
+          //console.log(startX+' : '+startY);
+          //console.log(canMouseX+' : '+canMouseY);
+          //console.log(myoffsetx+' :offset: '+myoffsety);
+          //console.log(x+':xy:'+y);
+          
+          mx = x-nmyoffsetx;
+          my = y-nmyoffsety;
+          
+          contextphoto.clearRect(0, 0, canvasphoto.width, canvasphoto.height);
+          context.clearRect(0, 0, canvas.width, canvas.height);
+          contextphoto.drawImage(imgphoto, 0, 0, imgphoto.width, imgphoto.height, mx, my, width, height);
+          var imgData = contextphoto.getImageData(0, 0, canvasphoto.width, canvasphoto.height);
+          context.putImageData(imgData, 0, 0);
+          context.drawImage(imgposter, 0, 0, canvas.width, canvas.height);
+    }
+
+  }
+  fgesertwibbonphoto();
 }
 
-function fdownloadfiletwibbon(IMG_URL,FILE_NAME)
+
+
+function fdownloadfiletwibbonposter(IMG_URL,FILE_NAME)
 {
   const startTime = new Date().getTime();
-
   request = new XMLHttpRequest();
-
   request.responseType = "blob";
   request.open("get", IMG_URL, true);
-  request.send();
-  
+  request.send();  
   let mypreloader = app.dialog.preloader();
 
   request.onreadystatechange = function () {
-
     if (this.readyState == 4 && this.status == 200) {
       const imageURL = window.URL.createObjectURL(this.response);
-
       mypreloader.close();
       let output = document.getElementById('mybsmi-twibbon-poster');
       output.src = imageURL;
@@ -4392,22 +4525,15 @@ function fdownloadfiletwibbon(IMG_URL,FILE_NAME)
       let context = canvas.getContext("2d");
       let img1 = document.getElementById('mybsmi-twibbon-poster');
       context.drawImage(img1, 0, 0, canvas.width, canvas.height);
-      }
-
-
-
-      
+      }      
     }
   };
 
   request.onprogress = function (e) {
     const percent_complete = Math.floor((e.loaded / e.total) * 100);
-
     const duration = (new Date().getTime() - startTime) / 1000;
     const bps = e.loaded / duration;
-
     const kbps = Math.floor(bps / 1024);
-
     const time = (e.total - e.loaded) / bps;
     const seconds = Math.floor(time % 60);
     const minutes = Math.floor(time / 60);
