@@ -4337,70 +4337,109 @@ function fpagetwibbonrun(data)
           $$('.mybsmi-twibbon-photo-download').removeClass('display-none');
           $$('#zoom-slider').removeClass('display-none');
           if (!exists) fjadipendukung(data[1]);
+          fgesertwibbonphoto();
+          zoomtwibbonpoto()
         }
 
     }
   }
   
-  /////////////////////zoom///////////////////////////////////////
+  /////////////////////zoomandpan///////////////////////////////////////
   let canvas = document.getElementById("mybsmi-twibbon-canvas");
   let context = canvas.getContext("2d", { willReadFrequently: true });
   let imgposter = document.getElementById('mybsmi-twibbon-poster');
   let canvasphoto = document.getElementById("mybsmi-twibbon-canvas-photo");
   let contextphoto = canvasphoto.getContext("2d", { willReadFrequently: true });
-  let imgphoto = document.getElementById('mybsmi-twibbon-photo');
+  let imgphoto = document.getElementById('mybsmi-twibbon-photo');  
   let ratio,width,height,y,x,myoffsetx,myoffsety;
   myoffsetx = 0;
   myoffsety = 0;
-  const slider = document.getElementById('zoom-slider');
-  slider.value = 1;
-  slider.min = 0.01;
-  slider.max = 10;
-  slider.step = 'any';
-  slider.addEventListener('input', e => {
-    //debugger
-    contextphoto.clearRect(0, 0, canvasphoto.width, canvasphoto.height);
-    const scale = e.target.value;//console.log('scale:'+scale);
 
-    //contextphoto.scale(scale, scale); 
-    //contextphoto.drawImage(imgphoto, 0, 0);
-    //contextphoto.scale(1 / scale, 1 / scale);  
-    
-    let xsekarang = x;
-    let ysekarang = y;
+  function drawcanvas()
+  {
+          contextphoto.clearRect(0, 0, canvasphoto.width, canvasphoto.height);
+          context.clearRect(0, 0, canvas.width, canvas.height);
+          contextphoto.drawImage(imgphoto, 0, 0, imgphoto.width, imgphoto.height, x, y, width, height);
+          var imgData = contextphoto.getImageData(0, 0, canvasphoto.width, canvasphoto.height);
+          context.putImageData(imgData, 0, 0);
+          context.drawImage(imgposter, 0, 0, canvas.width, canvas.height);
+  }
+  
+  function zoomtwibbonpoto()
+  {
+      const slider = document.getElementById('zoom-slider');
+      slider.value = 1;
+      slider.min = 0.01;
+      slider.max = 10;
+      slider.step = 'any';
+      slider.addEventListener('input', e => {
+        //debugger
+        contextphoto.clearRect(0, 0, canvasphoto.width, canvasphoto.height);
+        const scale = e.target.value;//console.log('scale:'+scale);
 
-    ratio = imgphoto.width/imgphoto.height;
-    width = canvasphoto.width;
-    height = width/ratio;
-    y = (width-height)/2;
-    x = 0;
-    if (height>width)
-    {
-      height = canvasphoto.height;
-      width = height*ratio;
-      x = (height-width)/2;
-      y = 0;
-    }
-    
-    
-    width *= scale;
-    height *= scale;
-    
-    let mx = (canvasphoto.width-width)/2-myoffsetx;
-    let my = (canvasphoto.height-height)/2-myoffsety;
-    
-    x = mx;
-    y = my;
-    
-    //console.log(x+ ':'+y);
-           
-    contextphoto.drawImage(imgphoto, 0, 0, imgphoto.width, imgphoto.height, mx, my, width, height);
+        //contextphoto.scale(scale, scale); 
+        //contextphoto.drawImage(imgphoto, 0, 0);
+        //contextphoto.scale(1 / scale, 1 / scale);  
         
-    context.clearRect(0, 0, canvas.width, canvas.height);
-    var imgData = contextphoto.getImageData(0, 0, canvasphoto.width, canvasphoto.height);
-    context.putImageData(imgData, 0, 0);
-    context.drawImage(imgposter, 0, 0, canvas.width, canvas.height);
-  });
+        let xsekarang = x;
+        let ysekarang = y;
+
+        ratio = imgphoto.width/imgphoto.height;
+        width = canvasphoto.width;
+        height = width/ratio;
+        y = (width-height)/2;
+        x = 0;
+        if (height>width)
+        {
+          height = canvasphoto.height;
+          width = height*ratio;
+          x = (height-width)/2;
+          y = 0;
+        }
+        
+        
+        width *= scale;
+        height *= scale;
+        
+        let mx = (canvasphoto.width-width)/2-myoffsetx;
+        let my = (canvasphoto.height-height)/2-myoffsety;
+        
+        x = mx;
+        y = my;
+        
+        //console.log(x+ ':'+y);
+               
+        contextphoto.drawImage(imgphoto, 0, 0, imgphoto.width, imgphoto.height, mx, my, width, height);       
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        var imgData = contextphoto.getImageData(0, 0, canvasphoto.width, canvasphoto.height);
+        context.putImageData(imgData, 0, 0);
+        context.drawImage(imgposter, 0, 0, canvas.width, canvas.height);
+      });
+
+      slider.ontouchstart=handleTouchStart;
+      slider.ontouchend=handleTouchEnd;
+      slider.onmousedown=handleMouseDown;
+      slider.onmouseup=handleMouseUp;
+      
+      function handleTouchStart(e){
+        context.globalAlpha = 0.2;
+      }
+
+      function handleTouchEnd(e){
+        context.globalAlpha = 1.0;
+        drawcanvas();
+      }
+
+      function handleMouseDown(e){
+        context.globalAlpha = 0.2;
+      }
+
+      function handleMouseUp(e){
+        context.globalAlpha = 1.0;
+        drawcanvas();
+      }
+
+  }
 
   ///////////////////gesertwibbonphoto//////////////////////////////
   function fgesertwibbonphoto()
@@ -4446,6 +4485,7 @@ function fpagetwibbonrun(data)
       startY=parseInt(touch.clientY-offsetY);
       // set the drag flag
       isDragging=true;
+      context.globalAlpha = 0.2;
     }
 
     function handleTouchEnd(e){
@@ -4459,6 +4499,8 @@ function fpagetwibbonrun(data)
       y = my;
       myoffsetx += nmyoffsetx;
       myoffsety += nmyoffsety
+      context.globalAlpha = 1.0;
+      drawcanvas();
     }
 
     function handleTouchMove(e){
@@ -4477,6 +4519,7 @@ function fpagetwibbonrun(data)
       startY=parseInt(e.clientY-offsetY);
       // set the drag flag
       isDragging=true;
+      context.globalAlpha = 0.2;
     }
 
     function handleMouseUp(e){
@@ -4487,7 +4530,9 @@ function fpagetwibbonrun(data)
       x = mx;
       y = my;
       myoffsetx += nmyoffsetx;
-      myoffsety += nmyoffsety
+      myoffsety += nmyoffsety;
+      context.globalAlpha = 1.0;
+      drawcanvas();
     }
 
     function handleMouseOut(e){
@@ -4527,7 +4572,7 @@ function fpagetwibbonrun(data)
     }
 
   }
-  fgesertwibbonphoto();
+  
 }
 
 
