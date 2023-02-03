@@ -4473,17 +4473,11 @@ function fpagetwibbonrun(data)
       }
     }
     
-    function redraw(canMouseX,canMouseY)
+    function redraw(myX,myY)
     {
 
-          nmyoffsetx = (startX-canMouseX)*4;
-          nmyoffsety = (startY-canMouseY)*4;
-          
-
-          //console.log(startX+' : '+startY);
-          //console.log(canMouseX+' : '+canMouseY);
-          //console.log(myoffsetx+' :offset: '+myoffsety);
-          //console.log(x+':xy:'+y);
+          nmyoffsetx = (startX-myX)*4;
+          nmyoffsety = (startY-myY)*4;
           
           mx = x-nmyoffsetx;
           my = y-nmyoffsety;
