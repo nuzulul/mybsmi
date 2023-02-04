@@ -4222,12 +4222,16 @@ function getaktivitasdatarun(content)
 {
   //console.log(content);
   $$('.mybsmi-aktivitas').html('');
+  $$('.mybsmi-aktivitas-buataktivitas').html('<i class="icons f7-icons ">plus_app_fill</i>');
+  $$('.mybsmi-aktivitas-buataktivitas i').on('click', function (e) {
+        fbuataktivitas();
+  });
   for(i=content.length-1;i>-1;i--)
   {
     //let date = new Date(content[i][0]).toLocaleString('en-US', { timeZone: 'Asia/Jakarta' });
     let date = new Intl.DateTimeFormat("id-ID", { hour12:false,dateStyle: "short" , timeStyle: "short",  timeZone: "Asia/Jakarta"}).format(new Date(content[i][0]));date = date.split(' ');date = date[0];
     //data += '<div class="timeline-item"><div class="timeline-item-date"><small>'+date+'</small></div><div class="timeline-item-divider"></div><div class="timeline-item-content"><div class="timeline-item-inner"><div class="timeline-item-time"></div><div class="timeline-item-text">'+safe(content[i][5])+'</div></div></div></div>';
-    let data = '<div class="col-100 xsmall-75 small-50 medium-40 large-40 xlarge-33 mybsmi-aktivitas-item-'+safe(content[i][1])+'" data-user="'+btoa(JSON.stringify(content[i]))+'" style="cursor:pointer;"> <div class="card"> <div class="card-header no-padding" style="overflow:hidden;"><img class="poster" src="photo.svg" style="width:100%;aspect-ratio: 1 / 1;object-fit:cover;background-image:none;"></div> <div class="card-content card-content-padding"> <div style="font-weight:bold;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">'+safe(content[i][6])+'</div> <div></div> </div> <div class="card-footer"> <div class="row"> <div class="col-100 margin-bottom margin-top"> <div class="float-left" style="width:3em;"><img class="avatar" src="avatar.png" style="width:2em;aspet-ratio 1 / 1;height:2em;object-fit:cover;border-radius:50% 50%;overflow:hidden;"></div> <div class="float-left" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">'+safe(content[i][3])+'</div> </div> <div class="col-100 margin-bottom"> <div class="float-left" style="width:3em;"><i class="icons f7-icons">person_2</i></div> <div class="float-left" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">'+safe(JSON.parse(content[i][12]).length)+' Pendukung</div> </div> <div class="col-100 margin-bottom"> <div class="float-left" style="width:3em;"><i class="icons f7-icons">paperclip</i></div> <div class="float-left" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">'+safe(content[i][5])+'</div> </div><div class="col-100 margin-bottom"> <div class="float-left" style="width:3em;"><i class="icons f7-icons">calendar</i></div> <div class="float-left" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">'+date+'</div> </div> </div>   </div> </div> </div>';
+    let data = '<div class="col-100 xsmall-75 small-50 medium-33 large-33 xlarge-33 mybsmi-aktivitas-item-'+safe(content[i][1])+'" data-user="'+btoa(JSON.stringify(content[i]))+'" style="cursor:pointer;"> <div class="card"> <div class="card-header no-padding" style="overflow:hidden;"><img class="poster" src="photo.svg" style="width:100%;aspect-ratio: 1 / 1;object-fit:cover;background-image:none;"></div> <div class="card-content card-content-padding"> <div style="font-weight:bold;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">'+safe(content[i][6])+'</div> <div></div> </div> <div class="card-footer"> <div class="row" style="width:100%"> <div class="col-100 margin-bottom margin-top" style="width:100%;"> <div class="float-left" style="width:3em;"><img class="avatar" src="avatar.png" style="width:2em;aspet-ratio 1 / 1;height:2em;object-fit:cover;border-radius:50% 50%;overflow:hidden;"></div> <div class="float-left" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;width:70%;">'+safe(content[i][3])+'</div> </div> <div class="col-100 margin-bottom"> <div class="float-left" style="width:3em;"><i class="icons f7-icons">person_2</i></div> <div class="float-left" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">'+safe(JSON.parse(content[i][12]).length)+' Pendukung</div> </div> <div class="col-100 margin-bottom"> <div class="float-left" style="width:3em;"><i class="icons f7-icons">paperclip</i></div> <div class="float-left" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">'+safe(content[i][5])+'</div> </div><div class="col-100 margin-bottom"> <div class="float-left" style="width:3em;"><i class="icons f7-icons">calendar</i></div> <div class="float-left" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">'+date+'</div> </div> </div>   </div> </div> </div>';
     $$('.mybsmi-aktivitas').append(data);
     $$('.mybsmi-aktivitas-item-'+content[i][1]+' img.poster').attr('src','https://drive.google.com/uc?export=view&id='+safe(content[i][8]));
     $$('.mybsmi-aktivitas-item-'+content[i][1]+' img.avatar').attr('src','https://drive.google.com/uc?export=view&id='+safe(content[i][4]));
@@ -4242,9 +4246,201 @@ function getaktivitasdatarun(content)
           app.views.main.router.navigate(url);
     });
   }
+  let datadumy = '<div class="col-100 xsmall-75 small-50 medium-33 large-33 xlarge-33" ></div><div class="col-100 xsmall-75 small-50 medium-40 large-40 xlarge-33" ></div>';
+  $$('.mybsmi-aktivitas').append(datadumy);
   
 }
 
+function fbuataktivitas()
+{
+  //console.log('buataktivitas');
+  var dialog = app.dialog.create({
+    title: 'Buat Aktivitas',
+    closeByBackdropClick: false,
+    destroyOnClose: true,
+    content: '<div style="width:100%;height:60vh;overflow:auto;">'
+      +'<form id="mybsmi-buataktivitas-form" runat="server" style="display:flex;flex-direction:column;align-items:center;justify-content: center;">'
+      +'  <img id="mybsmibuataktivitasposeterpreview" src="photo.svg" style="width:200px;height:150px;margin: 10px 10px;object-fit: contain;">'
+      +'  <input accept="image/png,image/jpeg" type="file" name="mybsmibuataktivitasuploadposter" id="mybsmibuataktivitasuploadposter" required validate/>'
+      +'  <div class="list no-hairlines-md">'
+      +'    <ul>'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-input-wrap">'
+      +'            <p>Silahkan isi data berikut ini</p>'
+      +'            </div></div>'
+      +'        </li>'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-input-wrap">'
+      +'                            <select name="kategori" required validate>'
+      +'                              <option value="" disabled selected>-- Kategori --</option>'
+      +'                              <option value="Twibbon">Twibbon</option>'
+      +'                              <option value="Webinar" disabled>Webinar</option>'
+      +'                            </select>'
+      +'            </div></div>'
+      +'        </li>'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-input-wrap">'
+      +'                            <select name="pembuat" required validate>'
+      +'                              <option value="" disabled selected>-- Pembuat --</option>'
+      +'                              <option value="user"><span class="mybsmi-buataktivitas-form-user">User<span></option>'
+      +'                              <option value="cabang" disabled><span class="mybsmi-buataktivitas-form-cabang">Cabang</span></option>'
+      +'                            </select>'
+      +'            </div></div>'
+      +'        </li>'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-input-wrap">'
+      +'            <input type="text" name="judul" placeholder="Judul" required validate/>'
+      +'            </div></div>'
+      +'        </li>'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-input-wrap">'
+      //+'            <input type="text" name="deskripsi" placeholder="Deskripsi" required validate/>'
+      +'            <textarea name="deskripsi" placeholder="Deskripsi" required validate></textarea>'
+      +'            </div></div>'
+      +'        </li>'
+      +'        <li class="item-content item-input display-none"><div class="item-inner"><div class="item-input-wrap">'
+      +'            <input type="text" name="batas" placeholder="Batas" value="-" required validate/>'
+      +'            </div></div>'
+      +'        </li>'
+      +'        <li class="item-content item-input display-none"><div class="item-inner"><div class="item-input-wrap">'
+      +'            <input type="text" name="lokasi" placeholder="Lokasi" value="-" required validate/>'
+      +'            </div></div>'
+      +'        </li>'
+      +'        <li class="item-content item-input display-none"><div class="item-inner"><div class="item-input-wrap">'
+      +'            <input type="text" name="info" placeholder="Info" value="-" required validate/>'
+      +'            </div></div>'
+      +'        </li>'
+      +'    </ul>'
+      +'  </div>'
+      +'</form>'
+      +'</div>',
+    on: {
+      opened: function () {
+          $$('#mybsmi-buataktivitas-form select[name=pembuat] option[value=user]').html(dashboarddata.user.usernama);
+          $$('#mybsmi-buataktivitas-form select[name=pembuat] option[value=cabang]').html(dashboarddata.user.usercabang);
+          $$('#mybsmi-buataktivitas-form select[name=kategori]').on('click', function (e) {
+            //console.log('tes');
+          });         
+          mybsmibuataktivitasuploadposter.onchange = evt => {
+            const [file] = mybsmibuataktivitasuploadposter.files
+            if (file) {
+              if (file.size > 524288)
+              {
+                //app.dialog.alert('File tidak boleh lebih dari 500 KB','Terjadi Kesalahan');
+                var toastBottom = app.toast.create({ text: 'File tidak boleh lebih dari 500 KB', closeTimeout: 5000,position: 'center', });toastBottom.open();
+                mybsmibuataktivitasuploadposter.value = '';
+                mybsmibuataktivitasposeterpreview.src = 'photo.svg'
+              }
+              else
+              {
+                mybsmibuataktivitasposeterpreview.src = URL.createObjectURL(file)
+              }
+            }
+            else
+            {
+              mybsmibuataktivitasposeterpreview.src = 'photo.svg'
+            }
+          }
+      }
+    },
+    buttons: [
+      {
+        text: 'Cancel',
+        close:true,
+        color: 'gray',
+        onClick: function(dialog, e)
+          {
+          }
+      },
+      {
+        text: 'Buat',
+        close:false,
+        onClick: function(dialog, e)
+          {            
+            const [file] = mybsmibuataktivitasuploadposter.files
+            if (file) {
+              if (!$$('#mybsmi-buataktivitas-form')[0].checkValidity()) {
+                    //console.log('Check Validity!');
+                    return;
+              }
+              var dataform = JSON.stringify(app.form.convertToData('#mybsmi-buataktivitas-form'));//console.log(dataform);
+              const fr = new FileReader();
+              fr.onload = function(e) {
+                const obj = {
+                  filename: file.name,
+                  mimeType: file.type,
+                  bytes: [...new Int8Array(e.target.result)],
+                  aktivitas: dataform
+                };
+                fkirimbuataktivitas(dialog,obj);
+              };
+              fr.readAsArrayBuffer(file);
+            }
+            else
+            {
+              var toastBottom = app.toast.create({ text: 'Pilih file poster', closeTimeout: 5000,position: 'center', });toastBottom.open();
+            }
+          }
+      },
+    ]
+  });
+  dialog.open();
+}
+
+function fkirimbuataktivitas(dialog,obj)
+{
+  //console.log(obj);
+  var data = JSON.stringify(obj);
+  dialog.close();dialog.destroy();
+  let mypreloader = app.dialog.preloader();
+  app.request({
+    url: apidataurl,
+    method: 'POST',
+    cache: false,
+    data : { token:mybsmiusertoken, command: 'buataktivitas', data: data}, 
+    success: function (data, status, xhr)
+      {
+        mypreloader.close();        
+        var status = JSON.parse(data).status;
+        var content = JSON.parse(data).data;
+        if (status == "success")
+        {
+          console.log(content);
+          if (content === 'Aktif')
+          {
+            app.dialog.alert("Aktivitas berhasil dibuat",'Info');
+          }
+          else if (content === 'Pending')
+          {
+            app.dialog.alert("Aktivitas akan diterbitkan segera setelah peninjauan",'Info');
+          }
+          else
+          {
+            app.dialog.alert(content,'Info');
+          }
+        }
+        else if (status == "failed")
+        {
+          //console.log("failed");
+          app.dialog.alert(content,'Terjadi Kesalahan');
+        }
+        else
+        {
+          //console.log("failed");
+          app.dialog.alert(content,'Terjadi Kesalahan');
+        }
+      },
+    error: function (xhr, status, message)
+      {
+        //console.log(message);
+        mypreloader.close();
+        app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
+      },
+  });
+}
+///////////////fpageaktivitas/////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+///////////////fpagetwibbon/////////////////////////////////////////////////////////////////////////////////////
 function fpagetwibbon(aktivitasid)
 {
 
@@ -4646,7 +4842,11 @@ function fdownloadtwibbon(canvas, filename) {
           lnk.fireEvent("onclick");
       }
 }
+///////////////fpagetwibbon/////////////////////////////////////////////////////////////////////////////////////
 
+
+
+///////////////pendukung/////////////////////////////////////////////////////////////////////////////////////
 function fjadipendukung(aktivitasid)
 {
     //console.log(aktivitasid)
@@ -4705,7 +4905,7 @@ function fjadipendukungrun(mydata)
     $$('.mybsmi-twibbon-pendukungdetail-item-'+pendukung[i].uid+' img').attr('src','https://drive.google.com/uc?export=view&id='+safe(pendukung[i].photo));
   }
 }
-/////////fpageaktivitas()/////////////////////////////////////////////////////////////
+/////////fpendukung/////////////////////////////////////////////////////////////
 
 
 
