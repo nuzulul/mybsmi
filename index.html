@@ -4950,9 +4950,9 @@ function fjadipendukungrun(mydata)
   {
     if (pendukung[i].uid === dashboarddata.user.useruid) exists = true;
     let data = ''
-+'          <div class="col-100 margin-bottom mybsmi-twibbon-pendukungdetail-item-'+pendukung[i].uid+'">'
++'          <div class="col-100 margin-bottom mybsmi-twibbon-pendukungdetail-item-'+pendukung[i].uid+'" style="width:100%">'
 +'          <div class="float-left" style="width:3em;"><img src="avatar.png" style="width:1.5em;aspet-ratio 1/1;object-fit:cover;border-radius:50% 50%;overflow:hidden;"></div>'
-+'          <div class="float-left" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">'+pendukung[i].nama+'</div>'
++'          <div class="float-left" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;width:70%">'+pendukung[i].nama+'</div>'
 +'          </div>'
     $$('.mybsmi-twibbon-pendukungdetail').append(data);
     $$('.mybsmi-twibbon-pendukungdetail-item-'+pendukung[i].uid+' img').attr('src','https://drive.google.com/uc?export=view&id='+safe(pendukung[i].photo));
