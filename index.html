@@ -2440,7 +2440,7 @@ function fpageprofilku()
     $$('.mybsmi-profilku .mybsmi-userphoto').attr('src','https://drive.google.com/uc?export=view&id='+safe(data.userphoto));
     let bintang = JSON.parse(data.usermydata).bintang;//console.log(bintang);
     if (typeof bintang === 'undefined' || bintang === null) bintang = 0;
-    $$('.mybsmi-profilku .mybsmi-bintang').text('Poin : '+safe(bintang)+' bintang');
+    $$('.mybsmi-profilku .mybsmi-bintang').text('Kontribusi : '+safe(bintang)+' bintang');
     $$('.mybsmi-profilku .mybsmi-usernama').text(safe(data.usernama));
     $$('.mybsmi-profilku .mybsmi-userjeniskelamin').text(safe(data.userjeniskelamin));
     $$('.mybsmi-profilku .mybsmi-usertanggallahir').text(safe(data.usertanggallahir));
