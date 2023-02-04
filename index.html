@@ -4225,6 +4225,7 @@ function getaktivitasdatarun(content)
   $$('.mybsmi-aktivitas-buataktivitas').html('<i class="icons f7-icons ">plus_app_fill</i>');
   $$('.mybsmi-aktivitas-buataktivitas i').on('click', function (e) {
         fbuataktivitas();
+        $$('.mybsmi-aktivitas-buataktivitas i').hide();
   });
   for(i=content.length-1;i>-1;i--)
   {
@@ -4254,6 +4255,7 @@ function getaktivitasdatarun(content)
 function fbuataktivitas()
 {
   //console.log('buataktivitas');
+  if (dashboarddata.user.userphoto === ''){flengkapidata();return;}
   var dialog = app.dialog.create({
     title: 'Buat Aktivitas',
     closeByBackdropClick: false,
@@ -4272,7 +4274,8 @@ function fbuataktivitas()
       +'                            <select name="kategori" required validate>'
       +'                              <option value="" disabled selected>-- Kategori --</option>'
       +'                              <option value="Twibbon">Twibbon</option>'
-      +'                              <option value="Webinar" disabled>Webinar</option>'
+      +'                              <option value="Webinar" disabled>Webinar (Development)</option>'
+      +'                              <option value="Event" disabled>Event (Development)</option>'
       +'                            </select>'
       +'            </div></div>'
       +'        </li>'
@@ -4280,7 +4283,7 @@ function fbuataktivitas()
       +'                            <select name="pembuat" required validate>'
       +'                              <option value="" disabled selected>-- Pembuat --</option>'
       +'                              <option value="user"><span class="mybsmi-buataktivitas-form-user">User<span></option>'
-      +'                              <option value="cabang" disabled><span class="mybsmi-buataktivitas-form-cabang">Cabang</span></option>'
+      +'                              <option value="cabang" class="display-none"><span class="mybsmi-buataktivitas-form-cabang">Cabang</span></option>'
       +'                            </select>'
       +'            </div></div>'
       +'        </li>'
@@ -4313,8 +4316,13 @@ function fbuataktivitas()
       opened: function () {
           $$('#mybsmi-buataktivitas-form select[name=pembuat] option[value=user]').html(dashboarddata.user.usernama);
           $$('#mybsmi-buataktivitas-form select[name=pembuat] option[value=cabang]').html(dashboarddata.user.usercabang);
-          $$('#mybsmi-buataktivitas-form select[name=kategori]').on('click', function (e) {
-            //console.log('tes');
+          let data = JSON.parse(dashboarddata.user.usermydata)
+          if (data.admincabang)
+          {
+            $$('#mybsmi-buataktivitas-form select[name=pembuat] option[value=cabang]').removeClass('display-none');
+          }
+          $$('#mybsmi-buataktivitas-form select[name=kategori]').on('change', function (e) {
+            console.log('tes');
           });         
           mybsmibuataktivitasuploadposter.onchange = evt => {
             const [file] = mybsmibuataktivitasuploadposter.files
@@ -4352,7 +4360,7 @@ function fbuataktivitas()
         close:false,
         onClick: function(dialog, e)
           {            
-            dialog.destroy();
+            //dialog.destroy();
             const [file] = mybsmibuataktivitasuploadposter.files
             if (file) {
               if (!$$('#mybsmi-buataktivitas-form')[0].checkValidity()) {
@@ -4404,7 +4412,7 @@ function fkirimbuataktivitas(dialog,obj)
           console.log(content);
           if (content === 'Aktif')
           {
-            app.dialog.alert("Aktivitas berhasil dibuat",'Info');
+            //app.dialog.alert("Aktivitas berhasil dibuat",'Info');
             mybsmiaktivitas = null;
             fpageaktivitas();
             dapatbintang(3);
