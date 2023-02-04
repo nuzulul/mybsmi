@@ -2355,7 +2355,7 @@ function getdefaultdata(render=true)
 }
 
 function getdefaultdatarun(data)
-{
+{ //console.log(data)
   $$('.mybsmi-currentusernama').text(safe(data.user.usernama));
   if (data.user.userphoto !== '') {$$('.mybsmi-avatar').attr('src','https://drive.google.com/uc?export=view&id='+safe(data.user.userphoto));}
   if (data.user.userstatus === "Terverifikasi"){$$('.mybsmi-avatar-badge').css('display','flex');};
@@ -2382,18 +2382,18 @@ function getdefaultdatarun(data)
   }
   $$('.mybsmi-rekapitulasicabang').html(rekapitulasicabang);
   $$('.mybsmi-rekapitulasiprov').html(rekapitulasiprov);
-  
+
   var ratiorelawan = relawan/(relawan*10);
-  var gauge = app.gauge.get('#mybsmi-relawan');
-  gauge.update({
+  var gauge1 = app.gauge.get('#mybsmi-relawan');
+  gauge1.update({
     el: '#mybsmi-relawan',
     value: ratiorelawan,
     valueText: relawan,
   })  
 
   var ratiocabang = cabang/38;
-  var gauge = app.gauge.get('#mybsmi-cabang');
-  gauge.update({
+  var gauge2 = app.gauge.get('#mybsmi-cabang');
+  gauge2.update({
     el: '#mybsmi-cabang',
     value: ratiocabang,
     valueText: cabang,
