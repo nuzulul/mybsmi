@@ -2840,7 +2840,7 @@ function fuploadphoto(dialog,obj)
       {
         //console.log(message);
         mypreloader.close();
-        dialog.close();dialog.destroy();
+        dialog.close();
         app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
       },
   });
@@ -3069,7 +3069,7 @@ function fkirimverifikasiidentitas(dialog,obj)
       {
         //console.log(message);
         mypreloader.close();
-        dialog.close();dialog.destroy();
+        dialog.close();
         app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
       },
   });
@@ -4225,7 +4225,7 @@ function getaktivitasdatarun(content)
   $$('.mybsmi-aktivitas-buataktivitas').html('<i class="icons f7-icons ">plus_app_fill</i>');
   $$('.mybsmi-aktivitas-buataktivitas i').on('click', function (e) {
         fbuataktivitas();
-        $$('.mybsmi-aktivitas-buataktivitas i').hide();
+        //$$('.mybsmi-aktivitas-buataktivitas i').hide();
   });
   for(i=content.length-1;i>-1;i--)
   {
@@ -4325,7 +4325,7 @@ function fbuataktivitas()
             console.log('tes');
           });         
           mybsmibuataktivitasuploadposter.onchange = evt => {
-            const [file] = mybsmibuataktivitasuploadposter.files
+            let [file] = mybsmibuataktivitasuploadposter.files
             if (file) {
               if (file.size > 524288)
               {
@@ -4360,8 +4360,7 @@ function fbuataktivitas()
         close:false,
         onClick: function(dialog, e)
           {            
-            //dialog.destroy();
-            const [file] = mybsmibuataktivitasuploadposter.files
+            let [file] = mybsmibuataktivitasuploadposter.files
             if (file) {
               if (!$$('#mybsmi-buataktivitas-form')[0].checkValidity()) {
                     //console.log('Check Validity!');
@@ -4395,7 +4394,7 @@ function fkirimbuataktivitas(dialog,obj)
 {
   //console.log(obj);
   var data = JSON.stringify(obj);
-  dialog.close();dialog.destroy();
+  dialog.close();
   let mypreloader = app.dialog.preloader();
   app.request({
     url: apidataurl,
