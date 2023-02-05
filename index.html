@@ -5361,9 +5361,9 @@ function getbukusakudatarun(data)
     $$('.mybsmi-bukusaku-item-'+i).css('cursor','pointer');
     $$('.mybsmi-bukusaku-item-'+i).on('click', function (e) {
        //console.log($$(this).attr('data-index')) 
-       //let url = 'https://drive.google.com/file/d/'+safe(data[i][0])+'/preview';
+       let url = 'https://drive.google.com/file/d/'+safe(data[i][0])+'/preview';
        //let url = 'https://drive.google.com/uc?export=view&id='+safe(data[i][0]);
-       let url = 'https://drive.google.com/uc?export=view&id='+safe(data[i][0])+'#toolbar=0&navpanes=0&scrollbar=0&statusbar=0&messages=0&scrollbar=0';
+       //let url = 'https://drive.google.com/uc?export=view&id='+safe(data[i][0])+'#toolbar=0&navpanes=0&scrollbar=0&statusbar=0&messages=0&scrollbar=0';
        myviewer(url);         
     });
   }
