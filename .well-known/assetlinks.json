@@ -1,0 +1,6 @@
+[{
+        "relation": ["delegate_permission/common.handle_all_urls"],
+        "target" : { "namespace": "android_app", "package_name": "org.bsmijatim.mybsmi",
+                     "sha256_cert_fingerprints": ["8E:4E:7A:61:6A:86:51:95:DE:F5:B4:82:48:97:4E:6D:36:23:A7:81:5C:DE:A7:CA:66:76:E4:77:17:50:63:CB"] }
+      }
+]
