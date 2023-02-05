@@ -1,0 +1,26 @@
+{
+  "background_color": "#ffffff",
+  "description": "MyBSMI Sistem Keanggotaan Relawan BSMI",
+  "dir": "ltr",
+  "display": "standalone",
+  "name": "MyBSMI",
+  "orientation": "any",
+  "scope": "/",
+  "short_name": "MyBSMI",
+  "start_url": "/",
+  "theme_color": "#f33521",
+  "categories": [
+    "social"
+  ],
+  "screenshots": [],
+  "icons": [
+      {
+          "src": "/icon512.png",
+          "sizes": "512x512",
+          "type": "image/png",
+          "purpose": "any"
+      }
+  ],
+  "shortcuts": [],
+  "lang": "id"
+}
