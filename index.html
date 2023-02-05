@@ -1484,6 +1484,48 @@ var getParams = function (url) {
 var params = getParams(window.location.href);
 //////////////////////////////////////////////////////////////////////////////
 
+var kodecabang = [
+    ['BSMI Jawa Timur', '3500'],
+    ['BSMI Kota Surabaya', '3578'],
+    ['BSMI Kab Sidoarjo', '3515'],
+    ['BSMI Kab Mojokerto', '3516'],
+    ['BSMI Kota Mojokerto', '3576'],
+    ['BSMI Kab Lamongan', '3524'],
+    ['BSMI Kab Gresik', '3525'],
+    ['BSMI Kab Tuban', '3523'],
+    ['BSMI Kab Bojonegoro', '3522'],
+    ['BSMI Kota Pasuruan', '3575'],
+    ['BSMI Kab Pasuruan', '3514'],
+    ['BSMI Kab Bangkalan', '3526'],
+    ['BSMI Kab Sampang', '3527'],
+    ['BSMI Kab Pamekasan', '3528'],
+    ['BSMI Kab Sumenep', '3529'],
+    ['BSMI Kota Probolinggo', '3574'],
+    ['BSMI Kab Probolinggo', '3513'],
+    ['BSMI Kab Jember', '3509'],
+    ['BSMI Kab Lumajang', '3508'],
+    ['BSMI Kab Bondowoso', '3511'],
+    ['BSMI Kab Situbondo', '3512'],
+    ['BSMI Kab Banyuwangi', '3510'],
+    ['BSMI Kab Jombang', '3517'],
+    ['BSMI Kota Malang', '3573'],
+    ['BSMI Kab Malang', '3507'],
+    ['BSMI Kota Batu', '3579'],
+    ['BSMI Kota Kediri', '3571'],
+    ['BSMI Kab Kediri', '3506'],
+    ['BSMI Kota Blitar', '3572'],
+    ['BSMI Kab Blitar', '3505'],
+    ['BSMI Kab Tulungagung', '3504'],
+    ['BSMI Kota Madiun', '3577'],
+    ['BSMI Kab Madiun', '3519'],
+    ['BSMI Kab Ngawi', '3521'],
+    ['BSMI Kab Magetan', '3520'],
+    ['BSMI Kab Ponorogo', '3502'],
+    ['BSMI Kab Pacitan', '3501'],
+    ['BSMI Kab Trenggalek', '3503'],
+    ['BSMI Kab Nganjuk', '3518']
+];
+
 var $$ = Dom7;
 
 var mybsmiaktivasi = 'd426d702f89bac9fb66b22ede9593b62a447bf4154dfac317a72fcf4f168172a';
@@ -1557,7 +1599,7 @@ routes: [
       },
     },
     beforeEnter: function ({ resolve, reject }) {          
-          fperiksauserdata({ resolve, reject })
+        fperiksauserdata({ resolve, reject })
     },
   },
   {
@@ -1569,16 +1611,31 @@ routes: [
       },
     },
     beforeEnter: function ({ resolve, reject }) {
-      function fperiksakesiapan({ resolve, reject })
-      {
-          if (typeof dashboarddata === 'undefined' || dashboarddata === null) {
-            // variable is undefined or null
-            setTimeout(function(){ fperiksakesiapan({ resolve, reject }); }, 1000);
-            return;
-          }
-        resolve();
-      }
-      fperiksakesiapan({ resolve, reject })
+      fperiksauserdata({ resolve, reject })
+    },
+  },
+  {
+    path: '/cabang/:cabangid',
+    url: 'cabang.html',
+    on: {
+      pageAfterIn: function test (e, page) {
+        fpagecabang(true,page.route.params.cabangid);
+      },
+    },
+    beforeEnter: function ({ resolve, reject }) {
+      fperiksauserdata({ resolve, reject })
+    },
+  },
+  {
+    path: '/relawan/:relawanid',
+    url: 'relawan.html',
+    on: {
+      pageAfterIn: function test (e, page) {
+        fpagerelawan(page.route.params.relawanid);
+      },
+    },
+    beforeEnter: function ({ resolve, reject }) {
+      fperiksauserdata({ resolve, reject })
     },
   },
   {
@@ -2369,13 +2426,22 @@ function getdefaultdatarun(data)
   datacabang.sort(function(a, b){return b.relawan - a.relawan});
   for(i=0;i<datacabang.length;i++)
   {
+    let kode;
+    for(var j=0;j<kodecabang.length;j++)
+    {
+      if (datacabang[i].cabang === kodecabang[j][0])
+      {
+        kode = kodecabang[j][1];
+      }
+    }
+    
     if (datacabang[i].cabang == 'BSMI Jawa Timur')
     {
-      rekapitulasiprov += '<tr> <td class="label-cell">'+safe(datacabang[i].cabang)+'</td> <td class="numeric-cell">'+safe(datacabang[i].relawan-1)+'</td> </tr>';
+      rekapitulasiprov += '<tr> <td class="label-cell"><a href="/cabang/'+kode+'">'+safe(datacabang[i].cabang)+'</a></td> <td class="numeric-cell">'+safe(datacabang[i].relawan-1)+'</td> </tr>';
     }
     else
     {
-    rekapitulasicabang += '<tr> <td class="label-cell">'+safe(datacabang[i].cabang)+'</td> <td class="numeric-cell">'+safe(datacabang[i].relawan)+'</td> </tr>';
+    rekapitulasicabang += '<tr> <td class="label-cell"><a href="/cabang/'+kode+'">'+safe(datacabang[i].cabang)+'</a></td> <td class="numeric-cell">'+safe(datacabang[i].relawan)+'</td> </tr>';
     cabang = cabang+1;
     }
     relawan = relawan+datacabang[i].relawan;
@@ -2415,6 +2481,143 @@ function getdefaultdatarun(data)
 
 
 
+//////fpagecabang/////////////////////////////////////////////
+function fpagecabang(run = true,cabangid)
+{
+  //console.log(cabangid);
+  if (typeof mybsmicabangdata === 'undefined' || mybsmicabangdata === null)
+  {
+      let mypreloader = app.dialog.preloader();
+      app.request({
+        url: apidataurl,
+        method: 'POST',
+        cache: false,
+        data : { token:mybsmiusertoken, command: 'getcabangdata'}, 
+        success: function (data, status, xhr)
+          {
+            mypreloader.close();
+            var status = JSON.parse(data).status;
+            var content = JSON.parse(data).data;
+            if (status == "success")
+            {
+              //console.log(content);
+              window.mybsmicabangdata = content;
+              if (run) fpagecabangrun(content,cabangid);
+            }
+            else if (status == "failed")
+            {
+              //console.log("failed");
+              app.dialog.alert(content,'Terjadi Kesalahan');
+            }
+            else
+            {
+              //console.log("failed");
+              app.dialog.alert(content,'Terjadi Kesalahan');
+            }
+          },
+        error: function (xhr, status, message)
+          {
+            //console.log(message);
+            mypreloader.close();
+            app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
+          },
+      })
+  }
+  else
+  {
+    if (run) fpagecabangrun(mybsmicabangdata,cabangid);
+  }
+
+  $$('.mybsmi-cabangrefresh').on('click', function () {
+    //mybsmicabangdata = null
+    //fpagecabang()
+  })
+}
+
+function fpagecabangrun(content,cabangid)
+{
+  //console.log(cabangid);
+  for (i=0;i<kodecabang.length;i++)
+  {
+    if (kodecabang[i][1] === cabangid) cabangnama = kodecabang[i][0];
+  }
+  //console.log(cabangnama);
+  $$('.mybsmi-cabangnama').text(cabangnama);
+  var data = '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th></th><th>Nama</th><th>Cabang</th><th>Aktif</th></tr></thead><tbody>';
+  for (i=content.length-1;i>-1;i--)
+  {
+      if ((content[i][1] === '0OOBNq02038mf3ZfIdV7')&&(mybsmiuseremail !== 'nuzulz@gmail.com')){continue;}else{if ((content[i][2] === 'nuzulz+1@gmail.com')&&(!isLocal)) continue;}
+      
+      if ((content[i][2] === 'Terbatas')||(content[i][2] === 'Terverifikasi')||(content[i][2] === 'Tertolak')){}else{continue;}
+      
+      if (content[i][4] === cabangnama){}else{continue;}
+      
+      let date = new Intl.DateTimeFormat("id-ID", { hour12:false,dateStyle: "short" , timeStyle: "short",  timeZone: "Asia/Jakarta"}).format(new Date(content[i][0]));date = date.split(' ');date = date[0];
+      
+      data += '<tr class="mybsmi-admin-item-'+safe(content[i][1])+'"><td data-collapsible-title=""><img src="https://drive.google.com/uc?export=view&id='+safe(content[i][5])+'" style="width:1.5em;aspet-ratio 1/1;object-fit:cover;border-radius:50% 50%;overflow:hidden;"></td><td data-collapsible-title="Nama"><a class="mybsmi-cabangaction" data-user="'+btoa(JSON.stringify(content[i]))+'">'+safe(content[i][3])+'</a></td><td data-collapsible-title="Aktif">'+safe(content[i][4])+'</td><td data-collapsible-title="Aktif">'+safe(date)+'</td></tr>';
+  }
+  data += '</tbody></table></div>';
+  $$('.mybsmi-cabang').html(data);
+
+  $$('.mybsmi-cabang a.mybsmi-cabangaction').on('click', function (e) {
+        let base64 = this.attributes["data-user"].value;
+        let data = JSON.parse(atob(base64));
+        //console.log(data);
+        let url = "/relawan/"+safe(data[1]);
+        //console.log(url);
+        app.views.main.router.navigate(url);
+  });
+}
+//////fpagecabang///////////////////////////////////////////////
+
+
+
+
+
+//////////////////////////////////////////////////////////////
+function fpagerelawan(relawanid)
+{
+
+  fpagecabang(false);
+  function fperiksakesiapan()
+  {
+      if (typeof mybsmicabangdata === 'undefined' || mybsmicabangdata === null) {
+        setTimeout(function(){ fperiksakesiapan(); }, 1000);
+        return;
+      }
+
+      for (var i=0;i<mybsmicabangdata.length;i++)
+      {
+        if (relawanid === mybsmicabangdata[i][1])
+        {
+          fpagerelawanrun(mybsmicabangdata[i]);
+        }
+      }
+  }
+  fperiksakesiapan()
+}
+
+function fpagerelawanrun(data)
+{
+  //console.log(data);
+  let date = new Intl.DateTimeFormat("id-ID", { hour12:false,dateStyle: "short" , timeStyle: "short",  timeZone: "Asia/Jakarta"}).format(new Date(data[0]));date = date.split(' ');date = date[0];
+  let html = ''
++'    <img class="mybsmi-relawan-userphoto" src="avatar.png" style="width:150px;height:150px;margin: 20px 10px 0px;border-radius: 50%;object-fit: cover;"><span class="badge color-blue mybsmi-relawan-avatar-badge" style="bottom:20px;right:-40px;display:none;"><i class="icon f7-icons" style="font-size:12px;">checkmark_seal</i></span>'
++'    <p class="mybsmi-relawan-data text-align-center"><span style="font-weight:bold;">'+safe(data[3])+'</span><br><span style="font-weight:normal;">'+safe(data[4])+' | '+safe(data[6])+' Bintang</span><br><span style="font-weight:normal;">Aktif '+safe(date)+'</span><br><br><span><a href="#" class="button button-fill color-red display-none mybsmi-relawan-kirimpesan">Kirim Pesan</a></span><p>';
+  $$('.mybsmi-relawan').html(html);
+  let src = "https://drive.google.com/uc?export=view&id="+safe(data[5]);
+  $$('.mybsmi-relawan-userphoto').attr('src',src);
+  if (data[2] === "Terverifikasi") $$('.mybsmi-relawan-avatar-badge').css("display","block");
+  if (data[1] !== dashboarddata.user.useruid) $$('.mybsmi-relawan-kirimpesan').removeClass('display-none');
+  $$('.mybsmi-relawan-kirimpesan').on('click', function (e) {
+        fkirimpesan(data[1],data[3],data[5])
+  });
+}
+////////////////////////////////////////////////////////////
+
+
+
+
 
 ///grecaptcha/////////////////////////////////
 function grecaptcharesponse(data)
@@ -2440,7 +2643,7 @@ function fpageprofilku()
     $$('.mybsmi-profilku .mybsmi-userphoto').attr('src','https://drive.google.com/uc?export=view&id='+safe(data.userphoto));
     let bintang = JSON.parse(data.usermydata).bintang;//console.log(bintang);
     if (typeof bintang === 'undefined' || bintang === null) bintang = 0;
-    $$('.mybsmi-profilku .mybsmi-bintang').text('Poin : '+safe(bintang)+' bintang');
+    $$('.mybsmi-profilku .mybsmi-bintang').text(safe(bintang)+' bintang');
     $$('.mybsmi-profilku .mybsmi-usernama').text(safe(data.usernama));
     $$('.mybsmi-profilku .mybsmi-userjeniskelamin').text(safe(data.userjeniskelamin));
     $$('.mybsmi-profilku .mybsmi-usertanggallahir').text(safe(data.usertanggallahir));
@@ -2452,6 +2655,10 @@ function fpageprofilku()
     $$('.mybsmi-profilku .mybsmi-usercabang').text(safe(data.usercabang));
     $$('.mybsmi-profilku .mybsmi-usertahunbergabung').text(safe(data.usertahunbergabung));
     if (data.userstatus === "Terverifikasi"){$$('.mybsmi-avatar-badge').css('display','flex');};
+    $$('.mybsmi-lihatprofil').on('click', function (e) {
+        let url = "/relawan/"+safe(data.useruid);
+        app.views.main.router.navigate(url);          
+    });
 }
 ////fpageprofilku////////////////////////////
 
@@ -3858,7 +4065,7 @@ function getpesandatarun(content)
     {
       $$('.mybsmi-pesan-masuk').append(data);
       $$('.mybsmi-pesan-item-'+content[i][1]+' img').attr('src','https://drive.google.com/uc?export=view&id='+safe(content[i][4]));
-      if (content[i][9] == "false")
+      if (content[i][9] == false)
       {
         $$('.mybsmi-pesan-item-'+content[i][1]+' .item-title').removeClass('text-color-gray');
         $$('.mybsmi-pesan-item-'+content[i][1]+' .item-title').addClass('text-color-black');
@@ -3906,16 +4113,22 @@ function fpagebacapesan(id)
       if(data[5] === dashboarddata.user.useruid)
       {
         $$('.mybsmi-bacapesan .item-subtitle').html('kepada saya');
-        if (data[9] === 'false')
+        if (data[9] === false)
         {
-          mybsmipesan[id][9] = 'true';
+          mybsmipesan[id][9] = true;
           fupdatebacapesan(data[1]);
         }
         $$('.mybsmi-balaspesan').removeClass('display-none');
         $$('.mybsmi-balaspesan').on('click', function (e) {
               fkirimpesan(data[2],data[3],data[4])
         }); 
-      }     
+      }
+      $$('.mybsmi-bacapesan .item-title').on('click', function (e) {
+          let url = "/relawan/"+safe(data[2]);
+          //console.log(url);
+          app.views.main.router.navigate(url);          
+      });
+      $$('.mybsmi-bacapesan .item-title').css("cursor","pointer");
     }
 }
 
@@ -4067,7 +4280,7 @@ function fkirimpesanrun(uid,nama,photo,subjek,pesan,dialog)
             {
               //console.log(content);
               let pesanku = JSON.parse(content);
-              mybsmipesan.push(pesanku);
+              if (typeof mybsmipesan === 'undefined' || mybsmipesan === null){}else{mybsmipesan.push(pesanku)};
               app.dialog.alert("Pesan telah terkirim",'Info');
             }
             else if (status == "failed")
@@ -4411,7 +4624,7 @@ function fkirimbuataktivitas(dialog,obj)
         var content = JSON.parse(data).data;
         if (status == "success")
         {
-          console.log(content);
+          //console.log(content);
           if (content === 'Aktif')
           {
             //app.dialog.alert("Aktivitas berhasil dibuat",'Info');
@@ -4522,6 +4735,20 @@ function fpagetwibbonrun(data)
   $$('.mybsmi-twibbon-pendukung').text(JSON.parse(data[12]).length);
   $$('.mybsmi-twibbon-deskripsi').text(data[7]);
   $$('.mybsmi-twibbon-avatar').attr('src','https://drive.google.com/uc?export=view&id='+safe(data[4]));
+
+  $$('.mybsmi-twibbon-nama').on('click', function (e) {
+      let url = "/relawan/"+safe(data[2]);
+      //console.log(url);
+      app.views.main.router.navigate(url);          
+  });
+  $$('.mybsmi-twibbon-nama').css("cursor","pointer");
+
+  $$('.mybsmi-twibbon-avatar').on('click', function (e) {
+      let url = "/relawan/"+safe(data[2]);
+      //console.log(url);
+      app.views.main.router.navigate(url);          
+  });
+  $$('.mybsmi-twibbon-avatar').css("cursor","pointer");
   
   let date = new Intl.DateTimeFormat("id-ID", { hour12:false,dateStyle: "short" , timeStyle: "short",  timeZone: "Asia/Jakarta"}).format(new Date(data[0]));date = date.split(' ');date = date[0];
   $$('.mybsmi-twibbon-date').text(date);
@@ -4950,12 +5177,18 @@ function fjadipendukungrun(mydata)
   {
     if (pendukung[i].uid === dashboarddata.user.useruid) exists = true;
     let data = ''
-+'          <div class="col-100 margin-bottom mybsmi-twibbon-pendukungdetail-item-'+pendukung[i].uid+'" style="width:100%">'
++'          <div class="col-100 margin-bottom mybsmi-twibbon-pendukungdetail-item-'+safe(pendukung[i].uid)+'" style="width:100%">'
 +'          <div class="float-left" style="width:3em;"><img src="avatar.png" style="width:1.5em;aspet-ratio 1/1;object-fit:cover;border-radius:50% 50%;overflow:hidden;"></div>'
-+'          <div class="float-left" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;width:70%">'+pendukung[i].nama+'</div>'
++'          <div class="float-left" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;width:70%">'+safe(pendukung[i].nama)+'</div>'
 +'          </div>'
     $$('.mybsmi-twibbon-pendukungdetail').append(data);
     $$('.mybsmi-twibbon-pendukungdetail-item-'+pendukung[i].uid+' img').attr('src','https://drive.google.com/uc?export=view&id='+safe(pendukung[i].photo));
+    $$('.mybsmi-twibbon-pendukungdetail-item-'+pendukung[i].uid).on('click', function (e) {
+        let url = "/relawan/"+safe(pendukung[i].uid);
+        //console.log(url);
+        app.views.main.router.navigate(url);          
+    });
+    $$('.mybsmi-twibbon-pendukungdetail-item-'+pendukung[i].uid).css("cursor","pointer");
   }
 }
 /////////fpendukung/////////////////////////////////////////////////////////////
