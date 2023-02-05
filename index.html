@@ -2560,10 +2560,16 @@ function fpagecabangrun(content,cabangid)
       
       let date = new Intl.DateTimeFormat("id-ID", { hour12:false,dateStyle: "short" , timeStyle: "short",  timeZone: "Asia/Jakarta"}).format(new Date(content[i][0]));date = date.split(' ');date = date[0];
       
-      data += '<tr class="mybsmi-admin-item-'+safe(content[i][1])+'"><td data-collapsible-title=""><img src="https://drive.google.com/uc?export=view&id='+safe(content[i][5])+'" style="width:1.5em;aspet-ratio 1/1;object-fit:cover;border-radius:50% 50%;overflow:hidden;"></td><td data-collapsible-title="Nama"><a class="mybsmi-cabangaction" data-user="'+btoa(JSON.stringify(content[i]))+'">'+safe(content[i][3])+'</a></td><td data-collapsible-title="Aktif">'+safe(content[i][4])+'</td><td data-collapsible-title="Aktif">'+safe(date)+'</td></tr>';
+      data += '<tr class="mybsmi-admin-item-'+safe(content[i][1])+'"><td data-collapsible-title=""><img src="avatar.png" style="width:1.5em;aspet-ratio 1/1;object-fit:cover;border-radius:50% 50%;overflow:hidden;"></td><td data-collapsible-title="Nama"><a class="mybsmi-cabangaction" data-user="'+btoa(JSON.stringify(content[i]))+'">'+safe(content[i][3])+'</a></td><td data-collapsible-title="Aktif">'+safe(content[i][4])+'</td><td data-collapsible-title="Aktif">'+safe(date)+'</td></tr>';
   }
   data += '</tbody></table></div>';
   $$('.mybsmi-cabang').html(data);
+  
+  for (i=content.length-1;i>-1;i--)
+  {
+    let url = 'https://drive.google.com/uc?export=view&id='+safe(content[i][5]);
+    $$('.mybsmi-admin-item-'+safe(content[i][1])+' img').attr('src',url);
+  }
 
   $$('.mybsmi-cabang a.mybsmi-cabangaction').on('click', function (e) {
         let base64 = this.attributes["data-user"].value;
