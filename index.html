@@ -5342,7 +5342,7 @@ function fpagebukusaku(run = true)
 function getbukusakudatarun(data)
 {
   //console.log(data);
-  for (let i=data.length-1;i>0;i--)
+  for (let i=1;i<data.length;i++)
   {
     let html = ''
     +'            <div class="col-100 xsmall-75 small-50 medium-33 large-33 xlarge-33 mybsmi-bukusaku-item-'+i+'" data-index="'+i+'">'
