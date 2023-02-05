@@ -206,6 +206,21 @@
               </li>
             </ul>
           </div>
+
+          <div class="list">
+            <ul>
+              <li>
+                <a href="/bukusaku/" class="item-content item-link panel-close mybsmi-menu">
+                  <div class="item-media">
+                    <i class="icon f7-icons">bookmark_fill</i>
+                  </div>
+                  <div class="item-inner">
+                    <div class="item-title">Buku Saku</div>
+                  </div>
+                </a>
+              </li>
+            </ul>
+          </div>
 <!--
           <div class="list">
             <ul>
@@ -1596,6 +1611,18 @@ routes: [
     on: {
       pageAfterIn: function test (e, page) {
         fpageaktivitas();
+      },
+    },
+    beforeEnter: function ({ resolve, reject }) {          
+        fperiksauserdata({ resolve, reject })
+    },
+  },
+  {
+    path: '/bukusaku/',
+    url: 'bukusaku.html',
+    on: {
+      pageAfterIn: function test (e, page) {
+        fpagebukusaku();
       },
     },
     beforeEnter: function ({ resolve, reject }) {          
@@ -5260,6 +5287,103 @@ function relative_time(x) {
         return (r.match('NaN') ? x : r)
 }
 /////////relative_time//////////////////////////////////////////////////////////////////////////////
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+function fpagebukusaku(run = true)
+{
+  if (typeof mybsmibukusakudata === 'undefined' || mybsmibukusakudata === null)
+  {
+      let mypreloader = app.dialog.preloader();
+      app.request({
+        url: apidataurl,
+        method: 'POST',
+        cache: false,
+        data : { token:mybsmiusertoken, command: 'getbukusakudata'}, 
+        success: function (data, status, xhr)
+          {
+            mypreloader.close();
+            var status = JSON.parse(data).status;
+            var content = JSON.parse(data).data;
+            if (status == "success")
+            {
+              //console.log(content);
+              window.mybsmibukusakudata = content;
+              if (run) getbukusakudatarun(content);
+            }
+            else if (status == "failed")
+            {
+              //console.log("failed");
+              app.dialog.alert(content,'Terjadi Kesalahan');
+            }
+            else
+            {
+              //console.log("failed");
+              app.dialog.alert(content,'Terjadi Kesalahan');
+            }
+          },
+        error: function (xhr, status, message)
+          {
+            //console.log(message);
+            mypreloader.close();
+            app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
+          },
+      })
+  }
+  else
+  {
+    if (run) getbukusakudatarun(mybsmibukusakudata);
+  }
+}
+
+function getbukusakudatarun(data)
+{
+  //console.log(data);
+  for (let i=data.length-1;i>0;i--)
+  {
+    let html = ''
+    +'            <div class="col-100 xsmall-75 small-50 medium-33 large-33 xlarge-33 mybsmi-bukusaku-item-'+i+'" data-index="'+i+'">'
+    +'              <div class="card">'
+    +                '<div class="card-header no-padding" style="overflow:hidden;"><img src="photo.svg" style="width:100%;aspect-ratio: 1 / 1;object-fit:cover;"></div>'
+    +'                <div class="card-content card-content-padding">'
+    +'                  <div style="font-weight:bold;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">'+safe(data[i][1])+'</div>'
+    +'                  <div></div>'
+    +'                </div>'
+    +'                <div class="card-footer display-none">'                 
+    +'                </div>'
+    +'              </div>'
+    +'            </div>';
+    $$('.mybsmi-bukusaku').append(html);
+    let url = 'https://lh3.googleusercontent.com/d/'+safe(data[i][0]);
+    $$('.mybsmi-bukusaku-item-'+i+' img').attr('src',url);
+    $$('.mybsmi-bukusaku-item-'+i).css('cursor','pointer');
+    $$('.mybsmi-bukusaku-item-'+i).on('click', function (e) {
+       //console.log($$(this).attr('data-index')) 
+       //let url = 'https://drive.google.com/file/d/'+safe(data[i][0])+'/preview';
+       //let url = 'https://drive.google.com/uc?export=view&id='+safe(data[i][0]);
+       let url = 'https://drive.google.com/uc?export=view&id='+safe(data[i][0])+'#toolbar=0&navpanes=0&scrollbar=0&statusbar=0&messages=0&scrollbar=0';
+       myviewer(url);         
+    });
+  }
+}
+
+function myviewer(data)
+{
+  
+  const para = document.createElement("div");
+  para.innerHTML = '<div style="background: rgba(0, 0, 0, 0.8);position: fixed;z-index: 1000000000000000;align-items: center;justify-content: center;display: flex;bottom: 0;left: 0;right: 0;top: 0;"><embed id="mybsmi-iframe" src="" style="border-radius: 1em;display: block;margin: auto;height: 90vh;width: 90vw;object-fit: contain;background-image:none;"></div>';
+  
+  para.addEventListener("click",()=>{
+    para.remove(); 
+  })
+
+  document.body.appendChild(para);
+  $$('#mybsmi-iframe').attr('src',data);
+
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////////
 </script>
 <!--end script------------------------------------------------------------------------------->  
 </body>
