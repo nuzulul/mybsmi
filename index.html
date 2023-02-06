@@ -1937,6 +1937,8 @@ function getPWADisplayMode() {
   return 'browser';
 }
 
+//console.log(getPWADisplayMode());
+
 window.matchMedia('(display-mode: standalone)').addEventListener('change', (evt) => {
   let displayMode = 'browser';
   if (evt.matches) {
@@ -1954,8 +1956,15 @@ async function tesinstall()
       if (relatedApps.length > 0) {
         //window.open(window.location.href, "_blank");
         console.log('installed');
+        if (getPWADisplayMode() === 'browser')
+        {
+          window.open(window.location.href, "_blank");
+        }
       }else{
         console.log('not installed');
+        if (getPWADisplayMode() === 'browser')
+        {
+        }
       }
       relatedApps.forEach((app) => {
         console.log(app.id, app.platform, app.url);
@@ -1990,6 +1999,8 @@ window.addEventListener('DOMContentLoaded', () => {
       });
   tesinstall();
 });
+
+
 /////////install//////////////////////////////////////////////////
 
 
