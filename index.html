@@ -435,6 +435,16 @@
                     </div>
                   </a>
                 </li>
+                <li>
+                  <a href="#" class="item-link item-content link popover-close mybsmi-install display-none" data-popover=".profile-popover">
+                    <div class="item-media">
+                      <i class="icon f7-icons">tray_arrow_down_fill</i>
+                    </div>
+                    <div class="item-inner">
+                      <div class="item-title">Install</div>
+                    </div>
+                  </a>
+                </li>
               </ul>
             </div>
 
@@ -1856,6 +1866,74 @@ function fperiksauserstatus({ resolve, reject })
           reject();
        }
 }
+
+
+/////////install//////////////////////////////////////////////////
+//https://web.dev/codelab-make-installable/
+window.addEventListener('beforeinstallprompt', (event) => {
+  // Prevent the mini-infobar from appearing on mobile.
+  event.preventDefault();
+  console.log('👍', 'beforeinstallprompt', event);
+  // Stash the event so it can be triggered later.
+  window.deferredPrompt = event;
+  // Remove the 'hidden' class from the install button container.
+  $$('.mybsmi-install').removeClass('display-none');
+});
+
+$$('.mybsmi-install').on('click', async function () {
+  console.log('👍', 'butInstall-clicked');
+  const promptEvent = window.deferredPrompt;
+  if (!promptEvent) {
+    // The deferred prompt isn't available.
+    return;
+  }
+  // Show the install prompt.
+  promptEvent.prompt();
+  // Log the result
+  const result = await promptEvent.userChoice;
+  console.log('👍', 'userChoice', result);
+  // Reset the deferred prompt variable, since
+  // prompt() can only be called once.
+  window.deferredPrompt = null;
+  // Act on the user's choice
+  if (result === 'accepted') {
+    console.log('User accepted the install prompt.');
+  } else if (result === 'dismissed') {
+    console.log('User dismissed the install prompt');
+  }
+  // Hide the install button.
+  $$('.mybsmi-install').addClass('display-none');
+});
+
+window.addEventListener('appinstalled', (event) => {
+  console.log('👍', 'appinstalled', event);
+  // Clear the deferredPrompt so it can be garbage collected
+  window.deferredPrompt = null;
+  $$('.mybsmi-install').addClass('display-none');
+});
+
+function getPWADisplayMode() {
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+  if (document.referrer.startsWith('android-app://')) {
+    return 'twa';
+  } else if (navigator.standalone || isStandalone) {
+    return 'standalone';
+  }
+  return 'browser';
+}
+
+window.matchMedia('(display-mode: standalone)').addEventListener('change', (evt) => {
+  let displayMode = 'browser';
+  if (evt.matches) {
+    displayMode = 'standalone';
+  }
+  // Log display mode change to analytics
+  console.log('DISPLAY_MODE_CHANGED', displayMode);
+});
+/////////install//////////////////////////////////////////////////
+
+
+
 
 
 app.on('pageInit', function (page) {

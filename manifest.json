@@ -1,6 +1,6 @@
 {
   "background_color": "#ffffff",
-  "description": "MyBSMI Sistem Keanggotaan Relawan BSMI",
+  "description": "MyBSMI Aplikasi Relawan BSMI",
   "dir": "ltr",
   "display": "standalone",
   "name": "MyBSMI",
@@ -21,6 +21,11 @@
           "purpose": "any"
       }
   ],
-  "shortcuts": [],
+  "shortcuts": [
+    {
+      "name": "Aktivitas",
+      "url": "/#page/aktivitas/"
+    }  
+  ],
   "lang": "id"
 }
