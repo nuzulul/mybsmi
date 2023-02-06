@@ -1958,7 +1958,11 @@ async function tesinstall()
         console.log('installed');
         if (getPWADisplayMode() === 'browser')
         {
-          window.open(window.location.href, "_blank");
+          //window.open(window.location.href, "_blank");
+          const anchor = document.createElement("a");
+          anchor.setAttribute('href', window.location.href);
+          anchor.setAttribute('target', '_blank');
+          anchor.click();
         }
       }else{
         console.log('not installed');
