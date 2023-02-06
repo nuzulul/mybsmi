@@ -1959,10 +1959,10 @@ async function tesinstall()
         if (getPWADisplayMode() === 'browser')
         {
           //window.open(window.location.href, "_blank");
-          const anchor = document.createElement("a");
-          anchor.setAttribute('href', window.location.href);
-          anchor.setAttribute('target', '_blank');
-          anchor.click();
+          //const anchor = document.createElement("a");
+          //anchor.setAttribute('href', window.location.href);
+          //anchor.setAttribute('target', '_blank');
+          //anchor.click();
         }
       }else{
         console.log('not installed');
@@ -2004,7 +2004,50 @@ window.addEventListener('DOMContentLoaded', () => {
   tesinstall();
 });
 
+function openapp()
+{
+  var dialog = app.dialog.create({
+    content:''////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      +'<div style="width:100%;">'
+      +'  <div style="display:flex;flex-direction:column;align-items:center;justify-content: center;">'
+      +'      <img id="img" src="" style="width:150px;height:150px;margin: 10px 10px;border-radius: 50%;object-fit: cover;">'
+      +'      <p style="font-weight:normal;">MyBSMI App Tersedia</p>'
+      +'      <div class="data-table"></div>'
+      +'  </div>'
+      +'</div>',//////////////////////////////////////////////////////////////////////////////////////////////////
+    closeByBackdropClick: false,
+    destroyOnClose: true,
+    verticalButtons: false,
+    on: {
+      opened: function () {
+        //console.log('Dialog opened')
+        let src = "icon512.png";
+        $$('#img').attr('src',src);
+      }
+    },
+    buttons: [
+      {
+        text: 'Nanti Saja',
+        close:true,
+        color: 'gray',
+        onClick: function(dialog, e)
+          {
 
+          }
+      },
+      {
+        text: 'Buka App',
+        close:true,
+        color: 'red',
+        onClick: function(dialog, e)
+          {
+            window.open(window.location.href, "_blank");
+          }
+      },
+    ]
+  });
+  dialog.open();
+}
 /////////install//////////////////////////////////////////////////
 
 
