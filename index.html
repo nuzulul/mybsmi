@@ -1593,6 +1593,13 @@ var apiuserurl = "https://script.google.com/macros/s/AKfycbys-GEdilEu0nqdjDRUlEE
 var apidataurl = "https://script.google.com/macros/s/AKfycbyyPrApY4R8xv-_m8LUz9XHhkdYeTPMovm8MkBXgTXlojx31nHz9GVdGa4Ikw8cELMN/exec";
 }
 
+if (params.mybsmi !== undefined )
+{
+  let mybsmi = params.mybsmi;mybsmi = mybsmi.replace('web+mybsmi://','');window.location.href = mybsmi;
+  console.log(mybsmi);
+  //console.log(decodeURIComponent(mybsmi));
+}
+
 var app = new Framework7({
 el: '#app',
 theme: 'aurora',
@@ -1931,6 +1938,11 @@ function fmybsminstallclick()
     // Hide the install button.
     $$('.mybsmi-install').addClass('display-none');
   });
+  $$('.mybsmi-bukaapp').addClass('display-none');
+  if (localStorage.getItem("mybsmiinstalled") !== null)
+  {
+    localStorage.removeItem("mybsmiinstalled");
+  }
 }
 
 function fmybsmibukaapp()
@@ -1957,7 +1969,7 @@ function fmybsmibukaapp()
           console.log('browserName :'+browserName);
           $$('.mybsmi-bukaapp').removeClass('display-none');
           $$('.mybsmi-bukaapp').on('click', function () {
-          let url = 'web+mybsmi://';
+          let url = 'web+mybsmi://'+window.location.href;
             window.open(url, "_blank");
           });      
         }
@@ -2048,7 +2060,7 @@ if (!isSecureContext) {
 
 (async() => {
   window.addEventListener('load', () => {
-    navigator.registerProtocolHandler('web+mybsmi', '/#page/%s');
+    navigator.registerProtocolHandler('web+mybsmi', '/?mybsmi=%s');
   });
   //tesinstall();
 })();

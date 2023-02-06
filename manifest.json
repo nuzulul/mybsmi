@@ -39,7 +39,7 @@
   "protocol_handlers": [
     {
       "protocol": "web+mybsmi",
-      "url": "/#page/%s"
+      "url": "/?mybsmi=%s"
     }
   ],
   "intent_filters": [
