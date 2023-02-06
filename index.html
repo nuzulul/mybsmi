@@ -1948,11 +1948,16 @@ window.matchMedia('(display-mode: standalone)').addEventListener('change', (evt)
 
 async function tesinstall()
 {
-const relatedApps = await navigator.getInstalledRelatedApps();
-console.log('instaled: '+relatedApps.length > 0);
-relatedApps.forEach((app) => {
-  console.log(app.id, app.platform, app.url);
-});
+if ('getInstalledRelatedApps' in navigator) {
+    const relatedApps = await navigator.getInstalledRelatedApps();
+    console.log('instaled: '+relatedApps.length > 0);
+    relatedApps.forEach((app) => {
+      console.log(app.id, app.platform, app.url);
+    });
+} else {
+  console.log('getInstalledRelatedApps not supported');
+}
+
 }
 
 if (!isSecureContext) {  
