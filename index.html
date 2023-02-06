@@ -1595,9 +1595,14 @@ var apidataurl = "https://script.google.com/macros/s/AKfycbyyPrApY4R8xv-_m8LUz9X
 
 if (params.mybsmi !== undefined )
 {
-  let mybsmi = params.mybsmi;mybsmi = mybsmi.replace('web+mybsmi://','');window.location.href = mybsmi;
-  console.log(mybsmi);
-  //console.log(decodeURIComponent(mybsmi));
+  let mybsmi = params.mybsmi;
+  mybsmi = mybsmi.replace('web+mybsmi://','');
+  mybsmi = mybsmi.replace('javascript:','');
+  mybsmi = safe(mybsmi);
+  if ((mybsmi.startsWith("http://localhost:8080"))||(mybsmi.startsWith("https://mybsmi.bsmijatim.org")))
+  {
+    window.location.href = mybsmi;
+  }
 }
 
 var app = new Framework7({
@@ -4212,7 +4217,7 @@ function encodenonalphanumeric( s )
 function safe(unsafe)
 {
 unsafe = String(unsafe);
-var data = escapeHTML(unsafe);
+var data = escapehtmloldbrowser(unsafe);
 return data;
 
 }
