@@ -455,6 +455,16 @@
                     </div>
                   </a>
                 </li>
+                <li>
+                  <a href="#" class="item-link item-content link popover-close mybsmi-bukaapp display-none" data-popover=".profile-popover">
+                    <div class="item-media">
+                      <i class="icon f7-icons">app</i>
+                    </div>
+                    <div class="item-inner">
+                      <div class="item-title">Buka App</div>
+                    </div>
+                  </a>
+                </li>
               </ul>
             </div>
 
@@ -1478,7 +1488,7 @@
 
           
 <!--start overlay------------------------------------------------------------------------------->          
-<div id="overlay-welcome" style="background: rgba(0, 0, 0, 0.8);position: fixed;z-index: 10000;align-items: center;justify-content: center;display: flex;bottom: 0;left: 0;right: 0;top: 0;    background-image: url();background-size: cover;background-position: center top;">
+<div id="overlay-welcome" style="background: rgba(0, 0, 0, 0.8);position: fixed;z-index: 10000;align-items: center;justify-content: center;display: flex;flex-direction:column;bottom: 0;left: 0;right: 0;top: 0;    background-image: url();background-size: cover;background-position: center top;">
   <div style="background:#fff;display: flex;flex-direction:column;margin: auto;align-items: center;justify-content: center;padding:20px 20px;">
     <img src="https://1.bp.blogspot.com/-I9V1NyLtG68/XmJRZ_RhTJI/AAAAAAAADgI/wJiuL0Wnjvc2jyoV8AMRsIp1YvSQs1QXwCLcBGAsYHQ/s1600/Logo%2BBSMI%2B%2528vector%2529.png" style="width:200px;height:300px;object-fit: contain;background-image:none;">
     <p style="font-size:16px;font-weight:bold;text-align:center;width:300px;margin-top:15px;margin-bottom:2px;">MyBSMI</p>
@@ -1487,6 +1497,7 @@
     <!--<p style="font-size:12px;color:grey;tex-align:center">Belum punya akun? <a href="" class="login-screen-open" data-login-screen="#my-aktivasi-screen">Aktivasi</a></p>-->
     <p style="font-size:12px;color:grey;tex-align:center">Belum punya akun? <a href="" class="mybsmi-aktivasiscreen">Aktivasi</a></p>
   </div>
+  <div><p><a href="https://mybsmi.bsmijatim.org" class="mybsmi-bukaapp display-none" target="_blank">Buka MyBSMI App</a></p></div>
 </div>
 <!--end overlay------------------------------------------------------------------------------->
 
@@ -1600,6 +1611,7 @@ routes: [
         //console.log(typeof(dashboarddata));
         if (typeof dashboarddata !== 'undefined'){getdefaultdatarun(dashboarddata);}
         if (window.deferredPrompt) fmybsminstallclick();
+        if (window.mybsmiinstalled) $$('.mybsmi-bukaapp').removeClass('display-none');
       },
     },
   },
@@ -1965,7 +1977,9 @@ async function tesinstall()
           //anchor.setAttribute('target', '_blank');
           //anchor.click();
           //openapp();
-          window.location.href = 'https://mybsmi.bsmijatim.org';
+          //window.location.href = 'https://mybsmi.bsmijatim.org';
+          $$('.mybsmi-bukaapp').removeClass('display-none');
+          window.mybsmiinstalled = true;
         }
       }else{
         console.log('not installed');
