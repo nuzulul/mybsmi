@@ -1597,6 +1597,7 @@ routes: [
       pageAfterIn: function test (e, page) {
         //console.log(typeof(dashboarddata));
         if (typeof dashboarddata !== 'undefined'){getdefaultdatarun(dashboarddata);}
+        if (window.deferredPrompt) $$('.mybsmi-install').removeClass('display-none');
       },
     },
   },
