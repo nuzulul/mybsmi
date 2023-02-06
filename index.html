@@ -1597,7 +1597,7 @@ routes: [
       pageAfterIn: function test (e, page) {
         //console.log(typeof(dashboarddata));
         if (typeof dashboarddata !== 'undefined'){getdefaultdatarun(dashboarddata);}
-        if (window.deferredPrompt) $$('.mybsmi-install').removeClass('display-none');
+        if (window.deferredPrompt) fmybsminstallclick();
       },
     },
   },
@@ -1889,30 +1889,34 @@ window.addEventListener('beforeinstallprompt', (event) => {
   $$('.mybsmi-install').removeClass('display-none');
 });
 
-$$('.mybsmi-install').on('click', async function () {
-  console.log('👍', 'butInstall-clicked');
-  const promptEvent = window.deferredPrompt;
-  if (!promptEvent) {
-    // The deferred prompt isn't available.
-    return;
-  }
-  // Show the install prompt.
-  promptEvent.prompt();
-  // Log the result
-  const result = await promptEvent.userChoice;
-  console.log('👍', 'userChoice', result);
-  // Reset the deferred prompt variable, since
-  // prompt() can only be called once.
-  window.deferredPrompt = null;
-  // Act on the user's choice
-  if (result === 'accepted') {
-    console.log('User accepted the install prompt.');
-  } else if (result === 'dismissed') {
-    console.log('User dismissed the install prompt');
-  }
-  // Hide the install button.
-  $$('.mybsmi-install').addClass('display-none');
-});
+function fmybsminstallclick()
+{
+  $$('.mybsmi-install').removeClass('display-none');
+  $$('.mybsmi-install').on('click', async function () {
+    console.log('👍', 'butInstall-clicked');
+    const promptEvent = window.deferredPrompt;
+    if (!promptEvent) {
+      // The deferred prompt isn't available.
+      return;
+    }
+    // Show the install prompt.
+    promptEvent.prompt();
+    // Log the result
+    const result = await promptEvent.userChoice;
+    console.log('👍', 'userChoice', result);
+    // Reset the deferred prompt variable, since
+    // prompt() can only be called once.
+    window.deferredPrompt = null;
+    // Act on the user's choice
+    if (result === 'accepted') {
+      console.log('User accepted the install prompt.');
+    } else if (result === 'dismissed') {
+      console.log('User dismissed the install prompt');
+    }
+    // Hide the install button.
+    $$('.mybsmi-install').addClass('display-none');
+  });
+}
 
 window.addEventListener('appinstalled', (event) => {
   console.log('👍', 'appinstalled', event);
