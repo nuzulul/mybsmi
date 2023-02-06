@@ -1947,7 +1947,7 @@ window.addEventListener('appinstalled', (event) => {
   window.deferredPrompt = null;
   $$('.mybsmi-install').addClass('display-none');
   window.mybsmiinstalled = true;
-  fmybsmibukaapp();
+  let timeout = setTimeout(fmybsmibukaapp, 10000);
 });
 
 function getPWADisplayMode() {
@@ -1988,8 +1988,9 @@ async function tesinstall()
           //anchor.click();
           //openapp();
           //window.location.href = 'https://mybsmi.bsmijatim.org';
-          fmybsmibukaapp();
           window.mybsmiinstalled = true;
+          fmybsmibukaapp();
+          
         }
       }else{
         console.log('not installed');
