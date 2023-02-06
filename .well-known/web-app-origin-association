@@ -1,0 +1,16 @@
+{
+    "web_apps": [
+        {
+            "manifest": "https://mybsmi.bsmijatim.org/manifest.json",
+            "details": {
+                "paths": ["/*"]
+            }
+        },
+        {
+            "manifest": "https://mybsmi.netlify.app/manifest.json",
+            "details": {
+                "paths": ["/*"]
+            }
+        }
+    ]
+}
