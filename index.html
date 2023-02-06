@@ -1945,6 +1945,16 @@ window.matchMedia('(display-mode: standalone)').addEventListener('change', (evt)
   // Log display mode change to analytics
   console.log('DISPLAY_MODE_CHANGED', displayMode);
 });
+
+if (!isSecureContext) {  
+  location.protocol = 'https:';
+}
+
+(async() => {
+  window.addEventListener('load', () => {
+    navigator.registerProtocolHandler('web+mybsmi', './#page/%s');
+  });
+})();
 /////////install//////////////////////////////////////////////////
 
 

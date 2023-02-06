@@ -36,5 +36,11 @@
       "origin": "https://mybsmi.netlify.app"
     }
   ],
+  "protocol_handlers": [
+    {
+      "protocol": "web+mybsmi",
+      "url": "./#page/%s"
+    }
+  ],
   "lang": "id"
 }
