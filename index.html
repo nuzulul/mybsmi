@@ -1946,15 +1946,38 @@ window.matchMedia('(display-mode: standalone)').addEventListener('change', (evt)
   console.log('DISPLAY_MODE_CHANGED', displayMode);
 });
 
+async function tesinstall()
+{
+const relatedApps = await navigator.getInstalledRelatedApps();
+relatedApps.forEach((app) => {
+  console.log(app.id, app.platform, app.url);
+});
+}
+
 if (!isSecureContext) {  
   location.protocol = 'https:';
 }
 
 (async() => {
   window.addEventListener('load', () => {
-    navigator.registerProtocolHandler('web+mybsmi', './#page/%s');
+    navigator.registerProtocolHandler('web+mybsmi', '/#page/%s');
   });
 })();
+
+window.addEventListener('DOMContentLoaded', () => {
+  // replace standalone with your display used in manifest
+  window.matchMedia('(display-mode: standalone)')
+      .addListener(event => {
+          if (event.matches) {
+             // From browser to standalone
+             console.log('From browser to standalone');
+          } else {
+             // From standalone to browser
+             console.log('From standalone to browser');
+          }
+      });
+  tesinstall();
+});
 /////////install//////////////////////////////////////////////////
 
 
