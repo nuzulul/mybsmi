@@ -456,7 +456,7 @@
                   </a>
                 </li>
                 <li>
-                  <a href="https://mybsmi.bsmijatim.org" target="_blank" class="item-link item-content link popover-close mybsmi-bukaapp display-none" data-popover=".profile-popover">
+                  <a href="#" target="_blank" class="item-link item-content link popover-close mybsmi-bukaapp display-none" data-popover=".profile-popover">
                     <div class="item-media">
                       <i class="icon f7-icons">app</i>
                     </div>
@@ -1497,7 +1497,7 @@
     <!--<p style="font-size:12px;color:grey;tex-align:center">Belum punya akun? <a href="" class="login-screen-open" data-login-screen="#my-aktivasi-screen">Aktivasi</a></p>-->
     <p style="font-size:12px;color:grey;tex-align:center">Belum punya akun? <a href="" class="mybsmi-aktivasiscreen">Aktivasi</a></p>
   </div>
-  <div><p><a href="https://mybsmi.bsmijatim.org" class="mybsmi-bukaapp display-none" target="_blank">Buka MyBSMI App</a></p></div>
+  <div><p><a href="#" class="mybsmi-bukaapp display-none" target="_blank">Buka MyBSMI App</a></p></div>
 </div>
 <!--end overlay------------------------------------------------------------------------------->
 
@@ -1611,7 +1611,7 @@ routes: [
         //console.log(typeof(dashboarddata));
         if (typeof dashboarddata !== 'undefined'){getdefaultdatarun(dashboarddata);}
         if (window.deferredPrompt) fmybsminstallclick();
-        if (window.mybsmiinstalled) $$('.mybsmi-bukaapp').removeClass('display-none');
+        if (window.mybsmiinstalled) fmybsmibukaapp();
       },
     },
   },
@@ -1933,6 +1933,14 @@ function fmybsminstallclick()
   });
 }
 
+function fmybsmibukaapp()
+{
+  $$('.mybsmi-bukaapp').removeClass('display-none');
+  $$('.mybsmi-bukaapp').on('click', function () {
+    window.open(window.location.href, "_blank");
+  });
+}
+
 window.addEventListener('appinstalled', (event) => {
   console.log('👍', 'appinstalled', event);
   // Clear the deferredPrompt so it can be garbage collected
@@ -1978,7 +1986,7 @@ async function tesinstall()
           //anchor.click();
           //openapp();
           //window.location.href = 'https://mybsmi.bsmijatim.org';
-          $$('.mybsmi-bukaapp').removeClass('display-none');
+          fmybsmibukaapp();
           window.mybsmiinstalled = true;
         }
       }else{
