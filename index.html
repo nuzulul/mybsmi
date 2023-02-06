@@ -1951,7 +1951,12 @@ async function tesinstall()
   if ('getInstalledRelatedApps' in navigator) {
       const relatedApps = await navigator.getInstalledRelatedApps();
       //console.log('instaled: '+relatedApps.length > 0);
-      if (relatedApps.length > 0) {window.open(window.location.href, "_blank");}else{console.log('not installed');}
+      if (relatedApps.length > 0) {
+        //window.open(window.location.href, "_blank");
+        console.log('installed');
+      }else{
+        console.log('not installed');
+      }
       relatedApps.forEach((app) => {
         console.log(app.id, app.platform, app.url);
       });
