@@ -1935,10 +1935,34 @@ function fmybsminstallclick()
 
 function fmybsmibukaapp()
 {
-  $$('.mybsmi-bukaapp').removeClass('display-none');
-  $$('.mybsmi-bukaapp').on('click', function () {
-    window.open(window.location.href, "_blank");
-  });
+  const os = detectOS();
+  const browserName = getBrowserName();
+  const display = getPWADisplayMode();
+  if (display === 'browser')
+  {
+      console.log('display :'+display);
+      if (os === 'Android')
+      {
+        console.log('os :'+os);
+        $$('.mybsmi-bukaapp').removeClass('display-none');
+        $$('.mybsmi-bukaapp').on('click', function () {
+          window.open(window.location.href, "_blank");
+        });
+      }
+      else if (os === 'Windows')
+      {
+        console.log('os :'+os);
+        if (browserName === 'Edge')
+        {
+          console.log('browserName :'+browserName);
+          $$('.mybsmi-bukaapp').removeClass('display-none');
+          $$('.mybsmi-bukaapp').on('click', function () {
+          let url = 'web+mybsmi://';
+            window.open(url, "_blank");
+          });      
+        }
+      }
+  }
 }
 
 window.addEventListener('appinstalled', (event) => {
@@ -1947,6 +1971,7 @@ window.addEventListener('appinstalled', (event) => {
   window.deferredPrompt = null;
   $$('.mybsmi-install').addClass('display-none');
   window.mybsmiinstalled = true;
+  localStorage.setItem("mybsmiinstalled",true)
   let timeout = setTimeout(fmybsmibukaapp, 20000);
 });
 
@@ -1994,8 +2019,19 @@ async function tesinstall()
         }
       }else{
         console.log('not installed');
-        if (getPWADisplayMode() === 'browser')
+        const os = detectOS();
+        const browserName = getBrowserName();
+        if ((os === 'Windows')&&(browserName === 'Edge'))
         {
+          if (localStorage.getItem("mybsmiinstalled") !== null)
+          {
+            let isInstalled = localStorage.getItem("mybsmiinstalled");
+            if (isInstalled)
+            {
+              window.mybsmiinstalled = true;
+              fmybsmibukaapp();
+            }
+          }
         }
       }
       relatedApps.forEach((app) => {
@@ -2030,10 +2066,10 @@ window.addEventListener('DOMContentLoaded', () => {
           }
       });
   tesinstall();
-  console.log(isInstalled());
+  console.log(isStandalone());
 });
 
-function isInstalled() {
+function isStandalone() {
   // For iOS
   if(window.navigator.standalone) return true
 
@@ -2095,6 +2131,38 @@ const isInStandaloneMode = () =>
 
  if (isInStandaloneMode()) {
     console.log("webapp is installed")
+}
+
+function detectOS() {
+    const platform = navigator.platform.toLowerCase(),
+        iosPlatforms = ['iphone', 'ipad', 'ipod', 'ipod touch'];
+
+    if (platform.includes('mac')) return 'MacOS';
+    if (iosPlatforms.includes(platform)) return 'iOS';
+    if (platform.includes('win')) return 'Windows';
+    if (/android/.test(navigator.userAgent.toLowerCase())) return 'Android';
+    if (/linux/.test(platform)) return 'Linux';
+
+    return 'unknown';
+}
+
+const getBrowserName = () => {
+  let browserInfo = navigator.userAgent;
+  let browser;
+  if (browserInfo.includes('Opera') || browserInfo.includes('Opr')) {
+    browser = 'Opera';
+  } else if (browserInfo.includes('Edg')) {
+    browser = 'Edge';
+  } else if (browserInfo.includes('Chrome')) {
+    browser = 'Chrome';
+  } else if (browserInfo.includes('Safari')) {
+    browser = 'Safari';
+  } else if (browserInfo.includes('Firefox')) {
+    browser = 'Firefox'
+  } else {
+    browser = 'unknown'
+  }
+    return browser;
 }
 /////////install//////////////////////////////////////////////////
 
