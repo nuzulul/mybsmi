@@ -27,5 +27,13 @@
       "url": "/#page/aktivitas/"
     }  
   ],
+  "url_handlers": [
+    {
+      "origin": "https://mybsmi.bsmijatim.org"
+    },
+    {
+      "origin": "https://mybsmi.netlify.app"
+    }
+  ],
   "lang": "id"
 }
