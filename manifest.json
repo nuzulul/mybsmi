@@ -42,11 +42,13 @@
       "url": "/#page/%s"
     }
   ],
-  "intent_filters": {
-    "scope_url_scheme": "https",
-    "scope_url_host": "mybsmi.bsmijatim.org",
-    "scope_url_path": "/"
-  },
+  "intent_filters": [
+    {
+      "scope_url_scheme": "https",
+      "scope_url_host": "mybsmi.bsmijatim.org",
+      "scope_url_path": "/"
+    }
+  ],
   "related_applications": [{
     "platform": "webapp",
     "url": "https://mybsmi.bsmijatim.org/manifest.json"
