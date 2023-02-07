@@ -3919,7 +3919,8 @@ function fkirimverifikasiidentitas(dialog,obj)
         if (status == "success")
         {
           //console.log(content);
-          app.dialog.alert("Permintaan verifikasi telah terkirim. Proses verifikasi bisa membutuhkan beberapa hari. Terima kasih.",'Permintaan Verifikasi');
+          //app.dialog.alert("Permintaan verifikasi telah terkirim. Proses verifikasi bisa membutuhkan beberapa hari. Terima kasih.",'Permintaan Verifikasi');
+          fonesignalprompt('Permintaan Verifikasi Terkirim','Beri tahu jika proses verifikasi selesai');
           getdefaultdata();
         }
         else if (status == "failed")
@@ -4943,7 +4944,8 @@ function fkirimpesanrun(uid,nama,photo,subjek,pesan,dialog)
               //console.log(content);
               let pesanku = JSON.parse(content);
               if (typeof mybsmipesan === 'undefined' || mybsmipesan === null){}else{mybsmipesan.push(pesanku)};
-              app.dialog.alert("Pesan telah terkirim",'Info');
+              //app.dialog.alert("Pesan telah terkirim",'Info');
+              fonesignalprompt('Pesan Terkirim','Beri tahu jika ada balasan dan pesan masuk');
             }
             else if (status == "failed")
             {
