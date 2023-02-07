@@ -2031,7 +2031,7 @@ function fonesignal()
                   enable: false,
                 },
                 promptOptions: {
-                  actionMessage: 'ingin menampilkan notifikasi?',
+                  actionMessage: 'MyBSMI ingin menampilkan notifikasi',
                   acceptButton: 'Lanjutkan',
                   cancelButton: 'Nanti Saja',
                 },
@@ -2220,7 +2220,7 @@ function fonesignalpromptrun(judul,msg,permission)
               $$('#mybsmi-promptoverlay').remove();
             });
             //OneSignal.showNativePrompt();
-            OneSignal.showSlidedownPrompt();            
+            OneSignal.showSlidedownPrompt({force: true});            
           }
         });
         if (permission === 'default')
