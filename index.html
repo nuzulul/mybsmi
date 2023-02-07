@@ -2026,8 +2026,14 @@ function fonesignal()
               OneSignal.init({
                 appId: "142b9d52-507c-4326-bc6e-d234d208f2cd",
                 safari_web_id: "web.onesignal.auto.194684e9-1eab-45d0-91dc-36dcc25bd22e",
+                autoResubscribe: true,
                 notifyButton: {
                   enable: false,
+                },
+                promptOptions: {
+                  actionMessage: 'ingin menampilkan notifikasi?',
+                  acceptButton: 'Lanjutkan',
+                  cancelButton: 'Nanti Saja',
                 },
                 welcomeNotification: {
                   disable: true,
@@ -2213,7 +2219,8 @@ function fonesignalpromptrun(judul,msg,permission)
             $$('.mybsmi-promptinfo').on('click', function () {
               $$('#mybsmi-promptoverlay').remove();
             });
-            OneSignal.showNativePrompt();            
+            //OneSignal.showNativePrompt();
+            OneSignal.showSlidedownPrompt();            
           }
         });
         if (permission === 'default')
