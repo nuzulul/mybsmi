@@ -465,6 +465,16 @@
                     </div>
                   </a>
                 </li>
+                <li>
+                  <a href="#" target="_blank" class="item-link item-content link popover-close mybsmi-refresh" data-popover=".profile-popover">
+                    <div class="item-media">
+                      <i class="icon f7-icons">arrow_clockwise_circle</i>
+                    </div>
+                    <div class="item-inner">
+                      <div class="item-title">Refresh</div>
+                    </div>
+                  </a>
+                </li>
               </ul>
             </div>
 
@@ -1624,6 +1634,7 @@ routes: [
         if (typeof dashboarddata !== 'undefined'){getdefaultdatarun(dashboarddata);}
         if (window.deferredPrompt) fmybsminstallclick();
         if (window.mybsmiinstalled) fmybsmibukaapp();
+        frefresh();
       },
     },
   },
@@ -1900,6 +1911,13 @@ function fperiksauserstatus({ resolve, reject })
        {
           reject();
        }
+}
+
+function frefresh()
+{
+  $$('.mybsmi-refresh').on('click', function () {
+    location.reload();
+  });
 }
 
 
