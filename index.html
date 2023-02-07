@@ -2101,11 +2101,11 @@ function fonesignal()
             console.log(data);
             let url = data.url;
             if (url === window.mybsmionesignaldisplay) 
-            {
-              
-              //window.location.hash = "#!login";
-              //window.location.replace(url); //notworking
-              window.location.assign(url);
+            {              
+              //window.location.hash = "#page";
+              //window.location.assign(url);
+              window.location.replace(url);
+              location.reload();
             }
         }]);
       //} catch(err){}
