@@ -1951,8 +1951,7 @@ function fonesignal()
     
     if (!isLocal)
     {
-      try {
-        window.OneSignal = window.OneSignal || [];
+      //try {
 
         function onManageWebPushSubscriptionButtonClicked(event) {
             getSubscriptionState().then(function(state) {
@@ -2011,12 +2010,19 @@ function fonesignal()
                 };
             });
         }
+        
+        window.OneSignal = window.OneSignal || [];
 
         OneSignal.push(function() {
               // If we're on an unsupported browser, do nothing
               if (!OneSignal.isPushNotificationsSupported()) {
                   return;
               }
+
+              OneSignal.SERVICE_WORKER_PARAM = { scope: '/push/onesignal/' };
+              OneSignal.SERVICE_WORKER_PATH = 'push/onesignal/OneSignalSDKWorker.js'
+              OneSignal.SERVICE_WORKER_UPDATER_PATH = 'push/onesignal/OneSignalSDKWorker.js'
+        
               OneSignal.init({
                 appId: "142b9d52-507c-4326-bc6e-d234d208f2cd",
                 safari_web_id: "web.onesignal.auto.194684e9-1eab-45d0-91dc-36dcc25bd22e",
@@ -2042,15 +2048,17 @@ function fonesignal()
                   console.log("Push notifications are not enabled yet.");
                   if (mybsmigetNotificationPermission === 'granted')
                   {
-                    OneSignal.setSubscription(true);
+                    //OneSignal.setSubscription(true);
                   }    
-              });          
+              });
+              
+              //updateMangeWebPushSubscriptionButton('#my-notification-button');          
               // Occurs when the user's subscription changes to a new value.
-              updateMangeWebPushSubscriptionButton('#my-notification-button');
               OneSignal.on('subscriptionChange', function (isSubscribed) {
                 console.log("The user's subscription state is now:", isSubscribed);
-                updateMangeWebPushSubscriptionButton('#my-notification-button');
+                //updateMangeWebPushSubscriptionButton('#my-notification-button');
               });
+              
               OneSignal.on('notificationPermissionChange', function(permissionChange) {
                 var currentPermission = permissionChange.to;
                 console.log('New permission state:', currentPermission);
@@ -2089,7 +2097,7 @@ function fonesignal()
             console.log("Received NotificationOpened:");
             console.log(data);
         }]);
-      } catch(err){}
+      //} catch(err){}
     }
     
 }
