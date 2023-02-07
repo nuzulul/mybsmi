@@ -2097,12 +2097,13 @@ function fonesignalprompt(judul = 'Terima Kasih',msg = 'Beritahu jika ada hal pe
       // (Output) Site Notification Permission: default
       if (permission === 'default')
       {
-        fonesignalpromptrun(judul,msg)
+        
       }
+      fonesignalpromptrun(judul,msg,permission)
   }]);
 }
 
-function fonesignalpromptrun(judul,msg)
+function fonesignalpromptrun(judul,msg,permission)
 {
   var dialog = app.dialog.create({
     content:''////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2111,7 +2112,7 @@ function fonesignalpromptrun(judul,msg)
       +'      <img id="img" src="" style="width:150px;height:150px;margin: 10px 10px;object-fit: cover;">'
       +'      <p style="font-weight:bold;text-align:center;" class="mybsmi-judulprompt">'+judul+'</p>'
       +'      <div class="data-table"></div>'
-+'                <div class="list media-list no-margin-top"><ul><li>'
++'                <div class="list media-list no-margin-top display-none mybsmi-promptlist"><ul><li>'
 +'                  <label class="item-checkbox item-content">'
 +'                    <input type="checkbox" name="demo-media-checkbox" id="mybsmi-promptcheck" value="1" />'
 +'                    <i class="icon icon-checkbox"></i>'
@@ -2147,10 +2148,14 @@ function fonesignalpromptrun(judul,msg)
             para.innerHTML = '<div style="background: rgba(0, 0, 0, 0.8);position: fixed;z-index: 1000000000000000;align-items: center;justify-content: center;display: flex;bottom: 0;left: 0;right: 0;top: 0;"></div>';
             document.body.appendChild(para);
             
-            //OneSignal.showNativePrompt();
+            OneSignal.showNativePrompt();
 
           }
         });
+        if (permission === 'default')
+        {
+            $$('.mybsmi-promptlist').removeClass('display-none');
+        }        
       }
     },
     buttons: [
