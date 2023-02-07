@@ -1979,10 +1979,13 @@ function fmybsmibukaapp()
       if (os === 'Android')
       {
         console.log('os :'+os);
-        $$('.mybsmi-bukaapp').removeClass('display-none');
-        $$('.mybsmi-bukaapp').on('click', function () {
-          window.open(window.location.href, "_blank");
-        });
+        if (browserName === 'Chrome')
+        {
+          $$('.mybsmi-bukaapp').removeClass('display-none');
+          $$('.mybsmi-bukaapp').on('click', function () {
+            window.open(window.location.href, "_blank");
+          });
+        }
       }
       else if (os === 'Windows')
       {
@@ -2194,6 +2197,8 @@ const getBrowserName = () => {
     browser = 'Safari';
   } else if (browserInfo.includes('Firefox')) {
     browser = 'Firefox'
+  } else if (browserInfo.includes('Samsung')) {
+    browser = 'Samsung'
   } else {
     browser = 'unknown'
   }
