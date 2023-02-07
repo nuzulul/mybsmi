@@ -14,6 +14,9 @@
   <link rel="stylesheet" href="https://unpkg.com/framework7@7.1.2/framework7-bundle.min.css">
   <link rel="stylesheet" href="https://unpkg.com/framework7-icons">
   <script src='https://www.google.com/recaptcha/api.js'></script>
+  <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>
+  
+  <!--------------------------Style-------------------------------------->
   <style>
     :root {
       --f7-panel-transition-duration: 250ms;
@@ -1624,6 +1627,11 @@ view: {
   browserHistory: true,
   browserHistorySeparator: '#page',
 },
+on: {
+  init() {
+    fappready();
+  },
+},
 routes: [
   {
     path: '/',
@@ -1913,6 +1921,19 @@ function fperiksauserstatus({ resolve, reject })
        }
 }
 
+//////////on app ready////////////////////////////////////////////////////
+function fappready()
+{
+  console.log('app ready');
+  fonesignal();
+  
+}
+
+//////////on dom ready////////////////////////////////////////////////////
+window.addEventListener('DOMContentLoaded', () => {
+  console.log('dom ready');
+});
+
 function frefresh()
 {
   $$('.mybsmi-refresh').on('click', function () {
@@ -1920,6 +1941,143 @@ function frefresh()
   });
 }
 
+function fonesignal()
+{
+    if (typeof dashboarddata === 'undefined' || dashboarddata === null) {
+      // variable is undefined or null
+      setTimeout(function(){ fonesignal(); }, 1000);
+      return;
+    }
+    
+    if (!isLocal)
+    {
+      try {
+        window.OneSignal = window.OneSignal || [];
+
+        function onManageWebPushSubscriptionButtonClicked(event) {
+            getSubscriptionState().then(function(state) {
+                if (state.isPushEnabled) {
+                    /* Subscribed, opt them out */
+                    OneSignal.setSubscription(false);
+                } else {
+                    if (state.isOptedOut) {
+                        /* Opted out, opt them back in */
+                        OneSignal.setSubscription(true);
+                    } else {
+                        /* Unsubscribed, subscribe them */
+                        OneSignal.registerForPushNotifications();
+                    }
+                }
+            });
+            event.preventDefault();
+        }
+
+        function updateMangeWebPushSubscriptionButton(buttonSelector) {
+            var hideWhenSubscribed = false;
+            var subscribeText = "Subscribe to Notifications";
+            var unsubscribeText = "Unsubscribe from Notifications";
+
+            getSubscriptionState().then(function(state) {
+                var buttonText = !state.isPushEnabled || state.isOptedOut ? subscribeText : unsubscribeText;
+
+                var element = document.querySelector(buttonSelector);
+                if (element === null) {
+                    return;
+                }
+
+                element.removeEventListener('click', onManageWebPushSubscriptionButtonClicked);
+                element.addEventListener('click', onManageWebPushSubscriptionButtonClicked);
+                element.textContent = buttonText;
+
+                if (hideWhenSubscribed && state.isPushEnabled) {
+                    element.style.display = "none";
+                } else {
+                    element.style.display = "";
+                }
+            });
+        }
+
+        function getSubscriptionState() {
+            return Promise.all([
+              OneSignal.isPushNotificationsEnabled(),
+              OneSignal.isOptedOut()
+            ]).then(function(result) {
+                var isPushEnabled = result[0];
+                var isOptedOut = result[1];
+
+                return {
+                    isPushEnabled: isPushEnabled,
+                    isOptedOut: isOptedOut
+                };
+            });
+        }
+
+        OneSignal.push(function() {
+              // If we're on an unsupported browser, do nothing
+              if (!OneSignal.isPushNotificationsSupported()) {
+                  return;
+              }
+              OneSignal.init({
+                appId: "142b9d52-507c-4326-bc6e-d234d208f2cd",
+                safari_web_id: "web.onesignal.auto.194684e9-1eab-45d0-91dc-36dcc25bd22e",
+                notifyButton: {
+                  enable: false,
+                },
+                welcomeNotification: {
+                  disable: true,
+                },
+                /* Your other init settings ... */
+                notificationClickHandlerMatch: 'exact', /* See above documentation: 'origin' relaxes tab matching requirements, 'exact' is default */
+                notificationClickHandlerAction: 'navigate', /* See above documentation: 'focus' does not navigate the targeted tab, 'navigate' is default */
+                /* ... */
+              });          
+              OneSignal.setDefaultTitle("MyBSMI");          
+              OneSignal.on('permissionPromptDisplay', function () {
+                console.log("The prompt displayed");
+              });
+              OneSignal.isPushNotificationsEnabled(function(isEnabled) {
+                if (isEnabled)
+                  console.log("Push notifications are enabled!");
+                else
+                  console.log("Push notifications are not enabled yet.");    
+              });          
+              // Occurs when the user's subscription changes to a new value.
+              updateMangeWebPushSubscriptionButton('#my-notification-button');
+              OneSignal.on('subscriptionChange', function (isSubscribed) {
+                console.log("The user's subscription state is now:", isSubscribed);
+                updateMangeWebPushSubscriptionButton('#my-notification-button');
+              });
+              OneSignal.on('notificationPermissionChange', function(permissionChange) {
+                var currentPermission = permissionChange.to;
+                console.log('New permission state:', currentPermission);
+              });
+              OneSignal.getUserId(function(userId) {
+                console.log("OneSignal User ID:", userId);
+                // (Output) OneSignal User ID: 270a35cd-4dda-4b3f-b04e-41d7463a2316    
+              });
+              OneSignal.on('notificationDisplay', function(event) {
+                console.warn('OneSignal notification displayed:', event);
+              });
+              OneSignal.on('notificationDismiss', function(event) {
+                console.warn('OneSignal notification dismissed:', event);
+              });
+              OneSignal.setExternalUserId(dashboarddata.user.useruid);
+              OneSignal.getExternalUserId().then(function(externalUserId){
+                console.log("externalUserId: ", externalUserId);
+              });
+        });
+        OneSignal.push(["getNotificationPermission", function(permission) {
+            console.log("Site Notification Permission:", permission);
+            // (Output) Site Notification Permission: default
+        }]);
+        OneSignal.push(["addListenerForNotificationOpened", function(data) {
+            console.log("Received NotificationOpened:");
+            console.log(data);
+        }]);
+      } catch(err){}
+    }
+    
+}
 
 /////////install//////////////////////////////////////////////////
 //https://web.dev/codelab-make-installable/
