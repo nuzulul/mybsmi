@@ -2057,6 +2057,7 @@ function fonesignal()
               OneSignal.on('subscriptionChange', function (isSubscribed) {
                 console.log("The user's subscription state is now:", isSubscribed);
                 //updateMangeWebPushSubscriptionButton('#my-notification-button');
+                fupdateusernotifikasi(isSubscribed);
               });
               
               OneSignal.on('notificationPermissionChange', function(permissionChange) {
@@ -2065,6 +2066,7 @@ function fonesignal()
                 $$('#mybsmi-promptoverlay').remove();
                 if (currentPermission === 'granted')
                 {
+                  fupdateusernotifikasi(true);
                 }
                 else if (currentPermission === 'denied')
                 {
@@ -2100,6 +2102,43 @@ function fonesignal()
       //} catch(err){}
     }
     
+}
+
+function fupdateusernotifikasi(data)
+{
+      let mypreloader = app.dialog.preloader();
+      app.request({
+        url: apidataurl,
+        method: 'POST',
+        cache: false,
+        data : { token:mybsmiusertoken, command: 'updateusernotifikasi', data:data}, 
+        success: function (data, status, xhr)
+          {
+            mypreloader.close();
+            var status = JSON.parse(data).status;
+            var content = JSON.parse(data).data;
+            if (status == "success")
+            {
+              //console.log(content);
+            }
+            else if (status == "failed")
+            {
+              //console.log("failed");
+              app.dialog.alert(content,'Terjadi Kesalahan');
+            }
+            else
+            {
+              //console.log("failed");
+              app.dialog.alert(content,'Terjadi Kesalahan');
+            }
+          },
+        error: function (xhr, status, message)
+          {
+            //console.log(message);
+            mypreloader.close();
+            app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
+          },
+      })
 }
 
 function fonesignalprompt(judul = 'Terima Kasih',msg = 'Beritahu jika ada hal penting')
