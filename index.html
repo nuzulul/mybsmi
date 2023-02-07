@@ -2034,7 +2034,7 @@ function fonesignal()
                 },
                 /* Your other init settings ... */
                 notificationClickHandlerMatch: 'origin', /* See above documentation: 'origin' relaxes tab matching requirements, 'exact' is default */
-                notificationClickHandlerAction: 'navigate', /* See above documentation: 'focus' does not navigate the targeted tab, 'navigate' is default */
+                notificationClickHandlerAction: 'focus', /* See above documentation: 'focus' does not navigate the targeted tab, 'navigate' is default */
                 /* ... */
               });          
               OneSignal.setDefaultTitle("MyBSMI");          
@@ -2100,7 +2100,13 @@ function fonesignal()
             console.log("Received NotificationOpened:");
             console.log(data);
             let url = data.url;
-            if (url === window.mybsmionesignaldisplay) window.location.href = url;
+            if (url === window.mybsmionesignaldisplay) 
+            {
+              
+              //window.location.hash = "#!login";
+              //window.location.assign(url);
+              window.location.replace(url);
+            }
         }]);
       //} catch(err){}
     }
@@ -4651,7 +4657,8 @@ function fpageadminrun(content)
   });
   
   $$('.mybsmi-testing').on('click', function (e) {
-    fonesignalprompt();
+    //fonesignalprompt();
+    window.location.replace('https://mybsmi.bsmijatim.org/#page/pesan/');
   });
 }
 
