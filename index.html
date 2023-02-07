@@ -2050,6 +2050,7 @@ function fonesignal()
               OneSignal.on('notificationPermissionChange', function(permissionChange) {
                 var currentPermission = permissionChange.to;
                 console.log('New permission state:', currentPermission);
+                $$('#mybsmi-promptoverlay').remove();
                 if (currentPermission === 'granted')
                 {
                 }
@@ -2095,10 +2096,6 @@ function fonesignalprompt(judul = 'Terima Kasih',msg = 'Beritahu jika ada hal pe
   OneSignal.push(["getNotificationPermission", function(permission) {
       console.log("Site Notification Permission:", permission);
       // (Output) Site Notification Permission: default
-      if (permission === 'default')
-      {
-        
-      }
       fonesignalpromptrun(judul,msg,permission)
   }]);
 }
@@ -2132,7 +2129,7 @@ function fonesignalpromptrun(judul,msg,permission)
     destroyOnClose: true,
     verticalButtons: false,
     on: {
-      opened: function () {
+      opened: function (dialog, e) {
         //console.log('Dialog opened')
         let src = "icon512.png";
         $$('#img').attr('src',src);
@@ -2140,6 +2137,7 @@ function fonesignalpromptrun(judul,msg,permission)
           let cek = $$('#mybsmi-promptcheck').attr('disabled')
           if (!cek)
           {
+            dialog.close();
             console.log('chek');
             $$('#mybsmi-promptcheck').attr('disabled','true');
             
