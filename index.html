@@ -2391,7 +2391,7 @@ window.addEventListener('appinstalled', (event) => {
   window.mybsmiinstalled = true;
   localStorage.setItem("mybsmiinstalled",true)  
   const os = detectOS();
-  if (os === 'Windows'){fmybsmibukaapp();}else{let timeout = setTimeout(fmybsmibukaapp, 20000);}
+  if (os === 'Windows'){let timeout = setTimeout(fmybsmibukaapp, 5000);}else{let timeout = setTimeout(fmybsmibukaapp, 20000);}
 });
 
 function getPWADisplayMode() {
