@@ -2375,7 +2375,8 @@ function fmybsmibukaapp()
         {
           $$('.mybsmi-bukaapp').removeClass('display-none');
           $$('.mybsmi-bukaapp').on('click', function () {
-            window.open(window.location.href, "_blank");
+          let url = 'web+mybsmi://'+window.location.href;
+            window.open(url, "_blank");
           });
         }
       }
@@ -2388,8 +2389,9 @@ window.addEventListener('appinstalled', (event) => {
   window.deferredPrompt = null;
   $$('.mybsmi-install').addClass('display-none');
   window.mybsmiinstalled = true;
-  localStorage.setItem("mybsmiinstalled",true)
-  let timeout = setTimeout(fmybsmibukaapp, 20000);
+  localStorage.setItem("mybsmiinstalled",true)  
+  const os = detectOS();
+  if (os === 'Windows'){fmybsmibukaapp();}else{let timeout = setTimeout(fmybsmibukaapp, 20000);}
 });
 
 function getPWADisplayMode() {
@@ -2438,7 +2440,7 @@ async function tesinstall()
         console.log('not installed');
         const os = detectOS();
         const browserName = getBrowserName();
-        if ((os === 'Windows')&&(browserName === 'Edge'))
+        if ((os === 'Windows')&&((browserName === 'Edge')||(browserName === 'Chrome')))
         {
           if (localStorage.getItem("mybsmiinstalled") !== null)
           {
