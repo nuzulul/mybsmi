@@ -2111,8 +2111,15 @@ function fonesignal()
         OneSignal.push(["addListenerForNotificationOpened", function(data) {
             console.log("Received NotificationOpened:");
             console.log(data);
-            window.mybsmiaddListenerForNotificationOpened = true;
-            console.log('history:'+History.length);
+            if ((app.views.current.history.length !== 2) || (app.views.current.router.currentPageEl.baseURI !== data.url))
+            {
+             window.mybsmiaddListenerForNotificationOpened = true;
+            }
+            else
+            {
+              var toastBottom = app.toast.create({ text: data.contents, closeTimeout: 5000,position: 'center', });toastBottom.open();
+            }
+            console.log(app.views.current.history.length);
             let url = data.url;
             if (window.mybsminotificationDisplay) 
             {              
