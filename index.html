@@ -3689,7 +3689,7 @@ function flengkapidata()
           }
       },
       {
-        text: 'Lengkapi Data',
+        text: 'Lanjutkan',
         close:true,
         onClick: function(dialog, e)
           {
@@ -3847,7 +3847,7 @@ function fverifikasidata()
           }
       },
       {
-        text: 'Verifikasi',
+        text: 'Lanjutkan',
         close:true,
         onClick: function(dialog, e)
           {
@@ -4823,11 +4823,11 @@ function getpesandatarun(content)
 +'                  <img src="avatar.png" style="width:40px;height:40px;margin-right:10px;border-radius:50% 50%;object-fit:cover;">'
 +'                  <div class="item-inner">'
 +'                    <div class="item-title-row">'
-+'                      <div class="item-title text-color-gray">'+safe(content[i][3])+'</div>'
++'                      <div class="item-title text-color-gray">NAMA</div>'
 +'                      <div class="item-after">'+date+'</div>'
 +'                    </div>'
-+'                    <div class="item-subtitle text-color-gray">'+safe(content[i][7])+'</div>'
-+'                    <div class="item-text">'+safe(content[i][8])+'</div>'
++'                    <div class="item-subtitle text-color-gray">JUDUL</div>'
++'                    <div class="item-text">ISI</div>'
 +'                  </div>'
 +'                </a>'
 +'              </li>'
@@ -4837,7 +4837,10 @@ function getpesandatarun(content)
     {
       $$('.mybsmi-pesan-masuk').append(data);
       $$('.mybsmi-pesan-item-'+content[i][1]+' img').attr('src','https://drive.google.com/uc?export=view&id='+safe(content[i][4]));
-      if (content[i][9] == false)
+      $$('.mybsmi-pesan-item-'+content[i][1]+' .item-title').html(safe(content[i][3]));
+      $$('.mybsmi-pesan-item-'+content[i][1]+' .item-subtitle').html(safe(content[i][8]));
+      $$('.mybsmi-pesan-item-'+content[i][1]+' .item-text').html(safe(content[i][9]));
+      if (content[i][10] == false)
       {
         $$('.mybsmi-pesan-item-'+content[i][1]+' .item-title').removeClass('text-color-gray');
         $$('.mybsmi-pesan-item-'+content[i][1]+' .item-title').addClass('text-color-black');
@@ -4848,7 +4851,10 @@ function getpesandatarun(content)
     else if (content[i][2] == dashboarddata.user.useruid)
     {
       $$('.mybsmi-pesan-terkirim').append(data);
-      $$('.mybsmi-pesan-item-'+content[i][1]+' img').attr('src','https://drive.google.com/uc?export=view&id='+safe(content[i][4]));
+      $$('.mybsmi-pesan-item-'+content[i][1]+' img').attr('src','https://drive.google.com/uc?export=view&id='+safe(content[i][7]));
+      $$('.mybsmi-pesan-item-'+content[i][1]+' .item-title').html('Kepada: '+safe(content[i][6]));
+      $$('.mybsmi-pesan-item-'+content[i][1]+' .item-subtitle').html(safe(content[i][8]));
+      $$('.mybsmi-pesan-item-'+content[i][1]+' .item-text').html(safe(content[i][9]));
     }
 
   }
@@ -4863,7 +4869,7 @@ function fpagebacapesan(id)
     }
     else
     {
-      let data = mybsmipesan[id];
+      let data = mybsmipesan[id];//console.log(data);
       let date = new Intl.DateTimeFormat("id-ID", { hour12:false,dateStyle: "short" , timeStyle: "short",  timeZone: "Asia/Jakarta"}).format(new Date(data[0]));
       let pengirim = ''
 +'              <div class="list list-email media-list"><ul><li>'
@@ -4878,29 +4884,61 @@ function fpagebacapesan(id)
 +'                  </div>'
 +'                </label>'
 +'              </li></ul></div>'
-      $$('.mybsmi-bacapesan .card-header').html(safe(data[7]));
-      $$('.mybsmi-bacapesan .card-content').html(pengirim);
-      $$('.mybsmi-bacapesan .card-footer').html(safe(data[8]))
-      if (data[4] !== '') $$('.mybsmi-bacapesan img').attr('src','https://drive.google.com/uc?export=view&id='+safe(data[4]));
+
+      
       if(data[5] === dashboarddata.user.useruid)
       {
-        $$('.mybsmi-bacapesan .item-subtitle').html('kepada saya');
-        if (data[9] === false)
-        {
-          mybsmipesan[id][9] = true;
-          fupdatebacapesan(data[1]);
-        }
-        $$('.mybsmi-balaspesan').removeClass('display-none');
-        $$('.mybsmi-balaspesan').on('click', function (e) {
-              fkirimpesan(data[2],data[3],data[4])
-        }); 
+            $$('.mybsmi-bacapesan .card-header').html(safe(data[8]));
+            $$('.mybsmi-bacapesan .card-content').html(pengirim);
+            $$('.mybsmi-bacapesan .card-footer').html(safe(data[9]));
+            $$('.mybsmi-bacapesan .item-title').html(safe(data[3]));
+            if (data[4] !== '') $$('.mybsmi-bacapesan img').attr('src','https://drive.google.com/uc?export=view&id='+safe(data[4]));
+            $$('.mybsmi-bacapesan .item-subtitle').html('kepada saya');
+            if (data[10] === false)
+            {
+              mybsmipesan[id][10] = true;
+              fupdatebacapesan(data[1]);
+            }
+            $$('.mybsmi-balaspesan').removeClass('display-none');
+            $$('.mybsmi-balaspesan').on('click', function (e) {
+                  fkirimpesan(data[2],data[3],data[4])
+            }); 
+            $$('.mybsmi-bacapesan .item-title').on('click', function (e) {
+                let url = "/relawan/"+safe(data[2]);
+                //console.log(url);
+                app.views.main.router.navigate(url);          
+            });
+            $$('.mybsmi-bacapesan img').on('click', function (e) {
+                let url = "/relawan/"+safe(data[2]);
+                //console.log(url);
+                app.views.main.router.navigate(url);          
+            });
+            $$('.mybsmi-bacapesan img').css("cursor","pointer");
+            $$('.mybsmi-bacapesan .item-title').css("cursor","pointer");
       }
-      $$('.mybsmi-bacapesan .item-title').on('click', function (e) {
-          let url = "/relawan/"+safe(data[2]);
-          //console.log(url);
-          app.views.main.router.navigate(url);          
-      });
-      $$('.mybsmi-bacapesan .item-title').css("cursor","pointer");
+      else if(data[2] === dashboarddata.user.useruid)
+      {
+        $$('.mybsmi-bacapesan .card-header').html(safe(data[8]));
+        $$('.mybsmi-bacapesan .card-content').html(pengirim);
+        $$('.mybsmi-bacapesan .card-footer').html(safe(data[9]));
+        $$('.mybsmi-bacapesan .item-title').html('Kepada: '+safe(data[6]));
+        if (data[4] !== '') $$('.mybsmi-bacapesan img').attr('src','https://drive.google.com/uc?export=view&id='+safe(data[7]));
+        $$('.mybsmi-bacapesan .item-subtitle').html('dari saya');
+            $$('.mybsmi-bacapesan .item-title').on('click', function (e) {
+                let url = "/relawan/"+safe(data[5]);
+                //console.log(url);
+                app.views.main.router.navigate(url);          
+            });
+            $$('.mybsmi-bacapesan img').on('click', function (e) {
+                let url = "/relawan/"+safe(data[5]);
+                //console.log(url);
+                app.views.main.router.navigate(url);          
+            });
+            $$('.mybsmi-bacapesan img').css("cursor","pointer");
+            $$('.mybsmi-bacapesan .item-title').css("cursor","pointer");
+      }
+      
+
     }
 }
 
@@ -5076,6 +5114,10 @@ function fkirimpesanrun(uid,nama,photo,subjek,pesan,dialog)
       })
 }
 /////fpagepesan//////////////////////////////////////////////////////////////
+
+
+
+
 
 
 //////fdownloadfile/////////////////////////////////////////////////////////////////////
