@@ -2087,7 +2087,13 @@ function fonesignal()
               });
               OneSignal.on('notificationDisplay', function(event) {
                 console.warn('OneSignal notification displayed:', event);
-                window.mybsmionesignaldisplay = event.url;
+                window.mybsminotificationDisplay = true;
+                let url = event.url;
+                if (window.mybsmiaddListenerForNotificationOpened) 
+                {              
+                  window.location.replace(url);
+                  location.reload();
+                }
               });
               OneSignal.on('notificationDismiss', function(event) {
                 console.warn('OneSignal notification dismissed:', event);
@@ -2105,18 +2111,12 @@ function fonesignal()
         OneSignal.push(["addListenerForNotificationOpened", function(data) {
             console.log("Received NotificationOpened:");
             console.log(data);
+            window.mybsmiaddListenerForNotificationOpened = true;
             let url = data.url;
-            if (url === window.mybsmionesignaldisplay) 
+            if (window.mybsminotificationDisplay) 
             {              
-              //window.location.hash = "#page";
-              //window.location.assign(url);
               window.location.replace(url);
               location.reload();
-            }
-            else
-            {
-              //window.location.replace(url);
-              //location.reload();
             }
         }]);
       //} catch(err){}
