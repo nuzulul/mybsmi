@@ -2371,6 +2371,13 @@ function fmybsmibukaapp()
             window.open(url, "_blank");
           });      
         }
+        else if (browserName === 'Chrome')
+        {
+          $$('.mybsmi-bukaapp').removeClass('display-none');
+          $$('.mybsmi-bukaapp').on('click', function () {
+            window.open(window.location.href, "_blank");
+          });
+        }
       }
   }
 }
@@ -4877,10 +4884,10 @@ function fpagebacapesan(id)
 +'                  <img src="avatar.png" style="width:40px;height:40px;margin-right:10px;border-radius:50% 50%;object-fit:cover;">'
 +'                  <div class="item-inner">'
 +'                    <div class="item-title-row">'
-+'                      <div class="item-title text-color-black">'+safe(data[3])+'</div>'
++'                      <div class="item-title text-color-black">NAMA</div>'
 +'                      <div class="item-after">'+date+'</div>'
 +'                    </div>'
-+'                    <div class="item-subtitle text-color-gray">kepada '+safe(data[6])+'</div>'
++'                    <div class="item-subtitle text-color-gray">kepada</div>'
 +'                  </div>'
 +'                </label>'
 +'              </li></ul></div>'
@@ -4918,12 +4925,12 @@ function fpagebacapesan(id)
       }
       else if(data[2] === dashboarddata.user.useruid)
       {
-        $$('.mybsmi-bacapesan .card-header').html(safe(data[8]));
-        $$('.mybsmi-bacapesan .card-content').html(pengirim);
-        $$('.mybsmi-bacapesan .card-footer').html(safe(data[9]));
-        $$('.mybsmi-bacapesan .item-title').html('Kepada: '+safe(data[6]));
-        if (data[4] !== '') $$('.mybsmi-bacapesan img').attr('src','https://drive.google.com/uc?export=view&id='+safe(data[7]));
-        $$('.mybsmi-bacapesan .item-subtitle').html('dari saya');
+            $$('.mybsmi-bacapesan .card-header').html(safe(data[8]));
+            $$('.mybsmi-bacapesan .card-content').html(pengirim);
+            $$('.mybsmi-bacapesan .card-footer').html(safe(data[9]));
+            $$('.mybsmi-bacapesan .item-title').html('Kepada: '+safe(data[6]));
+            if (data[4] !== '') $$('.mybsmi-bacapesan img').attr('src','https://drive.google.com/uc?export=view&id='+safe(data[7]));
+            $$('.mybsmi-bacapesan .item-subtitle').html('dari saya');
             $$('.mybsmi-bacapesan .item-title').on('click', function (e) {
                 let url = "/relawan/"+safe(data[5]);
                 //console.log(url);
