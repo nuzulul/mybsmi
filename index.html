@@ -2091,7 +2091,7 @@ function fonesignal()
                 let url = event.url;
                 if (window.mybsmiaddListenerForNotificationOpened) 
                 {              
-                  window.location.replace(url);
+                  window.location.assign(url);
                   location.reload();
                 }
               });
@@ -2112,10 +2112,11 @@ function fonesignal()
             console.log("Received NotificationOpened:");
             console.log(data);
             window.mybsmiaddListenerForNotificationOpened = true;
+            console.log('history:'+History.length);
             let url = data.url;
             if (window.mybsminotificationDisplay) 
             {              
-              window.location.replace(url);
+              window.location.assign(url);
               location.reload();
             }
         }]);
