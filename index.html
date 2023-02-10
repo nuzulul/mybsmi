@@ -2033,7 +2033,7 @@ function fonesignal()
                     },
                     promptOptions: {
                       actionMessage: 'MyBSMI ingin menampilkan notifikasi',
-                      acceptButton: 'Lanjutkan',
+                      acceptButton: 'Setuju',
                       cancelButton: 'Nanti Saja',
                       slidedown: {
                         autoPrompt: false,
@@ -2098,6 +2098,8 @@ function fonesignal()
                       //window.location.assign(url);
                       //location.reload();
                       fnotifikasirun(event);
+                      window.mybsmiaddListenerForNotificationOpened = false;
+                      window.mybsminotificationDisplay = false;
                     }
                   });
                   OneSignal.on('notificationDismiss', function(event) {
@@ -2147,6 +2149,8 @@ function fonesignal()
                   //window.location.assign(url);
                   //location.reload();
                   fnotifikasirun(data);
+                  window.mybsmiaddListenerForNotificationOpened = false;
+                  window.mybsminotificationDisplay = false;
                 }
             }                
             const handler = function (data) {
