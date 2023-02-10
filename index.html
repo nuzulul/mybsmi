@@ -2171,12 +2171,26 @@ function fnotifikasirun(data)
     if (pagename === 'pesan')
     {
         mybsmipesan = null;
-        app.views.main.router.navigate(pageurl);
+        if (pageurl === app.views.current.router.url)
+        {
+          fpagepesan();
+        }
+        else
+        {
+          app.views.main.router.navigate(pageurl);
+        }
     }
     else if (pagename === 'riwayat')
     {
         mybsmiriwayat = null;
-        app.views.main.router.navigate(pageurl);
+        if (pageurl === app.views.current.router.url)
+        {
+          fpageriwayat();
+        }
+        else
+        {
+          app.views.main.router.navigate(pageurl);
+        }
     }
   }
 }
@@ -2618,8 +2632,8 @@ app.on('pageInit', function (page) {
   //console.log('Page is now pageInit');
   let mypreloader = app.dialog.preloader();
   setTimeout(function () {mypreloader.close();}, 1000);
-  console.log(page.router.currentRoute);
-  console.log(app.views.current);
+  //console.log(page.router.currentRoute);
+  //console.log(app.views.current);
 });
 
 app.on('pageAfterIn', function (page) {
