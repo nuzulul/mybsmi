@@ -2865,9 +2865,8 @@ $$('#my-login-screen .login-button').on('click', function () {
           let access = token.access;
           let refresh = token.refresh;
           var json = {email:email,token:refresh};
-          window.mybsmiuseremail = email;
           window.mybsmiusertoken = access;
-          window.localStorage["mybsmiuser"] = btoa(JSON.stringify(json));
+          window.localStorage["mybsmiuser"] = btoa(refresh);
           window.dashboarddata = data;
           getdefaultdatarun(data);
         }
@@ -2983,15 +2982,13 @@ function fchecksession(render=true)
       }
           
       if (localStorage.getItem("mybsmiuser") !== null) {
-        var json = atob(window.localStorage["mybsmiuser"]);
-        var email = JSON.parse(json).email;
-        var token = JSON.parse(json).token;
+        var token = atob(window.localStorage["mybsmiuser"]);
         let mypreloader = app.dialog.preloader();
         app.request({
           url: apiuserurl,
           method: 'POST',
           cache: false,
-          data : { command: 'loginwithtoken', email: email, password: token, deviceid:mybsmideviceid}, 
+          data : { command: 'loginwithtoken', email: 'noemail', password: token, deviceid:mybsmideviceid}, 
           success: function (data, status, xhr)
             {
               //console.log(data);
@@ -3006,10 +3003,8 @@ function fchecksession(render=true)
                 let token = JSON.parse(atob(data.token));
                 let access = token.access;
                 let refresh = token.refresh;
-                var json = {email:email,token:refresh};
-                window.mybsmiuseremail = email;
                 window.mybsmiusertoken = access;
-                window.localStorage["mybsmiuser"] = btoa(JSON.stringify(json));
+                window.localStorage["mybsmiuser"] = btoa(refresh);
                 if(render){getdefaultdata(true)}else{getdefaultdata(false)}
               }
               else if (status == "failed")
@@ -3235,7 +3230,6 @@ function flogout()
 {
 $$('.my-logout').on('click', function () {
   localStorage.removeItem("mybsmiuser");
-  window.mybsmiuseremail = '';
   window.mybsmiusertoken = '';
   app.popover.close('.profile-popover', false);
   $$('#overlay-welcome').css('display','flex');
@@ -3425,7 +3419,7 @@ function fpagecabangrun(content,cabangid)
   var data = '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th></th><th>Nama</th><th>Cabang</th><th>Aktif</th></tr></thead><tbody>';
   for (i=content.length-1;i>-1;i--)
   {
-      if ((content[i][1] === '0OOBNq02038mf3ZfIdV7')&&(mybsmiuseremail !== 'nuzulz@gmail.com')){continue;}else{if ((content[i][1] === '0OOBNq02038mf3ZfIdV7')&&(!isLocal)) continue;}
+      if ((content[i][1] === '0OOBNq02038mf3ZfIdV7')&&(dashboarddata.user.useruid !== '0ONjeb65X5OunuRI6Ap8')){continue;}else{if ((content[i][1] === '0OOBNq02038mf3ZfIdV7')&&(!isLocal)) continue;}
       
       if ((content[i][2] === 'Terbatas')||(content[i][2] === 'Terverifikasi')||(content[i][2] === 'Tertolak')){}else{continue;}
       
@@ -4463,7 +4457,7 @@ function fpageverifikatorrun(content)
   var data = '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th>Nama</th><th>Email</th><th>Cabang</th><th></th></tr></thead><tbody>';
   for (i=content.length-1;i>-1;i--)
   {
-      if ((content[i][2] === 'nuzulz+1@gmail.com')&&(mybsmiuseremail !== 'nuzulz@gmail.com')){continue;}else{if ((content[i][2] === 'nuzulz+1@gmail.com')&&(!isLocal)){continue;}else{
+      if ((content[i][2] === 'nuzulz+1@gmail.com')&&(dashboarddata.user.useruid !== '0ONjeb65X5OunuRI6Ap8')){continue;}else{if ((content[i][2] === 'nuzulz+1@gmail.com')&&(!isLocal)){continue;}else{
       
         data += '<a href="'+safe(content[i][4])+'" title="'+safe(content[i][4])+'">testing '+safe(content[i][4])+'</a>';
         
@@ -4806,7 +4800,7 @@ function fpageadminrun(content)
   var data = '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th>Nama</th><th>Cabang</th><th>Profesi</th><th></th></tr></thead><tbody>';
   for (i=content.length-1;i>-1;i--)
   {
-      if ((content[i][2] === 'nuzulz+1@gmail.com')&&(mybsmiuseremail !== 'nuzulz@gmail.com')){continue;}else{if ((content[i][2] === 'nuzulz+1@gmail.com')&&(!isLocal)) continue;}
+      if ((content[i][2] === 'nuzulz+1@gmail.com')&&(dashboarddata.user.useruid !== '0ONjeb65X5OunuRI6Ap8')){continue;}else{if ((content[i][2] === 'nuzulz+1@gmail.com')&&(!isLocal)) continue;}
       
       if ((content[i][3] === 'Terbatas')||(content[i][3] === 'Terverifikasi')||(content[i][3] === 'Tertolak')){}else{continue;}
       
