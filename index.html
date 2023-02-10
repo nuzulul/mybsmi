@@ -2869,6 +2869,7 @@ $$('#my-login-screen .login-button').on('click', function () {
           window.localStorage["mybsmiuser"] = btoa(refresh);
           window.dashboarddata = data;
           getdefaultdatarun(data);
+          fpollsession();
         }
         else if (status == "failed")
         {
@@ -3005,7 +3006,8 @@ function fchecksession(render=true)
                 let refresh = token.refresh;
                 window.mybsmiusertoken = access;
                 window.localStorage["mybsmiuser"] = btoa(refresh);
-                if(render){getdefaultdata(true)}else{getdefaultdata(false)}
+                if(render){getdefaultdata(true);}else{getdefaultdata(false)}
+                fpollsession();
               }
               else if (status == "failed")
               {
@@ -3037,10 +3039,11 @@ function fpollsession()
     {
       window.mybsmipolltime = now;
       fchecksession(false);
+      clearInterval(poll);
     }
   }, 1000);
 }
-fpollsession();
+
 //end check session///////////////////////////
 
 
