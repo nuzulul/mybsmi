@@ -2654,6 +2654,45 @@ openIn: 'popover'
 
 
 
+/////fdeviceid////////////////////////////////////////
+// Text with lowercase/uppercase/punctuation symbols
+async function fdevice()
+{
+var canvas = document.createElement("canvas");
+var ctx = canvas.getContext("2d");
+var txt = "mybsmi.bsmijatim,org <canvas> 1.0";
+ctx.textBaseline = "top";
+// The most common type
+ctx.font = "14px 'Arial'";
+ctx.textBaseline = "alphabetic";
+ctx.fillStyle = "#f60";
+ctx.fillRect(125,1,62,20);
+// Some tricks for color mixing to increase the difference in rendering
+ctx.fillStyle = "#069";
+ctx.fillText(txt, 2, 15);
+ctx.fillStyle = "rgba(102, 204, 0, 0.7)";
+ctx.fillText(txt, 4, 17);
+let data = canvas.toDataURL("image/png;base64");
+const buf = await crypto.subtle.digest("SHA-256", new TextEncoder("utf-8").encode(data));
+var hash = Array.prototype.map.call(new Uint8Array(buf), x=>(('00'+x.toString(16)).slice(-2))).join('');
+return hash;
+}
+
+function fdeviceid()
+{
+const p = Promise.resolve(fdevice());
+p.then(value => {
+  window.mybsmideviceid = value;
+}).catch(err => {
+  return err;
+});
+}
+
+fdeviceid();
+/////fdeviceid////////////////////////////////////////
+
+
+
 
 //form-aktivasi/////////////////////////////
 $$('.mybsmi-aktivasiscreen').on('click', function () {
@@ -2767,7 +2806,7 @@ $$('#my-login-screen .login-button').on('click', function () {
     url: apiuserurl,
     method: 'POST',
     cache: false,
-    data : { command: 'login',grecaptcharesponsedata: grecaptcharesponsedata, email: email,password: password}, 
+    data : { command: 'login',grecaptcharesponsedata: grecaptcharesponsedata, email: email,password: password, deviceid:mybsmideviceid}, 
     success: function (data, status, xhr)
       {
         //console.log(data);
@@ -2780,10 +2819,14 @@ $$('#my-login-screen .login-button').on('click', function () {
           app.loginScreen.close('#my-login-screen');
           $$('#my-login-screen')[0].reset();
           $$('#overlay-welcome').hide();
-          var json = {email:email,token:data.token};
+          //console.log(atob(data.token));
+          let token = JSON.parse(atob(data.token));
+          let access = token.access;
+          let refresh = token.refresh;
+          var json = {email:email,token:refresh};
           window.mybsmiuseremail = email;
-          window.mybsmiusertoken = data.token;
-          window.localStorage["mybsmiuser"] = JSON.stringify(json);
+          window.mybsmiusertoken = access;
+          window.localStorage["mybsmiuser"] = btoa(JSON.stringify(json));
           window.dashboarddata = data;
           getdefaultdatarun(data);
         }
@@ -2888,7 +2931,81 @@ document.getElementById('my-login-screen').onkeydown = function(e){
 
 
 
+//start check session/////////////////////////
+function fchecksession(render=true)
+{
 
+      if (typeof mybsmideviceid === 'undefined' || mybsmideviceid === null) {
+        // variable is undefined or null
+        setTimeout(function(){ fchecksession(render); }, 500);
+        return;
+      }
+          
+      if (localStorage.getItem("mybsmiuser") !== null) {
+        var json = atob(window.localStorage["mybsmiuser"]);
+        var email = JSON.parse(json).email;
+        var token = JSON.parse(json).token;
+        let mypreloader = app.dialog.preloader();
+        app.request({
+          url: apiuserurl,
+          method: 'POST',
+          cache: false,
+          data : { command: 'loginwithtoken', email: email, password: token, deviceid:mybsmideviceid}, 
+          success: function (data, status, xhr)
+            {
+              //console.log(data);
+              mypreloader.close();
+                      
+              var status = JSON.parse(data).status;
+              var data = JSON.parse(data).data;
+              if (status == "success")
+              {
+                //console.log(data);
+                $$('#overlay-welcome').hide();
+                let token = JSON.parse(atob(data.token));
+                let access = token.access;
+                let refresh = token.refresh;
+                var json = {email:email,token:refresh};
+                window.mybsmiuseremail = email;
+                window.mybsmiusertoken = access;
+                window.localStorage["mybsmiuser"] = btoa(JSON.stringify(json));
+                if(render){getdefaultdata(true)}else{getdefaultdata(false)}
+              }
+              else if (status == "failed")
+              {
+                localStorage.removeItem("mybsmiuser");
+              }
+              else
+              {
+              }
+            },
+          error: function (xhr, status, message)
+            {
+              //console.log(message);
+              mypreloader.close();
+            },
+        })
+      } 
+}
+fchecksession();
+
+function fpollsession()
+{
+  window.mybsmipolltime = new Date().getTime();
+  const poll = setInterval(function () 
+  {
+    let now = new Date().getTime();
+    let selisih = now-mybsmipolltime;
+    let limit = 45*60*1000;
+    if (selisih>limit)
+    {
+      window.mybsmipolltime = now;
+      fchecksession(false);
+    }
+  }, 60000);
+}
+fpollsession();
+//end check session///////////////////////////
 
 
 
@@ -3066,54 +3183,6 @@ function fdevmode(pwd)
   })
 }
 ///////dev mode/////////////////////////////////////////////////////////
-
-
-
-
-
-//start check session/////////////////////////
-if (localStorage.getItem("mybsmiuser") !== null) {
-  var json = window.localStorage["mybsmiuser"];
-  var email = JSON.parse(json).email;
-  var token = JSON.parse(json).token
-  let mypreloader = app.dialog.preloader();
-  app.request({
-    url: apiuserurl,
-    method: 'POST',
-    cache: false,
-    data : { command: 'loginwithtoken', email: email, password: token}, 
-    success: function (data, status, xhr)
-      {
-        //console.log(data);
-        mypreloader.close();
-                
-        var status = JSON.parse(data).status;
-        var data = JSON.parse(data).data;
-        if (status == "success")
-        {
-          //console.log(data);
-          $$('#overlay-welcome').hide();
-          window.mybsmiuseremail = email;
-          window.mybsmiusertoken = token;
-          window.dashboarddata = data;
-          getdefaultdatarun(data);
-        }
-        else if (status == "failed")
-        {
-          localStorage.removeItem("mybsmiuser");
-        }
-        else
-        {
-        }
-      },
-    error: function (xhr, status, message)
-      {
-        //console.log(message);
-        mypreloader.close();
-      },
-  })
-} 
-//end check session///////////////////////////
 
 
 
