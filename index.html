@@ -2095,8 +2095,9 @@ function fonesignal()
                     let url = event.url;
                     if (window.mybsmiaddListenerForNotificationOpened) 
                     {              
-                      window.location.assign(url);
-                      location.reload();
+                      //window.location.assign(url);
+                      //location.reload();
+                      fnotifikasirun(event);
                     }
                   });
                   OneSignal.on('notificationDismiss', function(event) {
@@ -2143,8 +2144,9 @@ function fonesignal()
                 let url = data.url;
                 if (window.mybsminotificationDisplay) 
                 {              
-                  window.location.assign(url);
-                  location.reload();
+                  //window.location.assign(url);
+                  //location.reload();
+                  fnotifikasirun(data);
                 }
             }                
             const handler = function (data) {
@@ -2157,6 +2159,26 @@ function fonesignal()
             OneSignal.push(["addListenerForNotificationOpened", handler]);
       //} catch(err){}
     }    
+}
+
+function fnotifikasirun(data)
+{
+  let command = data.data.command;
+  if (command === 'openpage')
+  {
+    let pagename = data.data.pagename;
+    let pageurl = data.data.pageurl;
+    if (pagename === 'pesan')
+    {
+        mybsmipesan = null;
+        app.views.main.router.navigate(pageurl);
+    }
+    else if (pagename === 'riwayat')
+    {
+        mybsmiriwayat = null;
+        app.views.main.router.navigate(pageurl);
+    }
+  }
 }
 
 function fupdateusernotifikasi(data)
@@ -2596,7 +2618,8 @@ app.on('pageInit', function (page) {
   //console.log('Page is now pageInit');
   let mypreloader = app.dialog.preloader();
   setTimeout(function () {mypreloader.close();}, 1000);
-  //console.log(page.router.currentRoute);
+  console.log(page.router.currentRoute);
+  console.log(app.views.current);
 });
 
 app.on('pageAfterIn', function (page) {
