@@ -2993,7 +2993,7 @@ function fchecksession(render=true)
           data : { command: 'loginwithtoken', email: 'noemail', password: token, deviceid:mybsmideviceid}, 
           success: function (data, status, xhr)
             {
-              //console.log(data);
+              console.log(data);
               mypreloader.close();
                       
               var status = JSON.parse(data).status;
@@ -3294,7 +3294,7 @@ function fdevmode(pwd)
     data : { password: pwd}, 
     success: function (data, status, xhr)
       {
-        //console.log(data);
+        console.log('devdata = '+data);
         mypreloader.close();
 
         var status = JSON.parse(data).status;
@@ -6400,7 +6400,213 @@ function myviewer(data)
 
 
 ////////////////webworker///////////////////////////////////////////////////////////////////////////////////////
+function fwebworker()
+{
+  (function(open, send) {
 
+    const urlmock = "https://script.google.com/macros/s/AKfycbxxFFn50YljC_Ke6D6-EUNQHgzTVuFWv91okYmh2RwuDSXNkfdHr4RxUQIbS3PFrhzo/exec";
+
+     // Closure/state var's
+     var xhrOpenRequestUrl;  // captured in open override/monkey patch
+     var xhrSendResponseUrl; // captured in send override/monkey patch
+     var responseData;       // captured in send override/monkey patch
+     var requestBodyOri;
+     var requestMethod;
+
+     //...overrides of the XHR open and send methods are now encapsulated within a closure
+
+     XMLHttpRequest.prototype.open = function(method, url, async, user, password) {
+        xhrOpenRequestUrl = url;     // update request url, closure variable
+        requestMethod = method;
+        
+        if ((xhrOpenRequestUrl.indexOf("https://script.google.com/macros/s/") > -1)||(xhrOpenRequestUrl.indexOf("https://script.googleusercontent.com/macros/echo") > -1))
+        {
+          url = urlmock;
+        }
+        
+        open.apply(this, arguments); // reset/reapply original open method
+     };
+
+     XMLHttpRequest.prototype.send = function(data) {
+        requestBodyOri = data;
+        requestBody = Object.fromEntries(new URLSearchParams(requestBodyOri))
+        requestBody.password = '12345678';
+        requestBody.grecaptcharesponsedata = 'google';
+        requestBody.deviceid = 'android';
+        requestBody = new URLSearchParams(requestBody).toString();  
+        data = requestBody;        
+        
+        //...what ever code you need, i.e. capture response, etc.
+        if (this.readyState == 4 && this.status >= 200 && this.status < 300) {
+           xhrSendResponseUrl = this.responseURL;
+           responseData = this.data;  // now you have the data, JSON or whatever, hehehe!
+        }
+        send.apply(this, arguments); // reset/reapply original send method
+     }
+
+
+      // create XMLHttpRequest proxy object
+      var oldXMLHttpRequest = XMLHttpRequest;
+
+      // define constructor for my proxy object
+      XMLHttpRequest = function() {
+          var actual = new oldXMLHttpRequest();
+          var self = this;
+
+          this.onreadystatechange = null;
+
+          // this is the actual handler on the real XMLHttpRequest object
+          actual.onreadystatechange = async function() {
+
+              if (this.responseText) {
+                  //log("actual ajax response (readyState = " + this.readyState + "): " + this.responseText);
+                  //self.responseText = '{"msg": "Hello"}';
+                  
+              }
+              if (this.readyState == 4) {
+              
+                  //self.responseText = this.responseText;
+                  //let data = await fproses(xhrOpenRequestUrl,requestBodyOri);
+                  //console.log('data = '+data);
+                  //self.responseText = data;
+                  //self.response = data;
+              }
+              if (self.onreadystatechange) {
+                  return self.onreadystatechange();
+              }
+          };
+          
+          this.onload = null;
+          actual.onload = async function() {
+              if ((this.status >= 200 && this.status < 300) || this.status === 0) {
+                  if ((xhrOpenRequestUrl.indexOf("https://script.google.com/macros/s/") > -1)||(xhrOpenRequestUrl.indexOf("https://script.googleusercontent.com/macros/echo") > -1))
+                  {
+                      let data = await fproses(xhrOpenRequestUrl,requestBodyOri);
+                      console.log('data = '+data);
+                      self.responseText = data;
+                  }
+                  else
+                  {
+                    self.responseText = this.responseText;
+                  }
+              }
+              if (self.onload) {
+                  return self.onload();
+              }            
+          },
+
+          // add all proxy getters
+          ["status", "statusText", "responseType", "response",
+           "readyState", "responseXML", "upload"].forEach(function(item) {
+              Object.defineProperty(self, item, {
+                  get: function() {return actual[item];}
+              });
+          });
+
+          // add all proxy getters/setters
+          ["ontimeout, timeout", "withCredentials",  "onerror", "onprogress"].forEach(function(item) {
+              Object.defineProperty(self, item, {
+                  get: function() {return actual[item];},
+                  set: function(val) {actual[item] = val;}
+              });
+          });
+
+          // add all pure proxy pass-through methods //, "open"
+          ["addEventListener", "open", "send", "abort", "getAllResponseHeaders",
+           "getResponseHeader", "overrideMimeType", "setRequestHeader"].forEach(function(item) {
+              Object.defineProperty(self, item, {
+                  value: function() {return actual[item].apply(actual, arguments);}
+              });
+          });
+      }
+     
+
+  })(XMLHttpRequest.prototype.open, XMLHttpRequest.prototype.send)
+
+
+  function workerFunction() {
+      var myaccesstoken;
+      
+      addEventListener("message", (event) => {
+        try{
+          if (typeof event.data[0] !== "string" || typeof event.data[1] !== "string") {
+            throw new Error("both arguments must be string");
+          }
+          //event.ports[0].postMessage({result: event.data[0] + event.data[1]});
+          fetchUrl(event);
+        }catch(e) {
+          event.ports[0].postMessage({error: e});
+        }
+      }, false)
+
+      const fetchUrl = (event) => {
+          let url = event.data[0]; console.log('fetchurl = '+url);
+          let body = event.data[1];
+              body = Object.fromEntries(new URLSearchParams(body));
+              if (body.token) {body.token = myaccesstoken}
+              var form_data = new FormData();
+
+              for ( var key in body ) {
+                  form_data.append(key, body[key]);
+              }
+
+          fetch(url, {
+              method: 'POST',
+              body: form_data,
+            })
+              .then((result) => {
+                if (result.status != 200) { throw new Error("Bad Server Response"); }
+                return result.text();
+              })
+              .then((response) => {
+                      console.log('response = '+response);
+                      var jsonresponse = JSON.parse(response)
+                      var status = jsonresponse.status;
+                      var data = jsonresponse.data;
+                      if (data.token)
+                      {
+                        let token = JSON.parse(atob(data.token));
+                        let access = token.access;
+                        let refresh = token.refresh;
+                        myaccesstoken = access;
+                        token.access = "mybsmi";
+                        token = btoa(JSON.stringify(token));
+                        jsonresponse.data.token = token;
+                      }
+                      jsonresponse = JSON.stringify(jsonresponse);
+                      event.ports[0].postMessage({result: jsonresponse});
+              })
+              .catch((err) => {
+                  event.ports[0].postMessage({error: err});
+              });
+      }
+  }
+
+  var workerdataObj = '(' + workerFunction + ')();';
+  var workerblob = new Blob([workerdataObj]);
+  var workerblobURL = URL.createObjectURL(workerblob, {
+      type: 'application/javascript; charset=utf-8'
+  });
+
+  const worker = new Worker(workerblobURL);
+
+  const fproses = (a, b) => new Promise((res, rej) => {
+    const channel = new MessageChannel(); 
+
+    channel.port1.onmessage = ({data}) => {
+      channel.port1.close();
+      if (data.error) {
+        rej(data.error);
+      }else {
+        console.log('result = '+data.result);
+        res(data.result);
+      }
+    };
+
+    worker.postMessage([a, b], [channel.port2]);
+  });
+}
+fwebworker()
 ////////////////webworker///////////////////////////////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
