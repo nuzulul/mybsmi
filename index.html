@@ -1598,6 +1598,7 @@ var isLocal = false;
 
 if ((window.location.href.indexOf("localhost") > -1)||(window.location.href.indexOf("127.0.0.1") > -1)) 
 {
+var DEBUG = true;
 console.log('local development');
 isLocal = true;
 var access_token = params.access_token;
@@ -1612,7 +1613,7 @@ DEBUG = false;
 }
 
 //////////console.log/////////////////////////////////////////////////////////////////////////////////////////////
-var DEBUG = true;
+
 if(!DEBUG){
     if(!window.console) window.console = {};
     var methods = ["log", "debug", "warn", "info"];
