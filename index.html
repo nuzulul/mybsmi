@@ -2768,7 +2768,7 @@ $$('.mybsmi-aktivasiscreen').on('click', function () {
     if (pinhash === mybsmiaktivasi)
     {
       app.loginScreen.open('#my-aktivasi-screen');
-      window.grecaptchaid = grecaptcha.render( 'mybsmi-grecaptchaaktivasi');
+      try{window.grecaptchaid = grecaptcha.render( 'mybsmi-grecaptchaaktivasi');}catch{}
     }
   }
   )
