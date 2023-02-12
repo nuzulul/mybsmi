@@ -2991,6 +2991,61 @@ document.getElementById('my-login-screen').onkeydown = function(e){
 //end form-login/////////////////////////////
 
 
+///logout button/////////////////////////
+function flogout()
+{
+$$('.my-logout').on('click', function () {
+  flogoutrun();
+  localStorage.removeItem("mybsmiuser");
+  window.mybsmiusertoken = '';
+  app.popover.close('.profile-popover', false);
+  $$('#overlay-welcome').css('display','flex');
+  //let mypreloader = app.dialog.preloader();
+  //window.location.href = 'https://bsmijatim.org'
+  
+});
+}
+
+function flogoutrun()
+{
+  let mypreloader = app.dialog.preloader();
+  app.request({
+    url: apidataurl,
+    method: 'POST',
+    cache: false,
+    data : { token:mybsmiusertoken, command: 'logout'}, 
+    success: function (data, status, xhr)
+      {
+        mypreloader.close();
+        var status = JSON.parse(data).status;
+        var content = JSON.parse(data).data;
+        if (status == "success")
+        {
+          //console.log(content);
+          window.location.href = 'https://bsmijatim.org';
+        }
+        else if (status == "failed")
+        {
+          //console.log("failed");
+          app.dialog.alert(content,'Terjadi Kesalahan');
+        }
+        else
+        {
+          //console.log("failed");
+          //app.dialog.alert(content,'Terjadi Kesalahan');
+          fcekexpiredtoken(content);
+        }
+      },
+    error: function (xhr, status, message)
+      {
+        mypreloader.close();
+        app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
+      },
+  })
+}
+///logout button/////////////////////////
+
+
 
 //start check session/////////////////////////
 function fchecksession(render=true)
@@ -3341,25 +3396,6 @@ function fdevmode(pwd)
   })
 }
 ///////dev mode/////////////////////////////////////////////////////////
-
-
-
-
-
-
-///logout button/////////////////////////
-function flogout()
-{
-$$('.my-logout').on('click', function () {
-  localStorage.removeItem("mybsmiuser");
-  window.mybsmiusertoken = '';
-  app.popover.close('.profile-popover', false);
-  $$('#overlay-welcome').css('display','flex');
-  //let mypreloader = app.dialog.preloader();
-  window.location.href = 'https://bsmijatim.org'
-});
-}
-///logout button/////////////////////////
 
 
 
