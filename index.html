@@ -2673,6 +2673,9 @@ let myprofile = ''
 +'      </div>'
 
   //$$('.navbar-inner .title').append(myprofile);
+    $$('img').on('error', function (e) {
+      $$(this).attr('src','photo.svg');
+    });  
 });
 
 //console.log(app.views.current);
