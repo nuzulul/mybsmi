@@ -6652,14 +6652,20 @@ function fwebworker()
 
       function validateapiurl(url)
       {
-        if ((xhrOpenRequestUrl.indexOf("https://script.google.com/macros/s/") > -1)||(xhrOpenRequestUrl.indexOf("https://script.googleusercontent.com/macros/echo") > -1))
+        var validurl = [
+        'https://script.google.com/macros/s/AKfycbwWFxUmhmfem1mHJT7HDqJoVFNkCmUkInvOOx2K1KZy/dev', //devuserapi
+        'https://script.google.com/macros/s/AKfycbxXCV5_Bj1-IqUtezfR_MPLrc-YRGq0pSWVQwPZ5K0/dev', //devdataapi
+        'https://script.google.com/macros/s/AKfycbys-GEdilEu0nqdjDRUlEExkamYVIRsplNMEnLl2WiQQy3DxZoikpts7bnLotnT5IcwzQ/exec', //realuserapi
+        'https://script.google.com/macros/s/AKfycbyyPrApY4R8xv-_m8LUz9XHhkdYeTPMovm8MkBXgTXlojx31nHz9GVdGa4Ikw8cELMN/exec', //realdataapi
+        'https://script.google.com/macros/s/AKfycbztYLCDVY-nZyQJFK7QhIRboEcuRUWPIrfkGzbU6bUnTEn909HgWhwc1VadGotPDIkp7Q/exec', //devmode
+        'https://script.googleusercontent.com/macros/echo',
+        ]
+        var valid = false;
+        for(i=0;i<validurl.length-1;i++)
         {
-          return true;
+          if (url.indexOf(validurl[i]) > -1) {valid = true;}
         }
-        else
-        {
-          return false;
-        }
+        return valid;
       }
       
       addEventListener("message", (event) => {
@@ -6680,7 +6686,7 @@ function fwebworker()
           let deviceid;
           let penting;
           let url = event.data[0]; console.log('fetchurl = '+url);
-          //if (!validateapiurl(url)) {event.ports[0].postMessage({error: 'forbidden'});}
+          if (!validateapiurl(url)) {event.ports[0].postMessage({error: 'Forbidden url'});return;}
           let body = event.data[1];
           if (body === 'get')
           {
@@ -6718,7 +6724,7 @@ function fwebworker()
               body: body,
             })
               .then((result) => {
-                if (result.status != 200) { throw new Error("Bad Server Response"); }
+                if (result.status != 200) { }
                 return result.text();
               })
               .then(async(response) => {
