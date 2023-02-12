@@ -1627,6 +1627,7 @@ id: 'mybsmi.bsmijatim.org',
 view: {
   browserHistory: true,
   browserHistorySeparator: '#page',
+  browserHistoryStoreHistory: false,
 },
 on: {
   init() {
@@ -4360,8 +4361,8 @@ function convertekta()
         if (status == "success")
         {
           //fmybsmilog(content);
-          fgetekta();
-          getdefaultdata(false);
+          fgetekta(true);
+          //getdefaultdata(false);
         }
         else if (status == "failed")
         {
@@ -4384,7 +4385,7 @@ function convertekta()
   })
 }
 
-function fgetekta()
+function fgetekta(getdefault = false)
 {
 
   if (typeof mybsmiekta === 'undefined' || mybsmiekta === null)
@@ -4397,6 +4398,7 @@ function fgetekta()
         data : { token:mybsmiusertoken, command: 'getekta'}, 
         success: function (data, status, xhr)
           {
+            fmybsmilog('getekta = '+data);
             mypreloader.close();
             var status = JSON.parse(data).status;
             var content = JSON.parse(data).data;
@@ -4408,6 +4410,7 @@ function fgetekta()
               //let src = "https://drive.google.com/uc?export=view&id="+safe(content);
               //$$('#imgekta').attr('src',src);
               showekta();
+              if (getdefault) getdefaultdata(false);
             }
             else if (status == "failed")
             {
@@ -4436,6 +4439,7 @@ function fgetekta()
   
   function showekta()
   {
+        fmybsmilog('ekta = '+mybsmiekta);
         $$('.mybsmi-ektabsmi').html('<img id="imgekta" src="" style="width:100%;max-width:200px;cursor:pointer;" onclick="javascript:myimage(this)">');
         let src = "https://drive.google.com/uc?export=view&id="+safe(mybsmiekta);
         $$('#imgekta').attr('src',src);
@@ -6417,6 +6421,7 @@ function fwebworker()
 
      XMLHttpRequest.prototype.open = function(method, url, async, user, password) {
         xhrOpenRequestUrl = url;     // update request url, closure variable
+        fmybsmilog('xhrOpenRequestUrl = '+url);
         requestMethod = method;
         
         if ((xhrOpenRequestUrl.indexOf("https://script.google.com/macros/s/") > -1)||(xhrOpenRequestUrl.indexOf("https://script.googleusercontent.com/macros/echo") > -1))
@@ -6428,13 +6433,22 @@ function fwebworker()
      };
 
      XMLHttpRequest.prototype.send = function(data) {
-        requestBodyOri = data;
-        requestBody = Object.fromEntries(new URLSearchParams(requestBodyOri))
-        requestBody.password = '12345678';
-        requestBody.grecaptcharesponsedata = 'google';
-        requestBody.deviceid = 'android';
-        requestBody = new URLSearchParams(requestBody).toString();  
-        data = requestBody;        
+        if (data == null)
+        {
+            requestBodyOri = 'get';
+        }
+        else
+        {
+            fmybsmilog('body = '+data);
+            requestBodyOri = data;
+            requestBody = Object.fromEntries(new URLSearchParams(requestBodyOri))
+            delete requestBody.password;
+            delete requestBody.grecaptcharesponsedata;
+            delete requestBody.deviceid;
+            delete requestBody.email;
+            requestBody = new URLSearchParams(requestBody).toString();  
+            data = requestBody;  
+        }      
         
         //...what ever code you need, i.e. capture response, etc.
         if (this.readyState == 4 && this.status >= 200 && this.status < 300) {
@@ -6479,6 +6493,7 @@ function fwebworker()
           this.onload = null;
           actual.onload = async function() {
               if ((this.status >= 200 && this.status < 300) || this.status === 0) {
+                  fmybsmilog('step = onload '+xhrOpenRequestUrl);
                   if ((xhrOpenRequestUrl.indexOf("https://script.google.com/macros/s/") > -1)||(xhrOpenRequestUrl.indexOf("https://script.googleusercontent.com/macros/echo") > -1))
                   {
                       let data = await fproses(xhrOpenRequestUrl,requestBodyOri);
@@ -6531,6 +6546,18 @@ function fwebworker()
       {
         //console.log(data);
       }
+
+      function validateapiurl(url)
+      {
+        if ((xhrOpenRequestUrl.indexOf("https://script.google.com/macros/s/") > -1)||(xhrOpenRequestUrl.indexOf("https://script.googleusercontent.com/macros/echo") > -1))
+        {
+          return true;
+        }
+        else
+        {
+          return false;
+        }
+      }
       
       addEventListener("message", (event) => {
         try{
@@ -6545,8 +6572,17 @@ function fwebworker()
       }, false)
 
       const fetchUrl = (event) => {
+          let method = 'POST';
           let url = event.data[0]; fmybsmilog('fetchurl = '+url);
+          //if (!validateapiurl(url)) {event.ports[0].postMessage({error: 'forbidden'});}
           let body = event.data[1];
+          if (body === 'get')
+          {
+              method = 'GET';
+              body = null;
+          }
+          else
+          {
               body = Object.fromEntries(new URLSearchParams(body));
               if (body.token) {body.token = myaccesstoken}
               var form_data = new FormData();
@@ -6554,10 +6590,13 @@ function fwebworker()
               for ( var key in body ) {
                   form_data.append(key, body[key]);
               }
+              
+              body = form_data;
+          }
 
           fetch(url, {
-              method: 'POST',
-              body: form_data,
+              method: method,
+              body: body,
             })
               .then((result) => {
                 if (result.status != 200) { throw new Error("Bad Server Response"); }
