@@ -6624,6 +6624,11 @@ function fwebworker()
 
   function workerFunction() {
 
+
+      async function mybsmie(e,n){let t=new TextEncoder().encode(n),a=await crypto.subtle.digest("SHA-256",t),i=crypto.getRandomValues(new Uint8Array(12)),o={name:"AES-GCM",iv:i},r=await crypto.subtle.importKey("raw",a,o,!1,["encrypt"]),m=new TextEncoder().encode(e),s=await crypto.subtle.encrypt(o,r,m),w=Array.from(new Uint8Array(s)),c=w.map(e=>String.fromCharCode(e)).join(""),l=btoa(c),u=Array.from(i).map(e=>("00"+e.toString(16)).slice(-2)).join("");return u+l}
+      async function mybsmid(e,t){let n=new TextEncoder().encode(t),a=await crypto.subtle.digest("SHA-256",n),c=e.slice(0,24).match(/.{2}/g).map(e=>parseInt(e,16)),i={name:"AES-GCM",iv:new Uint8Array(c)},l=await crypto.subtle.importKey("raw",a,i,!1,["decrypt"]),w=atob(e.slice(24)),d=new Uint8Array(new ArrayBuffer(w.length));for(let r=0;r<w.length;r++)d[r]=w.charCodeAt(r);let s=await crypto.subtle.decrypt(i,l,d),m=new TextDecoder().decode(s);return m}
+
+
       //////////console.log/////////////////////////////////////////////////////////////////////////////////////////////
       var DEBUG = false;
       if(!DEBUG){
@@ -6661,8 +6666,10 @@ function fwebworker()
         }
       }, false)
 
-      const fetchUrl = (event) => {
+      async function fetchUrl(event){
           let method = 'POST';
+          let deviceid;
+          let penting;
           let url = event.data[0]; console.log('fetchurl = '+url);
           //if (!validateapiurl(url)) {event.ports[0].postMessage({error: 'forbidden'});}
           let body = event.data[1];
@@ -6675,12 +6682,25 @@ function fwebworker()
           {
               body = Object.fromEntries(new URLSearchParams(body));
               if (body.token) {body.token = myaccesstoken}
+              penting = false;
+              if (body.command) 
+              {
+                if (body.command === 'loginwithtoken')
+                {
+                  body.password = await mybsmid(body.password,body.deviceid);
+                  deviceid = body.deviceid;
+                  penting = true;
+                }
+                if (body.command === 'login')
+                {
+                  deviceid = body.deviceid;
+                  penting = true;
+                }
+              }
               var form_data = new FormData();
-
               for ( var key in body ) {
                   form_data.append(key, body[key]);
-              }
-              
+              }              
               body = form_data;
           }
 
@@ -6692,7 +6712,7 @@ function fwebworker()
                 if (result.status != 200) { throw new Error("Bad Server Response"); }
                 return result.text();
               })
-              .then((response) => {
+              .then(async(response) => {
                       console.log('response = '+response);
                       var jsonresponse = JSON.parse(response)
                       var status = jsonresponse.status;
@@ -6704,6 +6724,7 @@ function fwebworker()
                         let refresh = token.refresh;
                         myaccesstoken = access;
                         token.access = "mybsmi";
+                        token.refresh = await mybsmie(refresh,deviceid);
                         token = btoa(JSON.stringify(token));
                         jsonresponse.data.token = token;
                       }
