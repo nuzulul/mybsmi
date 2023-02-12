@@ -1595,21 +1595,22 @@ var $$ = Dom7;
 var mybsmiaktivasi = 'd426d702f89bac9fb66b22ede9593b62a447bf4154dfac317a72fcf4f168172a';
 var grecaptcharesponsedata = '';
 var isLocal = false;
+var DEBUG = true;
 
 if ((window.location.href.indexOf("localhost") > -1)||(window.location.href.indexOf("127.0.0.1") > -1)) 
 {
-var DEBUG = true;
-console.log('local development');
-isLocal = true;
-var access_token = params.access_token;
-var apiuserurl = "https://script.google.com/macros/s/AKfycbwWFxUmhmfem1mHJT7HDqJoVFNkCmUkInvOOx2K1KZy/dev?access_token="+access_token;
-var apidataurl = "https://script.google.com/macros/s/AKfycbxXCV5_Bj1-IqUtezfR_MPLrc-YRGq0pSWVQwPZ5K0/dev?access_token="+access_token;
+  DEBUG = true;
+  console.log('local development');
+  isLocal = true;
+  var access_token = params.access_token;
+  var apiuserurl = "https://script.google.com/macros/s/AKfycbwWFxUmhmfem1mHJT7HDqJoVFNkCmUkInvOOx2K1KZy/dev?access_token="+access_token;
+  var apidataurl = "https://script.google.com/macros/s/AKfycbxXCV5_Bj1-IqUtezfR_MPLrc-YRGq0pSWVQwPZ5K0/dev?access_token="+access_token;
 }
 else
 {
-var apiuserurl = "https://script.google.com/macros/s/AKfycbys-GEdilEu0nqdjDRUlEExkamYVIRsplNMEnLl2WiQQy3DxZoikpts7bnLotnT5IcwzQ/exec";
-var apidataurl = "https://script.google.com/macros/s/AKfycbyyPrApY4R8xv-_m8LUz9XHhkdYeTPMovm8MkBXgTXlojx31nHz9GVdGa4Ikw8cELMN/exec";
-DEBUG = false;
+  var apiuserurl = "https://script.google.com/macros/s/AKfycbys-GEdilEu0nqdjDRUlEExkamYVIRsplNMEnLl2WiQQy3DxZoikpts7bnLotnT5IcwzQ/exec";
+  var apidataurl = "https://script.google.com/macros/s/AKfycbyyPrApY4R8xv-_m8LUz9XHhkdYeTPMovm8MkBXgTXlojx31nHz9GVdGa4Ikw8cELMN/exec";
+  DEBUG = false;
 }
 
 //////////console.log/////////////////////////////////////////////////////////////////////////////////////////////
@@ -6649,6 +6650,7 @@ function fwebworker()
       //////////console.log/////////////////////////////////////////////////////////////////////////////////////////////
       
       var myaccesstoken;
+      var myunik;
 
       function validateapiurl(url)
       {
@@ -6703,12 +6705,12 @@ function fwebworker()
                 if (body.command === 'loginwithtoken')
                 {
                   body.password = await mybsmid(body.password,body.deviceid);
-                  deviceid = body.deviceid;
+                  deviceid = body.deviceid;myunik = body.deviceid;
                   penting = true;
                 }
                 if (body.command === 'login')
                 {
-                  deviceid = body.deviceid;
+                  deviceid = body.deviceid;myunik = body.deviceid;
                   penting = true;
                 }
               }
