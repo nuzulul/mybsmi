@@ -3696,10 +3696,17 @@ function fpageprofilku()
     $$('.mybsmi-profilku .mybsmi-usernohp').text(safe(data.userhp));
     $$('.mybsmi-profilku .mybsmi-usercabang').text(safe(data.usercabang));
     $$('.mybsmi-profilku .mybsmi-usertahunbergabung').text(safe(data.usertahunbergabung));
-    if (data.userstatus === "Terverifikasi"){$$('.mybsmi-avatar-badge').css('display','flex');};
+    if (data.userstatus === "Terverifikasi"){
+      $$('.mybsmi-avatar-badge').css('display','flex');
+    } else {
+      $$('.mybsmi-profilku-verifikasi').removeClass('display-none');
+    }
     $$('.mybsmi-lihatprofil').on('click', function (e) {
         let url = "/relawan/"+safe(data.useruid);
         app.views.main.router.navigate(url);          
+    });
+    $$('.mybsmi-profilku-verifikasi').on('click', function (e) {
+        fverifikasiidentitas();     
     });
 }
 ////fpageprofilku////////////////////////////
