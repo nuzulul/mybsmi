@@ -1527,16 +1527,7 @@
 <!--start script------------------------------------------------------------------------------->
 <script>
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////console.log/////////////////////////////////////////////////////////////////////////////////////////////
-var DEBUG = true;
-if(!DEBUG){
-    if(!window.console) window.console = {};
-    var methods = ["log", "debug", "warn", "info"];
-    for(var i=0;i<methods.length;i++){
-        console[methods[i]] = function(){};
-    }
-}
-//////////console.log/////////////////////////////////////////////////////////////////////////////////////////////
+
 
 
 
@@ -1619,6 +1610,18 @@ var apiuserurl = "https://script.google.com/macros/s/AKfycbys-GEdilEu0nqdjDRUlEE
 var apidataurl = "https://script.google.com/macros/s/AKfycbyyPrApY4R8xv-_m8LUz9XHhkdYeTPMovm8MkBXgTXlojx31nHz9GVdGa4Ikw8cELMN/exec";
 DEBUG = false;
 }
+
+//////////console.log/////////////////////////////////////////////////////////////////////////////////////////////
+var DEBUG = true;
+if(!DEBUG){
+    if(!window.console) window.console = {};
+    var methods = ["log", "debug", "warn", "info"];
+    for(var i=0;i<methods.length;i++){
+        console[methods[i]] = function(){};
+    }
+}
+//////////console.log/////////////////////////////////////////////////////////////////////////////////////////////
+
 
 if (params.mybsmi !== undefined )
 {
