@@ -6581,9 +6581,15 @@ function fwebworker()
                   {
                     if ((xhrOpenRequestUrl.indexOf("https://script.google.com/macros/s/") > -1)||(xhrOpenRequestUrl.indexOf("https://script.googleusercontent.com/macros/echo") > -1))
                     {
+                      try {
                         let data = await fproses(xhrOpenRequestUrl,requestBodyOri);
                         console.log('data = '+data);
                         self.responseText = data;
+                      }
+                      catch
+                      {
+                       self.responseText = '{"status":"failed","data":"Gangguan koneksi"}';
+                      }
                     }
                     else
                     {
@@ -6669,6 +6675,7 @@ function fwebworker()
       }, false)
 
       async function fetchUrl(event){
+          
           let method = 'POST';
           let deviceid;
           let penting;
@@ -6736,6 +6743,7 @@ function fwebworker()
               .catch((err) => {
                   event.ports[0].postMessage({error: err});
               });
+          
       }
   }
 
