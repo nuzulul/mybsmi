@@ -1527,7 +1527,19 @@
 <!--start script------------------------------------------------------------------------------->
 <script>
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////console.log/////////////////////////////////////////////////////////////////////////////////////////////
+var DEBUG = true;
+if(!DEBUG){
+    if(!window.console) window.console = {};
+    var methods = ["log", "debug", "warn", "info"];
+    for(var i=0;i<methods.length;i++){
+        console[methods[i]] = function(){};
+    }
+}
+//////////console.log/////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
 
 /////getparams/////////////////////////////////////////////////////////////////////////////
 var getParams = function (url) {
@@ -1595,7 +1607,7 @@ var isLocal = false;
 
 if ((window.location.href.indexOf("localhost") > -1)||(window.location.href.indexOf("127.0.0.1") > -1)) 
 {
-fmybsmilog('local development');
+console.log('local development');
 isLocal = true;
 var access_token = params.access_token;
 var apiuserurl = "https://script.google.com/macros/s/AKfycbwWFxUmhmfem1mHJT7HDqJoVFNkCmUkInvOOx2K1KZy/dev?access_token="+access_token;
@@ -1605,6 +1617,7 @@ else
 {
 var apiuserurl = "https://script.google.com/macros/s/AKfycbys-GEdilEu0nqdjDRUlEExkamYVIRsplNMEnLl2WiQQy3DxZoikpts7bnLotnT5IcwzQ/exec";
 var apidataurl = "https://script.google.com/macros/s/AKfycbyyPrApY4R8xv-_m8LUz9XHhkdYeTPMovm8MkBXgTXlojx31nHz9GVdGa4Ikw8cELMN/exec";
+DEBUG = FALSE;
 }
 
 if (params.mybsmi !== undefined )
@@ -1640,7 +1653,7 @@ routes: [
     url: '/',
     on: {
       pageAfterIn: function test (e, page) {
-        //fmybsmilog(typeof(dashboarddata));
+        //console.log(typeof(dashboarddata));
         if (typeof dashboarddata !== 'undefined'){getdefaultdatarun(dashboarddata);}
         if (window.deferredPrompt) fmybsminstallclick();
         if (window.mybsmiinstalled) fmybsmibukaapp();
@@ -1771,7 +1784,7 @@ routes: [
     on: {
       pageAfterIn: function test (e, page) {
         fpagebacapesan(page.route.params.pesanId);
-        //fmybsmilog(page.route.params.pesanId)
+        //console.log(page.route.params.pesanId)
       },
     },
     beforeEnter: function ({ resolve, reject }) {
@@ -1926,14 +1939,14 @@ function fperiksauserstatus({ resolve, reject })
 //////////on app ready////////////////////////////////////////////////////
 function fappready()
 {
-  fmybsmilog('app ready');
+  console.log('app ready');
   fonesignal();
   
 }
 
 //////////on dom ready////////////////////////////////////////////////////
 window.addEventListener('DOMContentLoaded', () => {
-  fmybsmilog('dom ready');
+  console.log('dom ready');
 });
 
 function frefresh()
@@ -2050,13 +2063,13 @@ function fonesignal()
                   });          
                   OneSignal.setDefaultTitle("MyBSMI");          
                   OneSignal.on('permissionPromptDisplay', function () {
-                    fmybsmilog("The prompt displayed");
+                    console.log("The prompt displayed");
                   });
                   OneSignal.isPushNotificationsEnabled(function(isEnabled) {
                     if (isEnabled)
-                      fmybsmilog("Push notifications are enabled!");
+                      console.log("Push notifications are enabled!");
                     else
-                      fmybsmilog("Push notifications are not enabled yet.");
+                      console.log("Push notifications are not enabled yet.");
                       if (mybsmigetNotificationPermission === 'granted')
                       {
                         //OneSignal.setSubscription(true);
@@ -2066,14 +2079,14 @@ function fonesignal()
                   //updateMangeWebPushSubscriptionButton('#my-notification-button');          
                   // Occurs when the user's subscription changes to a new value.
                   OneSignal.on('subscriptionChange', function (isSubscribed) {
-                    fmybsmilog("The user's subscription state is now:", isSubscribed);
+                    console.log("The user's subscription state is now:", isSubscribed);
                     //updateMangeWebPushSubscriptionButton('#my-notification-button');
                     fupdateusernotifikasi(isSubscribed);
                   });
                   
                   OneSignal.on('notificationPermissionChange', function(permissionChange) {
                     var currentPermission = permissionChange.to;
-                    fmybsmilog('New permission state:', currentPermission);
+                    console.log('New permission state:', currentPermission);
                     $$('#mybsmi-promptoverlay').remove();
                     if (currentPermission === 'granted')
                     {
@@ -2087,7 +2100,7 @@ function fonesignal()
                     }
                   });
                   OneSignal.getUserId(function(userId) {
-                    fmybsmilog("OneSignal User ID:", userId);
+                    console.log("OneSignal User ID:", userId);
                     // (Output) OneSignal User ID: 270a35cd-4dda-4b3f-b04e-41d7463a2316    
                   });
                   OneSignal.on('notificationDisplay', function(event) {
@@ -2108,33 +2121,33 @@ function fonesignal()
                   });
                   OneSignal.setExternalUserId(dashboarddata.user.useruid);
                   OneSignal.getExternalUserId().then(function(externalUserId){
-                    fmybsmilog("externalUserId: ", externalUserId);
+                    console.log("externalUserId: ", externalUserId);
                   });
                   OneSignal.on('popoverShown', function() {
-                    fmybsmilog('Slide Prompt Shown');
+                    console.log('Slide Prompt Shown');
                   });
                   OneSignal.on('popoverAllowClick', function() {
-                    fmybsmilog('Slide Prompt popoverAllowClick');
+                    console.log('Slide Prompt popoverAllowClick');
                     $$('.mybsmi-promptinfo').removeClass('display-none')
                   });
                   OneSignal.on('popoverCancelClick', function() {
-                    fmybsmilog('Slide Prompt popoverCancelClick');
+                    console.log('Slide Prompt popoverCancelClick');
                     $$('#mybsmi-promptoverlay').remove();
                   });
                   OneSignal.on('popoverClosed', function() {
-                    fmybsmilog('Slide Prompt popoverClosed');
+                    console.log('Slide Prompt popoverClosed');
                   });
             });
             OneSignal.push(["getNotificationPermission", function(permission) {
-                fmybsmilog("Site Notification Permission:", permission);
+                console.log("Site Notification Permission:", permission);
                 // (Output) Site Notification Permission: default
                 window.mybsmigetNotificationPermission = permission;
             }]);
 
             const onNotificationClicked = function (data) 
             {
-                fmybsmilog("Received NotificationOpened:");
-                fmybsmilog(data);
+                console.log("Received NotificationOpened:");
+                console.log(data);
                 if ((app.views.current.history.length !== 2) || (app.views.current.router.currentPageEl.baseURI !== data.url))
                 {
                  window.mybsmiaddListenerForNotificationOpened = true;
@@ -2143,7 +2156,7 @@ function fonesignal()
                 {
                   var toastBottom = app.toast.create({ text: data.content, closeTimeout: 5000,position: 'center', });toastBottom.open();
                 }
-                fmybsmilog(app.views.current.history.length);
+                console.log(app.views.current.history.length);
                 let url = data.url;
                 if (window.mybsminotificationDisplay) 
                 {              
@@ -2215,23 +2228,23 @@ function fupdateusernotifikasi(data)
             var content = JSON.parse(data).data;
             if (status == "success")
             {
-              //fmybsmilog(content);
+              //console.log(content);
             }
             else if (status == "failed")
             {
-              //fmybsmilog("failed");
+              //console.log("failed");
               app.dialog.alert(content,'Terjadi Kesalahan');
             }
             else
             {
-              //fmybsmilog("failed");
+              //console.log("failed");
               //app.dialog.alert(content,'Terjadi Kesalahan');
               fcekexpiredtoken(content);
             }
           },
         error: function (xhr, status, message)
           {
-            //fmybsmilog(message);
+            //console.log(message);
             mypreloader.close();
             app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
           },
@@ -2240,10 +2253,10 @@ function fupdateusernotifikasi(data)
 
 function fonesignalprompt(judul = 'Terima Kasih',msg = 'Beritahu jika ada hal penting')
 {
-  fmybsmilog('prompt');
+  console.log('prompt');
   
   OneSignal.push(["getNotificationPermission", function(permission) {
-      fmybsmilog("Site Notification Permission:", permission);
+      console.log("Site Notification Permission:", permission);
       // (Output) Site Notification Permission: default
       fonesignalpromptrun(judul,msg,permission)
   }]);
@@ -2279,7 +2292,7 @@ function fonesignalpromptrun(judul,msg,permission)
     verticalButtons: false,
     on: {
       opened: function (dialog, e) {
-        //fmybsmilog('Dialog opened')
+        //console.log('Dialog opened')
         let src = "icon512.png";
         $$('#img').attr('src',src);
         $$('#mybsmi-promptcheck').on('click', function () {
@@ -2287,7 +2300,7 @@ function fonesignalpromptrun(judul,msg,permission)
           if (!cek)
           {
             dialog.close();
-            fmybsmilog('chek');
+            console.log('chek');
             $$('#mybsmi-promptcheck').attr('disabled','true');            
             const para = document.createElement("div");
             para.id = 'mybsmi-promptoverlay';
@@ -2333,7 +2346,7 @@ function fonesignalpromptrun(judul,msg,permission)
 window.addEventListener('beforeinstallprompt', (event) => {
   // Prevent the mini-infobar from appearing on mobile.
   event.preventDefault();
-  fmybsmilog('👍', 'beforeinstallprompt', event);
+  console.log('👍', 'beforeinstallprompt', event);
   // Stash the event so it can be triggered later.
   window.deferredPrompt = event;
   // Remove the 'hidden' class from the install button container.
@@ -2345,7 +2358,7 @@ function fmybsminstallclick()
 {
   $$('.mybsmi-install').removeClass('display-none');
   $$('.mybsmi-install').on('click', async function () {
-    fmybsmilog('👍', 'butInstall-clicked');
+    console.log('👍', 'butInstall-clicked');
     const promptEvent = window.deferredPrompt;
     if (!promptEvent) {
       // The deferred prompt isn't available.
@@ -2355,15 +2368,15 @@ function fmybsminstallclick()
     promptEvent.prompt();
     // Log the result
     const result = await promptEvent.userChoice;
-    fmybsmilog('👍', 'userChoice', result);
+    console.log('👍', 'userChoice', result);
     // Reset the deferred prompt variable, since
     // prompt() can only be called once.
     window.deferredPrompt = null;
     // Act on the user's choice
     if (result === 'accepted') {
-      fmybsmilog('User accepted the install prompt.');
+      console.log('User accepted the install prompt.');
     } else if (result === 'dismissed') {
-      fmybsmilog('User dismissed the install prompt');
+      console.log('User dismissed the install prompt');
     }
     // Hide the install button.
     $$('.mybsmi-install').addClass('display-none');
@@ -2382,10 +2395,10 @@ function fmybsmibukaapp()
   const display = getPWADisplayMode();
   if (display === 'browser')
   {
-      fmybsmilog('display :'+display);
+      console.log('display :'+display);
       if (os === 'Android')
       {
-        fmybsmilog('os :'+os);
+        console.log('os :'+os);
         if (browserName === 'Chrome')
         {
           $$('.mybsmi-bukaapp').removeClass('display-none');
@@ -2404,10 +2417,10 @@ function fmybsmibukaapp()
       }
       else if (os === 'Windows')
       {
-        fmybsmilog('os :'+os);
+        console.log('os :'+os);
         if (browserName === 'Edge')
         {
-          fmybsmilog('browserName :'+browserName);
+          console.log('browserName :'+browserName);
           $$('.mybsmi-bukaapp').removeClass('display-none');
           $$('.mybsmi-bukaapp').on('click', function () {
           let url = 'web+mybsmi://'+window.location.href;
@@ -2427,7 +2440,7 @@ function fmybsmibukaapp()
 }
 
 window.addEventListener('appinstalled', (event) => {
-  fmybsmilog('👍', 'appinstalled', event);
+  console.log('👍', 'appinstalled', event);
   // Clear the deferredPrompt so it can be garbage collected
   window.deferredPrompt = null;
   $$('.mybsmi-install').addClass('display-none');
@@ -2447,7 +2460,7 @@ function getPWADisplayMode() {
   return 'browser';
 }
 
-//fmybsmilog(getPWADisplayMode());
+//console.log(getPWADisplayMode());
 
 window.matchMedia('(display-mode: standalone)').addEventListener('change', (evt) => {
   let displayMode = 'browser';
@@ -2455,17 +2468,17 @@ window.matchMedia('(display-mode: standalone)').addEventListener('change', (evt)
     displayMode = 'standalone';
   }
   // Log display mode change to analytics
-  fmybsmilog('DISPLAY_MODE_CHANGED', displayMode);
+  console.log('DISPLAY_MODE_CHANGED', displayMode);
 });
 
 async function tesinstall()
 {
   if ('getInstalledRelatedApps' in navigator) {
       const relatedApps = await navigator.getInstalledRelatedApps();
-      //fmybsmilog('instaled: '+relatedApps.length > 0);
+      //console.log('instaled: '+relatedApps.length > 0);
       if (relatedApps.length > 0) {
         //window.open(window.location.href, "_blank");
-        fmybsmilog('installed');
+        console.log('installed');
         if (getPWADisplayMode() === 'browser')
         {
           //window.open(window.location.href, "_blank");
@@ -2480,7 +2493,7 @@ async function tesinstall()
           
         }
       }else{
-        fmybsmilog('not installed');
+        console.log('not installed');
         const os = detectOS();
         const browserName = getBrowserName();
         if ((os === 'Windows')&&((browserName === 'Edge')||(browserName === 'Chrome')))
@@ -2497,10 +2510,10 @@ async function tesinstall()
         }
       }
       relatedApps.forEach((app) => {
-        fmybsmilog(app.id, app.platform, app.url);
+        console.log(app.id, app.platform, app.url);
       });
   } else {
-    fmybsmilog('getInstalledRelatedApps not supported');
+    console.log('getInstalledRelatedApps not supported');
   }
 }
 
@@ -2521,14 +2534,14 @@ window.addEventListener('DOMContentLoaded', () => {
       .addListener(event => {
           if (event.matches) {
              // From browser to standalone
-             fmybsmilog('From browser to standalone');
+             console.log('From browser to standalone');
           } else {
              // From standalone to browser
-             fmybsmilog('From standalone to browser');
+             console.log('From standalone to browser');
           }
       });
   tesinstall();
-  fmybsmilog(isStandalone());
+  console.log(isStandalone());
 });
 
 function isStandalone() {
@@ -2559,7 +2572,7 @@ function openapp()
     verticalButtons: false,
     on: {
       opened: function () {
-        //fmybsmilog('Dialog opened')
+        //console.log('Dialog opened')
         let src = "icon512.png";
         $$('#img').attr('src',src);
       }
@@ -2592,7 +2605,7 @@ const isInStandaloneMode = () =>
       (window.matchMedia('(display-mode: standalone)').matches) || (window.navigator.standalone) || document.referrer.includes('android-app://');
 
  if (isInStandaloneMode()) {
-    fmybsmilog("webapp is installed")
+    console.log("webapp is installed")
 }
 
 function detectOS() {
@@ -2635,15 +2648,15 @@ const getBrowserName = () => {
 
 
 app.on('pageInit', function (page) {
-  //fmybsmilog('Page is now pageInit');
+  //console.log('Page is now pageInit');
   let mypreloader = app.dialog.preloader();
   setTimeout(function () {mypreloader.close();}, 1000);
-  //fmybsmilog(page.router.currentRoute);
-  //fmybsmilog(app.views.current);
+  //console.log(page.router.currentRoute);
+  //console.log(app.views.current);
 });
 
 app.on('pageAfterIn', function (page) {
-  //fmybsmilog('Page is pageAfterIn');
+  //console.log('Page is pageAfterIn');
   //mypreloader.close();
 
 let myprofile = ''
@@ -2657,8 +2670,8 @@ let myprofile = ''
   //$$('.navbar-inner .title').append(myprofile);
 });
 
-//fmybsmilog(app.views.current);
-//fmybsmilog(app.views.current.router.initialUrl);
+//console.log(app.views.current);
+//console.log(app.views.current.router.initialUrl);
 var currentrouturl = app.views.current.router.initialUrl;
 var currentmybsmimenu = $$('a[href="'+currentrouturl+'"]');
 currentmybsmimenu.addClass('active-link');
@@ -2743,7 +2756,7 @@ $$('.mybsmi-aktivasiscreen').on('click', function () {
     
     const buf = await crypto.subtle.digest("SHA-256", new TextEncoder("utf-8").encode(pin));
     var pinhash = Array.prototype.map.call(new Uint8Array(buf), x=>(('00'+x.toString(16)).slice(-2))).join('');
-    //fmybsmilog(pinhash);
+    //console.log(pinhash);
     if (pinhash === mybsmiaktivasi)
     {
       app.loginScreen.open('#my-aktivasi-screen');
@@ -2755,7 +2768,7 @@ $$('.mybsmi-aktivasiscreen').on('click', function () {
 
 $$('.persetujuanaktivasi').on('click', function () {
    let url = $$(this).attr('data-url');
-   //fmybsmilog(url);
+   //console.log(url);
    //window.open(url);
    myviewer('https://mybsmi.netlify.app/'+url);
 });
@@ -2763,7 +2776,7 @@ $$('.persetujuanaktivasi').on('click', function () {
 $$('#my-aktivasi-screen .register-button').on('click', function () {
 
   if (!$$('#my-aktivasi-screen')[0].checkValidity()) {
-        //fmybsmilog('Check Validity!');
+        //console.log('Check Validity!');
         return;
   }
   
@@ -2795,7 +2808,7 @@ $$('#my-aktivasi-screen .register-button').on('click', function () {
     data : { command: 'aktivasi', grecaptcharesponsedata: grecaptcharesponsedata, email: email,password: password, nama: nama, jeniskelamin: jeniskelamin, tanggallahir: tanggallahir, alamatdomisili: alamatdomisili, profesi: profesi, golongandarah:golongandarah, nohp: nohp, cabang: cabang, tahun: tahun  }, 
     success: function (data, status, xhr)
       {
-        //fmybsmilog(data);
+        //console.log(data);
         mypreloader.close();
 
         var status = JSON.parse(data).status;
@@ -2818,7 +2831,7 @@ $$('#my-aktivasi-screen .register-button').on('click', function () {
       },
     error: function (xhr, status, message)
       {
-        //fmybsmilog(message);
+        //console.log(message);
         mypreloader.close();
         app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
       },
@@ -2836,7 +2849,7 @@ $$('#my-aktivasi-screen .register-button').on('click', function () {
 //start form-login/////////////////////////////
 $$('#my-login-screen .login-button').on('click', function () {
   if (!$$('#my-login-screen')[0].checkValidity()) {
-        //fmybsmilog('Check Validity!');
+        //console.log('Check Validity!');
         return;
   }
   
@@ -2852,7 +2865,7 @@ $$('#my-login-screen .login-button').on('click', function () {
     data : { command: 'login',grecaptcharesponsedata: grecaptcharesponsedata, email: email,password: password, deviceid:mybsmideviceid}, 
     success: function (data, status, xhr)
       {
-        //fmybsmilog(data);
+        //console.log(data);
         mypreloader.close();
                 
         var status = JSON.parse(data).status;
@@ -2862,7 +2875,7 @@ $$('#my-login-screen .login-button').on('click', function () {
           app.loginScreen.close('#my-login-screen');
           $$('#my-login-screen')[0].reset();
           $$('#overlay-welcome').hide();
-          //fmybsmilog(atob(data.token));
+          //console.log(atob(data.token));
           let token = JSON.parse(atob(data.token));
           let access = token.access;
           let refresh = token.refresh;
@@ -2887,7 +2900,7 @@ $$('#my-login-screen .login-button').on('click', function () {
               closeByBackdropClick: true,
               on: {
                 opened: function () {
-                  fmybsmilog('Dialog opened')
+                  console.log('Dialog opened')
                 }
               },
               buttons: [
@@ -2904,7 +2917,7 @@ $$('#my-login-screen .login-button').on('click', function () {
                           data : { command: 'verifikasiemail', email: email,password: password  }, 
                           success: function (data, status, xhr)
                             {
-                              //fmybsmilog(data);
+                              //console.log(data);
                               mypreloader.close();
 
                               var status = JSON.parse(data).status;
@@ -2929,7 +2942,7 @@ $$('#my-login-screen .login-button').on('click', function () {
                             },
                           error: function (xhr, status, message)
                             {
-                              //fmybsmilog(message);
+                              //console.log(message);
                               mypreloader.close();
                               app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
                             },
@@ -2958,7 +2971,7 @@ $$('#my-login-screen .login-button').on('click', function () {
       },
     error: function (xhr, status, message)
       {
-        //fmybsmilog(message);
+        //console.log(message);
         mypreloader.close();
         app.dialog.alert('Server sedang sibuk','Terjadi Kesalahan');
       },
@@ -2994,14 +3007,14 @@ function fchecksession(render=true)
           data : { command: 'loginwithtoken', email: 'noemail', password: token, deviceid:mybsmideviceid}, 
           success: function (data, status, xhr)
             {
-              fmybsmilog(data);
+              console.log(data);
               mypreloader.close();
                       
               var status = JSON.parse(data).status;
               var data = JSON.parse(data).data;
               if (status == "success")
               {
-                //fmybsmilog(data);
+                //console.log(data);
                 $$('#overlay-welcome').hide();
                 let token = JSON.parse(atob(data.token));
                 let access = token.access;
@@ -3021,7 +3034,7 @@ function fchecksession(render=true)
             },
           error: function (xhr, status, message)
             {
-              //fmybsmilog(message);
+              //console.log(message);
               mypreloader.close();
             },
         })
@@ -3066,14 +3079,14 @@ function fperiodikauth()
           data : { command: 'loginwithtoken', email: 'noemail', password: token, deviceid:mybsmideviceid}, 
           success: function (data, status, xhr)
             {
-              //fmybsmilog(data);
+              //console.log(data);
               //mypreloader.close();
                       
               var status = JSON.parse(data).status;
               var data = JSON.parse(data).data;
               if (status == "success")
               {
-                //fmybsmilog(data);
+                //console.log(data);
 
                 let token = JSON.parse(atob(data.token));
                 let access = token.access;
@@ -3093,7 +3106,7 @@ function fperiodikauth()
             },
           error: function (xhr, status, message)
             {
-              //fmybsmilog(message);
+              //console.log(message);
               //mypreloader.close();
             },
         })
@@ -3119,7 +3132,7 @@ function fcekexpiredtoken(data, showalert = true)
         verticalButtons: false,
         on: {
           opened: function () {
-            //fmybsmilog('Dialog opened')
+            //console.log('Dialog opened')
             let src = "icon512.png";
             $$('#img').attr('src',src);
           }
@@ -3151,7 +3164,7 @@ function fcekexpiredtoken(data, showalert = true)
 
 /////////////verifikasiemail//////////////////
 
-var code = params.verifikasi;//fmybsmilog(code);
+var code = params.verifikasi;//console.log(code);
 
 if (code !== undefined)
 {
@@ -3163,7 +3176,7 @@ if (code !== undefined)
     data : { command: 'verifikasiemail', code: code}, 
     success: function (data, status, xhr)
       {
-        //fmybsmilog(data);
+        //console.log(data);
         mypreloader.close();
 
         var status = JSON.parse(data).status;
@@ -3174,7 +3187,7 @@ if (code !== undefined)
               text: 'Alamat email berhasil diverifikasi',
               on: {
                 opened: function () {
-                  //fmybsmilog('Dialog opened')
+                  //console.log('Dialog opened')
                 }
               },
               buttons: [
@@ -3201,7 +3214,7 @@ if (code !== undefined)
       },
     error: function (xhr, status, message)
       {
-        //fmybsmilog(message);
+        //console.log(message);
         mypreloader.close();
         app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
       },
@@ -3227,20 +3240,20 @@ if (cari !== undefined)
     data : { command: 'pencarian', cari: cari}, 
     success: function (data, status, xhr)
       {
-        //fmybsmilog(data);
+        //console.log(data);
         mypreloader.close();
 
         var status = JSON.parse(data).status;
         var data = JSON.parse(data).data;
         if (status == "success")
         {
-            //fmybsmilog(data);
+            //console.log(data);
             var dialog = app.dialog.create({
               title: 'Data ditemukan',
               content: '<p>Nama : '+safe(data.nama)+'</p><p>Cabang : '+safe(data.cabang)+'</p>',
               on: {
                 opened: function () {
-                  //fmybsmilog('Dialog opened')
+                  //console.log('Dialog opened')
                 }
               },
               buttons: [
@@ -3267,7 +3280,7 @@ if (cari !== undefined)
       },
     error: function (xhr, status, message)
       {
-        //fmybsmilog(message);
+        //console.log(message);
         mypreloader.close();
         app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
       },
@@ -3295,14 +3308,14 @@ function fdevmode(pwd)
     data : { password: pwd}, 
     success: function (data, status, xhr)
       {
-        fmybsmilog('devdata = '+data);
+        console.log('devdata = '+data);
         mypreloader.close();
 
         var status = JSON.parse(data).status;
         var data = JSON.parse(data).data;
         if (status == "success")
         {
-            //fmybsmilog(data);
+            //console.log(data);
             window.location.href = '/?access_token='+data;
         }
         else if (status == "failed")
@@ -3316,7 +3329,7 @@ function fdevmode(pwd)
       },
     error: function (xhr, status, message)
       {
-        //fmybsmilog(message);
+        //console.log(message);
         mypreloader.close();
         app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
       },
@@ -3364,25 +3377,25 @@ function getdefaultdata(render=true)
         var content = JSON.parse(data).data;
         if (status == "success")
         {
-          //fmybsmilog(content);
+          //console.log(content);
           if (render){getdefaultdatarun(content)}
           window.dashboarddata = content;
         }
         else if (status == "failed")
         {
-          //fmybsmilog("failed");
+          //console.log("failed");
           app.dialog.alert(content,'Terjadi Kesalahan');
         }
         else
         {
-          //fmybsmilog("failed");
+          //console.log("failed");
           //app.dialog.alert(content,'Terjadi Kesalahan');
           fcekexpiredtoken(content);
         }
       },
     error: function (xhr, status, message)
       {
-        fmybsmilog(message);
+        console.log(message);
         mypreloader.close();
         app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
       },
@@ -3390,7 +3403,7 @@ function getdefaultdata(render=true)
 }
 
 function getdefaultdatarun(data)
-{ //fmybsmilog(data)
+{ //console.log(data)
   $$('.mybsmi-currentusernama').text(safe(data.user.usernama));
   if (data.user.userphoto !== '') {$$('.mybsmi-avatar').attr('src','https://drive.google.com/uc?export=view&id='+safe(data.user.userphoto));}
   if (data.user.userstatus === "Terverifikasi"){$$('.mybsmi-avatar-badge').css('display','flex');};
@@ -3462,7 +3475,7 @@ function getdefaultdatarun(data)
 //////fpagecabang/////////////////////////////////////////////
 function fpagecabang(run = true,cabangid)
 {
-  //fmybsmilog(cabangid);
+  //console.log(cabangid);
   if (typeof mybsmicabangdata === 'undefined' || mybsmicabangdata === null)
   {
       let mypreloader = app.dialog.preloader();
@@ -3478,25 +3491,25 @@ function fpagecabang(run = true,cabangid)
             var content = JSON.parse(data).data;
             if (status == "success")
             {
-              //fmybsmilog(content);
+              //console.log(content);
               window.mybsmicabangdata = content;
               if (run) fpagecabangrun(content,cabangid);
             }
             else if (status == "failed")
             {
-              //fmybsmilog("failed");
+              //console.log("failed");
               app.dialog.alert(content,'Terjadi Kesalahan');
             }
             else
             {
-              //fmybsmilog("failed");
+              //console.log("failed");
               //app.dialog.alert(content,'Terjadi Kesalahan');
               fcekexpiredtoken(content);
             }
           },
         error: function (xhr, status, message)
           {
-            //fmybsmilog(message);
+            //console.log(message);
             mypreloader.close();
             app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
           },
@@ -3515,12 +3528,12 @@ function fpagecabang(run = true,cabangid)
 
 function fpagecabangrun(content,cabangid)
 {
-  //fmybsmilog(cabangid);
+  //console.log(cabangid);
   for (i=0;i<kodecabang.length;i++)
   {
     if (kodecabang[i][1] === cabangid) cabangnama = kodecabang[i][0];
   }
-  //fmybsmilog(cabangnama);
+  //console.log(cabangnama);
   $$('.mybsmi-cabangnama').text(cabangnama);
   var data = '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th></th><th>Nama</th><th>Cabang</th><th>Aktif</th></tr></thead><tbody>';
   for (i=content.length-1;i>-1;i--)
@@ -3547,9 +3560,9 @@ function fpagecabangrun(content,cabangid)
   $$('.mybsmi-cabang a.mybsmi-cabangaction').on('click', function (e) {
         let base64 = this.attributes["data-user"].value;
         let data = JSON.parse(atob(base64));
-        //fmybsmilog(data);
+        //console.log(data);
         let url = "/relawan/"+safe(data[1]);
-        //fmybsmilog(url);
+        //console.log(url);
         app.views.main.router.navigate(url);
   });
 }
@@ -3584,7 +3597,7 @@ function fpagerelawan(relawanid)
 
 function fpagerelawanrun(data)
 {
-  //fmybsmilog(data);
+  //console.log(data);
   let date = new Intl.DateTimeFormat("id-ID", { hour12:false,dateStyle: "short" , timeStyle: "short",  timeZone: "Asia/Jakarta"}).format(new Date(data[0]));date = date.split(' ');date = date[0];
   let html = ''
 +'    <img class="mybsmi-relawan-userphoto" src="avatar.png" style="width:150px;height:150px;margin: 20px 10px 0px;border-radius: 50%;object-fit: cover;"><span class="badge color-blue mybsmi-relawan-avatar-badge" style="bottom:20px;right:-40px;display:none;"><i class="icon f7-icons" style="font-size:12px;">checkmark_seal</i></span>'
@@ -3607,13 +3620,13 @@ function fpagerelawanrun(data)
 ///grecaptcha/////////////////////////////////
 function grecaptcharesponse(data)
 {
-  //fmybsmilog(data);
+  //console.log(data);
   grecaptcharesponsedata = data;
 }
 
 function grecaptchaexpired()
 {
-  //fmybsmilog('expired');
+  //console.log('expired');
   grecaptcharesponsedata = '';
 }
 ///grecaptcha/////////////////////////////////
@@ -3626,7 +3639,7 @@ function fpageprofilku()
 {
     var data = dashboarddata.user;
     $$('.mybsmi-profilku .mybsmi-userphoto').attr('src','https://drive.google.com/uc?export=view&id='+safe(data.userphoto));
-    let bintang = JSON.parse(data.usermydata).bintang;//fmybsmilog(bintang);
+    let bintang = JSON.parse(data.usermydata).bintang;//console.log(bintang);
     if (typeof bintang === 'undefined' || bintang === null) bintang = 0;
     $$('.mybsmi-profilku .mybsmi-bintang').text(safe(bintang)+' bintang');
     $$('.mybsmi-profilku .mybsmi-usernama').text(safe(data.usernama));
@@ -3681,14 +3694,14 @@ function resetpasswordopen()
 function resetpasswordemail(dynamicPopup)
 {
     if (!$$('#resetpasswordform')[0].checkValidity()) {
-        //fmybsmilog('Check Validity!');
+        //console.log('Check Validity!');
         return;
     }
     
     if ((grecaptcharesponsedata == undefined) || (grecaptcharesponsedata == '')){return;}
     
     var email = $$('#resetpasswordform [name="email"]').val();
-    //fmybsmilog(email);
+    //console.log(email);
       
       let mypreloader = app.dialog.preloader(); 
       app.request({
@@ -3697,7 +3710,7 @@ function resetpasswordemail(dynamicPopup)
           url: apiuserurl,
           error: function(xhr, status, message) 
             {
-              //fmybsmilog(message);
+              //console.log(message);
               mypreloader.close();
               dynamicPopup.close();  
               //var toastBottom = app.toast.create({ text: 'Server sedang sibuk', closeTimeout: 5000,position: 'center', });toastBottom.open();  
@@ -3705,7 +3718,7 @@ function resetpasswordemail(dynamicPopup)
             },
           success: function(data, status, xhr) 
             {
-              //fmybsmilog(data);
+              //console.log(data);
               mypreloader.close(); 
               //var toastBottom = app.toast.create({ text: jqXHR.responseText, closeTimeout: 2000,position: 'center', });toastBottom.open();
               var json = JSON.parse(data); 
@@ -3769,14 +3782,14 @@ function otpexpired()
 function resetpasswordotp(dynamicPopup,email,hash)
 {
     if (!$$('#resetpasswordotpform')[0].checkValidity()) {
-        //fmybsmilog('Check Validity!');
+        //console.log('Check Validity!');
         return;
     }
     
     if ((grecaptcharesponsedata == undefined) || (grecaptcharesponsedata == '')){return;}
     
     var otp = $$('#resetpasswordotpform [name="otp"]').val();
-    //fmybsmilog(email);
+    //console.log(email);
       
       let mypreloader = app.dialog.preloader(); 
       app.request({
@@ -3785,7 +3798,7 @@ function resetpasswordotp(dynamicPopup,email,hash)
           url: apiuserurl,
           error: function(xhr, status, message) 
             {
-              //fmybsmilog(message);
+              //console.log(message);
               mypreloader.close(); 
               dynamicPopup.close(); 
               //var toastBottom = app.toast.create({ text: 'Server sedang sibuk', closeTimeout: 5000,position: 'center', });toastBottom.open();          
@@ -3793,7 +3806,7 @@ function resetpasswordotp(dynamicPopup,email,hash)
             },
           success: function(data, status, xhr) 
             {
-              //fmybsmilog(data);
+              //console.log(data);
               mypreloader.close(); 
               dynamicPopup.close();
               var json = JSON.parse(data); 
@@ -3837,11 +3850,11 @@ function resetpasswordinputform(data,email)
 function resetpasswordinput(dynamicPopup,data,email)
 {
     if (!$$('#resetpasswordinputform')[0].checkValidity()) {
-        //fmybsmilog('Check Validity!');
+        //console.log('Check Validity!');
         return;
     }
     var password = $$('#resetpasswordinputform [name="password"]').val();
-    //fmybsmilog(email);
+    //console.log(email);
       
       let mypreloader = app.dialog.preloader(); 
       app.request({
@@ -3850,7 +3863,7 @@ function resetpasswordinput(dynamicPopup,data,email)
           url: apiuserurl,
           error: function(xhr, status, message) 
             {
-              //fmybsmilog(message);
+              //console.log(message);
               mypreloader.close();  
               dynamicPopup.close();
               //var toastBottom = app.toast.create({ text: 'Server sedang sibuk', closeTimeout: 5000,position: 'center', });toastBottom.open();  
@@ -3858,7 +3871,7 @@ function resetpasswordinput(dynamicPopup,data,email)
             },
           success: function(data, status, xhr) 
             {
-              //fmybsmilog(data);
+              //console.log(data);
               mypreloader.close(); 
               dynamicPopup.close();
               var json = JSON.parse(data); 
@@ -3896,7 +3909,7 @@ function flengkapidata()
     destroyOnClose: true,
     on: {
       opened: function () {
-        //fmybsmilog('Dialog opened')
+        //console.log('Dialog opened')
       }
     },
     buttons: [
@@ -3999,7 +4012,7 @@ function flengkapiphoto()
 
 function fuploadphoto(dialog,obj)
 {
-  //fmybsmilog(obj);
+  //console.log(obj);
   var data = JSON.stringify(obj);
   dialog.close();
   let mypreloader = app.dialog.preloader();
@@ -4015,26 +4028,26 @@ function fuploadphoto(dialog,obj)
         var content = JSON.parse(data).data;
         if (status == "success")
         {
-          //fmybsmilog(content);
+          //console.log(content);
           var toastBottom = app.toast.create({ text: 'Upload photo berhasil', closeTimeout: 5000,position: 'center', });toastBottom.open();
           getdefaultdata();
           
         }
         else if (status == "failed")
         {
-          //fmybsmilog("failed");
+          //console.log("failed");
           app.dialog.alert(content,'Terjadi Kesalahan');
         }
         else
         {
-          //fmybsmilog("failed");
+          //console.log("failed");
           //app.dialog.alert(content,'Terjadi Kesalahan');
           fcekexpiredtoken(content);
         }
       },
     error: function (xhr, status, message)
       {
-        //fmybsmilog(message);
+        //console.log(message);
         mypreloader.close();
         dialog.close();
         app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
@@ -4055,7 +4068,7 @@ function fverifikasidata()
     destroyOnClose: true,
     on: {
       opened: function () {
-        //fmybsmilog('Dialog opened')
+        //console.log('Dialog opened')
       }
     },
     buttons: [
@@ -4201,10 +4214,10 @@ function fverifikasiidentitas()
             const [file] = mybsmiuploadphoto.files
             if (file) {
               if (!$$('#mybsmi-formverifikasiidentitas')[0].checkValidity()) {
-                    //fmybsmilog('Check Validity!');
+                    //console.log('Check Validity!');
                     return;
               }
-              var dataform = JSON.stringify(app.form.convertToData('#mybsmi-formverifikasiidentitas'));//fmybsmilog(dataform);
+              var dataform = JSON.stringify(app.form.convertToData('#mybsmi-formverifikasiidentitas'));//console.log(dataform);
               const fr = new FileReader();
               fr.onload = function(e) {
                 const obj = {
@@ -4230,7 +4243,7 @@ function fverifikasiidentitas()
 
 function fkirimverifikasiidentitas(dialog,obj)
 {
-  //fmybsmilog(obj);
+  //console.log(obj);
   var data = JSON.stringify(obj);
   dialog.close();
   let mypreloader = app.dialog.preloader();
@@ -4246,26 +4259,26 @@ function fkirimverifikasiidentitas(dialog,obj)
         var content = JSON.parse(data).data;
         if (status == "success")
         {
-          //fmybsmilog(content);
+          //console.log(content);
           //app.dialog.alert("Permintaan verifikasi telah terkirim. Proses verifikasi bisa membutuhkan beberapa hari. Terima kasih.",'Permintaan Verifikasi');
           fonesignalprompt('Permintaan Verifikasi Terkirim','Beri tahu jika proses verifikasi selesai');
           getdefaultdata();
         }
         else if (status == "failed")
         {
-          //fmybsmilog("failed");
+          //console.log("failed");
           app.dialog.alert(content,'Terjadi Kesalahan');
         }
         else
         {
-          //fmybsmilog("failed");
+          //console.log("failed");
           //app.dialog.alert(content,'Terjadi Kesalahan');
           fcekexpiredtoken(content);
         }
       },
     error: function (xhr, status, message)
       {
-        //fmybsmilog(message);
+        //console.log(message);
         mypreloader.close();
         dialog.close();
         app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
@@ -4321,24 +4334,24 @@ function fbuatekta()
         var content = JSON.parse(data).data;
         if (status == "success")
         {
-          //fmybsmilog(content);
+          //console.log(content);
           convertekta();
         }
         else if (status == "failed")
         {
-          //fmybsmilog("failed");
+          //console.log("failed");
           app.dialog.alert(content,'Terjadi Kesalahan');
         }
         else
         {
-          //fmybsmilog("failed");
+          //console.log("failed");
           //app.dialog.alert(content,'Terjadi Kesalahan');
           fcekexpiredtoken(content);
         }
       },
     error: function (xhr, status, message)
       {
-        //fmybsmilog(message);
+        //console.log(message);
         app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
         mypreloader.close();
       },
@@ -4360,25 +4373,25 @@ function convertekta()
         var content = JSON.parse(data).data;
         if (status == "success")
         {
-          //fmybsmilog(content);
+          //console.log(content);
           fgetekta(true);
           //getdefaultdata(false);
         }
         else if (status == "failed")
         {
-          //fmybsmilog("failed");
+          //console.log("failed");
           app.dialog.alert(content,'Terjadi Kesalahan');
         }
         else
         {
-          //fmybsmilog("failed");
+          //console.log("failed");
           //app.dialog.alert(content,'Terjadi Kesalahan');
           fcekexpiredtoken(content);
         }
       },
     error: function (xhr, status, message)
       {
-        //fmybsmilog(message);
+        //console.log(message);
         app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
         mypreloader.close();
       },
@@ -4398,13 +4411,13 @@ function fgetekta(getdefault = false)
         data : { token:mybsmiusertoken, command: 'getekta'}, 
         success: function (data, status, xhr)
           {
-            fmybsmilog('getekta = '+data);
+            console.log('getekta = '+data);
             mypreloader.close();
             var status = JSON.parse(data).status;
             var content = JSON.parse(data).data;
             if (status == "success")
             {
-              //fmybsmilog(content);
+              //console.log(content);
               window.mybsmiekta = content;
               //$$('.mybsmi-ektabsmi').html('<img id="imgekta" src="" style="width:100%;max-width:200px;cursor:pointer;" onclick="javascript:myimage(this)">');
               //let src = "https://drive.google.com/uc?export=view&id="+safe(content);
@@ -4414,19 +4427,19 @@ function fgetekta(getdefault = false)
             }
             else if (status == "failed")
             {
-              //fmybsmilog("failed");
+              //console.log("failed");
               app.dialog.alert(content,'Terjadi Kesalahan');
             }
             else
             {
-              //fmybsmilog("failed");
+              //console.log("failed");
               //app.dialog.alert(content,'Terjadi Kesalahan');
               fcekexpiredtoken(content);
             }
           },
         error: function (xhr, status, message)
           {
-            //fmybsmilog(message);
+            //console.log(message);
             app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
             mypreloader.close();
           },
@@ -4439,7 +4452,7 @@ function fgetekta(getdefault = false)
   
   function showekta()
   {
-        fmybsmilog('ekta = '+mybsmiekta);
+        console.log('ekta = '+mybsmiekta);
         $$('.mybsmi-ektabsmi').html('<img id="imgekta" src="" style="width:100%;max-width:200px;cursor:pointer;" onclick="javascript:myimage(this)">');
         let src = "https://drive.google.com/uc?export=view&id="+safe(mybsmiekta);
         $$('#imgekta').attr('src',src);
@@ -4472,25 +4485,25 @@ function fpageriwayat()
             var content = JSON.parse(data).data;
             if (status == "success")
             {
-              //fmybsmilog(content);
+              //console.log(content);
               window.mybsmiriwayat = content;
               getriwayatdatarun(content)
             }
             else if (status == "failed")
             {
-              //fmybsmilog("failed");
+              //console.log("failed");
               app.dialog.alert(content,'Terjadi Kesalahan');
             }
             else
             {
-              //fmybsmilog("failed");
+              //console.log("failed");
               //app.dialog.alert(content,'Terjadi Kesalahan');
               fcekexpiredtoken(content);
             }
           },
         error: function (xhr, status, message)
           {
-            //fmybsmilog(message);
+            //console.log(message);
             mypreloader.close();
             app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
           },
@@ -4539,19 +4552,19 @@ function fpageverifikator()
             }
             else if (status == "failed")
             {
-              //fmybsmilog("failed");
+              //console.log("failed");
               app.dialog.alert(content,'Terjadi Kesalahan');
             }
             else
             {
-              //fmybsmilog("failed");
+              //console.log("failed");
               //app.dialog.alert(content,'Terjadi Kesalahan');
               fcekexpiredtoken(content);
             }
           },
         error: function (xhr, status, message)
           {
-            //fmybsmilog(message);
+            //console.log(message);
             mypreloader.close();
             app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
           },
@@ -4614,19 +4627,19 @@ function fpageverifikatoridentitas(base64)
         }
         else if (status == "failed")
         {
-          //fmybsmilog("failed");
+          //console.log("failed");
           app.dialog.alert(content,'Terjadi Kesalahan');
         }
         else
         {
-          //fmybsmilog("failed");
+          //console.log("failed");
           //app.dialog.alert(content,'Terjadi Kesalahan');
           fcekexpiredtoken(content);
         }
       },
     error: function (xhr, status, message)
       {
-        //fmybsmilog(message);
+        //console.log(message);
         app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
         mypreloader.close();
       },
@@ -4679,7 +4692,7 @@ function fpageverifikatoridentitasrun(base64,content)
     verticalButtons: true,
     on: {
       opened: function () {
-        //fmybsmilog('Dialog opened')
+        //console.log('Dialog opened')
         let src = "https://drive.google.com/uc?export=view&id="+safe(data[13]);
         $$('#img').attr('src',src);
       }
@@ -4741,26 +4754,26 @@ function fpageverifikatorkeputusan(uid,hasil,catatan)
         if (status == "success")
         {
           
-          //fmybsmilog(content);
+          //console.log(content);
           //fpageverifikator();
           $$('.mybsmi-verifikator-item-'+uid).hide();
           var toastBottom = app.toast.create({ text: content, closeTimeout: 2000,position: 'center', });toastBottom.open();
         }
         else if (status == "failed")
         {
-          //fmybsmilog("failed");
+          //console.log("failed");
           app.dialog.alert(content,'Terjadi Kesalahan');
         }
         else
         {
-          //fmybsmilog("failed");
+          //console.log("failed");
           //app.dialog.alert(content,'Terjadi Kesalahan');
           fcekexpiredtoken(content);
         }
       },
     error: function (xhr, status, message)
       {
-        //fmybsmilog(message);
+        //console.log(message);
         app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
         mypreloader.close();
       },
@@ -4879,25 +4892,25 @@ function fpageadmin()
             var content = JSON.parse(data).data;
             if (status == "success")
             {
-              //fmybsmilog(content);
+              //console.log(content);
               window.mybsmiadmindata = content;
               fpageadminrun(content);
             }
             else if (status == "failed")
             {
-              //fmybsmilog("failed");
+              //console.log("failed");
               app.dialog.alert(content,'Terjadi Kesalahan');
             }
             else
             {
-              //fmybsmilog("failed");
+              //console.log("failed");
               //app.dialog.alert(content,'Terjadi Kesalahan');
               fcekexpiredtoken(content);
             }
           },
         error: function (xhr, status, message)
           {
-            //fmybsmilog(message);
+            //console.log(message);
             mypreloader.close();
             app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
           },
@@ -4970,7 +4983,7 @@ function fpageadminidentitas(base64)
     verticalButtons: true,
     on: {
       opened: function () {
-        //fmybsmilog('Dialog opened')
+        //console.log('Dialog opened')
         let src = "https://drive.google.com/uc?export=view&id="+safe(data[13]);
         $$('#img').attr('src',src);
       }
@@ -5011,25 +5024,25 @@ function fpagepesan()
             var content = JSON.parse(data).data;
             if (status == "success")
             {
-              //fmybsmilog(content);
+              //console.log(content);
               window.mybsmipesan = content;
               getpesandatarun(content)
             }
             else if (status == "failed")
             {
-              //fmybsmilog("failed");
+              //console.log("failed");
               app.dialog.alert(content,'Terjadi Kesalahan');
             }
             else
             {
-              //fmybsmilog("failed");
+              //console.log("failed");
               //app.dialog.alert(content,'Terjadi Kesalahan');
               fcekexpiredtoken(content);
             }
           },
         error: function (xhr, status, message)
           {
-            //fmybsmilog(message);
+            //console.log(message);
             mypreloader.close();
             app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
           },
@@ -5043,7 +5056,7 @@ function fpagepesan()
 
 function getpesandatarun(content)
 {
-  //fmybsmilog(content);
+  //console.log(content);
   $$('.mybsmi-pesan-masuk').html('');
   $$('.mybsmi-pesan-terkirim').html('');
   for(i=content.length-1;i>-1;i--)
@@ -5103,7 +5116,7 @@ function fpagebacapesan(id)
     }
     else
     {
-      let data = mybsmipesan[id];//fmybsmilog(data);
+      let data = mybsmipesan[id];//console.log(data);
       let date = new Intl.DateTimeFormat("id-ID", { hour12:false,dateStyle: "short" , timeStyle: "short",  timeZone: "Asia/Jakarta"}).format(new Date(data[0]));
       let pengirim = ''
 +'              <div class="list list-email media-list"><ul><li>'
@@ -5139,12 +5152,12 @@ function fpagebacapesan(id)
             }); 
             $$('.mybsmi-bacapesan .item-title').on('click', function (e) {
                 let url = "/relawan/"+safe(data[2]);
-                //fmybsmilog(url);
+                //console.log(url);
                 app.views.main.router.navigate(url);          
             });
             $$('.mybsmi-bacapesan img').on('click', function (e) {
                 let url = "/relawan/"+safe(data[2]);
-                //fmybsmilog(url);
+                //console.log(url);
                 app.views.main.router.navigate(url);          
             });
             $$('.mybsmi-bacapesan img').css("cursor","pointer");
@@ -5160,12 +5173,12 @@ function fpagebacapesan(id)
             $$('.mybsmi-bacapesan .item-subtitle').html('dari saya');
             $$('.mybsmi-bacapesan .item-title').on('click', function (e) {
                 let url = "/relawan/"+safe(data[5]);
-                //fmybsmilog(url);
+                //console.log(url);
                 app.views.main.router.navigate(url);          
             });
             $$('.mybsmi-bacapesan img').on('click', function (e) {
                 let url = "/relawan/"+safe(data[5]);
-                //fmybsmilog(url);
+                //console.log(url);
                 app.views.main.router.navigate(url);          
             });
             $$('.mybsmi-bacapesan img').css("cursor","pointer");
@@ -5191,23 +5204,23 @@ function fupdatebacapesan(pesanid)
             var content = JSON.parse(data).data;
             if (status == "success")
             {
-              //fmybsmilog(content);
+              //console.log(content);
             }
             else if (status == "failed")
             {
-              //fmybsmilog("failed");
+              //console.log("failed");
               app.dialog.alert(content,'Terjadi Kesalahan');
             }
             else
             {
-              //fmybsmilog("failed");
+              //console.log("failed");
               //app.dialog.alert(content,'Terjadi Kesalahan');
               fcekexpiredtoken(content);
             }
           },
         error: function (xhr, status, message)
           {
-            //fmybsmilog(message);
+            //console.log(message);
             //mypreloader.close();
             app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
           },
@@ -5216,7 +5229,7 @@ function fupdatebacapesan(pesanid)
 
 function fkirimpesan(uid,nama,photo)
 {
-  //fmybsmilog(uid+nama+photo);
+  //console.log(uid+nama+photo);
   if (dashboarddata.user.userphoto === ''){flengkapidata();return;}
   var dialog = app.dialog.create({
     title: 'Tulis Pesan',
@@ -5275,7 +5288,7 @@ function fkirimpesan(uid,nama,photo)
     destroyOnClose: true,
     on: {
       opened: function () {
-        //fmybsmilog('Dialog opened')
+        //console.log('Dialog opened')
         $$('.mybsmi-dariphoto').attr('src','https://drive.google.com/uc?export=view&id='+safe(dashboarddata.user.userphoto));
         if (photo !== '') $$('.mybsmi-kepadaphoto').attr('src','https://drive.google.com/uc?export=view&id='+safe(photo));
       }
@@ -5308,7 +5321,7 @@ function fkirimpesan(uid,nama,photo)
 
 function fkirimpesanrun(uid,nama,photo,subjek,pesan,dialog)
 {
-  //fmybsmilog(uid+subjek+pesan)
+  //console.log(uid+subjek+pesan)
       dialog.close();
       let mypreloader = app.dialog.preloader();
       app.request({
@@ -5323,7 +5336,7 @@ function fkirimpesanrun(uid,nama,photo,subjek,pesan,dialog)
             var content = JSON.parse(data).data;
             if (status == "success")
             {
-              //fmybsmilog(content);
+              //console.log(content);
               let pesanku = JSON.parse(content);
               if (typeof mybsmipesan === 'undefined' || mybsmipesan === null){}else{mybsmipesan.push(pesanku)};
               //app.dialog.alert("Pesan telah terkirim",'Info');
@@ -5331,19 +5344,19 @@ function fkirimpesanrun(uid,nama,photo,subjek,pesan,dialog)
             }
             else if (status == "failed")
             {
-              //fmybsmilog("failed");
+              //console.log("failed");
               app.dialog.alert(content,'Terjadi Kesalahan');
             }
             else
             {
-              //fmybsmilog("failed");
+              //console.log("failed");
               //app.dialog.alert(content,'Terjadi Kesalahan');
               fcekexpiredtoken(content);
             }
           },
         error: function (xhr, status, message)
           {
-            //fmybsmilog(message);
+            //console.log(message);
             mypreloader.close();
             app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
           },
@@ -5397,7 +5410,7 @@ function fdownloadfile(IMG_URL,FILE_NAME)
     const seconds = Math.floor(time % 60);
     const minutes = Math.floor(time / 60);
 
-    fmybsmilog(
+    console.log(
       //`${percent_complete}% - ${kbps} Kbps - ${minutes} min ${seconds} sec remaining`
     );
   };
@@ -5456,25 +5469,25 @@ function fpageaktivitas(run = true)
             var content = JSON.parse(data).data;
             if (status == "success")
             {
-              //fmybsmilog(content);
+              //console.log(content);
               window.mybsmiaktivitas = content;
               if (run) getaktivitasdatarun(content);
             }
             else if (status == "failed")
             {
-              //fmybsmilog("failed");
+              //console.log("failed");
               app.dialog.alert(content,'Terjadi Kesalahan');
             }
             else
             {
-              //fmybsmilog("failed");
+              //console.log("failed");
               //app.dialog.alert(content,'Terjadi Kesalahan');
               fcekexpiredtoken(content);
             }
           },
         error: function (xhr, status, message)
           {
-            //fmybsmilog(message);
+            //console.log(message);
             mypreloader.close();
             app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
           },
@@ -5488,7 +5501,7 @@ function fpageaktivitas(run = true)
 
 function getaktivitasdatarun(content)
 {
-  //fmybsmilog(content);
+  //console.log(content);
   $$('.mybsmi-aktivitas').html('');
   $$('.mybsmi-aktivitas-buataktivitas').html('<i class="icons f7-icons ">plus_app_fill</i>');
   $$('.mybsmi-aktivitas-buataktivitas i').on('click', function (e) {
@@ -5511,7 +5524,7 @@ function getaktivitasdatarun(content)
           let jenis = data[5].toLowerCase();
           let id = data[1];
           let url = "/"+jenis+"/"+id;
-          //fmybsmilog(url);
+          //console.log(url);
           app.views.main.router.navigate(url);
     });
   }
@@ -5522,7 +5535,7 @@ function getaktivitasdatarun(content)
 
 function fbuataktivitas()
 {
-  //fmybsmilog('buataktivitas');
+  //console.log('buataktivitas');
   if (dashboarddata.user.userphoto === ''){flengkapidata();return;}
   var dialog = app.dialog.create({
     title: 'Buat Aktivitas',
@@ -5590,7 +5603,7 @@ function fbuataktivitas()
             $$('#mybsmi-buataktivitas-form select[name=pembuat] option[value=cabang]').removeClass('display-none');
           }
           $$('#mybsmi-buataktivitas-form select[name=kategori]').on('change', function (e) {
-            fmybsmilog('tes');
+            console.log('tes');
           });         
           mybsmibuataktivitasuploadposter.onchange = evt => {
             let [file] = mybsmibuataktivitasuploadposter.files
@@ -5631,10 +5644,10 @@ function fbuataktivitas()
             let [file] = mybsmibuataktivitasuploadposter.files
             if (file) {
               if (!$$('#mybsmi-buataktivitas-form')[0].checkValidity()) {
-                    //fmybsmilog('Check Validity!');
+                    //console.log('Check Validity!');
                     return;
               }
-              var dataform = JSON.stringify(app.form.convertToData('#mybsmi-buataktivitas-form'));//fmybsmilog(dataform);
+              var dataform = JSON.stringify(app.form.convertToData('#mybsmi-buataktivitas-form'));//console.log(dataform);
               const fr = new FileReader();
               fr.onload = function(e) {
                 const obj = {
@@ -5660,7 +5673,7 @@ function fbuataktivitas()
 
 function fkirimbuataktivitas(dialog,obj)
 {
-  //fmybsmilog(obj);
+  //console.log(obj);
   var data = JSON.stringify(obj);
   dialog.close();
   let mypreloader = app.dialog.preloader();
@@ -5676,7 +5689,7 @@ function fkirimbuataktivitas(dialog,obj)
         var content = JSON.parse(data).data;
         if (status == "success")
         {
-          //fmybsmilog(content);
+          //console.log(content);
           if (content === 'Aktif')
           {
             //app.dialog.alert("Aktivitas berhasil dibuat",'Info');
@@ -5696,18 +5709,18 @@ function fkirimbuataktivitas(dialog,obj)
         }
         else if (status == "failed")
         {
-          //fmybsmilog("failed");
+          //console.log("failed");
           app.dialog.alert(content,'Terjadi Kesalahan');
         }
         else
         {
-          //fmybsmilog("failed");
+          //console.log("failed");
           app.dialog.alert(content,'Terjadi Kesalahan');
         }
       },
     error: function (xhr, status, message)
       {
-        //fmybsmilog(message);
+        //console.log(message);
         mypreloader.close();
         app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
       },
@@ -5731,7 +5744,7 @@ function dapatbintang(jumlah)
     verticalButtons: false,
     on: {
       opened: function () {
-        //fmybsmilog('Dialog opened')
+        //console.log('Dialog opened')
         let src = "https://drive.google.com/uc?export=view&id="+safe(dashboarddata.user.userphoto);
         $$('#img').attr('src',src);
       }
@@ -5782,7 +5795,7 @@ function fpagetwibbon(aktivitasid)
 
 function fpagetwibbonrun(data)
 {
-  //fmybsmilog(data);
+  //console.log(data);
   $$('.mybsmi-twibbon-nama').text(data[3]);
   $$('.mybsmi-twibbon-judul').text(data[6]);
   $$('.mybsmi-twibbon-pendukung').text(JSON.parse(data[12]).length);
@@ -5799,7 +5812,7 @@ function fpagetwibbonrun(data)
   {
     $$('.mybsmi-twibbon-nama').on('click', function (e) {
         let url = "/relawan/"+safe(data[2]);
-        //fmybsmilog(url);
+        //console.log(url);
         app.views.main.router.navigate(url);          
     });
   }
@@ -5807,7 +5820,7 @@ function fpagetwibbonrun(data)
   {
     $$('.mybsmi-twibbon-nama').on('click', function (e) {
         let url = "/cabang/"+safe(cabangid);
-        //fmybsmilog(url);
+        //console.log(url);
         app.views.main.router.navigate(url);          
     });
   }
@@ -5816,7 +5829,7 @@ function fpagetwibbonrun(data)
 
   $$('.mybsmi-twibbon-avatar').on('click', function (e) {
       let url = "/relawan/"+safe(data[2]);
-      //fmybsmilog(url);
+      //console.log(url);
       app.views.main.router.navigate(url);          
   });
   $$('.mybsmi-twibbon-avatar').css("cursor","pointer");
@@ -5924,7 +5937,7 @@ function fpagetwibbonrun(data)
       slider.addEventListener('input', e => {
         //debugger
         contextphoto.clearRect(0, 0, canvasphoto.width, canvasphoto.height);
-        const scale = e.target.value;//fmybsmilog('scale:'+scale);
+        const scale = e.target.value;//console.log('scale:'+scale);
 
         //contextphoto.scale(scale, scale); 
         //contextphoto.drawImage(imgphoto, 0, 0);
@@ -5956,7 +5969,7 @@ function fpagetwibbonrun(data)
         x = mx;
         y = my;
         
-        //fmybsmilog(x+ ':'+y);
+        //console.log(x+ ':'+y);
                
         contextphoto.drawImage(imgphoto, 0, 0, imgphoto.width, imgphoto.height, mx, my, width, height);       
         context.clearRect(0, 0, canvas.width, canvas.height);
@@ -6098,7 +6111,7 @@ function fpagetwibbonrun(data)
       if(isDragging){
           //ctx.clearRect(0,0,canvasWidth,canvasHeight);
           //ctx.drawImage(img,canMouseX-128/2,canMouseY-120/2,128,120);
-          //fmybsmilog(canMouseX+' : '+canMouseY);
+          //console.log(canMouseX+' : '+canMouseY);
           redraw(canMouseX,canMouseY);
       }
     }
@@ -6124,9 +6137,59 @@ function fpagetwibbonrun(data)
   
 }
 
-
-
 function fdownloadfiletwibbonposter(IMG_URL,FILE_NAME)
+{
+      let mypreloader = app.dialog.preloader();
+      app.request({
+        url: IMG_URL,
+        method: 'GET',
+        xhrFields: {
+          responseType: "blob",
+        },
+        success: function (data, status, xhr)
+          {
+            mypreloader.close();
+            const imageURL = window.URL.createObjectURL(data);
+            let output = document.getElementById('mybsmi-twibbon-poster');
+            output.src = imageURL;
+            output.onload = function() {
+            URL.revokeObjectURL(output.src)
+            let canvas = document.getElementById("mybsmi-twibbon-canvas");
+            canvas.width = 1000;
+            canvas.height = 1000;
+            let context = canvas.getContext("2d");
+            let img1 = document.getElementById('mybsmi-twibbon-poster');
+            context.drawImage(img1, 0, 0, canvas.width, canvas.height);
+            }            
+          },
+        error: function (xhr, status, message)
+          {
+            //console.log(message);
+            mypreloader.close();
+            app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
+          },
+      })
+}
+
+
+function fdownloadfiletwibbonposter1(IMG_URL,FILE_NAME)
+{
+      const imageURL = IMG_URL;
+      let output = document.getElementById('mybsmi-twibbon-poster');
+      output.src = imageURL;
+      output.onload = function() {
+      URL.revokeObjectURL(output.src)
+      let canvas = document.getElementById("mybsmi-twibbon-canvas");
+      canvas.width = 1000;
+      canvas.height = 1000;
+      let context = canvas.getContext("2d");
+      let img1 = document.getElementById('mybsmi-twibbon-poster');
+      context.drawImage(img1, 0, 0, canvas.width, canvas.height);
+      }
+}
+
+
+function fdownloadfiletwibbonposter2(IMG_URL,FILE_NAME)
 {
   const startTime = new Date().getTime();
   request = new XMLHttpRequest();
@@ -6136,7 +6199,11 @@ function fdownloadfiletwibbonposter(IMG_URL,FILE_NAME)
   let mypreloader = app.dialog.preloader();
 
   request.onreadystatechange = function () {
+    //console.log('responsetext = readystate = '+this.readyState+' = status = '+this.status+' = data = '+this.responseText);
+    //console.log('response = readystate = '+this.readyState+' = status = '+this.status+' = data = '+this.response);
     if (this.readyState == 4 && this.status == 200) {
+      //console.log('responsetext = '+this.responseText);
+      console.log(this.response);
       const imageURL = window.URL.createObjectURL(this.response);
       mypreloader.close();
       let output = document.getElementById('mybsmi-twibbon-poster');
@@ -6162,7 +6229,7 @@ function fdownloadfiletwibbonposter(IMG_URL,FILE_NAME)
     const seconds = Math.floor(time % 60);
     const minutes = Math.floor(time / 60);
 
-    fmybsmilog(
+    console.log(
       //`${percent_complete}% - ${kbps} Kbps - ${minutes} min ${seconds} sec remaining`
     );
   };
@@ -6199,7 +6266,7 @@ function fdownloadtwibbon(canvas, filename) {
 ///////////////pendukung/////////////////////////////////////////////////////////////////////////////////////
 function fjadipendukung(aktivitasid)
 {
-    //fmybsmilog(aktivitasid)
+    //console.log(aktivitasid)
     let mypreloader = app.dialog.preloader();
     app.request({
       url: apidataurl,
@@ -6213,25 +6280,25 @@ function fjadipendukung(aktivitasid)
           var content = JSON.parse(data).data;
           if (status == "success")
           {
-            //fmybsmilog(content);
+            //console.log(content);
             fjadipendukungrun(content);
             dapatbintang(1);
           }
           else if (status == "failed")
           {
-            //fmybsmilog("failed");
+            //console.log("failed");
             //app.dialog.alert(content,'Terjadi Kesalahan');
           }
           else
           {
-            //fmybsmilog("failed");
+            //console.log("failed");
             //app.dialog.alert(content,'Terjadi Kesalahan');
             fcekexpiredtoken(content, false);
           }
         },
       error: function (xhr, status, message)
         {
-          //fmybsmilog(message);
+          //console.log(message);
           mypreloader.close();
           app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
         },
@@ -6244,7 +6311,7 @@ function fjadipendukungrun(mydata)
   let exists = false;
   $$('.mybsmi-twibbon-pendukungdetail').html('');
   $$('.mybsmi-twibbon-pendukung').text(pendukung.length);
-  //fmybsmilog(pendukung);
+  //console.log(pendukung);
   for (let i= pendukung.length-1;i>-1;i--)
   {
     if (pendukung[i].uid === dashboarddata.user.useruid) exists = true;
@@ -6257,7 +6324,7 @@ function fjadipendukungrun(mydata)
     $$('.mybsmi-twibbon-pendukungdetail-item-'+pendukung[i].uid+' img').attr('src','https://drive.google.com/uc?export=view&id='+safe(pendukung[i].photo));
     $$('.mybsmi-twibbon-pendukungdetail-item-'+pendukung[i].uid).on('click', function (e) {
         let url = "/relawan/"+safe(pendukung[i].uid);
-        //fmybsmilog(url);
+        //console.log(url);
         app.views.main.router.navigate(url);          
     });
     $$('.mybsmi-twibbon-pendukungdetail-item-'+pendukung[i].uid).css("cursor","pointer");
@@ -6324,25 +6391,25 @@ function fpagebukusaku(run = true)
             var content = JSON.parse(data).data;
             if (status == "success")
             {
-              //fmybsmilog(content);
+              //console.log(content);
               window.mybsmibukusakudata = content;
               if (run) getbukusakudatarun(content);
             }
             else if (status == "failed")
             {
-              //fmybsmilog("failed");
+              //console.log("failed");
               app.dialog.alert(content,'Terjadi Kesalahan');
             }
             else
             {
-              //fmybsmilog("failed");
+              //console.log("failed");
               //app.dialog.alert(content,'Terjadi Kesalahan');
               fcekexpiredtoken(content);
             }
           },
         error: function (xhr, status, message)
           {
-            //fmybsmilog(message);
+            //console.log(message);
             mypreloader.close();
             app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
           },
@@ -6356,7 +6423,7 @@ function fpagebukusaku(run = true)
 
 function getbukusakudatarun(data)
 {
-  //fmybsmilog(data);
+  //console.log(data);
   for (let i=1;i<data.length;i++)
   {
     let html = ''
@@ -6376,7 +6443,7 @@ function getbukusakudatarun(data)
     $$('.mybsmi-bukusaku-item-'+i+' img').attr('src',url);
     $$('.mybsmi-bukusaku-item-'+i).css('cursor','pointer');
     $$('.mybsmi-bukusaku-item-'+i).on('click', function (e) {
-       //fmybsmilog($$(this).attr('data-index')) 
+       //console.log($$(this).attr('data-index')) 
        let url = 'https://drive.google.com/file/d/'+safe(data[i][0])+'/preview';
        //let url = 'https://drive.google.com/uc?export=view&id='+safe(data[i][0]);
        //let url = 'https://drive.google.com/uc?export=view&id='+safe(data[i][0])+'#toolbar=0&navpanes=0&scrollbar=0&statusbar=0&messages=0&scrollbar=0';
@@ -6421,7 +6488,7 @@ function fwebworker()
 
      XMLHttpRequest.prototype.open = function(method, url, async, user, password) {
         xhrOpenRequestUrl = url;     // update request url, closure variable
-        fmybsmilog('xhrOpenRequestUrl = '+url);
+        console.log('xhrOpenRequestUrl = '+url);
         requestMethod = method;
         
         if ((xhrOpenRequestUrl.indexOf("https://script.google.com/macros/s/") > -1)||(xhrOpenRequestUrl.indexOf("https://script.googleusercontent.com/macros/echo") > -1))
@@ -6439,7 +6506,7 @@ function fwebworker()
         }
         else
         {
-            fmybsmilog('body = '+data);
+            console.log('body = '+data);
             requestBodyOri = data;
             requestBody = Object.fromEntries(new URLSearchParams(requestBodyOri))
             delete requestBody.password;
@@ -6454,6 +6521,8 @@ function fwebworker()
         if (this.readyState == 4 && this.status >= 200 && this.status < 300) {
            xhrSendResponseUrl = this.responseURL;
            responseData = this.data;  // now you have the data, JSON or whatever, hehehe!
+           console.log('respondata =');
+           console.log(responseData);
         }
         send.apply(this, arguments); // reset/reapply original send method
      }
@@ -6472,18 +6541,21 @@ function fwebworker()
           // this is the actual handler on the real XMLHttpRequest object
           actual.onreadystatechange = async function() {
 
-              if (this.responseText) {
+              
+              //if (this.responseText) {
                   //log("actual ajax response (readyState = " + this.readyState + "): " + this.responseText);
                   //self.responseText = '{"msg": "Hello"}';
                   
-              }
+              //}
               if (this.readyState == 4) {
               
                   //self.responseText = this.responseText;
                   //let data = await fproses(xhrOpenRequestUrl,requestBodyOri);
-                  //fmybsmilog('data = '+data);
+                  //console.log('data = '+data);
                   //self.responseText = data;
                   //self.response = data;
+                  //self.response = this.response;
+
               }
               if (self.onreadystatechange) {
                   return self.onreadystatechange();
@@ -6493,17 +6565,27 @@ function fwebworker()
           this.onload = null;
           actual.onload = async function() {
               if ((this.status >= 200 && this.status < 300) || this.status === 0) {
-                  fmybsmilog('step = onload '+xhrOpenRequestUrl);
-                  if ((xhrOpenRequestUrl.indexOf("https://script.google.com/macros/s/") > -1)||(xhrOpenRequestUrl.indexOf("https://script.googleusercontent.com/macros/echo") > -1))
+                  console.log('step = onload '+xhrOpenRequestUrl);
+                  console.log('onload respontype ');
+                  console.log(this.responseType);
+                  console.log('onload response ');
+                  console.log(this.response);                  
+                  if (this.responseType === 'blob')
                   {
-                      let data = await fproses(xhrOpenRequestUrl,requestBodyOri);
-                      fmybsmilog('data = '+data);
-                      self.responseText = data;
                   }
                   else
                   {
-                    self.responseText = this.responseText;
-                  }
+                    if ((xhrOpenRequestUrl.indexOf("https://script.google.com/macros/s/") > -1)||(xhrOpenRequestUrl.indexOf("https://script.googleusercontent.com/macros/echo") > -1))
+                    {
+                        let data = await fproses(xhrOpenRequestUrl,requestBodyOri);
+                        console.log('data = '+data);
+                        self.responseText = data;
+                    }
+                    else
+                    {
+                      self.responseText = this.responseText;
+                    }
+                   }
               }
               if (self.onload) {
                   return self.onload();
@@ -6514,7 +6596,8 @@ function fwebworker()
           ["status", "statusText", "responseType", "response",
            "readyState", "responseXML", "upload"].forEach(function(item) {
               Object.defineProperty(self, item, {
-                  get: function() {return actual[item];}
+                  get: function() {return actual[item];},
+                  set: function(val) {actual[item] = val;}
               });
           });
 
@@ -6526,7 +6609,7 @@ function fwebworker()
               });
           });
 
-          // add all pure proxy pass-through methods //, "open"
+          // add all pure proxy pass-through methods 
           ["addEventListener", "open", "send", "abort", "getAllResponseHeaders",
            "getResponseHeader", "overrideMimeType", "setRequestHeader"].forEach(function(item) {
               Object.defineProperty(self, item, {
@@ -6540,12 +6623,19 @@ function fwebworker()
 
 
   function workerFunction() {
-      var myaccesstoken;
 
-      function fmybsmilog(data)
-      {
-        //console.log(data);
+      //////////console.log/////////////////////////////////////////////////////////////////////////////////////////////
+      var DEBUG = false;
+      if(!DEBUG){
+          if(!console) console = {};
+          var methods = ["log", "debug", "warn", "info"];
+          for(var i=0;i<methods.length;i++){
+              console[methods[i]] = function(){};
+          }
       }
+      //////////console.log/////////////////////////////////////////////////////////////////////////////////////////////
+      
+      var myaccesstoken;
 
       function validateapiurl(url)
       {
@@ -6573,7 +6663,7 @@ function fwebworker()
 
       const fetchUrl = (event) => {
           let method = 'POST';
-          let url = event.data[0]; fmybsmilog('fetchurl = '+url);
+          let url = event.data[0]; console.log('fetchurl = '+url);
           //if (!validateapiurl(url)) {event.ports[0].postMessage({error: 'forbidden'});}
           let body = event.data[1];
           if (body === 'get')
@@ -6603,7 +6693,7 @@ function fwebworker()
                 return result.text();
               })
               .then((response) => {
-                      fmybsmilog('response = '+response);
+                      console.log('response = '+response);
                       var jsonresponse = JSON.parse(response)
                       var status = jsonresponse.status;
                       var data = jsonresponse.data;
@@ -6642,7 +6732,7 @@ function fwebworker()
       if (data.error) {
         rej(data.error);
       }else {
-        fmybsmilog('result = '+data.result);
+        console.log('result = '+data.result);
         res(data.result);
       }
     };
@@ -6655,13 +6745,6 @@ fwebworker()
 
 
 
-
-//////////fmybsmilog/////////////////////////////////////////////////////////////////////////////////////////////
-function fmybsmilog(data)
-{
-  //console.log(data);
-}
-//////////fmybsmilog/////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 </script>
 <!--end script------------------------------------------------------------------------------->  
