@@ -6722,12 +6722,12 @@ function fwebworker()
       }, false)
 
       async function fetchUrl(event){
-          
+        try{
           let method = 'POST';
           let deviceid;
           let penting;
           let url = event.data[0]; console.log('fetchurl = '+url);
-          if (!validateapiurl(url)) {event.ports[0].postMessage({error: 'Forbidden url'});return;}
+          if (!validateapiurl(url)) {event.ports[0].postMessage({error: 'Forbidden url'});return}
           let body = event.data[1];
           if (body === 'get')
           {
@@ -6759,6 +6759,7 @@ function fwebworker()
               }              
               body = form_data;
           }
+        
 
           fetch(url, {
               method: method,
@@ -6790,6 +6791,7 @@ function fwebworker()
               .catch((err) => {
                   event.ports[0].postMessage({error: err});
               });
+        }catch{event.ports[0].postMessage({error: 'error'});return;}
           
       }
   }
