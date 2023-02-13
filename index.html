@@ -6537,6 +6537,24 @@ function getbukusakudatarun(data)
 function myviewer(data)
 {
   
+    var dynamicPopup = app.popup.create({
+      content: '<div class="popup" style="background:#fff">'+
+      '<div class="block">'+
+      
+        '<iframe id="mybsmi-iframe" src="" style="display: block;margin: auto;height: 80vh;width: 90vw;object-fit: contain;background-image:none;background:#fff;"></iframe>'+
+        '<div style="height:10vh;width:90vw;" class="text-align-center"><a href="#" class="item-link list-button actions-close popup-close">Tutup</a></div>'+
+        
+       '</div></div>',
+    });     
+    dynamicPopup.open();
+    $$('#mybsmi-iframe').attr('src',data);
+    let mypreloader = app.dialog.preloader();
+    setTimeout(function () {mypreloader.close();}, 3000);
+}
+
+function myviewer1(data)
+{
+  
   const para = document.createElement("div");
   para.innerHTML = '<div style="background: rgba(0, 0, 0, 0.8);position: fixed;z-index: 1000000000000000;align-items: center;justify-content: center;display: flex;bottom: 0;left: 0;right: 0;top: 0;"><iframe id="mybsmi-iframe" src="" style="border-radius: 1em;display: block;margin: auto;height: 70vh;width: 90vw;object-fit: contain;background-image:none;background:#fff;"></div>';
   
