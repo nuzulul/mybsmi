@@ -505,7 +505,7 @@
         </div>
         <div class="toolbar toolbar-bottom">
           <div class="toolbar-inner">
-            2023 &copy; MyBSMI
+            2023 &copy; MyBSMI - BSMI Jawa Timur
           </div>
         </div>
         <div class="page-content hide-toolbar-on-scroll">
@@ -1384,6 +1384,8 @@
                                     <option value="Wiraswasta">Wiraswasta</option>
                                     <option value="Rescue">Rescue</option>
                                     <option value="Relawan">Relawan</option>
+                                    <option value="Relawan">Pelajar</option>
+                                    <option value="Relawan">Mahasiswa</option>
                                     <option value="Umum">Umum</option>
                                   </select>
                     </div>
@@ -2792,7 +2794,7 @@ fdeviceid();
 
 //form-aktivasi/////////////////////////////
 $$('.mybsmi-aktivasiscreen').on('click', function () {
-  app.dialog.prompt("Selamatkan satu jiwa ...", "MyBSMI", async function (pin) {
+  app.dialog.prompt("PIN", "MyBSMI", async function (pin) {
     
     const buf = await crypto.subtle.digest("SHA-256", new TextEncoder("utf-8").encode(pin));
     var pinhash = Array.prototype.map.call(new Uint8Array(buf), x=>(('00'+x.toString(16)).slice(-2))).join('');
@@ -2801,6 +2803,10 @@ $$('.mybsmi-aktivasiscreen').on('click', function () {
     {
       app.loginScreen.open('#my-aktivasi-screen');
       try{window.grecaptchaid = grecaptcha.render( 'mybsmi-grecaptchaaktivasi');}catch{}
+    }
+    else
+    {
+      var toastBottom = app.toast.create({ text: 'Salah', closeTimeout: 5000,position: 'center', });toastBottom.open();
     }
   }
   )
@@ -3505,6 +3511,7 @@ function getdefaultdatarun(data)
     if (datacabang[i].cabang == 'BSMI Jawa Timur')
     {
       rekapitulasiprov += '<tr> <td class="label-cell"><a href="/cabang/'+kode+'">'+safe(datacabang[i].cabang)+'</a></td> <td class="numeric-cell">'+safe(datacabang[i].relawan-1)+'</td> </tr>';
+      cabang = cabang+1;
     }
     else
     {
@@ -3622,7 +3629,7 @@ function fpagecabangrun(content,cabangid)
       
       let date = new Intl.DateTimeFormat("id-ID", { hour12:false,dateStyle: "short" , timeStyle: "short",  timeZone: "Asia/Jakarta"}).format(new Date(content[i][0]));date = date.split(' ');date = date[0];
       
-      data += '<tr class="mybsmi-admin-item-'+safe(content[i][1])+'"><td data-collapsible-title=""><img src="avatar.png" style="width:1.5em;aspet-ratio 1/1;object-fit:cover;border-radius:50% 50%;overflow:hidden;"></td><td data-collapsible-title="Nama"><a class="mybsmi-cabangaction" data-user="'+btoa(JSON.stringify(content[i]))+'">'+safe(content[i][3])+'</a></td><td data-collapsible-title="Aktif">'+safe(content[i][4])+'</td><td data-collapsible-title="Aktif">'+safe(date)+'</td></tr>';
+      data += '<tr class="mybsmi-admin-item-'+safe(content[i][1])+'"><td data-collapsible-title=""><img src="avatar.png" style="width:1.5em;aspet-ratio 1/1;object-fit:cover;border-radius:50% 50%;overflow:hidden;"></td><td data-collapsible-title="Nama"><a class="mybsmi-cabangaction" data-user="'+btoa(JSON.stringify(content[i]))+'">'+safe(content[i][3])+'</a></td><td data-collapsible-title="Cabang">'+safe(content[i][4])+'</td><td data-collapsible-title="Aktif">'+safe(date)+'</td></tr>';
   }
   data += '</tbody></table></div>';
   $$('.mybsmi-cabang').html(data);
@@ -4536,13 +4543,16 @@ function fgetekta(getdefault = false)
   function showekta()
   {
         console.log('ekta = '+mybsmiekta);
-        $$('.mybsmi-ektabsmi').html('<img id="imgekta" src="" style="width:100%;max-width:200px;cursor:pointer;" onclick="javascript:myimage(this)">');
+        $$('.mybsmi-ektabsmi').html('<img id="imgekta" src="" style="width:100%;max-width:200px;cursor:pointer;">');
         let src = "https://drive.google.com/uc?export=view&id="+safe(mybsmiekta);
         $$('#imgekta').attr('src',src);
         $$('.mybsmi-ektabsmi-download').html('<a href="#" class="button mybsmi-ektabsmi-download-button">Download</a>');
         $$('.mybsmi-ektabsmi-download-button').on('click', function () {
           //fdownloadfile('https://api.allorigins.win/raw?url=https://lh3.googleusercontent.com/d/'+mybsmiekta,'ektabsmi.jpg');
           fdownloadfile('https://cors.bsmijatim.workers.dev/?https://lh3.googleusercontent.com/d/'+mybsmiekta,'ektabsmi');
+        })
+        $$('.mybsmi-ektabsmi img').on('click', function () {
+          myimage(this);
         })
   }
 }
