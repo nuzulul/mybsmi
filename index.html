@@ -1961,6 +1961,26 @@ function frefresh()
   });
 }
 
+function fonimgerror()
+{
+  //return;
+  var timerImgBroken = 0;
+  var myVarTimerImgBroken = setInterval(myTimerImgBroken, 3000);
+  function myTimerImgBroken() {
+      var images = document.querySelectorAll('img');
+      for (var i = 0; i < images.length; i++) {
+          if ( images[i].complete
+          &&   (typeof images[i].naturalWidth == "undefined"
+          ||   images[i].naturalWidth == 0)                  
+          ) {
+            images[i].src = 'photo.svg';
+            //images[i].style.display='none';
+          }
+      }
+     if (timerImgBroken === 5) {clearInterval(myVarTimerImgBroken);}
+  }
+}
+
 function fonesignal()
 {
     if (typeof dashboarddata === 'undefined' || dashboarddata === null) {
@@ -2658,11 +2678,22 @@ app.on('pageInit', function (page) {
   setTimeout(function () {mypreloader.close();}, 1000);
   //console.log(page.router.currentRoute);
   //console.log(app.views.current);
+    $$('img').on('error', function (e) {
+      $$(this).attr('src','photo.svg');
+    }); 
+});
+
+app.on('pageBeforeIn', function (page) {
+    $$('img').on('error', function (e) {
+      $$(this).attr('src','photo.svg');
+    }); 
 });
 
 app.on('pageAfterIn', function (page) {
   //console.log('Page is pageAfterIn');
   //mypreloader.close();
+  
+  fonimgerror();
 
 let myprofile = ''
 +'      <div class="right">'
@@ -2673,9 +2704,7 @@ let myprofile = ''
 +'      </div>'
 
   //$$('.navbar-inner .title').append(myprofile);
-    $$('img').on('error', function (e) {
-      $$(this).attr('src','photo.svg');
-    });  
+ 
 });
 
 //console.log(app.views.current);
