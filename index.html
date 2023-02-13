@@ -8,14 +8,16 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="theme-color" content="#f00">
   <meta http-equiv="Content-Security-Policy" content="default-src * 'self' 'unsafe-inline' 'unsafe-eval' data: blob:">
+  <meta http-equiv="Content-Security-Policy" content="script-src 'self' data: blob: 'nonce-mybsmi' 'sha256-iN7wpJdxHlpujRppkOA8N0+Mzp0ZqZr3lCtxM00Y63c=' *.onesignal.com">
+  <meta http-equiv="Content-Security-Policy" content="style-src 'self' 'unsafe-inline' data: blob: https://unpkg.com/framework7@7.1.2/framework7-bundle.min.css https://unpkg.com/framework7-icons">
   <meta name="google" content="notranslate">
   <title>MyBSMI</title>
   <link rel="manifest" href="manifest.json" />
   <link rel="web-app-origin-association" href="/.well-known/web-app-origin-association">
   <link rel="stylesheet" href="https://unpkg.com/framework7@7.1.2/framework7-bundle.min.css">
   <link rel="stylesheet" href="https://unpkg.com/framework7-icons">
-  <script src='https://www.google.com/recaptcha/api.js'></script>
-  <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>
+  <script nonce="mybsmi" src='https://www.google.com/recaptcha/api.js'></script>
+  <script nonce="mybsmi" src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>
   
   <!--------------------------Style-------------------------------------->
   <style>
@@ -1522,10 +1524,9 @@
 
 
 
-  <script src="https://unpkg.com/framework7@7.1.2/framework7-bundle.min.js"></script>
-  <script src="https://unpkg.com/chart.js"></script>
+  <script nonce="mybsmi" src="https://unpkg.com/framework7@7.1.2/framework7-bundle.min.js"></script>
 <!--start script------------------------------------------------------------------------------->
-<script>
+<script nonce="mybsmi">
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -6883,7 +6884,7 @@ fwebworker()
 </script>
 <!--end script------------------------------------------------------------------------------->  
 
-<script>
+<script nonce="mybsmi">
   if (typeof navigator.serviceWorker !== 'undefined') {
     navigator.serviceWorker.register('sw.js')
   }
