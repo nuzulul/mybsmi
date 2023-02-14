@@ -7,13 +7,45 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="theme-color" content="#f00">
-  <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' data: blob:;object-src 'none';script-src 'unsafe-inline' data: blob: 'nonce-mybsmicareforlife' 'strict-dynamic' 'sha256-iN7wpJdxHlpujRppkOA8N0+Mzp0ZqZr3lCtxM00Y63c=' *.onesignal.com;style-src 'unsafe-inline' data:  https://unpkg.com/framework7@7.1.2/framework7-bundle.min.css https://unpkg.com/framework7-icons;base-uri 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' data: blob:;object-src 'none';script-src 'unsafe-inline' data: blob: 'nonce-mybsmicareforlife' 'strict-dynamic' 'sha256-iN7wpJdxHlpujRppkOA8N0+Mzp0ZqZr3lCtxM00Y63c=' *.onesignal.com;style-src 'unsafe-inline' data:  https://unpkg.com/framework7@7.1.2/framework7-bundle.min.css https://unpkg.com/framework7-icons;base-uri 'none';require-trusted-types-for 'script'">
   <meta name="google" content="notranslate">
   <title>MyBSMI</title>
   <link rel="manifest" href="manifest.json" />
   <link rel="web-app-origin-association" href="/.well-known/web-app-origin-association">
   <link rel="stylesheet" href="https://unpkg.com/framework7@7.1.2/framework7-bundle.min.css">
   <link rel="stylesheet" href="https://unpkg.com/framework7-icons">
+  <script nonce="mybsmicareforlife">
+      function ftrustedHTML(data)
+      {
+          let unescapefist = {
+              "&amp;": '&',
+              "&quot;": '"',
+              "&apos;": '\'',
+              "&lt;": '<',
+              "&gt;": '>'
+          };
+          let danger = data.replace( /[&"'<>]/g, c => unescapefist[c] );
+          let lookup = {
+              '&': "&amp;",
+              '"': "&quot;",
+              '\'': "&apos;",
+              '<': "&lt;",
+              '>': "&gt;"
+          };
+          let safehtml = danger.replace( /[&"'<>]/g, c => lookup[c] );
+          return safehtml;
+      }
+
+      if (window.trustedTypes && trustedTypes.createPolicy) { 
+        trustedTypes.createPolicy('default', {
+          //createHTML: (string) => safe(string),
+          //createHTML: string => string.replace(/\</g, '&lt;'),
+          //createHTML: (string) => ftrustedHTML(string),
+          createHTML: string => string, // warning: this is unsafe!
+          createScriptURL: string => string, // warning: this is unsafe!
+        });
+      }
+  </script>
   <script nonce="mybsmicareforlife" src='https://www.google.com/recaptcha/api.js'></script>
   <script nonce="mybsmicareforlife" src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>
   
@@ -4944,10 +4976,15 @@ function encodenonalphanumeric( s )
     return h;
 }
 
+function dangernotsafe(data)
+{
+  return data;
+}
+
 function safe(unsafe)
 {
 unsafe = String(unsafe);
-var data = escapehtmloldbrowser(unsafe);
+var data = escapeHTML(unsafe);
 return data;
 
 }
@@ -4957,6 +4994,8 @@ function safegetparam(unsafe)
 var data = encodeURIComponent(unsafe)
 return data;
 }
+
+
 /////////////////////////////////////////////////////////////////
 
 
