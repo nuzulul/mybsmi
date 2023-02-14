@@ -2926,7 +2926,7 @@ function fpagecabangrun(content,cabangid)
       
       if (content[i][4] === cabangnama){}else{continue;}
       
-      let date = new Intl.DateTimeFormat("id-ID", { hour12:false,dateStyle: "short" , timeStyle: "short",  timeZone: "Asia/Jakarta"}).format(new Date(content[i][0]));date = date.split(' ');date = date[0];
+      let date = new Intl.DateTimeFormat("id-ID", { hour12:false,dateStyle: "short" , timeStyle: "short",  timeZone: "Asia/Jakarta"}).format(new Date(content[i][0]));date = date.split(', ');date = date[0];
       
       data += '<tr class="mybsmi-admin-item-'+safe(content[i][1])+'"><td data-collapsible-title=""><img src="avatar.png" style="width:1.5em;aspet-ratio 1/1;object-fit:cover;border-radius:50% 50%;overflow:hidden;"></td><td data-collapsible-title="Nama"><a class="mybsmi-cabangaction" data-user="'+btoa(JSON.stringify(content[i]))+'">'+safe(content[i][3])+'</a></td><td data-collapsible-title="Cabang">'+safe(content[i][4])+'</td><td data-collapsible-title="Aktif">'+safe(date)+'</td></tr>';
   }
@@ -4933,7 +4933,7 @@ function getaktivitasdatarun(content)
   for(i=content.length-1;i>-1;i--)
   {
     //let date = new Date(content[i][0]).toLocaleString('en-US', { timeZone: 'Asia/Jakarta' });
-    let date = new Intl.DateTimeFormat("id-ID", { hour12:false,dateStyle: "short" , timeStyle: "short",  timeZone: "Asia/Jakarta"}).format(new Date(content[i][0]));date = date.split(' ');date = date[0];
+    let date = new Intl.DateTimeFormat("id-ID", { hour12:false,dateStyle: "short" , timeStyle: "short",  timeZone: "Asia/Jakarta"}).format(new Date(content[i][0]));date = date.split(', ');date = date[0];
     //data += '<div class="timeline-item"><div class="timeline-item-date"><small>'+date+'</small></div><div class="timeline-item-divider"></div><div class="timeline-item-content"><div class="timeline-item-inner"><div class="timeline-item-time"></div><div class="timeline-item-text">'+safe(content[i][5])+'</div></div></div></div>';
     let data = '<div class="col-100 xsmall-75 small-50 medium-33 large-33 xlarge-33 mybsmi-aktivitas-item-'+safe(content[i][1])+'" data-user="'+btoa(JSON.stringify(content[i]))+'" style="cursor:pointer;"> <div class="card"> <div class="card-header no-padding" style="overflow:hidden;"><img class="poster" src="photo.svg" style="width:100%;aspect-ratio: 1 / 1;object-fit:cover;background-image:none;"></div> <div class="card-content card-content-padding"> <div style="font-weight:bold;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">'+safe(content[i][6])+'</div> <div></div> </div> <div class="card-footer"> <div class="row" style="width:100%"> <div class="col-100 margin-bottom margin-top" style="width:100%;"> <div class="float-left" style="width:3em;"><img class="avatar" src="avatar.png" style="width:2em;aspet-ratio 1 / 1;height:2em;object-fit:cover;border-radius:50% 50%;overflow:hidden;"></div> <div class="float-left" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;width:70%;">'+safe(content[i][3])+'</div> </div> <div class="col-100 margin-bottom"> <div class="float-left" style="width:3em;"><i class="icons f7-icons">person_2</i></div> <div class="float-left" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">'+safe(JSON.parse(content[i][12]).length)+' Pendukung</div> </div> <div class="col-100 margin-bottom"> <div class="float-left" style="width:3em;"><i class="icons f7-icons">paperclip</i></div> <div class="float-left" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">'+safe(content[i][5])+'</div> </div><div class="col-100 margin-bottom"> <div class="float-left" style="width:3em;"><i class="icons f7-icons">calendar</i></div> <div class="float-left" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">'+date+'</div> </div> </div>   </div> </div> </div>';
     $$('.mybsmi-aktivitas').append(data);
@@ -5256,7 +5256,7 @@ function fpagetwibbonrun(data)
   });
   $$('.mybsmi-twibbon-avatar').css("cursor","pointer");
   
-  let date = new Intl.DateTimeFormat("id-ID", { hour12:false,dateStyle: "short" , timeStyle: "short",  timeZone: "Asia/Jakarta"}).format(new Date(data[0]));date = date.split(' ');date = date[0];
+  let date = new Intl.DateTimeFormat("id-ID", { hour12:false,dateStyle: "short" , timeStyle: "short",  timeZone: "Asia/Jakarta"}).format(new Date(data[0]));date = date.split(', ');date = date[0];
   $$('.mybsmi-twibbon-date').text(date);
   
   fjadipendukungrun(data[12])
