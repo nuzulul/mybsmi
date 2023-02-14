@@ -14,34 +14,12 @@
   <link rel="web-app-origin-association" href="/.well-known/web-app-origin-association">
   <link rel="stylesheet" href="https://unpkg.com/framework7@7.1.2/framework7-bundle.min.css">
   <link rel="stylesheet" href="https://unpkg.com/framework7-icons">
+  <script nonce="mybsmicareforlife" src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.0/purify.min.js" integrity="sha512-Ijc86Y/rPOFCr+CJLd0QQlEaCC9ztVJFvPzK0DMrHCJ8biDkyQoo6Ll/OmqMEOaDJ2nCgsV89402SzXnocKzZg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script nonce="mybsmicareforlife">
-      function ftrustedHTML(data)
-      {
-          let unescapefist = {
-              "&amp;": '&',
-              "&quot;": '"',
-              "&apos;": '\'',
-              "&lt;": '<',
-              "&gt;": '>'
-          };
-          let danger = data.replace( /[&"'<>]/g, c => unescapefist[c] );
-          let lookup = {
-              '&': "&amp;",
-              '"': "&quot;",
-              '\'': "&apos;",
-              '<': "&lt;",
-              '>': "&gt;"
-          };
-          let safehtml = danger.replace( /[&"'<>]/g, c => lookup[c] );
-          return safehtml;
-      }
-
       if (window.trustedTypes && trustedTypes.createPolicy) { 
         trustedTypes.createPolicy('default', {
-          //createHTML: (string) => safe(string),
-          //createHTML: string => string.replace(/\</g, '&lt;'),
-          //createHTML: (string) => ftrustedHTML(string),
-          createHTML: string => string, // warning: this is unsafe!
+          //createHTML: string => string, // warning: this is unsafe!          
+          createHTML: (string, sink) => DOMPurify.sanitize(string, {RETURN_TRUSTED_TYPE: true}),
           createScriptURL: string => string, // warning: this is unsafe!
         });
       }
@@ -268,38 +246,6 @@
               </li>
             </ul>
           </div>
-<!--
-          <div class="list">
-            <ul>
-              <li>
-                <a href="/riwayat/" class="item-content item-link panel-close">
-                  <div class="item-media">
-                    <i class="icon f7-icons">clock</i>
-                  </div>
-                  <div class="item-inner">
-                    <div class="item-title">Riwayat</div>
-                  </div>
-                </a>
-              </li>
-            </ul>
-          </div>
--->
-<!--
-          <div class="list">
-            <ul>
-              <li>
-                <a href="#" class="item-content item-link panel-close my-logout">
-                  <div class="item-media">
-                    <i class="icon f7-icons">power</i>
-                  </div>
-                  <div class="item-inner">
-                    <div class="item-title">Logout</div>
-                  </div>
-                </a>
-              </li>
-            </ul>
-          </div>
--->
 
           <div class="list mybsmi-verifikatormenu" style="display:none">
             <ul>
@@ -329,104 +275,7 @@
                 </a>
               </li>
             </ul>
-          </div>
-
-<!--
-          <div class="list">
-            <ul>
-              <li>
-                <a href="#" class="item-content item-link">
-                  <div class="item-media">
-                    <i class="icon f7-icons">folder_fill</i>
-                  </div>
-                  <div class="item-inner">
-                    <div class="item-title">Categories</div>
-                  </div>
-                </a>
-              </li>
-              <li>
-                <a href="#" class="item-content item-link">
-                  <div class="item-media">
-                    <i class="icon f7-icons">cart_fill</i>
-                  </div>
-                  <div class="item-inner">
-                    <div class="item-title">Products</div>
-                  </div>
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          <div class="list">
-            <ul>
-              <li>
-                <a href="#" class="item-content item-link">
-                  <div class="item-media">
-                    <i class="icon f7-icons">bag_fill</i>
-                  </div>
-                  <div class="item-inner">
-                    <div class="item-title">Sales</div>
-                  </div>
-                </a>
-              </li>
-              <li>
-                <a href="#" class="item-content item-link">
-                  <div class="item-media">
-                    <i class="icon f7-icons">graph_circle_fill</i>
-                  </div>
-                  <div class="item-inner">
-                    <div class="item-title">Analytics</div>
-                  </div>
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          <div class="block block-strong no-padding-horizontal padding-vertical-half">
-            <div class="treeview">
-              <div class="treeview-item">
-                <div class="treeview-item-root treeview-item-toggle">
-                  <div class="treeview-toggle"></div>
-                  <div class="treeview-item-content">
-                    <div class="treeview-item-label">Departments</div>
-                  </div>
-                </div>
-                <div class="treeview-item-children">
-                  <div class="treeview-item">
-                    <a href="#" class="treeview-item-root">
-                      <div class="treeview-item-content">
-                        <div class="treeview-item-label">New York</div>
-                      </div>
-                    </a>
-                  </div>
-                  <div class="treeview-item">
-                    <a href="#" class="treeview-item-root">
-                      <div class="treeview-item-content">
-                        <div class="treeview-item-label">London</div>
-                      </div>
-                    </a>
-                  </div>
-                  <div class="treeview-item">
-                    <a href="#" class="treeview-item-root">
-                      <div class="treeview-item-content">
-                        <div class="treeview-item-label">Beijing</div>
-                      </div>
-                    </a>
-                  </div>
-                  <div class="treeview-item">
-                    <a href="#" class="treeview-item-root">
-                      <div class="treeview-item-content">
-                        <div class="treeview-item-label">Tokyo</div>
-                      </div>
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
--->
-          
-          
+          </div>          
           
         </div>
       </div>
@@ -581,312 +430,11 @@
 
                 </div>
               </div>
-              
-              
-<!--              
-              <div class="col-100 medium-33 margin-top events-col">
-                <div class="card">
-                  <div class="card-header">Latest Events</div>
-                  <div class="card-content card-content-padding">
-                    <div class="timeline no-margin no-padding">
-                      <div class="timeline-item">
-                        <div class="timeline-item-date">10:00</div>
-                        <div class="timeline-item-divider"></div>
-                        <div class="timeline-item-content">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolor fugiat ipsam hic</div>
-                      </div>
-                      <div class="timeline-item">
-                        <div class="timeline-item-date">11:00</div>
-                        <div class="timeline-item-divider"></div>
-                        <div class="timeline-item-content">Another text goes here</div>
-                      </div>
-                      <div class="timeline-item">
-                        <div class="timeline-item-date">14:45</div>
-                        <div class="timeline-item-divider"></div>
-                        <div class="timeline-item-content">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolor fugiat ipsam hic porro enim, accusamus perferendis, quas commodi alias quaerat eius nemo deleniti. Odio quasi quos quis iure, aperiam pariatur?</div>
-                      </div>
-                      <div class="timeline-item">
-                        <div class="timeline-item-date">16:24</div>
-                        <div class="timeline-item-divider"></div>
-                        <div class="timeline-item-content">One more text here</div>
-                      </div>
-                      <div class="timeline-item">
-                        <div class="timeline-item-date">17:11</div>
-                        <div class="timeline-item-divider"></div>
-                        <div class="timeline-item-content">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolor fugiat ipsam hic</div>
-                      </div>
-                      <div class="timeline-item">
-                        <div class="timeline-item-date">17:28</div>
-                        <div class="timeline-item-divider"></div>
-                        <div class="timeline-item-content">Another text goes here</div>
-                      </div>
-                      <div class="timeline-item">
-                        <div class="timeline-item-date">18:00</div>
-                        <div class="timeline-item-divider"></div>
-                        <div class="timeline-item-content">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolor fugiat ipsam hic porro enim, accusamus perferendis, quas commodi alias quaerat eius nemo deleniti. Odio quasi quos quis iure, aperiam pariatur?</div>
-                      </div>
-                      <div class="timeline-item">
-                        <div class="timeline-item-date">19:19</div>
-                        <div class="timeline-item-divider"></div>
-                        <div class="timeline-item-content">One more text here</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
--->              
-              
-              
-              
             </div>
-            
-<!--            <div class="row margin-horizontal">
-              <div class="col-100 medium-66 margin-top">
-                <div class="card">
-                  <div class="card-header">
-                    <span>Best Sellers</span>
-                    <div class="segmented">
-                      <a class="button button-small button-outline tab-link-active tab-link" style="width:auto">Today</a>
-                      <a class="button button-small button-outline tab-link" style="width:auto">Week</a>
-                      <a class="button button-small button-outline tab-link" style="width:auto">Month</a>
-                    </div>
-                  </div>
-                  <div class="card-content card-content-padding scrollable">
-                    <div class="list media-list">
-                      <ul>
-                        <li class="item-content">
-                          <div class="item-media">
-                            <img class="product-image" src="https://placeimg.com/112/112/1">
-                          </div>
-                          <div class="item-inner">
-                            <div class="item-title-row">
-                              <div class="item-title">Logo Design</div>
-                              <div class="item-after">12 sales</div>
-                            </div>
-                            <div class="item-text">Design</div>
-                          </div>
-                        </li>
-                        <li class="item-content">
-                          <div class="item-media">
-                            <img class="product-image" src="https://placeimg.com/112/112/2">
-                          </div>
-                          <div class="item-inner">
-                            <div class="item-title-row">
-                              <div class="item-title">Website Design</div>
-                              <div class="item-after">10 sales</div>
-                            </div>
-                            <div class="item-text">Design</div>
-                          </div>
-                        </li>
-                        <li class="item-content">
-                          <div class="item-media">
-                            <img class="product-image" src="https://placeimg.com/112/112/3">
-                          </div>
-                          <div class="item-inner">
-                            <div class="item-title-row">
-                              <div class="item-title">PSD to HTML</div>
-                              <div class="item-after">8 sales</div>
-                            </div>
-                            <div class="item-text">Coding</div>
-                          </div>
-                        </li>
-                        <li class="item-content">
-                          <div class="item-media">
-                            <img class="product-image" src="https://placeimg.com/112/112/4">
-                          </div>
-                          <div class="item-inner">
-                            <div class="item-title-row">
-                              <div class="item-title">Business Card</div>
-                              <div class="item-after">7 sales</div>
-                            </div>
-                            <div class="item-text">Design</div>
-                          </div>
-                        </li>
-                        <li class="item-content">
-                          <div class="item-media">
-                            <img class="product-image" src="https://placeimg.com/112/112/5">
-                          </div>
-                          <div class="item-inner">
-                            <div class="item-title-row">
-                              <div class="item-title">Sketch to HTML</div>
-                              <div class="item-after">5 sales</div>
-                            </div>
-                            <div class="item-text">Coding</div>
-                          </div>
-                        </li>
-                        <li class="item-content">
-                          <div class="item-media">
-                            <img class="product-image" src="https://placeimg.com/112/112/5">
-                          </div>
-                          <div class="item-inner">
-                            <div class="item-title-row">
-                              <div class="item-title">Vecotor assets</div>
-                              <div class="item-after">4 sales</div>
-                            </div>
-                            <div class="item-text">Design</div>
-                          </div>
-                        </li>
-                        <li class="item-content">
-                          <div class="item-media">
-                            <img class="product-image" src="https://placeimg.com/112/112/6">
-                          </div>
-                          <div class="item-inner">
-                            <div class="item-title-row">
-                              <div class="item-title">50 Twitter Folowers Pack</div>
-                              <div class="item-after">3 sales</div>
-                            </div>
-                            <div class="item-text">Social</div>
-                          </div>
-                        </li>
-                        <li class="item-content">
-                          <div class="item-media">
-                            <img class="product-image" src="https://placeimg.com/112/112/6">
-                          </div>
-                          <div class="item-inner">
-                            <div class="item-title-row">
-                              <div class="item-title">100 Twitter Folowers Pack</div>
-                              <div class="item-after">2 sales</div>
-                            </div>
-                            <div class="item-text">Social</div>
-                          </div>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
--->
-
-              
-<!--
-              <div class="col-100 medium-33 margin-top">
-                <div class="card">
-                  <div class="card-header">New Users</div>
-                  <div class="card-content card-content-padding scrollable">
-                    <div class="list media-list">
-                      <ul>
-                        <li class="item-content">
-                          <div class="item-media">
-                            <img class="avatar" src="https://i.pravatar.cc/56?u=1">
-                          </div>
-                          <div class="item-inner">
-                            <div class="item-title-row">
-                              <div class="item-title">John Doe</div>
-                            </div>
-                            <div class="item-text">john@doe.com</div>
-                          </div>
-                        </li>
-                        <li class="item-content">
-                          <div class="item-media">
-                            <img class="avatar" src="https://i.pravatar.cc/56?u=2">
-                          </div>
-                          <div class="item-inner">
-                            <div class="item-title-row">
-                              <div class="item-title">Jane Doe</div>
-                            </div>
-                            <div class="item-text">jane@doe.com</div>
-                          </div>
-                        </li>
-                        <li class="item-content">
-                          <div class="item-media">
-                            <img class="avatar" src="https://i.pravatar.cc/56?u=3">
-                          </div>
-                          <div class="item-inner">
-                            <div class="item-title-row">
-                              <div class="item-title">Kate</div>
-                            </div>
-                            <div class="item-text">kate@athome.app</div>
-                          </div>
-                        </li>
-                        <li class="item-content">
-                          <div class="item-media">
-                            <img class="avatar" src="https://i.pravatar.cc/56?u=4">
-                          </div>
-                          <div class="item-inner">
-                            <div class="item-title-row">
-                              <div class="item-title">Mary</div>
-                            </div>
-                            <div class="item-text">-</div>
-                          </div>
-                        </li>
-                        <li class="item-content">
-                          <div class="item-media">
-                            <img class="avatar" src="https://i.pravatar.cc/56?u=5">
-                          </div>
-                          <div class="item-inner">
-                            <div class="item-title-row">
-                              <div class="item-title">Frame Work</div>
-                            </div>
-                            <div class="item-text">frame@work7.com</div>
-                          </div>
-                        </li>
-                        <li class="item-content">
-                          <div class="item-media">
-                            <img class="avatar" src="https://i.pravatar.cc/56?u=1">
-                          </div>
-                          <div class="item-inner">
-                            <div class="item-title-row">
-                              <div class="item-title">John Doe</div>
-                            </div>
-                            <div class="item-text">john@doe.com</div>
-                          </div>
-                        </li>
-                        <li class="item-content">
-                          <div class="item-media">
-                            <img class="avatar" src="https://i.pravatar.cc/56?u=2">
-                          </div>
-                          <div class="item-inner">
-                            <div class="item-title-row">
-                              <div class="item-title">Jane Doe</div>
-                            </div>
-                            <div class="item-text">jane@doe.com</div>
-                          </div>
-                        </li>
-                        <li class="item-content">
-                          <div class="item-media">
-                            <img class="avatar" src="https://i.pravatar.cc/56?u=3">
-                          </div>
-                          <div class="item-inner">
-                            <div class="item-title-row">
-                              <div class="item-title">Kate</div>
-                            </div>
-                            <div class="item-text">kate@athome.app</div>
-                          </div>
-                        </li>
-                        <li class="item-content">
-                          <div class="item-media">
-                            <img class="avatar" src="https://i.pravatar.cc/56?u=4">
-                          </div>
-                          <div class="item-inner">
-                            <div class="item-title-row">
-                              <div class="item-title">Mary</div>
-                            </div>
-                            <div class="item-text">-</div>
-                          </div>
-                        </li>
-                        <li class="item-content">
-                          <div class="item-media">
-                            <img class="avatar" src="https://i.pravatar.cc/56?u=5">
-                          </div>
-                          <div class="item-inner">
-                            <div class="item-title-row">
-                              <div class="item-title">Frame Work</div>
-                            </div>
-                            <div class="item-text">frame@work7.com</div>
-                          </div>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
--->
-
-
 
 
             <div class="row margin-horizontal margin-bottom">
-              <div class="col-100 medium-66 margin-top">
+              <div class="col-100 medium-66 margin-top mybsmi-statistik">
                 <div class="card data-table">
                   <div class="card-header">Statistik</div>
                   <div class="card-content">
@@ -898,10 +446,6 @@
                         </tr>
                       </thead>
                       <tbody class="mybsmi-rekapitulasiprov">
-                        <!--<tr>
-                          <td class="label-cell">BSMI Kota Surabaya</td>
-                          <td class="numeric-cell">1000</td>
-                        </tr>-->
                       </tbody>
                     </table>
                     <table>
@@ -912,357 +456,15 @@
                         </tr>
                       </thead>
                       <tbody class="mybsmi-rekapitulasicabang">
-                        <!--<tr>
-                          <td class="label-cell">BSMI Kota Surabaya</td>
-                          <td class="numeric-cell">1000</td>
-                        </tr>-->
                       </tbody>
                     </table>
                     <div class="data-table-footer">
-                      <!--<div class="data-table-rows-select">
-                        Rows per page:
-                        <div class="input input-dropdown input-with-value">
-                          <select class="input-with-value">
-                            <option value="5">5</option>
-                            <option value="10">10</option>
-                            <option value="25">25</option>
-                            <option value="all">All</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="data-table-pagination">
-                        <span class="data-table-pagination-label">1-5 of 10</span>
-                        <a href="#" class="link disabled">
-                          <i class="icon icon-prev color-gray"></i>
-                        </a>
-                        <a href="#" class="link">
-                          <i class="icon icon-next color-gray"></i>
-                        </a>
-                      </div>-->
                     </div>
                   </div>
 
                 </div>
               </div>
-            </div>
-
-
-
-<!--
-            <div class="row margin-horizontal margin-bottom">
-              <div class="col-100 medium-33 margin-top">
-                <div class="card">
-                  <div class="card-header">Notifications</div>
-                  <div class="card-content card-content-padding scrollable">
-                    <div class="list media-list">
-                      <ul>
-                        <li class="item-content">
-                          <div class="item-media">
-                            <i class="icon f7-icons text-color-yellow">exclamationmark_triangle_fill</i>
-                          </div>
-                          <div class="item-inner">
-                            <div class="item-title-row">
-                              <div class="item-title">Server access error</div>
-                              <div class="item-after">15:45</div>
-                            </div>
-                            <div class="item-text">Lorem ipsum dolor sit amet, consectetuer edipiscing elit</div>
-                          </div>
-                        </li>
-                        <li class="item-content">
-                          <div class="item-media">
-                            <i class="icon f7-icons text-color-green">cart_fill</i>
-                          </div>
-                          <div class="item-inner">
-                            <div class="item-title-row">
-                              <div class="item-title">New order received</div>
-                              <div class="item-after">13:20</div>
-                            </div>
-                            <div class="item-text">Lorem ipsum dolor sit amet, consectetuer edipiscing elit</div>
-                          </div>
-                        </li>
-                        <li class="item-content">
-                          <div class="item-media">
-                            <i class="icon f7-icons text-color-green">cart_fill</i>
-                          </div>
-                          <div class="item-inner">
-                            <div class="item-title-row">
-                              <div class="item-title">New order received</div>
-                              <div class="item-after">11:11</div>
-                            </div>
-                            <div class="item-text">Lorem ipsum dolor sit amet, consectetuer edipiscing elit</div>
-                          </div>
-                        </li>
-                        <li class="item-content">
-                          <div class="item-media">
-                            <i class="icon f7-icons text-color-blue">person_circle_fill</i>
-                          </div>
-                          <div class="item-inner">
-                            <div class="item-title-row">
-                              <div class="item-title">New user registered</div>
-                              <div class="item-after">10:16</div>
-                            </div>
-                            <div class="item-text">Lorem ipsum dolor sit amet, consectetuer edipiscing elit</div>
-                          </div>
-                        </li>
-                        <li class="item-content">
-                          <div class="item-media">
-                            <i class="icon f7-icons text-color-teal">document_text_fill</i>
-                          </div>
-                          <div class="item-inner">
-                            <div class="item-title-row">
-                              <div class="item-title">New report uploaded</div>
-                              <div class="item-after">02:00</div>
-                            </div>
-                            <div class="item-text">Lorem ipsum dolor sit amet, consectetuer edipiscing elit</div>
-                          </div>
-                        </li>
-                        <li class="item-content">
-                          <div class="item-media">
-                            <i class="icon f7-icons text-color-blue">person_circle_fill</i>
-                          </div>
-                          <div class="item-inner">
-                            <div class="item-title-row">
-                              <div class="item-title">New user registered</div>
-                              <div class="item-after">Yesterday at 22:56</div>
-                            </div>
-                            <div class="item-text">Lorem ipsum dolor sit amet, consectetuer edipiscing elit</div>
-                          </div>
-                        </li>
-                        <li class="item-content">
-                          <div class="item-media">
-                            <i class="icon f7-icons text-color-blue">person_circle_fill</i>
-                          </div>
-                          <div class="item-inner">
-                            <div class="item-title-row">
-                              <div class="item-title">New user registered</div>
-                              <div class="item-after">Yesterday at 20:10</div>
-                            </div>
-                            <div class="item-text">Lorem ipsum dolor sit amet, consectetuer edipiscing elit</div>
-                          </div>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
--->
-
-<!--
-              <div class="col-100 medium-33 margin-top">
-                <div class="card">
-                  <div class="card-header">Tasks</div>
-                  <div class="card-content card-content-padding scrollable">
-                    <div class="list tasks-list">
-                      <ul>
-                        <li>
-                          <label class="item-checkbox item-content">
-                            <div class="item-media">
-                              <span class="category-icon color-blue"></span>
-                            </div>
-                            <input type="checkbox"/>
-                            <i class="icon icon-checkbox"></i>
-                            <div class="item-inner">
-                              <div class="item-title">Prepare docs for meeting</div>
-                            </div>
-                          </label>
-                        </li>
-                        <li>
-                          <label class="item-checkbox item-content">
-                            <div class="item-media">
-                              <span class="category-icon color-blue"></span>
-                            </div>
-                            <input type="checkbox"/>
-                            <i class="icon icon-checkbox"></i>
-                            <div class="item-inner">
-                              <div class="item-title">Add new HS spectrum module to Color Picker</div>
-                            </div>
-                          </label>
-                        </li>
-                        <li>
-                          <label class="item-checkbox item-content">
-                            <div class="item-media">
-                              <span class="category-icon color-orange"></span>
-                            </div>
-                            <input type="checkbox"/>
-                            <i class="icon icon-checkbox"></i>
-                            <div class="item-inner">
-                              <div class="item-title">Add year/month selector to Calendar component</div>
-                            </div>
-                          </label>
-                        </li>
-                        <li>
-                          <label class="item-checkbox item-content">
-                            <div class="item-media">
-                              <span class="category-icon color-green"></span>
-                            </div>
-                            <input type="checkbox"/>
-                            <i class="icon icon-checkbox"></i>
-                            <div class="item-inner">
-                              <div class="item-title">Add new experimental set</div>
-                            </div>
-                          </label>
-                        </li>
-                        <li>
-                          <label class="item-checkbox item-content">
-                            <div class="item-media">
-                              <span class="category-icon color-pink"></span>
-                            </div>
-                            <input type="checkbox"/>
-                            <i class="icon icon-checkbox"></i>
-                            <div class="item-inner">
-                              <div class="item-title">Add learning mode to instruments set</div>
-                            </div>
-                          </label>
-                        </li>
-                        <li>
-                          <label class="item-checkbox item-content">
-                            <div class="item-media">
-                              <span class="category-icon color-blue"></span>
-                            </div>
-                            <input type="checkbox"/>
-                            <i class="icon icon-checkbox"></i>
-                            <div class="item-inner">
-                              <div class="item-title">Prepare docs for meeting</div>
-                            </div>
-                          </label>
-                        </li>
-                        <li>
-                          <label class="item-checkbox item-content">
-                            <div class="item-media">
-                              <span class="category-icon color-blue"></span>
-                            </div>
-                            <input type="checkbox"/>
-                            <i class="icon icon-checkbox"></i>
-                            <div class="item-inner">
-                              <div class="item-title">Add new HS spectrum module to Color Picker</div>
-                            </div>
-                          </label>
-                        </li>
-                        <li>
-                          <label class="item-checkbox item-content">
-                            <div class="item-media">
-                              <span class="category-icon color-orange"></span>
-                            </div>
-                            <input type="checkbox"/>
-                            <i class="icon icon-checkbox"></i>
-                            <div class="item-inner">
-                              <div class="item-title">Add year/month selector to Calendar component</div>
-                            </div>
-                          </label>
-                        </li>
-                        <li>
-                          <label class="item-checkbox item-content">
-                            <div class="item-media">
-                              <span class="category-icon color-green"></span>
-                            </div>
-                            <input type="checkbox"/>
-                            <i class="icon icon-checkbox"></i>
-                            <div class="item-inner">
-                              <div class="item-title">Add new experimental set</div>
-                            </div>
-                          </label>
-                        </li>
-                        <li>
-                          <label class="item-checkbox item-content">
-                            <div class="item-media">
-                              <span class="category-icon color-pink"></span>
-                            </div>
-                            <input type="checkbox"/>
-                            <i class="icon icon-checkbox"></i>
-                            <div class="item-inner">
-                              <div class="item-title">Add learning mode to instruments set</div>
-                            </div>
-                          </label>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
--->
-
-<!--
-              <div class="col-100 medium-33 margin-top">
-                <div class="card">
-                  <div class="card-header">Support Tickets</div>
-                  <div class="card-content card-content-padding scrollable">
-                    <div class="list media-list" style="--f7-list-item-text-max-lines: 5">
-                      <ul>
-                        <li class="item-content">
-                          <div class="item-media">
-                            <img class="avatar" src="https://i.pravatar.cc/56?u=1">
-                          </div>
-                          <div class="item-inner">
-                            <div class="item-title-row">
-                              <div class="item-title">John Doe</div>
-                              <div class="item-after"><span class="badge color-blue">Pending</span></div>
-                            </div>
-                            <div class="item-subtitle">1 hour ago</div>
-                            <div class="item-text">Lorem ipsum dolor sit amet,consectetuer edipiscing elit,sed diam nonummy nibh euismod tinciduntut laoreet doloremagna aliquam erat volutpat.</div>
-                          </div>
-                        </li>
-                        <li class="item-content">
-                          <div class="item-media">
-                            <img class="avatar" src="https://i.pravatar.cc/56?u=2">
-                          </div>
-                          <div class="item-inner">
-                            <div class="item-title-row">
-                              <div class="item-title">Jane Doe</div>
-                              <div class="item-after"><span class="badge color-green">Closed</span></div>
-                            </div>
-                            <div class="item-subtitle">6 hours ago</div>
-                            <div class="item-text">Sed diam nonummy nibh euismod tinciduntut laoreet doloremagna aliquam erat volutpat.Ut wisi enim ad minim veniam,quis nostrud exerci tation ullamcorper.</div>
-                          </div>
-                        </li>
-                        <li class="item-content">
-                          <div class="item-media">
-                            <img class="avatar" src="https://i.pravatar.cc/56?u=3">
-                          </div>
-                          <div class="item-inner">
-                            <div class="item-title-row">
-                              <div class="item-title">Kate</div>
-                              <div class="item-after"><span class="badge color-green">Closed</span></div>
-                            </div>
-                            <div class="item-subtitle">1 day ago</div>
-                            <div class="item-text">Lorem ipsum dolor sit amet,consectetuer edipiscing elit,sed diam nonummy nibh euismod tinciduntut laoreet doloremagna aliquam erat volutpat.</div>
-                          </div>
-                        </li>
-                        <li class="item-content">
-                          <div class="item-media">
-                            <img class="avatar" src="https://i.pravatar.cc/56?u=4">
-                          </div>
-                          <div class="item-inner">
-                            <div class="item-title-row">
-                              <div class="item-title">Mary</div>
-                              <div class="item-after"><span class="badge color-orange">Issue</span></div>
-                            </div>
-                            <div class="item-subtitle">3 days ago</div>
-                            <div class="item-text">Sed diam nonummy nibh euismod tinciduntut laoreet doloremagna aliquam erat volutpat.Ut wisi enim ad minim veniam,quis nostrud exerci tation ullamcorper.</div>
-                          </div>
-                        </li>
-                        <li class="item-content">
-                          <div class="item-media">
-                            <img class="avatar" src="https://i.pravatar.cc/56?u=5">
-                          </div>
-                          <div class="item-inner">
-                            <div class="item-title-row">
-                              <div class="item-title">Frame Work</div>
-                              <div class="item-after"><span class="badge color-blue">Pending</span></div>
-                            </div>
-                            <div class="item-subtitle">5 days ago</div>
-                            <div class="item-text">Lorem ipsum dolor sit amet,consectetuer edipiscing elit,sed diam nonummy nibh euismod tinciduntut laoreet doloremagna aliquam erat volutpat.</div>
-                          </div>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
--->              
-              
-              
-            
-              
+            </div>             
             </div>  
           </div>
 
@@ -4974,6 +4176,29 @@ function encodenonalphanumeric( s )
     }
 
     return h;
+}
+
+function ftrustedHTML(data)
+{
+    data = String(data);
+    let unescapefist = {
+        "&amp;": '&',
+        "&quot;": '"',
+        "&apos;": '\'',
+        "&lt;": '<',
+        "&gt;": '>'
+    };
+    let danger = data.replace( /[&"'<>]/g, c => unescapefist[c] );
+    let lookup = {
+        '&': "&amp;",
+        '"': "&quot;",
+        '\'': "&apos;",
+        '<': "&lt;",
+        '>': "&gt;"
+    };
+    let safehtml = danger.replace( /[&"'<>]/g, c => lookup[c] );
+    return safehtml;
+
 }
 
 function dangernotsafe(data)
