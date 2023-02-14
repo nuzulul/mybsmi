@@ -2720,7 +2720,19 @@ function getdefaultdatarun(data)
   if (data.user.userphoto !== '') {$$('.mybsmi-avatar').attr('src','https://drive.google.com/uc?export=view&id='+safe(data.user.userphoto));}
   if (data.user.userstatus === "Terverifikasi"){$$('.mybsmi-avatar-badge').css('display','flex');};
   flogout();
-  
+
+  let html = ''+
+                '<div class="card data-table">'+
+                  '<div class="card-header">Statistik</div>'+
+                  '<div class="card-content">'+
+                    '<table>'+
+                      '<thead>'+
+                        '<tr>'+
+                          '<th class="label-cell">BSMI Provinsi</th>'+
+                          '<th class="numeric-cell">Relawan</th>'+
+                        '</tr>'+
+                      '</thead>'+
+                      '<tbody class="mybsmi-rekapitulasiprov">';
   var relawan = -1;
   var cabang = 0;
   var rekapitulasiprov = '';
@@ -2750,8 +2762,27 @@ function getdefaultdatarun(data)
     }
     relawan = relawan+datacabang[i].relawan;
   }
-  $$('.mybsmi-rekapitulasicabang').html(rekapitulasicabang);
-  $$('.mybsmi-rekapitulasiprov').html(rekapitulasiprov);
+  html += rekapitulasiprov;
+  html += ''+
+                      '</tbody>'+
+                    '</table>'+
+                    '<table>'+
+                      '<thead>'+
+                        '<tr>'+
+                          '<th class="label-cell">BSMI Kota/Kabupaten</th>'+
+                          '<th class="numeric-cell">Relawan</th>'+
+                        '</tr>'+
+                      '</thead>'+
+                      '<tbody class="mybsmi-rekapitulasicabang">';
+  html += rekapitulasicabang;
+  html += ''+                    
+                      '</tbody>'+
+                    '</table>'+
+                    '<div class="data-table-footer">'+
+                    '</div>'+
+                  '</div>'+
+                '</div>';
+  $$('.mybsmi-statistik').html(html);
 
   var ratiorelawan = relawan/(relawan*10);
   var gauge1 = app.gauge.get('#mybsmi-relawan');
