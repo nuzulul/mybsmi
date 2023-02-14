@@ -47,12 +47,14 @@
             'https://cdn.onesignal.com/sdks/',
             'https://onesignal.com/api/',
           ]
+          let valid = false;
           hosts.forEach((host, index) => {
               if (string.startsWith(host))
               {
-                return string;
+                valid = true;
               }
           });
+          if (valid) return string;
         }
       }
       if (window.trustedTypes && trustedTypes.createPolicy) { 
