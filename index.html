@@ -31,12 +31,16 @@
       });
       function fwhitelistscript(string)
       {
-        var url = [
+        let url = [
           'https://www.gstatic.com/recaptcha/releases/tNAc29ZZrpcOCErva2nr4BS9/recaptcha__en.js',
           'https://cdn.onesignal.com/sdks/OneSignalPageSDKES6.js?v=151514',
           'sw.js',
         ]
         if (url.includes(string))
+        {
+          return string;
+        }
+        else if (string.startsWith('https://'))
         {
           return string;
         }
