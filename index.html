@@ -40,9 +40,19 @@
         {
           return string;
         }
-        else if (string.startsWith('https://onesignal.com/api/'))
+        else
         {
-          return string;
+          let hosts = [
+            'https://www.gstatic.com/recaptcha/releases/',
+            'https://cdn.onesignal.com/sdks/',
+            'https://onesignal.com/api/',
+          ]
+          hosts.forEach((host, index) => {
+              if (string.startsWith(host))
+              {
+                return string;
+              }
+          });
         }
       }
       if (window.trustedTypes && trustedTypes.createPolicy) { 
