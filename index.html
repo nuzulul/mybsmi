@@ -29,11 +29,24 @@
           }
         }
       });
+      function fwhitelistscript(string)
+      {
+        var url = [
+          'https://www.gstatic.com/recaptcha/releases/tNAc29ZZrpcOCErva2nr4BS9/recaptcha__en.js',
+          'https://cdn.onesignal.com/sdks/OneSignalPageSDKES6.js?v=151514',
+          'sw.js',
+        ]
+        if (url.includes(string))
+        {
+          return string;
+        }
+      }
       if (window.trustedTypes && trustedTypes.createPolicy) { 
         trustedTypes.createPolicy('default', {
           //createHTML: string => string, // warning: this is unsafe!          
           createHTML: (string, sink) => DOMPurify.sanitize(string, {ADD_TAGS: ['iframe'],RETURN_TRUSTED_TYPE: true}),
-          createScriptURL: string => string, // warning: this is unsafe!
+          //createScriptURL: string => string, // warning: this is unsafe!
+          createScriptURL: string => fwhitelistscript(string),
         });
       }
   </script>
@@ -6175,7 +6188,14 @@ function fwebworker()
   var workerblobURL = URL.createObjectURL(workerblob, {
       type: 'application/javascript; charset=utf-8'
   });
-
+  console.log('workerbloburl')
+  console.log(workerblobURL);
+  if (window.trustedTypes && trustedTypes.createPolicy) { 
+    const trustURLPolicy = trustedTypes.createPolicy('myTurstPolicy', {
+      createScriptURL: string => string,
+    });
+    workerblobURL = trustURLPolicy.createScriptURL(workerblobURL);
+  }
   const worker = new Worker(workerblobURL);
 
   const fproses = (a, b) => new Promise((res, rej) => {
