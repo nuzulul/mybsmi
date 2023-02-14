@@ -16,10 +16,23 @@
   <link rel="stylesheet" href="https://unpkg.com/framework7-icons">
   <script nonce="mybsmicareforlife" src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.0/purify.min.js" integrity="sha512-Ijc86Y/rPOFCr+CJLd0QQlEaCC9ztVJFvPzK0DMrHCJ8biDkyQoo6Ll/OmqMEOaDJ2nCgsV89402SzXnocKzZg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script nonce="mybsmicareforlife">
+      DOMPurify.addHook('uponSanitizeElement', (node, data) => {
+        if (data.tagName === 'iframe') {
+          const src = node.getAttribute('src') || ''
+          if ((!src.startsWith('https://drive.google.com/file/d/'))&&(!src.startsWith('https://mybsmi.netlify.app/'))) {
+            console.log('unsafe iframe trigger');
+            return node.parentNode?.removeChild(node)
+          }
+          else
+          {
+            console.log('safe iframe trigger');
+          }
+        }
+      });
       if (window.trustedTypes && trustedTypes.createPolicy) { 
         trustedTypes.createPolicy('default', {
           //createHTML: string => string, // warning: this is unsafe!          
-          createHTML: (string, sink) => DOMPurify.sanitize(string, {RETURN_TRUSTED_TYPE: true}),
+          createHTML: (string, sink) => DOMPurify.sanitize(string, {ADD_TAGS: ['iframe'],RETURN_TRUSTED_TYPE: true}),
           createScriptURL: string => string, // warning: this is unsafe!
         });
       }
@@ -5845,13 +5858,13 @@ function myviewer(data)
       content: '<div class="popup" style="background:#fff">'+
       '<div class="block">'+
       
-        '<iframe id="mybsmi-iframe" src="" style="display: block;margin: auto;height: 80vh;width: 90vw;object-fit: contain;background-image:none;background:#fff;"></iframe>'+
+        '<iframe id="mybsmi-iframe" src="'+safe(data)+'" style="display: block;margin: auto;height: 80vh;width: 90vw;object-fit: contain;background-image:none;background:#fff;"></iframe>'+
         '<div style="height:10vh;width:90vw;" class="text-align-center"><a href="#" class="item-link list-button actions-close popup-close">Tutup</a></div>'+
         
        '</div></div>',
     });     
     dynamicPopup.open();
-    $$('#mybsmi-iframe').attr('src',data);
+    //$$('#mybsmi-iframe').attr('src',data);
     let mypreloader = app.dialog.preloader();
     setTimeout(function () {mypreloader.close();}, 3000);
 }
@@ -5870,6 +5883,9 @@ function myviewer1(data)
   $$('#mybsmi-iframe').attr('src',data);
 
 }
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 
 
 ////////////////webworker///////////////////////////////////////////////////////////////////////////////////////
