@@ -2438,6 +2438,7 @@ function fpollsession()
     let limit = 45*60*1000;
     if (selisih>limit)
     {
+      console.log('fperiodikauth');
       window.mybsmipolltime = now;
       fperiodikauth();
       clearInterval(poll);
@@ -6037,6 +6038,7 @@ function fwebworker()
                     if ((xhrOpenRequestUrl.indexOf("https://script.google.com/macros/s/") > -1)||(xhrOpenRequestUrl.indexOf("https://script.googleusercontent.com/macros/echo") > -1))
                     {
                       try {
+                        console.log('send request to worker = '+requestBodyOri);
                         let data = await fproses(xhrOpenRequestUrl,requestBodyOri);
                         console.log('data = '+data);
                         self.responseText = data;
@@ -6130,6 +6132,8 @@ function fwebworker()
             throw new Error("both arguments must be string");
           }
           //event.ports[0].postMessage({result: event.data[0] + event.data[1]});
+          console.log('worker receive message');
+          console.log(event);
           fetchUrl(event);
         }catch(e) {
           event.ports[0].postMessage({error: e});
