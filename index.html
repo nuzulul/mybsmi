@@ -60,7 +60,7 @@
       if (window.trustedTypes && trustedTypes.createPolicy) { 
         trustedTypes.createPolicy('default', {
           //createHTML: string => string, // warning: this is unsafe!          
-          createHTML: (string, sink) => DOMPurify.sanitize(string, {ADD_TAGS: ['iframe'],RETURN_TRUSTED_TYPE: true}),
+          createHTML: (string, sink) => DOMPurify.sanitize(string, {ADD_ATTR: ['ontouchstart','ontouchend','ontouchmove'], ADD_TAGS: ['iframe'],RETURN_TRUSTED_TYPE: true}),
           //createScriptURL: string => string, // warning: this is unsafe!
           createScriptURL: string => fwhitelistscript(string),
         });
