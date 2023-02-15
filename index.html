@@ -2331,15 +2331,57 @@ document.getElementById('my-login-screen').onkeydown = function(e){
 function flogout()
 {
 $$('.my-logout').on('click', function () {
-  flogoutrun();
-  localStorage.removeItem("mybsmiuser");
-  window.mybsmiusertoken = '';
   app.popover.close('.profile-popover', false);
-  $$('#overlay-welcome').css('display','flex');
-  //let mypreloader = app.dialog.preloader();
-  //window.location.href = 'https://bsmijatim.org'
-  
+  flogoutkonfirm()
 });
+}
+
+function flogoutkonfirm()
+{
+      var dialog = app.dialog.create({
+        content:''////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+          +'<div style="width:100%;">'
+          +'  <div style="display:flex;flex-direction:column;align-items:center;justify-content: center;">'
+          +'      <img id="img" src="" style="width:150px;height:150px;margin: 10px 10px;object-fit: cover;">'
+          +'      <p style="font-weight:normal;">Apkah anda yakin ingin logout?</p>'
+          +'      <div class="data-table"></div>'
+          +'  </div>'
+          +'</div>',//////////////////////////////////////////////////////////////////////////////////////////////////
+        closeByBackdropClick: false,
+        destroyOnClose: true,
+        verticalButtons: false,
+        on: {
+          opened: function () {
+            //console.log('Dialog opened')
+            let src = "icon512.png";
+            $$('#img').attr('src',src);
+          }
+        },
+        buttons: [
+          {
+            text: 'Nanti Saja',
+            close:true,
+            color: 'gray',
+            onClick: function(dialog, e)
+              {
+
+              }
+          },
+          {
+            text: 'Logout',
+            close:true,
+            color: 'red',
+            onClick: function(dialog, e)
+              {
+                  flogoutrun();
+                  localStorage.removeItem("mybsmiuser");
+                  window.mybsmiusertoken = '';                  
+                  $$('#overlay-welcome').css('display','flex');
+              }
+          },
+        ]
+      });
+      dialog.open();
 }
 
 function flogoutrun()
@@ -4749,7 +4791,7 @@ function fkirimpesan(uid,nama,photo)
     },
     buttons: [
       {
-        text: 'Batal',
+        text: 'Nanti Saja',
         close:true,
         color: 'gray',
         onClick: function(dialog, e)
@@ -4989,6 +5031,51 @@ function getaktivitasdatarun(content)
 
 function fbuataktivitas()
 {
+      var dialog = app.dialog.create({
+        content:''////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+          +'<div style="width:100%;">'
+          +'  <div style="display:flex;flex-direction:column;align-items:center;justify-content: center;">'
+          +'      <img id="img" src="" style="width:150px;height:150px;margin: 10px 10px;object-fit: cover;">'
+          +'      <p style="font-weight:normal;">Buat Aktivitas bertema BSMI dan kumpulkan dukungan dari relawan</p>'
+          +'      <div class="data-table"></div>'
+          +'  </div>'
+          +'</div>',//////////////////////////////////////////////////////////////////////////////////////////////////
+        closeByBackdropClick: false,
+        destroyOnClose: true,
+        verticalButtons: false,
+        on: {
+          opened: function () {
+            //console.log('Dialog opened')
+            let src = "icon512.png";
+            $$('#img').attr('src',src);
+          }
+        },
+        buttons: [
+          {
+            text: 'Nanti Saja',
+            close:true,
+            color: 'gray',
+            onClick: function(dialog, e)
+              {
+
+              }
+          },
+          {
+            text: 'Lanjutkan',
+            close:true,
+            color: 'red',
+            onClick: function(dialog, e)
+              {
+                fbuataktivitasrun();
+              }
+          },
+        ]
+      });
+      dialog.open();
+}
+
+function fbuataktivitasrun()
+{
   //console.log('buataktivitas');
   if (dashboarddata.user.userphoto === ''){flengkapidata();return;}
   var dialog = app.dialog.create({
@@ -5083,7 +5170,7 @@ function fbuataktivitas()
     },
     buttons: [
       {
-        text: 'Cancel',
+        text: 'Nanti Saja',
         close:true,
         color: 'gray',
         onClick: function(dialog, e)
