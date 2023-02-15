@@ -1228,12 +1228,17 @@ window.addEventListener('DOMContentLoaded', () => {
   if (!isLocal) app.request.json('https://api.countapi.xyz/hit/mybsmi.bsmijatim.org/visits').then((res) => {console.log(res.data);visits = res.data.value;});
 });
 
-function frefresh()
+function fpagereload()
 {
-  $$('.mybsmi-refresh').on('click', function () {
     //location.reload();
     //window.location.reload();
     history.go(0);
+}
+
+function frefresh()
+{
+  $$('.mybsmi-refresh').on('click', function () {
+      fpagereload();
   });
 }
 
@@ -2521,7 +2526,7 @@ function fcekexpiredtoken(data, showalert = true)
             onClick: function(dialog, e)
               {
                 //window.open(window.location.href, "_blank");
-                location.reload();
+                fpagereload();
               }
           },
         ]
@@ -4380,7 +4385,7 @@ function fpageadminrun(content)
   $$('.mybsmi-testing').on('click', function (e) {
     //fonesignalprompt();
     window.location.replace('https://mybsmi.bsmijatim.org/#page/pesan/');
-    location.reload();
+    fpagereload();
   });
 }
 
