@@ -869,6 +869,7 @@ var mybsmiaktivasi = '3a76fa3439d3e90c20618add32a27b63ccc792fc55c6f1819e1df53bab
 var grecaptcharesponsedata = '';
 var isLocal = false;
 var DEBUG = true;
+var visits = 1;
 
 if ((window.location.href.indexOf("localhost") > -1)||(window.location.href.indexOf("127.0.0.1") > -1)) 
 {
@@ -1219,12 +1220,12 @@ function fappready()
 {
   console.log('app ready');
   fonesignal();
-  
 }
 
 //////////on dom ready////////////////////////////////////////////////////
 window.addEventListener('DOMContentLoaded', () => {
   console.log('dom ready');
+  if (!isLocal) app.request.json('https://api.countapi.xyz/hit/mybsmi.bsmijatim.org/visits').then((res) => {console.log(res.data);visits = res.data.value;});
 });
 
 function frefresh()
