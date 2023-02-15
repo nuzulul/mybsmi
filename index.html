@@ -393,12 +393,12 @@
                   </a>
                 </li>
                 <li>
-                  <a href="#" target="_blank" class="item-link item-content link popover-close mybsmi-refresh display-none" data-popover=".profile-popover">
+                  <a href="#" target="_blank" class="item-link item-content link popover-close mybsmi-refresh" data-popover=".profile-popover">
                     <div class="item-media">
                       <i class="icon f7-icons">arrow_clockwise_circle</i>
                     </div>
                     <div class="item-inner">
-                      <div class="item-title">Refresh</div>
+                      <div class="item-title">Reload</div>
                     </div>
                   </a>
                 </li>
@@ -2416,7 +2416,7 @@ function fpollsession()
 {
   window.mybsmipolltime = new Date().getTime();
   const poll = setInterval(function () 
-  {
+  {//console.log('fpollsession');
     let now = new Date().getTime();
     let selisih = now-mybsmipolltime;
     let limit = 45*60*1000;
