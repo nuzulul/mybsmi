@@ -780,7 +780,7 @@
 
           
 <!--start overlay------------------------------------------------------------------------------->          
-<div id="overlay-welcome" style="background: rgba(0, 0, 0, 0.8);position: fixed;z-index: 10000;align-items: center;justify-content: center;display: flex;flex-direction:column;bottom: 0;left: 0;right: 0;top: 0;    background-image: url();background-size: cover;background-position: center top;">
+<div id="overlay-welcome" style="background: rgba(0, 0, 0, 0.8);position: fixed;z-index: 10000;align-items: center;justify-content: center;display: none;flex-direction:column;bottom: 0;left: 0;right: 0;top: 0;    background-image: url();background-size: cover;background-position: center top;">
   <div style="background:#fff;display: flex;flex-direction:column;margin: auto;align-items: center;justify-content: center;padding:20px 20px;">
     <img src="https://1.bp.blogspot.com/-I9V1NyLtG68/XmJRZ_RhTJI/AAAAAAAADgI/wJiuL0Wnjvc2jyoV8AMRsIp1YvSQs1QXwCLcBGAsYHQ/s1600/Logo%2BBSMI%2B%2528vector%2529.png" style="width:200px;height:300px;object-fit: contain;background-image:none;">
     <p style="font-size:16px;font-weight:bold;text-align:center;width:300px;margin-top:15px;margin-bottom:2px;">MyBSMI</p>
@@ -2366,9 +2366,11 @@ function fchecksession(render=true)
         setTimeout(function(){ fchecksession(render); }, 500);
         return;
       }
-          
+      
+      $$('#overlay-welcome').hide();    
+      if (localStorage.getItem("mybsmiuser") === null) {$$('#overlay-welcome').css('display','flex');} else
       if (localStorage.getItem("mybsmiuser") !== null) {
-        var token = atob(window.localStorage["mybsmiuser"]);
+        try{var token = atob(window.localStorage["mybsmiuser"]);}catch{var token = '';}
         let mypreloader = app.dialog.preloader();
         app.request({
           url: apiuserurl,
@@ -2397,6 +2399,7 @@ function fchecksession(render=true)
               else if (status == "failed")
               {
                 localStorage.removeItem("mybsmiuser");
+                $$('#overlay-welcome').css('display','flex');
               }
               else
               {
@@ -2406,6 +2409,7 @@ function fchecksession(render=true)
             {
               //console.log(message);
               mypreloader.close();
+              $$('#overlay-welcome').css('display','flex');
             },
         })
       } 
