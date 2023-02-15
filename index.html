@@ -1226,7 +1226,8 @@ function fappready()
 //////////on dom ready////////////////////////////////////////////////////
 window.addEventListener('DOMContentLoaded', () => {
   console.log('dom ready');
-  if (!isLocal) app.request.json('https://api.countapi.xyz/hit/mybsmi.bsmijatim.org/visits').then((res) => {console.log(res.data);visits = res.data.value;});
+  //if (!isLocal) app.request.json('https://api.countapi.xyz/hit/mybsmi.bsmijatim.org/visits').then((res) => {console.log(res.data);visits = res.data.value;});
+  fchecksession();
 });
 
 function fpagereload()
@@ -2426,7 +2427,7 @@ function fchecksession(render=true)
         })
       } 
 }
-fchecksession();
+//fchecksession();
 
 function fpollsession()
 {
