@@ -1829,7 +1829,11 @@ if (!isSecureContext) {
 
 (async() => {
   window.addEventListener('load', () => {
-    navigator.registerProtocolHandler('web+mybsmi', '/?mybsmi=%s');
+    const os = detectOS();
+    if (os === 'Windows')
+    {
+      navigator.registerProtocolHandler('web+mybsmi', '/?mybsmi=%s');
+    }
   });
   //tesinstall();
 })();
