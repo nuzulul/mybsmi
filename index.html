@@ -2378,7 +2378,7 @@ function fchecksession(render=true)
         setTimeout(function(){ fchecksession(render); }, 500);
         return;
       }
-      
+      console.log('fchecksession');
       $$('#overlay-welcome').hide();    
       if (localStorage.getItem("mybsmiuser") === null) {$$('#overlay-welcome').css('display','flex');} else
       if (localStorage.getItem("mybsmiuser") !== null) {
