@@ -1231,7 +1231,9 @@ window.addEventListener('DOMContentLoaded', () => {
 function frefresh()
 {
   $$('.mybsmi-refresh').on('click', function () {
-    location.reload();
+    //location.reload();
+    //window.location.reload();
+    history.go(0);
   });
 }
 
