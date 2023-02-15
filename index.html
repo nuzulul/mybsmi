@@ -43,6 +43,7 @@
         else
         {
           let hosts = [
+            'https://mybsmi.bsmijatim.org/',
             'https://www.gstatic.com/recaptcha/releases/',
             'https://cdn.onesignal.com/sdks/',
             'https://onesignal.com/api/',
@@ -61,8 +62,8 @@
         trustedTypes.createPolicy('default', {
           //createHTML: string => string, // warning: this is unsafe!          
           createHTML: (string, sink) => DOMPurify.sanitize(string, {ADD_TAGS: ['iframe'],RETURN_TRUSTED_TYPE: true}),
-          createScriptURL: string => string, // warning: this is unsafe!
-          //createScriptURL: string => fwhitelistscript(string),
+          //createScriptURL: string => string, // warning: this is unsafe!
+          createScriptURL: string => fwhitelistscript(string),
         });
       }
   </script>
