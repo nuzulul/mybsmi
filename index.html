@@ -6025,7 +6025,7 @@ function fwebworker()
           this.onload = null;
           actual.onload = async function() {
               if ((this.status >= 200 && this.status < 300) || this.status === 0) {
-                  console.log('step = url '+xhrOpenRequestUrl+' | body 'requestBodyOri);
+                  console.log('step = url '+xhrOpenRequestUrl+' | body '+requestBodyOri);
                   console.log('onload respontype ');
                   console.log(this.responseType);
                   console.log('onload response ');
