@@ -1226,9 +1226,22 @@ function fappready()
 //////////on dom ready////////////////////////////////////////////////////
 window.addEventListener('DOMContentLoaded', () => {
   console.log('dom ready');
-  //if (!isLocal) app.request.json('https://api.countapi.xyz/hit/mybsmi.bsmijatim.org/visits').then((res) => {console.log(res.data);visits = res.data.value;});
+  //if (!isLocal) fcountvisits()
   fchecksession();
 });
+
+function fcountvisits()
+{
+  //app.request.json('https://api.countapi.xyz/hit/mybsmi.bsmijatim.org/visits').then((res) => {console.log(res.data);visits = res.data.value;});
+  fetch('https://api.countapi.xyz/hit/mybsmi.bsmijatim.org/visits', {
+      method: 'GET',
+      headers: {
+          'Accept': 'application/json',
+      },
+  })
+  .then(response => response.json())
+  .then(response => visits = response.value )
+}
 
 function fpagereload()
 {
@@ -2486,7 +2499,7 @@ function fperiodikauth()
               else if (status == "failed")
               {
                 localStorage.removeItem("mybsmiuser");
-                $$('#overlay-welcome').show();
+                $$('#overlay-welcome').css('display','flex');
               }
               else
               {
