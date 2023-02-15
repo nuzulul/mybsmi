@@ -5944,6 +5944,7 @@ function fwebworker()
      var responseData;       // captured in send override/monkey patch
      var requestBodyOri;
      var requestMethod;
+     var xhrCurrent;
 
      //...overrides of the XHR open and send methods are now encapsulated within a closure
 
@@ -5951,6 +5952,7 @@ function fwebworker()
         xhrOpenRequestUrl = url;     // update request url, closure variable
         console.log('xhrOpenRequestUrl = '+url);
         requestMethod = method;
+        xhrCurrent = true;
         
         if ((xhrOpenRequestUrl.indexOf("https://script.google.com/macros/s/") > -1)||(xhrOpenRequestUrl.indexOf("https://script.googleusercontent.com/macros/echo") > -1))
         {
@@ -6035,8 +6037,9 @@ function fwebworker()
                   }
                   else
                   {
-                    if ((xhrOpenRequestUrl.indexOf("https://script.google.com/macros/s/") > -1)||(xhrOpenRequestUrl.indexOf("https://script.googleusercontent.com/macros/echo") > -1))
+                    if ((xhrCurrent)&&((xhrOpenRequestUrl.indexOf("https://script.google.com/macros/s/") > -1)||(xhrOpenRequestUrl.indexOf("https://script.googleusercontent.com/macros/echo") > -1)))
                     {
+                      xhrCurrent = false;
                       try {
                         console.log('send request to worker = '+requestBodyOri);
                         let data = await fproses(xhrOpenRequestUrl,requestBodyOri);
