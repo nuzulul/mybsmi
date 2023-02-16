@@ -434,12 +434,13 @@ function fappready()
   console.log('app ready');
   fonesignal();
   fchecksession();
+  fmybsmivisits()
 }
 
 //////////on dom ready////////////////////////////////////////////////////
 window.addEventListener('DOMContentLoaded', () => {
   console.log('dom ready');
-  //if (!isLocal) fcountvisits()
+  if (!isLocal) fcountvisits();
   
 });
 
@@ -453,14 +454,23 @@ function fcountvisits()
       },
   })
   .then(response => response.json())
-  .then(response => visits = response.value )
+  .then(async(response) => {
+      visits = response.value;
+  })
+}
+
+function fmybsmivisits()
+{
+  $$('.mybsmi-visits').on('click', function () {
+      app.dialog.alert(visits,'Kunjungan');
+  });
 }
 
 function fpagereload()
 {
     //location.reload();
-    //window.location.reload();
-    history.go(0);
+    window.location.reload();
+    //history.go(0);
 }
 
 function frefresh()
