@@ -436,7 +436,6 @@ function fappready()
   fonesignal();
   fchecksession();
   if (!isLocal) fcountvisits();
-  fmybsmivisits();
 }
 
 //////////on dom ready////////////////////////////////////////////////////
