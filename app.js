@@ -434,13 +434,14 @@ function fappready()
   console.log('app ready');
   fonesignal();
   fchecksession();
-  fmybsmivisits()
+  if (!isLocal) fcountvisits();
+  fmybsmivisits();
 }
 
 //////////on dom ready////////////////////////////////////////////////////
 window.addEventListener('DOMContentLoaded', () => {
   console.log('dom ready');
-  if (!isLocal) fcountvisits();
+  
   
 });
 
