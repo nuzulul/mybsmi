@@ -1,4 +1,4 @@
-<!-- MyBSMI by nuzulul version 1.0.2 -->
+<!-- MyBSMI by nuzulul version 1.0.3 -->
 <!DOCTYPE html>
 <html lang="id" class="notranslate" translate="no">
 <head>
@@ -7,7 +7,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="theme-color" content="#f00">
-  <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' data: blob:;object-src 'none';script-src 'sha256-iN7wpJdxHlpujRppkOA8N0+Mzp0ZqZr3lCtxM00Y63c=' 'sha256-vwPXyvyeN80yycYZYxGJN1u9L3PhRK+w56TI2ggGgSo=' 'strict-dynamic' https: 'unsafe-inline';style-src 'unsafe-inline' data:  https://unpkg.com/framework7@7.1.2/framework7-bundle.min.css https://unpkg.com/framework7-icons@5.0.5/css/framework7-icons.css;base-uri 'none';require-trusted-types-for 'script';trusted-types dompurify goog#html mybsmiworker mybsmidompurify default">
+  <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' data: blob:;object-src 'none';script-src 'sha256-iN7wpJdxHlpujRppkOA8N0+Mzp0ZqZr3lCtxM00Y63c=' 'sha256-oPuJSd9oe4zrVKSJkjs6YzQQmQQKB1k1BxI079zhURM=' 'strict-dynamic' https: 'unsafe-inline';style-src 'unsafe-inline' data:  https://unpkg.com/framework7@7.1.2/framework7-bundle.min.css https://unpkg.com/framework7-icons@5.0.5/css/framework7-icons.css;base-uri 'none';require-trusted-types-for 'script';trusted-types dompurify goog#html mybsmiworker mybsmidompurify default">
   <meta name="google" content="notranslate">
   <title>MyBSMI</title>
   <link rel="manifest" href="manifest.json" />
@@ -767,85 +767,85 @@
       };
       document.head.appendChild(s);
 
-function fscriptloader()
-{
-      DOMPurify.addHook('uponSanitizeElement', (node, data) => {
-        if (data.tagName === 'iframe') {
-          const src = node.getAttribute('src') || ''
-          if ((!src.startsWith('https://drive.google.com/file/d/'))&&(!src.startsWith('https://mybsmi.netlify.app/'))) {
-            console.log('unsafe iframe trigger');
-            return node.parentNode?.removeChild(node)
-          }
-          else
-          {
-            console.log('safe iframe trigger');
-          }
-        }
-      });
-      
-      function fwhitelistscript(string)
+      function fscriptloader()
       {
-        let url = [
-          'https://www.gstatic.com/recaptcha/releases/tNAc29ZZrpcOCErva2nr4BS9/recaptcha__en.js',
-          'https://cdn.onesignal.com/sdks/OneSignalPageSDKES6.js?v=151514',
-          'sw.js',
-          'https://www.google.com/recaptcha/api.js',
-          'https://cdn.onesignal.com/sdks/OneSignalSDK.js',
-          'https://unpkg.com/framework7@7.1.2/framework7-bundle.min.js',
-          'https://www.googletagmanager.com/gtag/js?id=G-MSGF0B364L',
-        ]
-        if (url.includes(string))
-        {
-          return string;
-        }
-        else
-        {
-          let hosts = [
-            'https://mybsmi.bsmijatim.org/',
-            'https://www.gstatic.com/recaptcha/releases/',
-            'https://cdn.onesignal.com/sdks/',
-            'https://onesignal.com/api/',
-            'app.js'
-          ]
-          let valid = false;
-          hosts.forEach((host, index) => {
-              if (string.startsWith(host))
-              {
-                valid = true;
+            DOMPurify.addHook('uponSanitizeElement', (node, data) => {
+              if (data.tagName === 'iframe') {
+                const src = node.getAttribute('src') || ''
+                if ((!src.startsWith('https://drive.google.com/file/d/'))&&(!src.startsWith('https://mybsmi.netlify.app/'))) {
+                  console.log('unsafe iframe trigger');
+                  return node.parentNode?.removeChild(node)
+                }
+                else
+                {
+                  console.log('safe iframe trigger');
+                }
               }
-          });
-          if (valid) return string;
-        }
+            });
+            
+            function fwhitelistscript(string)
+            {
+              let url = [
+                'https://www.gstatic.com/recaptcha/releases/tNAc29ZZrpcOCErva2nr4BS9/recaptcha__en.js',
+                'https://cdn.onesignal.com/sdks/OneSignalPageSDKES6.js?v=151514',
+                'sw.js',
+                'https://www.google.com/recaptcha/api.js',
+                'https://cdn.onesignal.com/sdks/OneSignalSDK.js',
+                'https://unpkg.com/framework7@7.1.2/framework7-bundle.min.js',
+                'https://www.googletagmanager.com/gtag/js?id=G-MSGF0B364L',
+              ]
+              if (url.includes(string))
+              {
+                return string;
+              }
+              else
+              {
+                let hosts = [
+                  'https://mybsmi.bsmijatim.org/',
+                  'https://www.gstatic.com/recaptcha/releases/',
+                  'https://cdn.onesignal.com/sdks/',
+                  'https://onesignal.com/api/',
+                  'app.js'
+                ]
+                let valid = false;
+                hosts.forEach((host, index) => {
+                    if (string.startsWith(host))
+                    {
+                      valid = true;
+                    }
+                });
+                if (valid) return string;
+              }
+            }
+            
+            if (window.trustedTypes && trustedTypes.createPolicy) { 
+              trustedTypes.createPolicy('default', {
+                //createHTML: string => string, // warning: this is unsafe!          
+                createHTML: (string, sink) => DOMPurify.sanitize(string, {ADD_TAGS: ['iframe'],RETURN_TRUSTED_TYPE: true}),
+                //createScriptURL: string => string, // warning: this is unsafe!
+                createScriptURL: string => fwhitelistscript(string),
+              });
+            }
+            
+            var scripts = [ 
+                {url:'https://www.google.com/recaptcha/api.js',sri:''},
+                {url:'https://cdn.onesignal.com/sdks/OneSignalSDK.js',sri:''},
+                {url:'https://unpkg.com/framework7@7.1.2/framework7-bundle.min.js',sri:'sha512-Mq+GqgAuasB8N02H+5IP4XpGDKJekjBwEHg/uBvbBfHvGH/H/mrc3w0L+8bWk2lGsiUveZqRRrVfMzEQT9k1qw=='},
+                {url:'app.js',sri:''}
+              ];
+            scripts.forEach(function(scriptUrl) {
+              var s = document.createElement('script');
+              s.src = scriptUrl.url;
+              s.async = false;
+              if (scriptUrl.sri !== '')
+              {
+                  s.integrity = scriptUrl.sri;
+                  s.crossOrigin = 'anonymous';
+                  s.referrerpolicy = 'no-referrer';
+              }
+              document.head.appendChild(s);
+            });
       }
-      
-      if (window.trustedTypes && trustedTypes.createPolicy) { 
-        trustedTypes.createPolicy('default', {
-          //createHTML: string => string, // warning: this is unsafe!          
-          createHTML: (string, sink) => DOMPurify.sanitize(string, {ADD_TAGS: ['iframe'],RETURN_TRUSTED_TYPE: true}),
-          //createScriptURL: string => string, // warning: this is unsafe!
-          createScriptURL: string => fwhitelistscript(string),
-        });
-      }
-      
-      var scripts = [ 
-          {url:'https://www.google.com/recaptcha/api.js',sri:''},
-          {url:'https://cdn.onesignal.com/sdks/OneSignalSDK.js',sri:''},
-          {url:'https://unpkg.com/framework7@7.1.2/framework7-bundle.min.js',sri:'sha512-Mq+GqgAuasB8N02H+5IP4XpGDKJekjBwEHg/uBvbBfHvGH/H/mrc3w0L+8bWk2lGsiUveZqRRrVfMzEQT9k1qw=='},
-          {url:'app.js',sri:''}
-        ];
-      scripts.forEach(function(scriptUrl) {
-        var s = document.createElement('script');
-        s.src = scriptUrl.url;
-        s.async = false;
-        if (scriptUrl.sri !== '')
-        {
-            s.integrity = scriptUrl.sri;
-            s.crossOrigin = 'anonymous';
-            s.referrerpolicy = 'no-referrer';
-        }
-        document.head.appendChild(s);
-      });
-}
   </script>
 <!-- //////DONT EDIT////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// --> 
     </div>
