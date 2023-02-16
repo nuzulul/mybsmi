@@ -7,7 +7,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="theme-color" content="#f00">
-  <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' data: blob:;object-src 'none';script-src 'sha256-iN7wpJdxHlpujRppkOA8N0+Mzp0ZqZr3lCtxM00Y63c=' 'sha256-8IKHP2vnPTwEe/GaccqVa82yXVBha2cN1SLOB92JN1g=' 'strict-dynamic' https: 'unsafe-inline';style-src 'unsafe-inline' data:  https://unpkg.com/framework7@7.1.2/framework7-bundle.min.css https://unpkg.com/framework7-icons@5.0.5/css/framework7-icons.css;base-uri 'none';require-trusted-types-for 'script';trusted-types dompurify goog#html mybsmiworker mybsmidompurify default">
+  <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' data: blob:;object-src 'none';script-src 'sha256-iN7wpJdxHlpujRppkOA8N0+Mzp0ZqZr3lCtxM00Y63c=' 'sha256-vqy3QDMTyL8VGm/XqirLTSZ+pYqoNKv6vfA24x6HA+4=' 'strict-dynamic' https: 'unsafe-inline';style-src 'unsafe-inline' data:  https://unpkg.com/framework7@7.1.2/framework7-bundle.min.css https://unpkg.com/framework7-icons@5.0.5/css/framework7-icons.css;base-uri 'none';require-trusted-types-for 'script';trusted-types dompurify goog#html mybsmiworker mybsmidompurify default">
   <meta name="google" content="notranslate">
   <title>MyBSMI</title>
   <link rel="manifest" href="manifest.json" />
@@ -758,6 +758,9 @@
       
       var s = document.createElement('script');
       s.src = dompurifyurl;
+      s.integrity = 'sha512-Ijc86Y/rPOFCr+CJLd0QQlEaCC9ztVJFvPzK0DMrHCJ8biDkyQoo6Ll/OmqMEOaDJ2nCgsV89402SzXnocKzZg==';
+      s.crossOrigin = 'anonymous';
+      s.referrerpolicy = 'no-referrer';
       s.async = false;
       s.onload = function() {
           fscriptloader();
@@ -824,15 +827,21 @@ function fscriptloader()
       }
       
       var scripts = [ 
-          'https://www.google.com/recaptcha/api.js',
-          'https://cdn.onesignal.com/sdks/OneSignalSDK.js',
-          'https://unpkg.com/framework7@7.1.2/framework7-bundle.min.js',
-          'app.js'
+          {url:'https://www.google.com/recaptcha/api.js',sri:''},
+          {url:'https://cdn.onesignal.com/sdks/OneSignalSDK.js',sri:''},
+          {url:'https://unpkg.com/framework7@7.1.2/framework7-bundle.min.js',sri:'sha512-Mq+GqgAuasB8N02H+5IP4XpGDKJekjBwEHg/uBvbBfHvGH/H/mrc3w0L+8bWk2lGsiUveZqRRrVfMzEQT9k1qw=='},
+          {url:'app.js',sri:''}
         ];
       scripts.forEach(function(scriptUrl) {
         var s = document.createElement('script');
-        s.src = scriptUrl;
+        s.src = scriptUrl.url;
         s.async = false;
+        if (scriptUrl.sri !== '')
+        {
+            s.integrity = scriptUrl.sri;
+            s.crossOrigin = 'anonymous';
+            s.referrerpolicy = 'no-referrer';
+        }
         document.head.appendChild(s);
       });
 }
