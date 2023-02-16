@@ -83,6 +83,21 @@ else
   var apiuserurl = "https://script.google.com/macros/s/AKfycbys-GEdilEu0nqdjDRUlEExkamYVIRsplNMEnLl2WiQQy3DxZoikpts7bnLotnT5IcwzQ/exec";
   var apidataurl = "https://script.google.com/macros/s/AKfycbyyPrApY4R8xv-_m8LUz9XHhkdYeTPMovm8MkBXgTXlojx31nHz9GVdGa4Ikw8cELMN/exec";
   DEBUG = false;
+  fganalytic();
+}
+
+function fganalytic()
+{
+  const head = document.getElementsByTagName("head")[0];
+  var myScript = document.createElement('script');
+  myScript.setAttribute('src', 'https://www.googletagmanager.com/gtag/js?id=G-MSGF0B364L');
+  myScript.onload = function() {
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-MSGF0B364L');
+  }
+  head.insertBefore(myScript, head.children[1]);
 }
 
 //////////console.log/////////////////////////////////////////////////////////////////////////////////////////////
