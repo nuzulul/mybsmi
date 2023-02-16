@@ -150,6 +150,7 @@ routes: [
         if (window.deferredPrompt) fmybsminstallclick();
         if (window.mybsmiinstalled) fmybsmibukaapp();
         frefresh();
+        fmybsmivisits();
       },
     },
   },
