@@ -5508,7 +5508,7 @@ function fwebworker()
               for ( var key in body ) {
                   form_data.append(key, body[key]);
               }              
-              body = form_data;
+              body = form_data;console.log('worker body = '+form_data);
           }
         
 
