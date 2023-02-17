@@ -1811,6 +1811,14 @@ function fcekexpiredtoken(data, showalert = true)
         },
         buttons: [
           {
+            text: 'TUTUP',
+            close:true,
+            color: 'gray',
+            onClick: function(dialog, e)
+              {
+              }
+          },
+          {
             text: 'RELOAD',
             close:true,
             color: 'red',
