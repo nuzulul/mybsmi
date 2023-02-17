@@ -5377,7 +5377,7 @@ function fwebworker()
                       }
                       catch
                       {
-                       self.responseText = '{"status":"failed","data":"Gangguan koneksi"}';
+                       self.responseText = '{"status":"error","data":"Gangguan koneksi"}';
                       }
                     }
                     else
