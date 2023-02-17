@@ -1093,6 +1093,29 @@ window.addEventListener('DOMContentLoaded', () => {
   console.log(isStandalone());
 });
 
+function finstallload()
+{
+    const os = detectOS();
+    if (os === 'Windows')
+    {
+      navigator.registerProtocolHandler('web+mybsmi', '/?mybsmi=%s');
+    }
+  // replace standalone with your display used in manifest
+  window.matchMedia('(display-mode: standalone)')
+      .addListener(event => {
+          if (event.matches) {
+             // From browser to standalone
+             console.log('From browser to standalone');
+          } else {
+             // From standalone to browser
+             console.log('From standalone to browser');
+          }
+      });
+  tesinstall();
+  console.log(isStandalone());
+}
+finstallload();
+
 function isStandalone() {
   // For iOS
   if(window.navigator.standalone) return true
@@ -3577,7 +3600,7 @@ function dangernotsafe(data)
 function safe(unsafe)
 {
 unsafe = String(unsafe);
-var data = escapeHTML(unsafe);
+var data = escapehtmloldbrowser(unsafe);
 return data;
 
 }
