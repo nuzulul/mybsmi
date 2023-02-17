@@ -7,7 +7,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="theme-color" content="#f00">
-  <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' data: blob:;object-src 'none';script-src 'sha256-iN7wpJdxHlpujRppkOA8N0+Mzp0ZqZr3lCtxM00Y63c=' 'sha256-oPuJSd9oe4zrVKSJkjs6YzQQmQQKB1k1BxI079zhURM=' 'strict-dynamic' https: 'unsafe-inline';style-src 'unsafe-inline' data:  https://onesignal.com https://unpkg.com/framework7@7.1.2/framework7-bundle.min.css https://unpkg.com/framework7-icons@5.0.5/css/framework7-icons.css;base-uri 'none';require-trusted-types-for 'script';trusted-types dompurify goog#html mybsmiworker mybsmidompurify default">
+  <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' data: blob:;object-src 'none';script-src 'sha256-iN7wpJdxHlpujRppkOA8N0+Mzp0ZqZr3lCtxM00Y63c=' 'sha256-a9gysHVDkiOWUQE7lKlW1rLACvvwDQ/7PPuKtxggMHM=' 'strict-dynamic' https: 'unsafe-inline';style-src 'unsafe-inline' data:  https://onesignal.com https://unpkg.com/framework7@7.1.2/framework7-bundle.min.css https://unpkg.com/framework7-icons@5.0.5/css/framework7-icons.css;base-uri 'none';require-trusted-types-for 'script';trusted-types dompurify goog#html mybsmiworker mybsmidompurify default">
   <meta name="google" content="notranslate">
   <title>MyBSMI</title>
   <link rel="manifest" href="manifest.json" />
@@ -827,11 +827,12 @@
               });
             }
             
+            var timestamp = Date.now();
             var scripts = [ 
                 {url:'https://www.google.com/recaptcha/api.js',sri:''},
                 {url:'https://cdn.onesignal.com/sdks/OneSignalSDK.js',sri:''},
                 {url:'https://unpkg.com/framework7@7.1.2/framework7-bundle.min.js',sri:'sha512-Mq+GqgAuasB8N02H+5IP4XpGDKJekjBwEHg/uBvbBfHvGH/H/mrc3w0L+8bWk2lGsiUveZqRRrVfMzEQT9k1qw=='},
-                {url:'app.js',sri:''}
+                {url:'app.js?t='+timestamp,sri:''}
               ];
             scripts.forEach(function(scriptUrl) {
               var s = document.createElement('script');

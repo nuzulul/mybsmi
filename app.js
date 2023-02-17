@@ -5387,7 +5387,7 @@ function fwebworker()
                       }
                       catch
                       {
-                       self.responseText = '{"status":"error","data":"Token sudah expired server tidak merespon"}';
+                       self.responseText = '{"status":"failed","data":"Gangguan koneksi"}';
                       }
                     }
                     else
