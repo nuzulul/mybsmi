@@ -798,7 +798,7 @@ function fupdateusernotifikasi(data)
 
 function fonesignalprompt(judul = 'Terima Kasih',msg = 'Beritahu jika ada hal penting')
 {
-  console.log('prompt');
+  console.log('prompt onesignal');
   
   OneSignal.push(["getNotificationPermission", function(permission) {
       console.log("Site Notification Permission:", permission);
@@ -1023,7 +1023,7 @@ async function tesinstall()
       //console.log('instaled: '+relatedApps.length > 0);
       if (relatedApps.length > 0) {
         //window.open(window.location.href, "_blank");
-        console.log('installed');
+        console.log('app installed');
         if (getPWADisplayMode() === 'browser')
         {
           //window.open(window.location.href, "_blank");
@@ -1038,7 +1038,7 @@ async function tesinstall()
           
         }
       }else{
-        console.log('not installed');
+        console.log('app not installed');
         const os = detectOS();
         const browserName = getBrowserName();
         if ((os === 'Windows')&&((browserName === 'Edge')||(browserName === 'Chrome')))
@@ -1066,40 +1066,17 @@ if (!isSecureContext) {
   location.protocol = 'https:';
 }
 
-(async() => {
-  window.addEventListener('load', () => {
-    const os = detectOS();
-    if (os === 'Windows')
-    {
-      navigator.registerProtocolHandler('web+mybsmi', '/?mybsmi=%s');
-    }
-  });
-  //tesinstall();
-})();
 
-window.addEventListener('DOMContentLoaded', () => {
-  // replace standalone with your display used in manifest
-  window.matchMedia('(display-mode: standalone)')
-      .addListener(event => {
-          if (event.matches) {
-             // From browser to standalone
-             console.log('From browser to standalone');
-          } else {
-             // From standalone to browser
-             console.log('From standalone to browser');
-          }
-      });
-  tesinstall();
-  console.log(isStandalone());
-});
 
 function finstallload()
 {
     const os = detectOS();
     if (os === 'Windows')
     {
+      console.log('registerProtocolHandler');
       navigator.registerProtocolHandler('web+mybsmi', '/?mybsmi=%s');
     }
+    
   // replace standalone with your display used in manifest
   window.matchMedia('(display-mode: standalone)')
       .addListener(event => {
@@ -1112,9 +1089,13 @@ function finstallload()
           }
       });
   tesinstall();
-  console.log(isStandalone());
+  console.log('isStandalone = '+isStandalone());
 }
-finstallload();
+
+(async() => {
+  finstallload();
+})();
+
 
 function isStandalone() {
   // For iOS
@@ -2357,7 +2338,10 @@ function fpageprofilku()
     $$('.mybsmi-profilku .mybsmi-usertahunbergabung').text(safe(data.usertahunbergabung));
     if (data.userstatus === "Terverifikasi"){
       $$('.mybsmi-avatar-badge').css('display','flex');
-    } else {
+    }
+    let mydata = JSON.parse(dashboarddata.user.usermydata)
+    if (!mydata.verifikasiidentitas)
+    {
       $$('.mybsmi-profilku-verifikasi').removeClass('display-none');
     }
     $$('.mybsmi-lihatprofil').on('click', function (e) {
@@ -2682,7 +2666,7 @@ function flengkapiphoto()
     },
     buttons: [
       {
-        text: 'Cancel',
+        text: 'Nanti Saja',
         close:true,
         color: 'gray',
         onClick: function(dialog, e)
@@ -2909,7 +2893,7 @@ function fverifikasiidentitas()
     },
     buttons: [
       {
-        text: 'Cancel',
+        text: 'Nanti Saja',
         close:true,
         color: 'gray',
         onClick: function(dialog, e)
@@ -2969,7 +2953,7 @@ function fkirimverifikasiidentitas(dialog,obj)
         var content = JSON.parse(data).data;
         if (status == "success")
         {
-          //console.log(content);
+          console.log('kirim verifikasi sukses');
           //app.dialog.alert("Permintaan verifikasi telah terkirim. Proses verifikasi bisa membutuhkan beberapa hari. Terima kasih.",'Permintaan Verifikasi');
           fonesignalprompt('Permintaan Verifikasi Terkirim','Beri tahu jika proses verifikasi selesai');
           getdefaultdata();
@@ -3302,7 +3286,7 @@ function fpageverifikatorrun(content)
   {
       if ((content[i][2] === 'nuzulz+1@gmail.com')&&(dashboarddata.user.useruid !== '0ONjeb65X5OunuRI6Ap8')){continue;}else{if ((content[i][2] === 'nuzulz+1@gmail.com')&&(!isLocal)){continue;}else{
       
-        data += '<a href="'+safe(content[i][4])+'" title="'+safe(content[i][4])+'">testing '+safe(content[i][4])+'</a>';
+        //data += '<a href="'+safe(content[i][4])+'" title="'+safe(content[i][4])+'">testing '+safe(content[i][4])+'</a>';
         
       }}
       
@@ -5376,10 +5360,8 @@ function fwebworker()
               console.log('onload status = '+this.status+' | state = '+this.readyState);
               if ((this.status >= 200 && this.status < 300) || this.status === 0) {
                   console.log('step = url '+xhrOpenRequestUrl+' | body '+requestBodyOri);
-                  console.log('onload respontype ');
-                  console.log(this.responseType);
-                  console.log('onload response ');
-                  console.log(this.response);                  
+                  console.log('onload respontype ='+this.responseType);
+                  console.log('onload response = '+this.response);        
                   if (this.responseType === 'blob')
                   {
                   }
@@ -5390,7 +5372,7 @@ function fwebworker()
                       try {
                         console.log('send request to worker = '+requestBodyOri);
                         let data = await fproses(xhrOpenRequestUrl,requestBodyOri);
-                        console.log('data = '+data);
+                        console.log('data from worker= '+data);
                         self.responseText = data;
                       }
                       catch
@@ -5570,8 +5552,8 @@ function fwebworker()
   var workerblobURL = URL.createObjectURL(workerblob, {
       type: 'application/javascript; charset=utf-8'
   });
-  console.log('workerbloburl')
-  console.log(workerblobURL);
+
+  console.log('workerbloburl = '+workerblobURL);
   if (window.trustedTypes && trustedTypes.createPolicy) { 
     const trustURLPolicy = trustedTypes.createPolicy('mybsmiworker', {
       createScriptURL: string => string,
@@ -5588,7 +5570,7 @@ function fwebworker()
       if (data.error) {
         rej(data.error);
       }else {
-        console.log('result = '+data.result);
+        console.log('receive msg from worker = '+data.result);
         res(data.result);
       }
     };
