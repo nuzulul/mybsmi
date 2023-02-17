@@ -1699,6 +1699,7 @@ function fchecksession(render=true)
               }
               else
               {
+                fcekexpiredtoken(data);
               }
             },
           error: function (xhr, status, message)
@@ -1794,7 +1795,7 @@ function fcekexpiredtoken(data, showalert = true)
           +'<div style="width:100%;">'
           +'  <div style="display:flex;flex-direction:column;align-items:center;justify-content: center;">'
           +'      <img id="img" src="" style="width:150px;height:150px;margin: 10px 10px;object-fit: cover;">'
-          +'      <p style="font-weight:normal;">Koneksi Gagal</p>'
+          +'      <p style="font-weight:normal;">Gangguan Koneksi</p>'
           +'      <div class="data-table"></div>'
           +'  </div>'
           +'</div>',//////////////////////////////////////////////////////////////////////////////////////////////////
@@ -5377,7 +5378,7 @@ function fwebworker()
                       }
                       catch
                       {
-                       self.responseText = '{"status":"error","data":"Gangguan koneksi"}';
+                       self.responseText = '{"status":"error","data":"Token sudah expired server tidak merespon"}';
                       }
                     }
                     else
