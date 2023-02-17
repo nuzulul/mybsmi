@@ -5503,12 +5503,12 @@ function fwebworker()
                   deviceid = body.deviceid;myunik = body.deviceid;
                   penting = true;
                 }
-              }
+              }console.log('worker body = '+JSON.stringify(body));
               var form_data = new FormData();
               for ( var key in body ) {
                   form_data.append(key, body[key]);
               }              
-              body = form_data;console.log('worker body = '+form_data);
+              body = form_data;
           }
         
 
