@@ -1811,11 +1811,12 @@ function fcekexpiredtoken(data, showalert = true)
         },
         buttons: [
           {
-            text: 'TUTUP',
+            text: 'LOGOUT',
             close:true,
             color: 'gray',
             onClick: function(dialog, e)
               {
+                flogoutkonfirm();
               }
           },
           {
