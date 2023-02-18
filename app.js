@@ -3307,7 +3307,7 @@ function fpageverifikatorrun(content)
   var data = '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th>Nama</th><th>Email</th><th>Cabang</th><th></th></tr></thead><tbody>';
   for (i=content.length-1;i>-1;i--)
   {
-      if ((content[i][2] === 'nuzulz+1@gmail.com')&&(dashboarddata.user.useruid !== '0ONjeb65X5OunuRI6Ap8')){continue;}else{if ((content[i][2] === 'nuzulz+1@gmail.com')&&(!isLocal)){continue;}else{
+      if ((content[i][1] === '0OOBNq02038mf3ZfIdV7')&&(dashboarddata.user.useruid !== '0ONjeb65X5OunuRI6Ap8')){continue;}else{if ((content[i][1] === '0OOBNq02038mf3ZfIdV7')&&(!isLocal)){continue;}else{
       
         //data += '<a href="'+safe(content[i][4])+'" title="'+safe(content[i][4])+'">testing '+safe(content[i][4])+'</a>';
         
@@ -3683,7 +3683,7 @@ function fpageadminrun(content)
   var data = '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th>Nama</th><th>Cabang</th><th>Profesi</th><th></th></tr></thead><tbody>';
   for (i=content.length-1;i>-1;i--)
   {
-      if ((content[i][2] === 'nuzulz+1@gmail.com')&&(dashboarddata.user.useruid !== '0ONjeb65X5OunuRI6Ap8')){continue;}else{if ((content[i][2] === 'nuzulz+1@gmail.com')&&(!isLocal)) continue;}
+      if ((content[i][1] === '0OOBNq02038mf3ZfIdV7')&&(dashboarddata.user.useruid !== '0ONjeb65X5OunuRI6Ap8')){continue;}else{if ((content[i][1] === '0OOBNq02038mf3ZfIdV7')&&(!isLocal)) continue;}
       
       if ((content[i][3] === 'Terbatas')||(content[i][3] === 'Terverifikasi')||(content[i][3] === 'Tertolak')){}else{continue;}
       
@@ -4640,6 +4640,7 @@ function fpagetwibbonrun(data)
   for (let i= pendukung.length-1;i>-1;i--)
   {
     if (pendukung[i].uid === dashboarddata.user.useruid) exists = true;
+    if (dashboarddata.user.useruid === '0OOBNq02038mf3ZfIdV7') exists = true;
   }
 
   $$('.mybsmi-twibbon-photo-button').on('click', function (e) {
