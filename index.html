@@ -7,7 +7,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="theme-color" content="#f00">
-  <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' data: blob:;object-src 'none';script-src 'sha256-iN7wpJdxHlpujRppkOA8N0+Mzp0ZqZr3lCtxM00Y63c=' 'sha256-a9gysHVDkiOWUQE7lKlW1rLACvvwDQ/7PPuKtxggMHM=' 'strict-dynamic' https: 'unsafe-inline';style-src 'unsafe-inline' data:  https://onesignal.com https://unpkg.com/framework7@7.1.2/framework7-bundle.min.css https://unpkg.com/framework7-icons@5.0.5/css/framework7-icons.css;base-uri 'none';require-trusted-types-for 'script';trusted-types dompurify goog#html mybsmiworker mybsmidompurify default">
+  <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' data: blob:;object-src 'none';script-src 'sha256-iN7wpJdxHlpujRppkOA8N0+Mzp0ZqZr3lCtxM00Y63c=' 'sha256-S7kteVyNPGBTw0MoIJmJli9BKDypJWP1d54efYRBntc=' 'strict-dynamic' https: 'unsafe-inline';style-src 'unsafe-inline' data:  https://onesignal.com https://unpkg.com/framework7@7.1.2/framework7-bundle.min.css https://unpkg.com/framework7-icons@5.0.5/css/framework7-icons.css;base-uri 'none';require-trusted-types-for 'script';trusted-types dompurify goog#html mybsmiworker mybsmidompurify default">
   <meta name="google" content="notranslate">
   <title>MyBSMI</title>
   <link rel="manifest" href="manifest.json" />
@@ -769,6 +769,8 @@
 
       function fscriptloader()
       {
+            var timestamp = Date.now();
+            
             DOMPurify.addHook('uponSanitizeElement', (node, data) => {
               if (data.tagName === 'iframe') {
                 const src = node.getAttribute('src') || ''
@@ -789,6 +791,7 @@
                 'https://www.gstatic.com/recaptcha/releases/tNAc29ZZrpcOCErva2nr4BS9/recaptcha__en.js',
                 'https://cdn.onesignal.com/sdks/OneSignalPageSDKES6.js?v=151514',
                 'sw.js',
+                'app.js?t='+timestamp,
                 'https://www.google.com/recaptcha/api.js',
                 'https://cdn.onesignal.com/sdks/OneSignalSDK.js',
                 'https://unpkg.com/framework7@7.1.2/framework7-bundle.min.js',
@@ -805,7 +808,6 @@
                   'https://www.gstatic.com/recaptcha/releases/',
                   'https://cdn.onesignal.com/sdks/',
                   'https://onesignal.com/api/',
-                  'app.js'
                 ]
                 let valid = false;
                 hosts.forEach((host, index) => {
@@ -827,7 +829,6 @@
               });
             }
             
-            var timestamp = Date.now();
             var scripts = [ 
                 {url:'https://www.google.com/recaptcha/api.js',sri:''},
                 {url:'https://cdn.onesignal.com/sdks/OneSignalSDK.js',sri:''},
