@@ -2616,7 +2616,7 @@ function resetpasswordinput(dynamicPopup,data,email)
 function flengkapidata()
 {
   var dialog = app.dialog.create({
-    text: 'Silahkan lengkapi data Anda untuk membuka fitur ini.',
+    text: 'Silahkan lengkapi data Anda untuk membuka menu ini.',
     closeByBackdropClick: false,
     destroyOnClose: true,
     on: {
@@ -2649,10 +2649,11 @@ function flengkapidata()
 function flengkapiphoto()
 {
   var dialog = app.dialog.create({
-    title: 'Photo',
+    title: 'Photo Profile',
     closeByBackdropClick: false,
     destroyOnClose: true,
     content: '<div style="width:100%;">'
+      +'<p style="text-align:center; border:1px solid gray;padding:10px 10px;color:gray;">Anda tidak dapat melakukan perubahan photo setelah upload. Pilih photo background merah dengan muka pas di tengah.</p>'
       +'<form runat="server" style="display:flex;flex-direction:column;align-items:center;justify-content: center;">'
       +'<img id="mybsmiuploadphotopreview" src="avatar.png" style="width:150px;height:150px;margin: 10px 10px;border-radius: 50%;object-fit: cover;">'
       +'<input accept="image/jpeg" type="file" id="mybsmiuploadphoto" />'
