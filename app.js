@@ -430,7 +430,7 @@ function fappready()
   console.log('app ready');
   fonesignal();
   fchecksession();
-  if (!isLocal) fcountvisits();
+  //if (!isLocal) fcountvisits();
 }
 
 //////////on dom ready////////////////////////////////////////////////////
@@ -4607,6 +4607,11 @@ function fpagetwibbonrun(data)
         //console.log(url);
         app.views.main.router.navigate(url);          
     });
+    $$('.mybsmi-twibbon-avatar').on('click', function (e) {
+        let url = "/relawan/"+safe(data[2]);
+        //console.log(url);
+        app.views.main.router.navigate(url);          
+    });
   }
   else
   {
@@ -4615,15 +4620,15 @@ function fpagetwibbonrun(data)
         //console.log(url);
         app.views.main.router.navigate(url);          
     });
+    $$('.mybsmi-twibbon-avatar').on('click', function (e) {
+        let url = "/cabang/"+safe(cabangid);
+        //console.log(url);
+        app.views.main.router.navigate(url);          
+    });
   }
   
   $$('.mybsmi-twibbon-nama').css("cursor","pointer");
 
-  $$('.mybsmi-twibbon-avatar').on('click', function (e) {
-      let url = "/relawan/"+safe(data[2]);
-      //console.log(url);
-      app.views.main.router.navigate(url);          
-  });
   $$('.mybsmi-twibbon-avatar').css("cursor","pointer");
   
   let date = new Intl.DateTimeFormat("id-ID", { hour12:false,dateStyle: "short" , timeStyle: "short",  timeZone: "Asia/Jakarta"}).format(new Date(data[0]));date = date.split(' ');date = date[0];
