@@ -3173,7 +3173,9 @@ function fgetekta(getdefault = false)
         $$('.mybsmi-ektabsmi-download').html('<a href="#" class="button mybsmi-ektabsmi-download-button">Download</a>');
         $$('.mybsmi-ektabsmi-download-button').on('click', function () {
           //fdownloadfile('https://api.allorigins.win/raw?url=https://lh3.googleusercontent.com/d/'+mybsmiekta,'ektabsmi.jpg');
-          fdownloadfile('https://cors.bsmijatim.workers.dev/?https://lh3.googleusercontent.com/d/'+mybsmiekta,'ektabsmi');
+          const d = new Date();
+          let time = d.getTime();
+          fdownloadfile('https://cors.bsmijatim.workers.dev/?https://lh3.googleusercontent.com/d/'+mybsmiekta,'ektabsmi-'+time);
         })
         $$('.mybsmi-ektabsmi img').on('click', function () {
           myimage(this);
@@ -4649,7 +4651,9 @@ function fpagetwibbonrun(data)
   });
   $$('.mybsmi-twibbon-photo-download').on('click', function (e) {
     let canvas = document.getElementById("mybsmi-twibbon-canvas");
-    fdownloadtwibbon(canvas, data[1]+'.png');
+    const d = new Date();
+    let time = d.getTime();
+    fdownloadtwibbon(canvas, 'twibbon-'+data[1]+'-'+time+'.png');
   });
   
   ///////////////loadposter/////////////////////////////////////////////
