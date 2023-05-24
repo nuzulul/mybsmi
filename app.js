@@ -2268,10 +2268,13 @@ function fpagecabangrun(content,cabangid)
   //console.log(cabangid);
   for (i=0;i<kodecabang.length;i++)
   {
-    if (kodecabang[i][1] === cabangid) cabangnama = kodecabang[i][0];
+    if (kodecabang[i][1] === cabangid) {cabangnama = kodecabang[i][0];datacabang = kodecabang[i];}
   }
   //console.log(cabangnama);
-  $$('.mybsmi-cabangnama').text(cabangnama);
+  var ig;if (datacabang[4] != ''){ig = 'https://instagram.com/'+datacabang[4];}else{ig='';}
+  var profil = safe(datacabang[0])+'<p style="font-size:10px;">'+safe(datacabang[2])+'</br>'+safe(datacabang[3])+'</br>'+safe(ig)+'</p>';
+  //$$('.mybsmi-cabangnama').text(cabangnama);
+  $$('.mybsmi-cabangnama').html(profil);
   var data = '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th></th><th>Nama</th><th>Cabang</th><th>Aktif</th></tr></thead><tbody>';
   for (i=content.length-1;i>-1;i--)
   {
