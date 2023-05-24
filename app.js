@@ -15,7 +15,7 @@ var params = getParams(window.location.href);
 //////////////////////////////////////////////////////////////////////////////
 
 var kodecabang = [
-    ['BSMI Jawa Timur', '3500'],
+/*    ['BSMI Jawa Timur', '3500'],
     ['BSMI Kota Surabaya', '3578'],
     ['BSMI Kab Sidoarjo', '3515'],
     ['BSMI Kab Mojokerto', '3516'],
@@ -53,7 +53,7 @@ var kodecabang = [
     ['BSMI Kab Ponorogo', '3502'],
     ['BSMI Kab Pacitan', '3501'],
     ['BSMI Kab Trenggalek', '3503'],
-    ['BSMI Kab Nganjuk', '3518']
+    ['BSMI Kab Nganjuk', '3518'] */
 ];
 
 var $$ = Dom7;
@@ -336,6 +336,36 @@ routes: [
           }
             let data = JSON.parse(dashboarddata.user.usermydata)
             if (data.admin)
+            {
+                resolve();
+            }
+            else
+            {
+                app.dialog.alert('Tidak punya izin', 'Status')
+                reject();
+            }
+      }
+      fperiksakesiapan({ resolve, reject })
+    },
+  },
+  {
+    path: '/master/',
+    url: 'master.html',
+    on: {
+      pageAfterIn: function test (e, page) {
+        fpagemaster();
+      },
+    },
+    beforeEnter: function ({ resolve, reject }) {
+      function fperiksakesiapan({ resolve, reject })
+      {
+          if (typeof dashboarddata === 'undefined' || dashboarddata === null) {
+            // variable is undefined or null
+            setTimeout(function(){ fperiksakesiapan({ resolve, reject }); }, 1000);
+            return;
+          }
+            let data = JSON.parse(dashboarddata.user.usermydata)
+            if (data.master)
             {
                 resolve();
             }
@@ -2074,6 +2104,7 @@ function getdefaultdata(render=true)
 
 function getdefaultdatarun(data)
 { //console.log(data)
+  kodecabang = data.kodecabang;
   $$('.mybsmi-currentusernama').text(safe(data.user.usernama));
   if (data.user.userphoto !== '') {$$('.mybsmi-avatar').attr('src','https://drive.google.com/uc?export=view&id='+safe(data.user.userphoto));}
   if (data.user.userstatus === "Terverifikasi"){$$('.mybsmi-avatar-badge').css('display','flex');};
@@ -2167,6 +2198,10 @@ function getdefaultdatarun(data)
   {
     $$('.mybsmi-adminmenu').show();
   }  
+  if (ver.master)
+  {
+    $$('.mybsmi-mastermenu').show();
+  } 
   
 }
 ///end getdefaultdata//////////////////////////////
@@ -3678,17 +3713,56 @@ function fpageadmin()
 
 function fpageadminrun(content)
 {
-  var data = '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th>Nama</th><th>Cabang</th><th>Profesi</th><th></th></tr></thead><tbody>';
+  let json = JSON.parse(dashboarddata.user.usermydata);
+  let usercabang = dashboarddata.user.usercabang;
+  let datacabang;
+  let datarelawan = [];
+  kodecabang.forEach(function(currentElement, index, array){
+    if (currentElement[0] == usercabang)
+    {
+      datacabang = currentElement;
+    }
+  })
+
+  if (json.admincabang)
+  {
+    $$('.mybsmi-admincabangmenu').show();
+    var data = '<div class="data-table"><table><tbody>';
+    data += '<tr><td>Cabang</td><td>'+safe(datacabang[0])+'</td></tr>';
+    data += '<tr><td>Relawan</td><td><span class="jumlahrelawan"></span></td></tr>';
+    data += '<tr><td>Alamat</td><td>'+safe(datacabang[2])+'</td></tr>';
+    data += '<tr><td>Telepon</td><td>'+safe(datacabang[3])+'</td></tr>';
+    data += '<tr><td>Instagram</td><td>'+safe(datacabang[4])+'</td></tr>';
+    data += '<tr><td>Ketua</td><td>'+safe(datacabang[6])+'</td></tr>';
+    data += '</tbody></table></div>';
+    $$('.mybsmi-admincabangisi').html(data);
+  }
+
+  var data = '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th></th><th>Nama</th><th>Cabang</th><th>Profesi</th><th></th></tr></thead><tbody>';
+  var jumlahrelawan = 0;
   for (i=content.length-1;i>-1;i--)
   {
       if ((content[i][1] === '0OOBNq02038mf3ZfIdV7')&&(dashboarddata.user.useruid !== '0ONjeb65X5OunuRI6Ap8')){continue;}else{if ((content[i][1] === '0OOBNq02038mf3ZfIdV7')&&(!isLocal)) continue;}
       
       if ((content[i][3] === 'Terbatas')||(content[i][3] === 'Terverifikasi')||(content[i][3] === 'Tertolak')){}else{continue;}
       
-      data += '<tr class="mybsmi-admin-item-'+safe(content[i][1])+'"><td data-collapsible-title="Nama">'+safe(content[i][4])+'</td><td data-collapsible-title="Cabang">'+safe(content[i][11])+'</td><td data-collapsible-title="Profesi">'+safe(content[i][8])+'</td><td><a class="button button-fill mybsmi-adminaction" data-user="'+btoa(JSON.stringify(content[i]))+'">Detail</a></td></tr>';
+      if ((json.adminlaporan)&&(json.admincabang)){}else if((json.admincabang) && (content[i][11] !== usercabang)){continue;}
+      
+      data += '<tr class="mybsmi-admin-item-'+safe(content[i][1])+'"><td data-collapsible-title=""><img src="avatar.png" style="width:1.5em;aspet-ratio 1/1;object-fit:cover;border-radius:50% 50%;overflow:hidden;"></td><td data-collapsible-title="Nama">'+safe(content[i][4])+'</td><td data-collapsible-title="Cabang">'+safe(content[i][11])+'</td><td data-collapsible-title="Profesi">'+safe(content[i][8])+'</td><td><a class="button button-fill mybsmi-adminaction" data-user="'+btoa(JSON.stringify(content[i]))+'">Detail</a></td></tr>';
+      
+      jumlahrelawan++;
+      
+      datarelawan.push(content[i]);
   }
   data += '</tbody></table></div>';
   $$('.mybsmi-admin').html(data);
+  $$('.jumlahrelawan').html(jumlahrelawan);
+
+  for (i=content.length-1;i>-1;i--)
+  {
+    let url = 'https://drive.google.com/uc?export=view&id='+safe(content[i][13]);
+    $$('.mybsmi-admin-item-'+safe(content[i][1])+' img').attr('src',url);
+  }
 
   $$('.mybsmi-admin a.mybsmi-adminaction').on('click', function (e) {
         
@@ -3696,11 +3770,10 @@ function fpageadminrun(content)
         var base64 = this.attributes["data-user"].value;
         fpageadminidentitas(base64)
   });
-  
-  $$('.mybsmi-testing').on('click', function (e) {
-    //fonesignalprompt();
-    window.location.replace('https://mybsmi.bsmijatim.org/#page/pesan/');
-    fpagereload();
+
+  $$('.mybsmi-editcabang').off('click');
+  $$('.mybsmi-editcabang').on('click', function (e) {
+        fpageadmincabang(datacabang,datarelawan)
   });
 }
 
@@ -3751,8 +3824,286 @@ function fpageadminidentitas(base64)
   });
   dialog.open();
 }
+
+function fpageadmincabang(datacabang,datarelawan)
+{
+  var dialog = app.dialog.create({
+    title: 'Edit Cabang',
+    content:''////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      +'<div style="width:100%;height:50vh;overflow:auto;">'
+      +'  <div style="display:flex;flex-direction:column;align-items:center;justify-content: center;">'
+      +'      <img id="img" src="icon512.png" style="width:150px;height:150px;margin: 10px 10px;border-radius: 0%;object-fit: cover;">'
+      +'      <p style="font-weight:bold;">'+safe(datacabang[0])+'</p>'
+      +'  <div class="list no-hairlines-md">'
+      +'    <ul>'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Alamat</div><div class="item-input-wrap">'
+      +'            <input type="text" id="alamatcabang" name="alamat" placeholder="Alamat" value="'+safe(datacabang[2])+'">'
+      +'            </div></div>'
+      +'        </li>'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Telepon</div><div class="item-input-wrap">'
+      +'            <input type="text" id="teleponcabang" name="telepon" placeholder="Telepon" value="'+safe(datacabang[3])+'"/>'
+      +'            </div></div>'
+      +'        </li>'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Instagram Username</div><div class="item-input-wrap">'
+      +'            <input type="text" id="instagramcabang" name="instagram" placeholder="Instagram" value="'+safe(datacabang[4])+'">'
+      +'            </div></div>'
+      +'        </li>'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Ketua</div><div class="item-input-wrap">'
+      +'                            <select id="ketuacabang" name="ketua">'
+      +'                              <option value="" selected> </option>'
+      +'                            </select>'
+      +'            </div></div>'
+      +'        </li>'
+      +'    </ul>'
+      +'  </div>'
+      +'  </div>'
+      +'</div>',//////////////////////////////////////////////////////////////////////////////////////////////////
+    closeByBackdropClick: false,
+    destroyOnClose: true,
+    verticalButtons: true,
+    on: {
+      opened: function () {
+        //console.log('Dialog opened')
+        var select = document.getElementById('ketuacabang');
+        datarelawan.forEach(function(item,index){
+            var opt = document.createElement('option');
+            opt.value = item[1];
+            opt.innerHTML = item[4];            
+            select.appendChild(opt);
+            if (item[1] == datacabang[5])
+            {
+              select.value = item[1];
+            }
+        });
+      }
+    },
+    buttons: [
+      {
+        text: 'Simpan',
+        close:true,
+        color: 'red',
+        onClick: function(dialog, e)
+          {
+                var namacabang = datacabang[0];
+                var alamatcabang = $$('#alamatcabang').val();
+                var teleponcabang = $$('#teleponcabang').val();
+                var instagramcabang = $$('#instagramcabang').val();
+                var ketuacabangid = $$('#ketuacabang').val();
+                var ketuacabangnama = '',ketuacabangphoto='';
+                datarelawan.forEach(function(item,index){
+                  if (item[1] == ketuacabangid)
+                  {
+                    ketuacabangnama = item[4];
+                    ketuacabangphoto = item[13];
+                  }
+                });
+                var data = {namacabang,alamatcabang,teleponcabang,instagramcabang,ketuacabangid,ketuacabangnama,ketuacabangphoto};
+                fpageadmineditcabang(data);
+          }
+      },
+      {
+        text: 'Batal',
+        close:true,
+        color: 'gray',
+        onClick: function(dialog, e)
+          {
+
+          }
+      },
+    ]
+  });
+  dialog.open();
+}
+
+function fpageadmineditcabang(inputdata)
+{
+      inputdata=JSON.stringify(inputdata);
+      let mypreloader = app.dialog.preloader();
+      app.request({
+        url: apidataurl,
+        method: 'POST',
+        cache: false,
+        data : { token:mybsmiusertoken, command: 'updateprofilcabang', inputdata}, 
+        success: function (data, status, xhr)
+          {
+            mypreloader.close();
+            var status = JSON.parse(data).status;
+            var content = JSON.parse(data).data;
+            if (status == "success")
+            {
+              console.log(content);
+              fpageadmineditcabangupdate(inputdata); 
+              var toastBottom = app.toast.create({ text: 'Berhasil', closeTimeout: 3000,position: 'center', });toastBottom.open();
+            }
+            else if (status == "failed")
+            {
+              //console.log("failed");
+              app.dialog.alert(content,'Terjadi Kesalahan');
+            }
+            else
+            {
+              //console.log("failed");
+              //app.dialog.alert(content,'Terjadi Kesalahan');
+              fcekexpiredtoken(content);
+            }
+          },
+        error: function (xhr, status, message)
+          {
+            //console.log(message);
+            mypreloader.close();
+            app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
+          },
+      })
+}
+
+function fpageadmineditcabangupdate(inputdata)
+{
+  var inputdata = JSON.parse(inputdata);console.log(inputdata);
+  kodecabang.forEach(function(item,index){
+    if(item[0] == inputdata.namacabang)
+    {
+      kodecabang[index][2] = inputdata.alamatcabang;
+      kodecabang[index][3] = inputdata.teleponcabang;
+      kodecabang[index][4] = inputdata.instagramcabang; 
+      kodecabang[index][5] = inputdata.ketuacabangid;
+      kodecabang[index][6] = inputdata.ketuacabangnama;
+      kodecabang[index][7] = inputdata.ketuacabangphoto;
+      fpageadminrun(mybsmiadmindata);
+    }
+  })
+}
 ///////fpageadmin////////////////////////////////////////////////////////
 
+
+///////fpagemaster();///////////////////////////////////////////
+function fpagemaster()
+{
+  if (typeof mybsmimasterdata === 'undefined' || mybsmimasterdata === null)
+  {
+      let mypreloader = app.dialog.preloader();
+      app.request({
+        url: apidataurl,
+        method: 'POST',
+        cache: false,
+        data : { token:mybsmiusertoken, command: 'getmasterdata'}, 
+        success: function (data, status, xhr)
+          {
+            mypreloader.close();
+            var status = JSON.parse(data).status;
+            var content = JSON.parse(data).data;
+            if (status == "success")
+            {
+              //console.log(content);
+              window.mybsmimasterdata = content;
+              fpagemasterrun(content);
+            }
+            else if (status == "failed")
+            {
+              //console.log("failed");
+              app.dialog.alert(content,'Terjadi Kesalahan');
+            }
+            else
+            {
+              //console.log("failed");
+              //app.dialog.alert(content,'Terjadi Kesalahan');
+              fcekexpiredtoken(content);
+            }
+          },
+        error: function (xhr, status, message)
+          {
+            //console.log(message);
+            mypreloader.close();
+            app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
+          },
+      })
+  }
+  else
+  {
+    fpagemasterrun(mybsmimasterdata);
+  }
+
+  $$('.mybsmi-masterrefresh').on('click', function () {
+    mybsmimasterdata = null
+    fpagemaster()
+  })
+}
+
+function fpagemasterrun(content)
+{
+  var data = '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th>Nama</th><th>Cabang</th><th>Profesi</th><th></th></tr></thead><tbody>';
+  for (i=content.length-1;i>-1;i--)
+  {
+      if ((content[i][1] === '0OOBNq02038mf3ZfIdV7')&&(dashboarddata.user.useruid !== '0ONjeb65X5OunuRI6Ap8')){continue;}else{if ((content[i][1] === '0OOBNq02038mf3ZfIdV7')&&(!isLocal)) continue;}
+      
+      if ((content[i][3] === 'Terbatas')||(content[i][3] === 'Terverifikasi')||(content[i][3] === 'Tertolak')){}else{continue;}
+      
+      data += '<tr class="mybsmi-master-item-'+safe(content[i][1])+'"><td data-collapsible-title="Nama">'+safe(content[i][4])+'</td><td data-collapsible-title="Cabang">'+safe(content[i][11])+'</td><td data-collapsible-title="Profesi">'+safe(content[i][8])+'</td><td><a class="button button-fill mybsmi-masteraction" data-user="'+btoa(JSON.stringify(content[i]))+'">Detail</a></td></tr>';
+  }
+  data += '</tbody></table></div>';
+  $$('.mybsmi-master').html(data);
+
+  $$('.mybsmi-master a.mybsmi-masteraction').on('click', function (e) {
+        
+        //app.dialog.confirm('Pembuatan e-KTA memerlukan waktu 2-4 menit.', 'Pemberitahuan', function (){fbuatekta();})
+        var base64 = this.attributes["data-user"].value;
+        fpagemasteridentitas(base64)
+  });
+  
+  $$('.mybsmi-testing').on('click', function (e) {
+    //fonesignalprompt();
+    window.location.replace('https://mybsmi.bsmijatim.org/#page/pesan/');
+    fpagereload();
+  });
+}
+
+function fpagemasteridentitas(base64)
+{
+  var data = atob(base64);data = JSON.parse(data);
+  var dialog = app.dialog.create({
+    title: 'Data Relawan',
+    content:''////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      +'<div style="width:100%;height:50vh;overflow:auto;">'
+      +'  <div style="display:flex;flex-direction:column;align-items:center;justify-content: center;">'
+      +'      <img id="img" src="" style="width:150px;height:150px;margin: 10px 10px;border-radius: 50%;object-fit: cover;">'
+      +'      <p style="font-weight:bold;"></p>'
+      +'      <div class="data-table"><table><tbody>'
+      +'          <tr><td>Nama</td><td>'+safe(data[4])+'</td></tr>'
+      +'          <tr><td>Email</td><td>'+safe(data[2])+'</td></tr>'
+      +'          <tr><td>Cabang</td><td>'+safe(data[11])+'</td></tr>'
+      +'          <tr><td>Jenis Kelamin</td><td>'+safe(data[5])+'</td></tr>'
+      +'          <tr><td>Alamat</td><td>'+safe(data[7])+'</td></tr>'
+      +'          <tr><td>Profesi</td><td>'+safe(data[8])+'</td></tr>'
+      +'          <tr><td>Golongan Darah</td><td>'+safe(data[9])+'</td></tr>'
+      +'          <tr><td>No HP</td><td>'+safe(data[10])+'</td></tr>'
+      +'          <tr><td>Tahun Bergabung</td><td>'+safe(data[12])+'</td></tr>'
+      +'      </tbody></table></div>'
+      +'  </div>'
+      +'</div>',//////////////////////////////////////////////////////////////////////////////////////////////////
+    closeByBackdropClick: false,
+    destroyOnClose: true,
+    verticalButtons: true,
+    on: {
+      opened: function () {
+        //console.log('Dialog opened')
+        let src = "https://drive.google.com/uc?export=view&id="+safe(data[13]);
+        $$('#img').attr('src',src);
+      }
+    },
+    buttons: [
+      {
+        text: 'Tutup',
+        close:true,
+        color: 'gray',
+        onClick: function(dialog, e)
+          {
+
+          }
+      },
+    ]
+  });
+  dialog.open();
+}
+///////fpagemaster////////////////////////////////////////////////////////
 
 
 /////fpagepesan//////////////////////////////////////////////////////////////
