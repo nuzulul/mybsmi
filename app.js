@@ -2275,7 +2275,19 @@ function fpagecabangrun(content,cabangid)
   var profil = safe(datacabang[0])+'<p style="font-size:10px;">'+safe(datacabang[2])+'</br>'+safe(datacabang[3])+'</br>'+safe(ig)+'</p>';
   //$$('.mybsmi-cabangnama').text(cabangnama);
   $$('.mybsmi-cabangnama').html(profil);
+  $$('.mybsmi-cabang').html('');
+  if (datacabang[5] != '')
+  {
+    $$('.mybsmi-cabang').append('<p style="font-size:10px;">Ketua : <a class="ketuacabang" data-user="'+datacabang[5]+'">'+datacabang[6]+'</a></p>');
+    $$('.mybsmi-cabang .ketuacabang').on('click', function (e) {
+          let data = this.attributes["data-user"].value;
+          let url = "/relawan/"+safe(data);
+          app.views.main.router.navigate(url);
+    });
+  }
+  $$('.mybsmi-cabang').append('<p style="font-size:10px;">Jumlah Relawan : <span class="jumlahrelawan"></span> Orang</p>');
   var data = '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th></th><th>Nama</th><th>Cabang</th><th>Aktif</th></tr></thead><tbody>';
+  var jumlahrelawan = 0;
   for (i=content.length-1;i>-1;i--)
   {
       if ((content[i][1] === '0OOBNq02038mf3ZfIdV7')&&(dashboarddata.user.useruid !== '0ONjeb65X5OunuRI6Ap8')){continue;}else{if ((content[i][1] === '0OOBNq02038mf3ZfIdV7')&&(!isLocal)) continue;}
@@ -2287,9 +2299,12 @@ function fpagecabangrun(content,cabangid)
       let date = new Intl.DateTimeFormat("id-ID", { hour12:false,dateStyle: "short" , timeStyle: "short",  timeZone: "Asia/Jakarta"}).format(new Date(content[i][0]));date = date.split(' ');date = date[0];
       
       data += '<tr class="mybsmi-admin-item-'+safe(content[i][1])+'"><td data-collapsible-title=""><img src="avatar.png" style="width:1.5em;aspet-ratio 1/1;object-fit:cover;border-radius:50% 50%;overflow:hidden;"></td><td data-collapsible-title="Nama"><a class="mybsmi-cabangaction" data-user="'+btoa(JSON.stringify(content[i]))+'">'+safe(content[i][3])+'</a></td><td data-collapsible-title="Cabang">'+safe(content[i][4])+'</td><td data-collapsible-title="Aktif">'+safe(date)+'</td></tr>';
+      
+      jumlahrelawan++;
   }
   data += '</tbody></table></div>';
-  $$('.mybsmi-cabang').html(data);
+  $$('.mybsmi-cabang').append(data);
+  $$('.jumlahrelawan').text(jumlahrelawan);
   
   for (i=content.length-1;i>-1;i--)
   {
