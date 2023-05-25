@@ -2194,7 +2194,7 @@ function getdefaultdatarun(data)
   {
     $$('.mybsmi-verifikatormenu').show();
   }  
-  if (ver.admin)
+  if ((ver.admincabang)||(ver.adminlaporan))
   {
     $$('.mybsmi-adminmenu').show();
   }  
@@ -4067,6 +4067,7 @@ function fpagemaster()
 function fpagemasterrun(content)
 {
   fpagemasteradmincabang(content);
+  fpagemasteradminlaporan(content);
   fpagemasterdatabase(content);
 }
 
@@ -4126,81 +4127,7 @@ function fpagemasteradmincabang(alluser)
   }); 
 }
 
-function fpagemasterdatabase(content)
-{
-  var data = '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th>Nama</th><th>Cabang</th><th>Profesi</th><th></th></tr></thead><tbody>';
-  for (i=content.length-1;i>-1;i--)
-  {
-      if ((content[i][1] === '0OOBNq02038mf3ZfIdV7')&&(dashboarddata.user.useruid !== '0ONjeb65X5OunuRI6Ap8')){continue;}else{if ((content[i][1] === '0OOBNq02038mf3ZfIdV7')&&(!isLocal)) continue;}
-      
-      if ((content[i][3] === 'Terbatas')||(content[i][3] === 'Terverifikasi')||(content[i][3] === 'Tertolak')){}else{continue;}
-      
-      data += '<tr class="mybsmi-master-item-'+safe(content[i][1])+'"><td data-collapsible-title="Nama">'+safe(content[i][4])+'</td><td data-collapsible-title="Cabang">'+safe(content[i][11])+'</td><td data-collapsible-title="Profesi">'+safe(content[i][8])+'</td><td><a class="button button-fill mybsmi-masteraction" data-user="'+btoa(JSON.stringify(content[i]))+'">Detail</a></td></tr>';
-  }
-  data += '</tbody></table></div>';
-  $$('.mybsmi-master').html(data);
 
-  $$('.mybsmi-master a.mybsmi-masteraction').on('click', function (e) {
-        
-        //app.dialog.confirm('Pembuatan e-KTA memerlukan waktu 2-4 menit.', 'Pemberitahuan', function (){fbuatekta();})
-        var base64 = this.attributes["data-user"].value;
-        fpagemasteridentitas(base64)
-  });
-  
-  $$('.mybsmi-testing').on('click', function (e) {
-    //fonesignalprompt();
-    window.location.replace('https://mybsmi.bsmijatim.org/#page/pesan/');
-    fpagereload();
-  });
-}
-
-function fpagemasteridentitas(base64)
-{
-  var data = atob(base64);data = JSON.parse(data);
-  var dialog = app.dialog.create({
-    title: 'Data Relawan',
-    content:''////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-      +'<div style="width:100%;height:50vh;overflow:auto;">'
-      +'  <div style="display:flex;flex-direction:column;align-items:center;justify-content: center;">'
-      +'      <img id="img" src="" style="width:150px;height:150px;margin: 10px 10px;border-radius: 50%;object-fit: cover;">'
-      +'      <p style="font-weight:bold;"></p>'
-      +'      <div class="data-table"><table><tbody>'
-      +'          <tr><td>Nama</td><td>'+safe(data[4])+'</td></tr>'
-      +'          <tr><td>Email</td><td>'+safe(data[2])+'</td></tr>'
-      +'          <tr><td>Cabang</td><td>'+safe(data[11])+'</td></tr>'
-      +'          <tr><td>Jenis Kelamin</td><td>'+safe(data[5])+'</td></tr>'
-      +'          <tr><td>Alamat</td><td>'+safe(data[7])+'</td></tr>'
-      +'          <tr><td>Profesi</td><td>'+safe(data[8])+'</td></tr>'
-      +'          <tr><td>Golongan Darah</td><td>'+safe(data[9])+'</td></tr>'
-      +'          <tr><td>No HP</td><td>'+safe(data[10])+'</td></tr>'
-      +'          <tr><td>Tahun Bergabung</td><td>'+safe(data[12])+'</td></tr>'
-      +'      </tbody></table></div>'
-      +'  </div>'
-      +'</div>',//////////////////////////////////////////////////////////////////////////////////////////////////
-    closeByBackdropClick: false,
-    destroyOnClose: true,
-    verticalButtons: true,
-    on: {
-      opened: function () {
-        //console.log('Dialog opened')
-        let src = "https://drive.google.com/uc?export=view&id="+safe(data[13]);
-        $$('#img').attr('src',src);
-      }
-    },
-    buttons: [
-      {
-        text: 'Tutup',
-        close:true,
-        color: 'gray',
-        onClick: function(dialog, e)
-          {
-
-          }
-      },
-    ]
-  });
-  dialog.open();
-}
 
 function fpagemasteradmincabangedit(datacabang,datarelawan)
 {
@@ -4494,6 +4421,186 @@ function fpagemasteradmincabanggantiadminupdate(inputdata)
     json.admincabang = true;
     str = JSON.stringify(json);
     mybsmimasterdata[inputdata.newadminindex][14] = str
+  }
+  fpagemasterrun(mybsmimasterdata);
+}
+
+function fpagemasteradminlaporan(content)
+{
+  var data = '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th>Nama</th><th>Cabang</th><th></th></tr></thead><tbody>';
+  for (i=content.length-1;i>-1;i--)
+  {
+      if ((content[i][1] === '0OOBNq02038mf3ZfIdV7')&&(dashboarddata.user.useruid !== '0ONjeb65X5OunuRI6Ap8')){continue;}else{if ((content[i][1] === '0OOBNq02038mf3ZfIdV7')&&(!isLocal)) continue;}
+      
+      if ((content[i][3] === 'Terbatas')||(content[i][3] === 'Terverifikasi')||(content[i][3] === 'Tertolak')){}else{continue;}
+      
+      let json = JSON.parse(content[i][14]);
+      
+      if (json.adminlaporan){}else{continue;}
+      
+      data += '<tr class="mybsmi-master-item-'+safe(content[i][1])+'"><td data-collapsible-title="Nama">'+safe(content[i][4])+'</td><td data-collapsible-title="Cabang">'+safe(content[i][11])+'</td><td><a class="button button-fill mybsmi-masteraction" data-user="'+i+'">DELETE</a></td></tr>';
+  }
+  data += '</tbody></table></div>';
+  $$('.mybsmi-master-adminlaporan').html(data);
+
+  $$('.mybsmi-master-adminlaporan a.mybsmi-masteraction').on('click', function (e) {
+              var index = this.attributes["data-user"].value;
+              index = parseInt(index);
+              let inputdata = {"instruksi":"delete",index}
+              fpagemasteradminlaporansave(inputdata);
+  });
+  
+}
+
+
+function fpagemasterdatabase(content)
+{
+  var data = '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th>Nama</th><th>Cabang</th><th>Profesi</th><th></th></tr></thead><tbody>';
+  for (i=content.length-1;i>-1;i--)
+  {
+      if ((content[i][1] === '0OOBNq02038mf3ZfIdV7')&&(dashboarddata.user.useruid !== '0ONjeb65X5OunuRI6Ap8')){continue;}else{if ((content[i][1] === '0OOBNq02038mf3ZfIdV7')&&(!isLocal)) continue;}
+      
+      if ((content[i][3] === 'Terbatas')||(content[i][3] === 'Terverifikasi')||(content[i][3] === 'Tertolak')){}else{continue;}
+      
+      data += '<tr class="mybsmi-master-item-'+safe(content[i][1])+'"><td data-collapsible-title="Nama">'+safe(content[i][4])+'</td><td data-collapsible-title="Cabang">'+safe(content[i][11])+'</td><td data-collapsible-title="Profesi">'+safe(content[i][8])+'</td><td><a class="button button-fill mybsmi-masteraction" data-index="'+i+'" data-user="'+btoa(JSON.stringify(content[i]))+'">Detail</a></td></tr>';
+  }
+  data += '</tbody></table></div>';
+  $$('.mybsmi-master').html(data);
+
+  $$('.mybsmi-master a.mybsmi-masteraction').on('click', function (e) {
+        
+        //app.dialog.confirm('Pembuatan e-KTA memerlukan waktu 2-4 menit.', 'Pemberitahuan', function (){fbuatekta();})
+        var base64 = this.attributes["data-user"].value;
+        var index = this.attributes["data-index"].value;
+        fpagemasteridentitas(base64,index)
+  });
+  
+  $$('.mybsmi-testing').on('click', function (e) {
+    //fonesignalprompt();
+    window.location.replace('https://mybsmi.bsmijatim.org/#page/pesan/');
+    fpagereload();
+  });
+}
+
+function fpagemasteridentitas(base64,index)
+{
+  var data = atob(base64);data = JSON.parse(data);
+  var dialog = app.dialog.create({
+    title: 'Data Relawan',
+    content:''////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      +'<div style="width:100%;height:50vh;overflow:auto;">'
+      +'  <div style="display:flex;flex-direction:column;align-items:center;justify-content: center;">'
+      +'      <img id="img" src="" style="width:150px;height:150px;margin: 10px 10px;border-radius: 50%;object-fit: cover;">'
+      +'      <p style="font-weight:bold;"></p>'
+      +'      <div class="data-table"><table><tbody>'
+      +'          <tr><td>Nama</td><td>'+safe(data[4])+'</td></tr>'
+      +'          <tr><td>Email</td><td>'+safe(data[2])+'</td></tr>'
+      +'          <tr><td>Cabang</td><td>'+safe(data[11])+'</td></tr>'
+      +'          <tr><td>Jenis Kelamin</td><td>'+safe(data[5])+'</td></tr>'
+      +'          <tr><td>Alamat</td><td>'+safe(data[7])+'</td></tr>'
+      +'          <tr><td>Profesi</td><td>'+safe(data[8])+'</td></tr>'
+      +'          <tr><td>Golongan Darah</td><td>'+safe(data[9])+'</td></tr>'
+      +'          <tr><td>No HP</td><td>'+safe(data[10])+'</td></tr>'
+      +'          <tr><td>Tahun Bergabung</td><td>'+safe(data[12])+'</td></tr>'
+      +'      </tbody></table></div>'
+      +'  </div>'
+      +'</div>',//////////////////////////////////////////////////////////////////////////////////////////////////
+    closeByBackdropClick: false,
+    destroyOnClose: true,
+    verticalButtons: true,
+    on: {
+      opened: function () {
+        //console.log('Dialog opened')
+        let src = "https://drive.google.com/uc?export=view&id="+safe(data[13]);
+        $$('#img').attr('src',src);
+      }
+    },
+    buttons: [
+      {
+        text: 'Add Admin Laporan',
+        close:true,
+        color: 'red',
+        onClick: function(dialog, e)
+          {
+              index = parseInt(index);
+              let inputdata = {"instruksi":"add",index}
+              fpagemasteradminlaporansave(inputdata);
+          }
+      },
+      {
+        text: 'Tutup',
+        close:true,
+        color: 'gray',
+        onClick: function(dialog, e)
+          {
+
+          }
+      },
+    ]
+  });
+  dialog.open();
+}
+
+function fpagemasteradminlaporansave(inputdata)
+{
+      inputdata=JSON.stringify(inputdata);console.log(inputdata);
+      let mypreloader = app.dialog.preloader();
+      app.request({
+        url: apidataurl,
+        method: 'POST',
+        cache: false,
+        data : { token:mybsmiusertoken, command: 'masteradminlaporanupdate', inputdata}, 
+        success: function (data, status, xhr)
+          {
+            mypreloader.close();
+            var status = JSON.parse(data).status;
+            var content = JSON.parse(data).data;
+            if (status == "success")
+            {
+              console.log(content);
+              fpagemasteradminlaporanupdate(inputdata); 
+              var toastBottom = app.toast.create({ text: 'Berhasil', closeTimeout: 3000,position: 'center', });toastBottom.open();
+            }
+            else if (status == "failed")
+            {
+              //console.log("failed");
+              app.dialog.alert(content,'Terjadi Kesalahan');
+            }
+            else
+            {
+              //console.log("failed");
+              //app.dialog.alert(content,'Terjadi Kesalahan');
+              fcekexpiredtoken(content);
+            }
+          },
+        error: function (xhr, status, message)
+          {
+            //console.log(message);
+            mypreloader.close();
+            app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
+          },
+      })
+}
+
+function fpagemasteradminlaporanupdate(inputdata)
+{
+  var inputdata = JSON.parse(inputdata);console.log(inputdata);
+  
+  if (inputdata.instruksi == 'delete')
+  {
+    let str = mybsmimasterdata[inputdata.index][14];
+    let json = JSON.parse(str);
+    json.adminlaporan = false;
+    str = JSON.stringify(json);
+    mybsmimasterdata[inputdata.index][14] = str;
+  }
+  if (inputdata.instruksi == 'add')
+  {
+    let str = mybsmimasterdata[inputdata.index][14];
+    let json = JSON.parse(str);
+    json.adminlaporan = true;
+    str = JSON.stringify(json);
+    mybsmimasterdata[inputdata.index][14] = str;
   }
   fpagemasterrun(mybsmimasterdata);
 }
