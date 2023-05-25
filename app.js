@@ -3776,6 +3776,7 @@ function fpageadminrun(content)
   data += '</tbody></table></div>';
   $$('.mybsmi-admin').html(data);
   $$('.jumlahrelawan').html(jumlahrelawan);
+  $$('.totalrelawan').html('Total : '+jumlahrelawan);
 
   for (i=content.length-1;i>-1;i--)
   {
@@ -4470,6 +4471,7 @@ function fpagemasteradminlaporan(content)
 function fpagemasterdatabase(content)
 {
   var data = '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th>Nama</th><th>Email</th><th>Cabang</th><th>Profesi</th><th></th></tr></thead><tbody>';
+  var jumlahrelawan = 0;
   for (i=content.length-1;i>-1;i--)
   {
       if ((content[i][1] === '0OOBNq02038mf3ZfIdV7')&&(dashboarddata.user.useruid !== '0ONjeb65X5OunuRI6Ap8')){continue;}else{if ((content[i][1] === '0OOBNq02038mf3ZfIdV7')&&(!isLocal)) continue;}
@@ -4477,9 +4479,11 @@ function fpagemasterdatabase(content)
       if ((content[i][3] === 'Terbatas')||(content[i][3] === 'Terverifikasi')||(content[i][3] === 'Tertolak')){}else{continue;}
       
       data += '<tr class="mybsmi-master-item-'+safe(content[i][1])+'"><td data-collapsible-title="Nama">'+safe(content[i][4])+'</td><td data-collapsible-title="Email">'+safe(content[i][2])+'</td><td data-collapsible-title="Cabang">'+safe(content[i][11])+'</td><td data-collapsible-title="Profesi">'+safe(content[i][8])+'</td><td><a class="button button-fill mybsmi-masteraction" data-index="'+i+'" data-user="'+btoa(JSON.stringify(content[i]))+'">Detail</a></td></tr>';
+      jumlahrelawan++;
   }
   data += '</tbody></table></div>';
   $$('.mybsmi-master').html(data);
+  $$('.jumlahrelawan').html('Jumlah : '+jumlahrelawan);
 
   $$('.mybsmi-master a.mybsmi-masteraction').on('click', function (e) {
         
