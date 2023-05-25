@@ -4114,7 +4114,7 @@ function fpagemasteradmincabang(alluser)
           admin += item.nama+'\n';
         })
       }
-      data += '<tr class="mybsmi-master-admincabang-item-'+safe(content[i][1])+'"><td data-collapsible-title="Cabang">'+safe(content[i][0])+'</td><td data-collapsible-title="Alamat">'+safe(content[i][2])+'</td><td data-collapsible-title="Telepon">'+safe(content[i][3])+'</td><td data-collapsible-title="Instagram">'+safe(content[i][4])+'</td><td data-collapsible-title="Ketua">'+safe(content[i][6])+'</td><td data-collapsible-title="Admin">'+safe(admin)+'</td><td><a class="button button-fill mybsmi-master-admincabang-action" data-cabang="'+btoa(JSON.stringify(content[i]))+'">Edit</a></td></tr>';
+      data += '<tr class="mybsmi-master-admincabang-item-'+safe(content[i][1])+'"><td data-collapsible-title="Cabang"><a href="/cabang/'+safe(content[i][1])+'">'+safe(content[i][0])+'</a></td><td data-collapsible-title="Alamat">'+safe(content[i][2])+'</td><td data-collapsible-title="Telepon">'+safe(content[i][3])+'</td><td data-collapsible-title="Instagram">'+safe(content[i][4])+'</td><td data-collapsible-title="Ketua"><a class="mybsmi-master-admincabang-detail" data-user="'+safe(content[i][5])+'">'+safe(content[i][6])+'<a></td><td data-collapsible-title="Admin"><a class="mybsmi-master-admincabang-detail" data-user="'+safe(content[i][5])+'">'+safe(admin)+'</a></td><td><a class="button button-fill mybsmi-master-admincabang-action" data-cabang="'+btoa(JSON.stringify(content[i]))+'">Edit</a></td></tr>';
   }
   data += '</tbody></table></div>';
   $$('.mybsmi-master-admincabang').html(data);
@@ -4124,6 +4124,20 @@ function fpagemasteradmincabang(alluser)
       var base64 = this.attributes["data-cabang"].value;
       let datacabang = JSON.parse(atob(base64));
       fpagemasteradmincabangedit(datacabang,alluser)
+  }); 
+
+  $$('.mybsmi-master-admincabang a.mybsmi-master-admincabang-detail').off('click');
+  $$('.mybsmi-master-admincabang a.mybsmi-master-admincabang-detail').on('click', function (e) {
+      var useruid = this.attributes["data-user"].value;
+      alluser.forEach(function(item,index){
+        
+        if (item[1] == useruid)
+        {
+          var base64 = btoa(JSON.stringify(item));
+          fpagemasteridentitas(base64,index);
+          
+        }
+      })
   }); 
 }
 
