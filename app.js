@@ -335,7 +335,7 @@ routes: [
             return;
           }
             let data = JSON.parse(dashboarddata.user.usermydata)
-            if (data.admin)
+            if ((data.admincabang)||(data.adminlaporan))
             {
                 resolve();
             }
@@ -4066,6 +4066,68 @@ function fpagemaster()
 
 function fpagemasterrun(content)
 {
+  fpagemasteradmincabang(content);
+  //fpagemasterdatabase(content);
+}
+
+function fpagemasteradmincabang(alluser)
+{
+  var datacabang = [];
+
+  kodecabang.forEach(function (item,index){
+   let data = [item[0],item[1],item[2],item[3],item[4],item[5],item[6],item[7],[],0];
+   datacabang.push(data);   
+  });
+  
+  kodecabang.forEach(function(itemcabang,indexcabang){
+     alluser.forEach(function(itemuser,indexuser){
+        let usercabang = itemuser[11];
+        let userdata = itemuser[14];userdata = JSON.parse(userdata);
+        let uid = itemuser[1];
+        let nama = itemuser[4];
+        let photo = itemuser[13];
+        if (usercabang == itemcabang[0])
+        {
+          datacabang[indexcabang][9]++;
+          if (userdata.admincabang)
+          {
+
+              let data = datacabang[indexcabang][8];
+              data.push({uid,nama,photo});
+              datacabang[indexcabang][8] = data;
+          }
+        }
+     })
+  })
+  
+
+  var content = datacabang;
+  var data = '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th>Cabang</th><th>Alamat</th><th>Telepon</th><th>Instagram</th><th>Ketua</th><th>Admin</th><th>Edit</th></tr></thead><tbody>';
+  
+  for (i=0;i<content.length-1;i++)
+  {   
+      let admin = '';
+      if (content[i][8] == undefined){admin='';}else{
+        //admin=JSON.stringify(content[i][8])
+        content[i][8].forEach(function(item,index){
+          admin += item.nama+'\n';
+        })
+      }
+      data += '<tr class="mybsmi-master-admincabang-item-'+safe(content[i][1])+'"><td data-collapsible-title="Cabang">'+safe(content[i][0])+'</td><td data-collapsible-title="Alamat">'+safe(content[i][2])+'</td><td data-collapsible-title="Telepon">'+safe(content[i][3])+'</td><td data-collapsible-title="Instagram">'+safe(content[i][4])+'</td><td data-collapsible-title="Ketua">'+safe(content[i][6])+'</td><td data-collapsible-title="Admin">'+safe(admin)+'</td><td><a class="button button-fill mybsmi-master-admincabang-action" data-cabang="'+btoa(JSON.stringify(content[i]))+'">Edit</a></td></tr>';
+  }
+  data += '</tbody></table></div>';
+  $$('.mybsmi-master-admincabang').html(data);
+
+  $$('.mybsmi-master-admincabang a.mybsmi-master-admincabang-action').on('click', function (e) {
+      //console.log('ok');  
+      var base64 = this.attributes["data-cabang"].value;
+      let datacabang = JSON.parse(atob(base64));
+      fpagemasteradmincabangedit(datacabang,alluser)
+  }); 
+}
+
+function fpagemasterdatabase(content)
+{
   var data = '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th>Nama</th><th>Cabang</th><th>Profesi</th><th></th></tr></thead><tbody>';
   for (i=content.length-1;i>-1;i--)
   {
@@ -4138,6 +4200,302 @@ function fpagemasteridentitas(base64)
     ]
   });
   dialog.open();
+}
+
+function fpagemasteradmincabangedit(datacabang,datarelawan)
+{
+  var dialog = app.dialog.create({
+    title: 'Edit Cabang',
+    content:''////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      +'<div style="width:100%;height:50vh;overflow:auto;">'
+      +'  <div style="display:flex;flex-direction:column;align-items:center;justify-content: center;">'
+      +'      <img id="img" src="icon512.png" style="width:150px;height:150px;margin: 10px 10px;border-radius: 0%;object-fit: cover;">'
+      +'      <p style="font-weight:bold;">'+safe(datacabang[0])+'</p>'
+      +'  <div class="list no-hairlines-md">'
+      +'    <ul>'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Alamat</div><div class="item-input-wrap">'
+      +'            <input type="text" id="alamatcabang" name="alamat" placeholder="Alamat" value="'+safe(datacabang[2])+'">'
+      +'            </div></div>'
+      +'        </li>'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Telepon</div><div class="item-input-wrap">'
+      +'            <input type="text" id="teleponcabang" name="telepon" placeholder="Telepon" value="'+safe(datacabang[3])+'"/>'
+      +'            </div></div>'
+      +'        </li>'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Instagram Username</div><div class="item-input-wrap">'
+      +'            <input type="text" id="instagramcabang" name="instagram" placeholder="Instagram" value="'+safe(datacabang[4])+'">'
+      +'            </div></div>'
+      +'        </li>'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Ketua</div><div class="item-input-wrap">'
+      +'                            <select id="ketuacabang" name="ketua">'
+      +'                              <option value="" selected> </option>'
+      +'                            </select>'
+      +'            </div></div>'
+      +'        </li>'
+      +'    </ul>'
+      +'  </div>'
+      +'  </div>'
+      +'</div>',//////////////////////////////////////////////////////////////////////////////////////////////////
+    closeByBackdropClick: false,
+    destroyOnClose: true,
+    verticalButtons: true,
+    on: {
+      opened: function () {
+        //console.log('Dialog opened')
+        var select = document.getElementById('ketuacabang');
+        datarelawan.forEach(function(item,index){
+          if(item[11] == datacabang[0])
+          {
+            var opt = document.createElement('option');
+            opt.value = item[1];
+            opt.innerHTML = item[4];            
+            select.appendChild(opt);
+            if (item[1] == datacabang[5])
+            {
+              select.value = item[1];
+            }
+          }
+        });
+      }
+    },
+    buttons: [
+      {
+        text: 'Simpan',
+        close:true,
+        color: 'red',
+        onClick: function(dialog, e)
+          {
+                var namacabang = datacabang[0];
+                var alamatcabang = $$('#alamatcabang').val();
+                var teleponcabang = $$('#teleponcabang').val();
+                var instagramcabang = $$('#instagramcabang').val();
+                var ketuacabangid = $$('#ketuacabang').val();
+                var ketuacabangnama = '',ketuacabangphoto='';
+                datarelawan.forEach(function(item,index){
+                  if (item[1] == ketuacabangid)
+                  {
+                    ketuacabangnama = item[4];
+                    ketuacabangphoto = item[13];
+                  }
+                });
+                var data = {namacabang,alamatcabang,teleponcabang,instagramcabang,ketuacabangid,ketuacabangnama,ketuacabangphoto};
+                fpagemasteradmincabangsave(data);
+          }
+      },
+      {
+        text: 'Ganti Admin',
+        close:true,
+        color: 'red',
+        onClick: function(dialog, e)
+          {
+              fpagemasteradmincabanggantiadmin(datacabang,datarelawan);
+          }
+      },
+      {
+        text: 'Batal',
+        close:true,
+        color: 'gray',
+        onClick: function(dialog, e)
+          {
+
+          }
+      },
+    ]
+  });
+  dialog.open();
+}
+
+function fpagemasteradmincabangsave(inputdata)
+{
+      inputdata=JSON.stringify(inputdata);
+      let mypreloader = app.dialog.preloader();
+      app.request({
+        url: apidataurl,
+        method: 'POST',
+        cache: false,
+        data : { token:mybsmiusertoken, command: 'masterupdateprofilcabang', inputdata}, 
+        success: function (data, status, xhr)
+          {
+            mypreloader.close();
+            var status = JSON.parse(data).status;
+            var content = JSON.parse(data).data;
+            if (status == "success")
+            {
+              console.log(content);
+              fpagemasteradmincabangeditupdate(inputdata); 
+              var toastBottom = app.toast.create({ text: 'Berhasil', closeTimeout: 3000,position: 'center', });toastBottom.open();
+            }
+            else if (status == "failed")
+            {
+              //console.log("failed");
+              app.dialog.alert(content,'Terjadi Kesalahan');
+            }
+            else
+            {
+              //console.log("failed");
+              //app.dialog.alert(content,'Terjadi Kesalahan');
+              fcekexpiredtoken(content);
+            }
+          },
+        error: function (xhr, status, message)
+          {
+            //console.log(message);
+            mypreloader.close();
+            app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
+          },
+      })
+}
+
+function fpagemasteradmincabangeditupdate(inputdata)
+{
+  var inputdata = JSON.parse(inputdata);console.log(inputdata);
+  kodecabang.forEach(function(item,index){
+    if(item[0] == inputdata.namacabang)
+    {
+      kodecabang[index][2] = inputdata.alamatcabang;
+      kodecabang[index][3] = inputdata.teleponcabang;
+      kodecabang[index][4] = inputdata.instagramcabang; 
+      kodecabang[index][5] = inputdata.ketuacabangid;
+      kodecabang[index][6] = inputdata.ketuacabangnama;
+      kodecabang[index][7] = inputdata.ketuacabangphoto;
+      fpagemasterrun(mybsmimasterdata);
+    }
+  })
+}
+
+function  fpagemasteradmincabanggantiadmin(datacabang,datarelawan)
+{
+  var oldadminindex = -1;
+  var dialog = app.dialog.create({
+    title: 'Ganti Admin',
+    content:''////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      +'<div style="width:100%;height:50vh;overflow:auto;">'
+      +'  <div style="display:flex;flex-direction:column;align-items:center;justify-content: center;">'
+      +'      <img id="img" src="icon512.png" style="width:150px;height:150px;margin: 10px 10px;border-radius: 0%;object-fit: cover;">'
+      +'      <p style="font-weight:bold;">'+safe(datacabang[0])+'</p>'
+      +'  <div class="list no-hairlines-md">'
+      +'    <ul>'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Admin</div><div class="item-input-wrap">'
+      +'                            <select id="admincabang" name="admin">'
+      +'                              <option value="-1" selected> </option>'
+      +'                            </select>'
+      +'            </div></div>'
+      +'        </li>'
+      +'    </ul>'
+      +'  </div>'
+      +'  </div>'
+      +'</div>',//////////////////////////////////////////////////////////////////////////////////////////////////
+    closeByBackdropClick: false,
+    destroyOnClose: true,
+    verticalButtons: true,
+    on: {
+      opened: function () {
+        //console.log('Dialog opened')
+        var select = document.getElementById('admincabang');
+        datarelawan.forEach(function(item,index){
+          if(item[11] == datacabang[0])
+          {
+            var opt = document.createElement('option');
+            opt.value = index;
+            opt.innerHTML = item[4];            
+            select.appendChild(opt);
+            let json = JSON.parse(item[14]);
+            if (json.admincabang)
+            {
+              select.value = index;
+              oldadminindex = index;
+            }
+          }
+        });
+      }
+    },
+    buttons: [
+      {
+        text: 'Simpan',
+        close:true,
+        color: 'red',
+        onClick: function(dialog, e)
+          {
+              var newadminindex =  parseInt($$('#admincabang').val());
+              var inputdata = {oldadminindex,newadminindex};
+              if (oldadminindex != newadminindex)fpagemasteradmincabanggantiadminsave(inputdata);
+          }
+      },
+      {
+        text: 'Batal',
+        close:true,
+        color: 'gray',
+        onClick: function(dialog, e)
+          {
+
+          }
+      },
+    ]
+  });
+  dialog.open();
+}
+
+function fpagemasteradmincabanggantiadminsave(inputdata)
+{
+      inputdata=JSON.stringify(inputdata);console.log(inputdata);
+      let mypreloader = app.dialog.preloader();
+      app.request({
+        url: apidataurl,
+        method: 'POST',
+        cache: false,
+        data : { token:mybsmiusertoken, command: 'mastergantiadmincabang', inputdata}, 
+        success: function (data, status, xhr)
+          {
+            mypreloader.close();
+            var status = JSON.parse(data).status;
+            var content = JSON.parse(data).data;
+            if (status == "success")
+            {
+              console.log(content);
+              fpagemasteradmincabanggantiadminupdate(inputdata); 
+              var toastBottom = app.toast.create({ text: 'Berhasil', closeTimeout: 3000,position: 'center', });toastBottom.open();
+            }
+            else if (status == "failed")
+            {
+              //console.log("failed");
+              app.dialog.alert(content,'Terjadi Kesalahan');
+            }
+            else
+            {
+              //console.log("failed");
+              //app.dialog.alert(content,'Terjadi Kesalahan');
+              fcekexpiredtoken(content);
+            }
+          },
+        error: function (xhr, status, message)
+          {
+            //console.log(message);
+            mypreloader.close();
+            app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
+          },
+      })
+}
+
+function fpagemasteradmincabanggantiadminupdate(inputdata)
+{
+  var inputdata = JSON.parse(inputdata);console.log(inputdata);
+  
+  if (inputdata.oldadminindex>-1)
+  {
+    let str = mybsmimasterdata[inputdata.oldadminindex][14];
+    let json = JSON.parse(str);
+    json.admincabang = false;
+    str = JSON.stringify(json);
+    mybsmimasterdata[inputdata.oldadminindex][14] = str
+  }
+  if (inputdata.newadminindex>-1)
+  {
+    let str = mybsmimasterdata[inputdata.newadminindex][14];
+    let json = JSON.parse(str);
+    json.admincabang = true;
+    str = JSON.stringify(json);
+    mybsmimasterdata[inputdata.newadminindex][14] = str
+  }
+  fpagemasterrun(mybsmimasterdata);
 }
 ///////fpagemaster////////////////////////////////////////////////////////
 
