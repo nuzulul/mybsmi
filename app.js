@@ -4067,7 +4067,7 @@ function fpagemaster()
 function fpagemasterrun(content)
 {
   fpagemasteradmincabang(content);
-  //fpagemasterdatabase(content);
+  fpagemasterdatabase(content);
 }
 
 function fpagemasteradmincabang(alluser)
@@ -4227,7 +4227,7 @@ function fpagemasteradmincabangedit(datacabang,datarelawan)
       +'        </li>'
       +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Ketua</div><div class="item-input-wrap">'
       +'                            <select id="ketuacabang" name="ketua">'
-      +'                              <option value="" selected> </option>'
+      +'                              <option value="" selected>-</option>'
       +'                            </select>'
       +'            </div></div>'
       +'        </li>'
@@ -4374,9 +4374,9 @@ function  fpagemasteradmincabanggantiadmin(datacabang,datarelawan)
       +'      <p style="font-weight:bold;">'+safe(datacabang[0])+'</p>'
       +'  <div class="list no-hairlines-md">'
       +'    <ul>'
-      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Admin</div><div class="item-input-wrap">'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Admin Cabang</div><div class="item-input-wrap">'
       +'                            <select id="admincabang" name="admin">'
-      +'                              <option value="-1" selected> </option>'
+      +'                              <option value="-1" selected>-</option>'
       +'                            </select>'
       +'            </div></div>'
       +'        </li>'
