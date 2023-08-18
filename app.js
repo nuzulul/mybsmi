@@ -4767,7 +4767,7 @@ function fpagebacapesan(id)
             }
             $$('.mybsmi-balaspesan').removeClass('display-none');
             $$('.mybsmi-balaspesan').on('click', function (e) {
-                  fkirimpesan(data[2],data[3],data[4])
+                  fkirimpesan(data[2],data[3],data[4],data[1])
             }); 
             $$('.mybsmi-bacapesan .item-title').on('click', function (e) {
                 let url = "/relawan/"+safe(data[2]);
@@ -4846,7 +4846,7 @@ function fupdatebacapesan(pesanid)
       })
 }
 
-function fkirimpesan(uid,nama,photo)
+function fkirimpesan(uid,nama,photo,replyto = '')
 {
   //console.log(uid+nama+photo);
   if (dashboarddata.user.userphoto === ''){flengkapidata();return;}
@@ -4930,7 +4930,7 @@ function fkirimpesan(uid,nama,photo)
             let pesan = $$('#mybsmi-kirimpesan-pesan').val();
             if(subjek === ''){var toastBottom = app.toast.create({ text: 'Subjek tidak boleh kosong', closeTimeout: 3000,position: 'center', });toastBottom.open();return;}
             if(pesan === ''){var toastBottom = app.toast.create({ text: 'Pesan tidak boleh kosong', closeTimeout: 3000,position: 'center', });toastBottom.open();return;}
-            fkirimpesanrun(uid,nama,photo,subjek,pesan,dialog);
+            fkirimpesanrun(uid,nama,photo,subjek,pesan,replyto,dialog);
           }
       },
     ]
@@ -4938,7 +4938,7 @@ function fkirimpesan(uid,nama,photo)
   dialog.open();
 }
 
-function fkirimpesanrun(uid,nama,photo,subjek,pesan,dialog)
+function fkirimpesanrun(uid,nama,photo,subjek,pesan,replyto,dialog)
 {
   //console.log(uid+subjek+pesan)
       dialog.close();
@@ -4947,7 +4947,7 @@ function fkirimpesanrun(uid,nama,photo,subjek,pesan,dialog)
         url: apidataurl,
         method: 'POST',
         cache: false,
-        data : { token:mybsmiusertoken, command: 'kirimpesan', uid:uid, subjek:subjek, pesan:pesan}, 
+        data : { token:mybsmiusertoken, command: 'kirimpesan', uid:uid, subjek:subjek, pesan:pesan, replyto:replyto}, 
         success: function (data, status, xhr)
           {
             mypreloader.close();
