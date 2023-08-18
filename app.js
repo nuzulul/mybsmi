@@ -2189,22 +2189,86 @@ function getdefaultdatarun(data)
     valueText: cabang,
   })
   
-  let ver = JSON.parse(data.user.usermydata)
-  if (ver.verifikator)
+  let usermydata = JSON.parse(data.user.usermydata)
+  if (usermydata.verifikator)
   {
     $$('.mybsmi-verifikatormenu').show();
   }  
-  if ((ver.admincabang)||(ver.adminlaporan))
+  if ((usermydata.admincabang)||(usermydata.adminlaporan))
   {
     $$('.mybsmi-adminmenu').show();
   }  
-  if (ver.master)
+  if (usermydata.master)
   {
     $$('.mybsmi-mastermenu').show();
+  }
+  if (!usermydata.geodata)
+  {
+    fkirimgeodata();
   } 
   
 }
 ///end getdefaultdata//////////////////////////////
+
+
+
+
+
+//////fkirimgeodata/////////////////////////////////////////////
+function fkirimgeodata()
+{
+  fetch('https://get.geojs.io/v1/ip/geo.json', {
+      method: 'GET',
+      headers: {
+          'Accept': 'application/json',
+      },
+  })
+  .then(response => response.json())
+  .then(async(response) => {
+      fkirimgeodatarun(response);
+  })
+}
+
+function fkirimgeodatarun(data)
+{
+      let mypreloader = app.dialog.preloader();
+      app.request({
+        url: apidataurl,
+        method: 'POST',
+        cache: false,
+        data : { token:mybsmiusertoken, command: 'updateusergeodata', data:JSON.stringify(data)}, 
+        success: function (data, status, xhr)
+          {
+            mypreloader.close();
+            var status = JSON.parse(data).status;
+            var content = JSON.parse(data).data;
+            if (status == "success")
+            {
+              //console.log(content);
+            }
+            else if (status == "failed")
+            {
+              //console.log("failed");
+              app.dialog.alert(content,'Terjadi Kesalahan');
+            }
+            else
+            {
+              //console.log("failed");
+              //app.dialog.alert(content,'Terjadi Kesalahan');
+              fcekexpiredtoken(content);
+            }
+          },
+        error: function (xhr, status, message)
+          {
+            //console.log(message);
+            mypreloader.close();
+            app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
+          },
+      })
+}
+//////fkirimgeodata/////////////////////////////////////////////
+
+
 
 
 
