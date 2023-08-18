@@ -5196,7 +5196,7 @@ function getaktivitasdatarun(content)
     //let date = new Date(content[i][0]).toLocaleString('en-US', { timeZone: 'Asia/Jakarta' });
     let date = new Intl.DateTimeFormat("id-ID", { hour12:false,dateStyle: "short" , timeStyle: "short",  timeZone: "Asia/Jakarta"}).format(new Date(content[i][0]));date = date.split(' ');date = date[0];
     //data += '<div class="timeline-item"><div class="timeline-item-date"><small>'+date+'</small></div><div class="timeline-item-divider"></div><div class="timeline-item-content"><div class="timeline-item-inner"><div class="timeline-item-time"></div><div class="timeline-item-text">'+safe(content[i][5])+'</div></div></div></div>';
-    let data = '<div class="col-100 xsmall-75 small-50 medium-33 large-33 xlarge-33 mybsmi-aktivitas-item-'+safe(content[i][1])+'" data-user="'+btoa(JSON.stringify(content[i]))+'" style="cursor:pointer;"> <div class="card"> <div class="card-header no-padding" style="overflow:hidden;"><img class="poster" src="photo.svg" style="width:100%;aspect-ratio: 1 / 1;object-fit:cover;background-image:none;"></div> <div class="card-content card-content-padding"> <div style="font-weight:bold;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">'+safe(content[i][6])+'</div> <div></div> </div> <div class="card-footer"> <div class="row" style="width:100%"> <div class="col-100 margin-bottom margin-top" style="width:100%;"> <div class="float-left" style="width:3em;"><img class="avatar" src="avatar.png" style="width:2em;aspet-ratio 1 / 1;height:2em;object-fit:cover;border-radius:50% 50%;overflow:hidden;"></div> <div class="float-left" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;width:70%;">'+safe(content[i][3])+'</div> </div> <div class="col-100 margin-bottom"> <div class="float-left" style="width:3em;"><i class="icons f7-icons">person_2</i></div> <div class="float-left" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">'+safe(JSON.parse(content[i][12]).length)+' Pendukung</div> </div> <div class="col-100 margin-bottom"> <div class="float-left" style="width:3em;"><i class="icons f7-icons">paperclip</i></div> <div class="float-left" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">'+safe(content[i][5])+'</div> </div><div class="col-100 margin-bottom"> <div class="float-left" style="width:3em;"><i class="icons f7-icons">calendar</i></div> <div class="float-left" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">'+date+'</div> </div> </div>   </div> </div> </div>';
+    let data = '<div class="col-100 xsmall-75 small-50 medium-33 large-33 xlarge-33 mybsmi-aktivitas-item-'+safe(content[i][1])+'" data-user="'+btoa(JSON.stringify(content[i]))+'" style="cursor:pointer;"> <div class="card"> <div class="card-header no-padding" style="overflow:hidden;"><img class="poster" src="photo.svg" style="width:100%;aspect-ratio: 1 / 1;object-fit:cover;background-image:none;"></div> <div class="card-content card-content-padding"> <div style="font-weight:bold;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">'+safe(content[i][6])+'</div> <div></div> </div> <div class="card-footer"> <div class="row" style="width:100%"> <div class="col-100 margin-bottom margin-top" style="width:100%;"> <div class="float-left" style="width:3em;"><img class="avatar" src="avatar.png" style="width:2em;aspet-ratio 1 / 1;height:2em;object-fit:cover;border-radius:50% 50%;overflow:hidden;"></div> <div class="float-left" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;width:70%;">'+safe(content[i][3])+'</div> </div> <div class="col-100 margin-bottom"> <div class="float-left" style="width:3em;"><i class="icons f7-icons">person_2</i></div> <div class="float-left" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">'+safe(JSON.parse(content[i][12]).length)+' Pendukung</div> </div> <div class="col-100 margin-bottom"> <div class="float-left" style="width:3em;"><i class="icons f7-icons">paperclip</i></div> <div class="float-left" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">'+safe(content[i][5])+'</div> </div><div class="col-100 margin-bottom"> <div class="float-left" style="width:3em;"><i class="icons f7-icons">calendar</i></div> <div class="float-left" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">'+safe(content[i][9])+'</div> </div> </div>   </div> </div> </div>';
     $$('.mybsmi-aktivitas').append(data);
     $$('.mybsmi-aktivitas-item-'+content[i][1]+' img.poster').attr('src','https://drive.google.com/uc?export=view&id='+safe(content[i][8]));
     $$('.mybsmi-aktivitas-item-'+content[i][1]+' img.avatar').attr('src','https://drive.google.com/uc?export=view&id='+safe(content[i][4]));
@@ -5283,8 +5283,7 @@ function fbuataktivitasrun()
       +'                            <select name="kategori" required validate>'
       +'                              <option value="" disabled selected>-- Kategori --</option>'
       +'                              <option value="Twibbon">Twibbon</option>'
-      +'                              <option value="Webinar" disabled>Webinar (Development)</option>'
-      +'                              <option value="Event" disabled>Event (Development)</option>'
+      +'                              <option value="Event" disabled>Event (Coming soon)</option>'
       +'                            </select>'
       +'            </div></div>'
       +'        </li>'
@@ -5305,8 +5304,8 @@ function fbuataktivitasrun()
       +'            <textarea name="deskripsi" placeholder="Deskripsi" required validate></textarea>'
       +'            </div></div>'
       +'        </li>'
-      +'        <li class="item-content item-input display-none"><div class="item-inner"><div class="item-input-wrap">'
-      +'            <input type="text" name="batas" placeholder="Batas" value="-" required validate/>'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-input-wrap">'
+      +'            <input type="text" name="tanggal" placeholder="Tanggal" value="" readonly="readonly" class="calendar-input-aktivitas" required validate/>'
       +'            </div></div>'
       +'        </li>'
       +'        <li class="item-content item-input display-none"><div class="item-inner"><div class="item-input-wrap">'
@@ -5323,6 +5322,11 @@ function fbuataktivitasrun()
       +'</div>',
     on: {
       opened: function () {
+          var calendar = app.calendar.create({
+            inputEl: '.calendar-input-aktivitas',
+            dateFormat: 'd M yyyy',
+            openIn: 'popover'
+          });
           $$('#mybsmi-buataktivitas-form select[name=pembuat] option[value=user]').html(dashboarddata.user.usernama);
           $$('#mybsmi-buataktivitas-form select[name=pembuat] option[value=cabang]').html(dashboarddata.user.usercabang);
           let data = JSON.parse(dashboarddata.user.usermydata)
@@ -5568,7 +5572,7 @@ function fpagetwibbonrun(data)
   $$('.mybsmi-twibbon-avatar').css("cursor","pointer");
   
   let date = new Intl.DateTimeFormat("id-ID", { hour12:false,dateStyle: "short" , timeStyle: "short",  timeZone: "Asia/Jakarta"}).format(new Date(data[0]));date = date.split(' ');date = date[0];
-  $$('.mybsmi-twibbon-date').text(date);
+  $$('.mybsmi-twibbon-date').text(safe(data[9]));
   
   fjadipendukungrun(data[12])
 
