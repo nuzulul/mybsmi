@@ -54,5 +54,17 @@
     "platform": "webapp",
     "url": "https://mybsmi.bsmijatim.org/manifest.json"
   }],
-  "lang": "id"
+  "lang": "id",
+  "launch_handler": {
+      "client_mode": ["navigate-existing, auto"]
+  },  
+  "screenshots" : [
+    {
+      "src": "screenshot.jpg",
+      "sizes": "1280x720",
+      "type": "image/jpg",
+      "platform": "wide",
+    }
+  ]
+
 }
