@@ -63,6 +63,7 @@ var grecaptcharesponsedata = '';
 var isLocal = false;
 var DEBUG = true;
 var visits = 1;
+var skipuid = ["0OOBNq02038mf3ZfIdV7","0OeN3LUg0AcX3qtLZkPj"];
 
 if ((window.location.href.indexOf("localhost") > -1)||(window.location.href.indexOf("127.0.0.1") > -1)) 
 {
@@ -2122,7 +2123,7 @@ function getdefaultdatarun(data)
                         '</tr>'+
                       '</thead>'+
                       '<tbody class="mybsmi-rekapitulasiprov">';
-  var relawan = -1;
+  var relawan = 0;relawan = relawan-skipuid.length;
   var cabang = 0;
   var rekapitulasiprov = '';
   var rekapitulasicabang = '';
@@ -2141,7 +2142,7 @@ function getdefaultdatarun(data)
     
     if (datacabang[i].cabang == 'BSMI Jawa Timur')
     {
-      rekapitulasiprov += '<tr> <td class="label-cell"><a href="/cabang/'+kode+'">'+safe(datacabang[i].cabang)+'</a></td> <td class="numeric-cell">'+safe(datacabang[i].relawan-1)+'</td> </tr>';
+      rekapitulasiprov += '<tr> <td class="label-cell"><a href="/cabang/'+kode+'">'+safe(datacabang[i].cabang)+'</a></td> <td class="numeric-cell">'+safe(datacabang[i].relawan-skipuid.length)+'</td> </tr>';
       cabang = cabang+1;
     }
     else
@@ -2354,7 +2355,7 @@ function fpagecabangrun(content,cabangid)
   var jumlahrelawan = 0;
   for (i=content.length-1;i>-1;i--)
   {
-      if ((content[i][1] === '0OOBNq02038mf3ZfIdV7')&&(dashboarddata.user.useruid !== '0ONjeb65X5OunuRI6Ap8')){continue;}else{if ((content[i][1] === '0OOBNq02038mf3ZfIdV7')&&(!isLocal)) continue;}
+      if ((skipuid.includes(content[i][1]))&&(dashboarddata.user.useruid !== '0ONjeb65X5OunuRI6Ap8')){continue;}else{if ((skipuid.includes(content[i][1]))&&(!isLocal)) continue;}
       
       if ((content[i][2] === 'Terbatas')||(content[i][2] === 'Terverifikasi')||(content[i][2] === 'Tertolak')){}else{continue;}
       
@@ -3422,7 +3423,7 @@ function fpageverifikatorrun(content)
   var data = '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th>Nama</th><th>Email</th><th>Cabang</th><th></th></tr></thead><tbody>';
   for (i=content.length-1;i>-1;i--)
   {
-      if ((content[i][1] === '0OOBNq02038mf3ZfIdV7')&&(dashboarddata.user.useruid !== '0ONjeb65X5OunuRI6Ap8')){continue;}else{if ((content[i][1] === '0OOBNq02038mf3ZfIdV7')&&(!isLocal)){continue;}else{
+      if ((skipuid.includes(content[i][1]))&&(dashboarddata.user.useruid !== '0ONjeb65X5OunuRI6Ap8')){continue;}else{if ((skipuid.includes(content[i][1]))&&(!isLocal)){continue;}else{
       
         //data += '<a href="'+safe(content[i][4])+'" title="'+safe(content[i][4])+'">testing '+safe(content[i][4])+'</a>';
         
@@ -3825,7 +3826,7 @@ function fpageadminrun(content)
   var jumlahrelawan = 0;
   for (i=content.length-1;i>-1;i--)
   {
-      if ((content[i][1] === '0OOBNq02038mf3ZfIdV7')&&(dashboarddata.user.useruid !== '0ONjeb65X5OunuRI6Ap8')){continue;}else{if ((content[i][1] === '0OOBNq02038mf3ZfIdV7')&&(!isLocal)) continue;}
+      if ((skipuid.includes(content[i][1]))&&(dashboarddata.user.useruid !== '0ONjeb65X5OunuRI6Ap8')){continue;}else{if ((skipuid.includes(content[i][1]))&&(!isLocal)) continue;}
       
       if ((content[i][3] === 'Terbatas')||(content[i][3] === 'Terverifikasi')||(content[i][3] === 'Tertolak')){}else{continue;}
       
@@ -4509,7 +4510,7 @@ function fpagemasteradminlaporan(content)
   var data = '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th>Nama</th><th>Cabang</th><th></th></tr></thead><tbody>';
   for (i=content.length-1;i>-1;i--)
   {
-      if ((content[i][1] === '0OOBNq02038mf3ZfIdV7')&&(dashboarddata.user.useruid !== '0ONjeb65X5OunuRI6Ap8')){continue;}else{if ((content[i][1] === '0OOBNq02038mf3ZfIdV7')&&(!isLocal)) continue;}
+      if ((skipuid.includes(content[i][1]))&&(dashboarddata.user.useruid !== '0ONjeb65X5OunuRI6Ap8')){continue;}else{if ((skipuid.includes(content[i][1]))&&(!isLocal)) continue;}
       
       if ((content[i][3] === 'Terbatas')||(content[i][3] === 'Terverifikasi')||(content[i][3] === 'Tertolak')){}else{continue;}
       
@@ -4538,7 +4539,7 @@ function fpagemasterdatabase(content)
   var jumlahrelawan = 0;
   for (i=content.length-1;i>-1;i--)
   {
-      if ((content[i][1] === '0OOBNq02038mf3ZfIdV7')&&(dashboarddata.user.useruid !== '0ONjeb65X5OunuRI6Ap8')){continue;}else{if ((content[i][1] === '0OOBNq02038mf3ZfIdV7')&&(!isLocal)) continue;}
+      if ((skipuid.includes(content[i][1]))&&(dashboarddata.user.useruid !== '0ONjeb65X5OunuRI6Ap8')){continue;}else{if ((skipuid.includes(content[i][1]))&&(!isLocal)) continue;}
       
       if ((content[i][3] === 'Terbatas')||(content[i][3] === 'Terverifikasi')||(content[i][3] === 'Tertolak')){}else{continue;}
       
@@ -5581,7 +5582,7 @@ function fpagetwibbonrun(data)
   for (let i= pendukung.length-1;i>-1;i--)
   {
     if (pendukung[i].uid === dashboarddata.user.useruid) exists = true;
-    if (dashboarddata.user.useruid === '0OOBNq02038mf3ZfIdV7') exists = true;
+    if (skipuid.includes(dashboarddata.user.useruid)) exists = true;
   }
 
   $$('.mybsmi-twibbon-photo-button').on('click', function (e) {
