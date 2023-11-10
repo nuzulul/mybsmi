@@ -427,7 +427,7 @@ function fperiksauserstatus({ resolve, reject })
             let data = JSON.parse(dashboarddata.user.usermydata)
             if (data.verifikasiidentitas)
             {
-              app.dialog.alert('Proses verifikasi', 'Status')
+              app.dialog.alert('Proses verifikasi identitas', 'Status')
               reject();
             }
             else
@@ -446,7 +446,7 @@ function fperiksauserstatus({ resolve, reject })
        }
        else if (dashboarddata.user.userstatus === 'Tertolak')
        {
-          app.dialog.alert('Verifikasi gagal hubungi admin', 'Status')
+          app.dialog.alert('Verifikasi identitas gagal hubungi admin', 'Status')
           reject();
        }
        else
@@ -2191,6 +2191,10 @@ function getdefaultdatarun(data)
   })
   
   let usermydata = JSON.parse(data.user.usermydata)
+  if (usermydata.verifikasiidentitas)
+  {
+    $$('.mybsmi-ektamenu').show();
+  } 
   if (usermydata.verifikator)
   {
     $$('.mybsmi-verifikatormenu').show();
@@ -2485,7 +2489,8 @@ function fpageprofilku()
         app.views.main.router.navigate(url);          
     });
     $$('.mybsmi-profilku-verifikasi').on('click', function (e) {
-        fverifikasiidentitas();     
+        //fverifikasiidentitas();     
+        fverifikasidata()
     });
 }
 ////fpageprofilku////////////////////////////
@@ -2894,7 +2899,7 @@ function fverifikasidata()
 {
   var dialog = app.dialog.create({
     title: 'Permintaan Verifikasi',
-    text: 'Silahkan verifikasi identitas Anda untuk membuka fitur ini. Anda perlu menyiapkan kartu identitas untuk mengajukan verifikasi.',
+    text: 'Verifikasi identitas diperlukan.',
     closeByBackdropClick: false,
     destroyOnClose: true,
     on: {
