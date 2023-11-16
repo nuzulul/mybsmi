@@ -2367,7 +2367,7 @@ function fpagecabangrun(content,cabangid)
       
       let date = new Intl.DateTimeFormat("id-ID", { hour12:false,dateStyle: "short" , timeStyle: "short",  timeZone: "Asia/Jakarta"}).format(new Date(content[i][0]));date = date.split(' ');date = date[0];
       
-      data += '<tr class="mybsmi-admin-item-'+safe(content[i][1])+'"><td data-collapsible-title=""><img src="avatar.png" style="width:1.5em;aspet-ratio 1/1;object-fit:cover;border-radius:50% 50%;overflow:hidden;"></td><td data-collapsible-title="Nama"><a class="mybsmi-cabangaction" data-user="'+btoa(JSON.stringify(content[i]))+'">'+safe(content[i][3])+'</a></td><td data-collapsible-title="ID">'+safe(content[i][6])+'</td><td data-collapsible-title="Aktif">'+safe(date)+'</td></tr>';
+      data += '<tr class="mybsmi-admin-item-'+safe(content[i][1])+'"><td data-collapsible-title=""><img src="avatar.png" style="width:1.5em;aspet-ratio 1/1;object-fit:cover;border-radius:50% 50%;overflow:hidden;"></td><td data-collapsible-title="Nama"><a class="mybsmi-cabangaction" data-user="'+btoa(JSON.stringify(content[i]))+'">'+safe(content[i][3])+'</a></td><td data-collapsible-title="No. KTA">'+safe(content[i][6])+'</td><td data-collapsible-title="Aktif">'+safe(date)+'</td></tr>';
       
       jumlahrelawan++;
   }
