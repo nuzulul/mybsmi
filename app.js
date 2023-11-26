@@ -2143,7 +2143,7 @@ function getdefaultdatarun(data)
     if (datacabang[i].cabang == 'BSMI Jawa Timur')
     {
       rekapitulasiprov += '<tr> <td class="label-cell"><a href="/cabang/'+kode+'">'+safe(datacabang[i].cabang)+'</a></td> <td class="numeric-cell">'+safe(datacabang[i].relawan-skipuid.length)+'</td> </tr>';
-      cabang = cabang+1;
+      //cabang = cabang+1;
     }
     else
     {
