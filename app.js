@@ -3139,6 +3139,7 @@ function fpageekta()
     {
         fgetekta();
         $$('.mybsmi-ekta-keanggotaan').removeClass('display-none');
+        $$('.mybsmi-statuskeanggotaan').removeClass('display-none');
     }
     else
     {
@@ -3154,6 +3155,12 @@ function fpageekta()
             app.dialog.confirm('Pembuatan e-KTA memerlukan waktu sekitar 2-5 menit harap ditunggu.', 'Pemberitahuan', function (){fbuatekta();})
       });
     }
+    let status = data.statuskeanggotaan.status
+    let statustanggal = data.statuskeanggotaan.statustanggal
+    let jenjang = data.statuskeanggotaan.jenjang
+    let jenjangtanggal = data.statuskeanggotaan.jenjangtanggal
+    let statushtml = '<table><tr><td>STATUS</td><td>:</td><td>'+status+'</td></tr><tr><td>JENJANG</td><td>:</td><td>'+jenjang+'</td></tr></table>'
+    $$('.mybsmi-statuskeanggotaancontent').html(statushtml)
 }
 
 function fbuatekta()
