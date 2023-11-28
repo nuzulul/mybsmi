@@ -6487,7 +6487,7 @@ function getsocialdatarun(socialdata)
   window.mybsmisocialplace = {placename,city,region,latitude,longitude}
   let header = '<div class="row bg-color-white margin-bottom" style="padding:10px 10px;">'+
                     '<div class="col-20">'+
-                      '<div style="width:100%;"><img class="social-avatar" src="avatar.png" style="width:100%;aspet-ratio 1/1;object-fit:cover;"></div>'+
+                      '<div style="width:100%;aspect-ratio: auto 1 / 1;"><img class="social-avatar" src="avatar.png" style="width:100%;height:100%;aspet-ratio 1/1;object-fit:cover;"></div>'+
                     '</div>'+
                     '<div class="col-50">'+
                       '<span style="font-weight:bold;">'+safe(usernama)+'</span></br><span>@</span> <span><a href="#" class="change-place">'+safe(placename)+'</a></span></br><span class="text-color-gray">'+last+'</span>'+
@@ -6525,19 +6525,19 @@ function getsocialdatarun(socialdata)
             
             let img = ''
             if(arr[10]!=''){
-              img = '<img class="social-photo margin-right" src="avatar.png" style="width:50%;aspet-ratio 1/1;object-fit:cover;float:left;">'
+              img = '<div class="margin-right" style="width:50%;aspect-ratio: auto 1 / 1;float:left;"><img class="social-photo" src="avatar.png" style="width:100%;height:100%;aspet-ratio 1/1;object-fit:cover;"></div>'
             }
             
             let item = '<div class="row margin-bottom padding-top item-'+safe(arr[2])+'" style="border-style:inset hidden hidden hidden">'+
                             '<div class="col-20">'+
-                                '<div style="width:100%;"><a href="/relawan/'+safe(arr[6])+'"><img class="social-avatar" src="avatar.png" style="width:100%;aspet-ratio 1/1;object-fit:cover;"></a></div>'+
+                                '<div style="width:100%;aspect-ratio: auto 1 / 1;"><a href="/relawan/'+safe(arr[6])+'"><img class="social-avatar" src="avatar.png" style="width:100%;height:100%;aspet-ratio 1/1;object-fit:cover;"></a></div>'+
                             '</div>'+
                             '<div class="col-80">'+
                                   '<div class="row">'+
                                         '<div class="col-100 margin-bottom">'+img+
                                               '<a href="/relawan/'+safe(arr[6])+'"><span style="font-weight:bold;">'+safe(arr[4])+'</span></a> : <span>'+safe(arr[9])+'</span>'+
                                         '</div>'+
-                                        '<div class="col-100 text-color-gray margin-bottom" style="font-size:10px">'+
+                                        '<div class="col-100 text-color-gray margin-bottom" style="font-size:12px">'+
                                             '<div class="row">'+
                                                 '<div class="col-80">'+
                                                   '<span class="text-color-gray">@ '+safe(arr[11])+'</span> - '+relative_time(date)+' via '+safe(arr[14])+
@@ -6547,7 +6547,7 @@ function getsocialdatarun(socialdata)
                                                 '</div>'+
                                             '</div>'+
                                         '</div>'+
-                                        '<div class="col-100 margin-bottom bg-color-white comment">'+
+                                        '<div class="col-100 margin-bottom comment">'+
                                         '</div>'+
                                   '</div>'+
                             '</div>'+
@@ -6576,14 +6576,14 @@ function getsocialdatarun(socialdata)
             
             let item = '<div class="row margin-bottom padding-top padding-left padding-right item-'+safe(arr[2])+'" style="border-style:inset hidden hidden hidden">'+
                             '<div class="col-20">'+
-                                '<div style="width:100%;"><a href="/relawan/'+safe(arr[6])+'"><img class="social-avatar" src="avatar.png" style="width:100%;aspet-ratio 1/1;object-fit:cover;"></a></div>'+
+                                '<div style="width:100%;aspect-ratio: auto 1 / 1;"><a href="/relawan/'+safe(arr[6])+'"><img class="social-avatar" src="avatar.png" style="width:100%;height:100%;aspet-ratio 1/1;object-fit:cover;"></a></div>'+
                             '</div>'+
                             '<div class="col-80">'+
                                   '<div class="row">'+
                                         '<div class="col-100 margin-bottom">'+
                                               '<a href="/relawan/'+safe(arr[6])+'"><span style="font-weight:bold;">'+safe(arr[4])+'</span></a> : <span>'+safe(arr[9])+'</span>'+
                                         '</div>'+
-                                        '<div class="col-100 text-color-gray margin-bottom" style="font-size:10px">'+
+                                        '<div class="col-100 text-color-gray margin-bottom" style="font-size:12px">'+
                                             '<div class="row">'+
                                                 '<div class="col-100">'+
                                                   '<span class="text-color-gray">@ '+safe(arr[11])+'</span> - '+relative_time(date)+' via '+safe(arr[14])+
@@ -6723,7 +6723,7 @@ function faddkomentarcheckin(social,id)
       +'  <div class="list no-hairlines-md" style="width:100%">'
       +'    <ul>'
       +'        <li class="item-content item-input"><div class="item-inner"><div class="item-input-wrap">'
-      +'            <textarea name="deskripsi" placeholder="Apa yang sedang anda lakukan?" validate></textarea>'
+      +'            <textarea name="deskripsi" placeholder="Tulis komentar disini" required validate></textarea>'
       +'            </div></div>'
       +'        </li>'
       +'    </ul>'
@@ -6750,6 +6750,7 @@ function faddkomentarcheckin(social,id)
           {            
                 if (!$$('#mybsmi-socialcheckin-form')[0].checkValidity()) {
                       //console.log('Check Validity!');
+                      var toastBottom = app.toast.create({ text: 'Isi kolom komentar', closeTimeout: 5000,position: 'center', });toastBottom.open();
                       return;
                 }
                 //var dataform = JSON.stringify(app.form.convertToData('#mybsmi-socialcheckin-form'));
