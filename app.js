@@ -199,6 +199,18 @@ routes: [
     },
   },
   {
+    path: '/social/',
+    url: 'social.html',
+    on: {
+      pageAfterIn: function test (e, page) {
+        fpagesocial();
+      },
+    },
+    beforeEnter: function ({ resolve, reject }) {          
+        fperiksauserdata({ resolve, reject })
+    },
+  },
+  {
     path: '/twibbon/:aktivitasid',
     url: 'twibbon.html',
     on: {
@@ -2145,7 +2157,7 @@ function getdefaultdatarun(data)
 
   let html = ''+
                 '<div class="card data-table">'+
-                  '<div class="card-header">Statistik</div>'+
+                  '<div class="card-header">Data</div>'+
                   '<div class="card-content">'+
                     '<table>'+
                       '<thead>'+
@@ -6373,6 +6385,449 @@ function myviewer1(data)
   document.body.appendChild(para);
   $$('#mybsmi-iframe').attr('src',data);
 
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+function fpagesocial(run = true)
+{
+  if (typeof mybsmisocialdata === 'undefined' || mybsmisocialdata === null)
+  {
+      let mypreloader = app.dialog.preloader();
+      app.request({
+        url: apidataurl,
+        method: 'POST',
+        cache: false,
+        data : { token:mybsmiusertoken, command: 'getsocialdata'}, 
+        success: function (data, status, xhr)
+          {
+            mypreloader.close();
+            var status = JSON.parse(data).status;
+            var content = JSON.parse(data).data;
+            if (status == "success")
+            {
+              //console.log(content);
+              window.mybsmisocialdata = content;
+              if (run) getsocialdatarun(content);
+            }
+            else if (status == "failed")
+            {
+              //console.log("failed");
+              app.dialog.alert(content,'Terjadi Kesalahan');
+            }
+            else
+            {
+              //console.log("failed");
+              //app.dialog.alert(content,'Terjadi Kesalahan');
+              fcekexpiredtoken(content);
+            }
+          },
+        error: function (xhr, status, message)
+          {
+            //console.log(message);
+            mypreloader.close();
+            app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
+          },
+      })
+  }
+  else
+  {
+    if (run) getsocialdatarun(mybsmisocialdata);
+  }
+}
+
+function timeConverter(UNIX_timestamp){
+  //var a = new Date(UNIX_timestamp * 1000);
+  var a = new Date(UNIX_timestamp);
+  var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var year = a.getFullYear();
+  var month = months[a.getMonth()];
+  var date = a.getDate();
+  var hour = a.getHours();
+  var min = a.getMinutes();
+  var sec = a.getSeconds();
+  var time = date + '/' + month + '/' + year + ' ' + hour + ':' + min + ':' + sec ;
+  return time;
+}
+
+function getsocialdatarun(socialdata)
+{
+  //console.log(socialdata)
+  $$('.mybsmi-social-content').html('')
+  let usernama = dashboarddata.user.usernama
+  let userphoto = dashboarddata.user.userphoto
+  let useruid = dashboarddata.user.useruid
+  let usermydata = JSON.parse(dashboarddata.user.usermydata)
+  //console.log(usermydata)
+  let placename = ''
+  let city = ''
+  let region = ''
+  let latitude = ''
+  let longitude = ''
+  let last = ''
+  if(usermydata.social){
+    placename = usermydata.social.placename
+    city = usermydata.social.city
+    region = usermydata.social.region
+    latitude = usermydata.social.latitude
+    longitude = usermydata.social.longitude
+    let date = usermydata.social.date
+    let mytime = timeConverter(usermydata.social.time)
+    last = 'Anda check-in '+relative_time(mytime)
+  }else{
+    placename = usermydata.geodata.city
+    city = usermydata.geodata.city
+    region = usermydata.geodata.region
+    latitude = usermydata.geodata.latitude
+    longitude = usermydata.geodata.longitude
+    last = 'Anda belum pernah check-in'
+  }
+  window.mybsmisocialplace = {placename,city,region,latitude,longitude}
+  let header = '<div class="row bg-color-white margin-bottom" style="padding:10px 10px;">'+
+                    '<div class="col-20">'+
+                      '<div style="width:100%;"><img class="social-avatar" src="avatar.png" style="width:100%;aspet-ratio 1/1;object-fit:cover;"></div>'+
+                    '</div>'+
+                    '<div class="col-50">'+
+                      '<span style="font-weight:bold;">'+safe(usernama)+'</span></br><span>@</span> <span><a href="#" class="change-place">'+safe(placename)+'</a></span></br><span class="text-color-gray">'+last+'</span>'+
+                    '</div>'+
+                    '<div class="col-30">'+
+                      '<button class="button button-fill mybsmi-social-checkin">Check-in</button>'+
+                    '</div>'+
+                '</div>'+
+                '<div class="row margin-bottom"><div class="col-80"></div><div class="col-20"><a href="#" class="mybsmi-social-refresh" title="Refresh"><i class="icon f7-icons">arrow_clockwise_circle</i></a></div></div>'+
+                '<div class="mybsmi-social-list"></div>'
+  $$('.mybsmi-social-content').append(header)
+  //let url = 'https://lh3.googleusercontent.com/d/'+safe(userphoto);
+  let url = 'https://drive.google.com/uc?export=view&id='+safe(userphoto);
+  $$('.social-avatar').attr('src',url);
+
+  $$('.mybsmi-social-checkin').on('click', function () {
+    fsocialcheckin(window.mybsmisocialplace)
+  })
+
+  $$('.mybsmi-social-refresh').on('click', function () {
+    mybsmisocialdata = null
+    fpagesocial()
+  })
+  
+  //socialdata.reverse()
+  
+  socialdata.forEach(function(arr,index){
+        //console.log(index)
+        console.log(arr)
+        if(arr[2]=='Id')return
+        
+        if(arr[3]==''){
+        
+            let date = timeConverter(arr[1])
+            
+            let img = ''
+            if(arr[10]!=''){
+              img = '<img class="social-photo margin-right" src="avatar.png" style="width:50%;aspet-ratio 1/1;object-fit:cover;float:left;">'
+            }
+            
+            let item = '<div class="row margin-bottom padding-top item-'+safe(arr[2])+'" style="border-style:inset hidden hidden hidden">'+
+                            '<div class="col-20">'+
+                                '<div style="width:100%;"><a href="/relawan/'+safe(arr[6])+'"><img class="social-avatar" src="avatar.png" style="width:100%;aspet-ratio 1/1;object-fit:cover;"></a></div>'+
+                            '</div>'+
+                            '<div class="col-80">'+
+                                  '<div class="row">'+
+                                        '<div class="col-100 margin-bottom">'+img+
+                                              '<a href="/relawan/'+safe(arr[6])+'"><span style="font-weight:bold;">'+safe(arr[4])+'</span></a> : <span>'+safe(arr[9])+'</span>'+
+                                        '</div>'+
+                                        '<div class="col-100 text-color-gray margin-bottom" style="font-size:10px">'+
+                                            '<div class="row">'+
+                                                '<div class="col-80">'+
+                                                  '<span class="text-color-gray">@ '+safe(arr[11])+'</span> - '+relative_time(date)+' via '+safe(arr[14])+
+                                                '</div>'+
+                                                '<div class="col-20">'+
+                                                  '<span class="add-comment-'+safe(arr[2])+'" data-id="'+safe(arr[2])+'"><i class="icon f7-icons size-10 color-red">bubble_left_fill</i> Komentar</span>'+
+                                                '</div>'+
+                                            '</div>'+
+                                        '</div>'+
+                                        '<div class="col-100 margin-bottom bg-color-white comment">'+
+                                        '</div>'+
+                                  '</div>'+
+                            '</div>'+
+                        '</div>'
+            $$('.mybsmi-social-list').prepend(item)
+            let url = 'https://drive.google.com/uc?export=view&id='+safe(arr[8]);
+            $$('.item-'+safe(arr[2])+' .social-avatar').attr('src',url);
+            if(arr[10]!=''){
+              let url = 'https://drive.google.com/uc?export=view&id='+safe(arr[10]);
+              $$('.item-'+safe(arr[2])+' .social-photo').attr('src',url);
+              $$('.item-'+safe(arr[2])+' .social-photo').on('click', function () {
+                myimage(this);
+              })
+              $$('.item-'+safe(arr[2])+' .social-photo').css("cursor","pointer");
+            }
+            $$('.add-comment-'+safe(arr[2])).css("cursor","pointer");
+            $$('.add-comment-'+safe(arr[2])).on('click', function () {
+              let id = $$(this).data('id')
+              faddkomentarcheckin(window.mybsmisocialplace,id)
+            })
+            
+        }else{
+        
+            let repplytoid = arr[3]
+            let date = timeConverter(arr[1])
+            
+            let item = '<div class="row margin-bottom padding-top padding-left padding-right item-'+safe(arr[2])+'" style="border-style:inset hidden hidden hidden">'+
+                            '<div class="col-20">'+
+                                '<div style="width:100%;"><a href="/relawan/'+safe(arr[6])+'"><img class="social-avatar" src="avatar.png" style="width:100%;aspet-ratio 1/1;object-fit:cover;"></a></div>'+
+                            '</div>'+
+                            '<div class="col-80">'+
+                                  '<div class="row">'+
+                                        '<div class="col-100 margin-bottom">'+
+                                              '<a href="/relawan/'+safe(arr[6])+'"><span style="font-weight:bold;">'+safe(arr[4])+'</span></a> : <span>'+safe(arr[9])+'</span>'+
+                                        '</div>'+
+                                        '<div class="col-100 text-color-gray margin-bottom" style="font-size:10px">'+
+                                            '<div class="row">'+
+                                                '<div class="col-100">'+
+                                                  '<span class="text-color-gray">@ '+safe(arr[11])+'</span> - '+relative_time(date)+' via '+safe(arr[14])+
+                                                '</div>'+
+                                            '</div>'+
+                                        '</div>'+
+                                  '</div>'+
+                            '</div>'+
+                        '</div>'
+            $$('.item-'+repplytoid+' .comment').append(item)
+            let url = 'https://drive.google.com/uc?export=view&id='+safe(arr[8]);
+            $$('.item-'+safe(arr[2])+' .social-avatar').attr('src',url);
+        }
+  })
+}
+
+
+function fsocialcheckin(social)
+{
+  if (dashboarddata.user.userphoto === ''){flengkapidata();return;}
+  var dialog = app.dialog.create({
+    title: 'Optional',
+    closeByBackdropClick: false,
+    destroyOnClose: true,
+    content: '<div style="width:100%;overflow:auto;">'
+      +'<form id="mybsmi-socialcheckin-form" runat="server" style="display:flex;flex-direction:column;align-items:center;justify-content: center;">'
+
+      +'  <div class="list no-hairlines-md" style="width:100%">'
+      +'    <ul>'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-input-wrap">'
+      +'            <textarea name="deskripsi" placeholder="Apa yang sedang anda lakukan?" validate></textarea>'
+      +'            </div></div>'
+      +'        </li>'
+      +'    </ul>'
+      +'  </div>'
+      +'  <div class="accordion-item">'
+      +'      <div class="accordion-item-toggle">Tambah photo (Max 500KB)</div>'
+      +'      <div class="accordion-item-content">'
+      +'        <img id="mybsmisocialcheckinphotopreview" src="photo.svg" style="width:200px;height:150px;margin: 10px 10px;object-fit: contain;">'
+      +'        <input accept="image/jpeg" type="file" name="mybsmisocialcheckinuploadphoto" id="mybsmisocialcheckinuploadphoto" validate/>'
+      +'      </div>'
+      +'  </div>'
+      +'</form>'
+      +'</div>',
+    on: {
+      opened: function () {       
+          mybsmisocialcheckinuploadphoto.onchange = evt => {
+            let [file] = mybsmisocialcheckinuploadphoto.files
+            if (file) {
+              if (file.size > 524288)
+              {
+                //app.dialog.alert('File tidak boleh lebih dari 500 KB','Terjadi Kesalahan');
+                var toastBottom = app.toast.create({ text: 'File tidak boleh lebih dari 500 KB', closeTimeout: 5000,position: 'center', });toastBottom.open();
+                mybsmisocialcheckinuploadphoto.value = '';
+                mybsmisocialcheckinphotopreview.src = 'photo.svg'
+              }
+              else
+              {
+                mybsmisocialcheckinphotopreview.src = URL.createObjectURL(file)
+              }
+            }
+            else
+            {
+              mybsmisocialcheckinphotopreview.src = 'photo.svg'
+            }
+          }
+      }
+    },
+    buttons: [
+      {
+        text: 'Nanti Saja',
+        close:true,
+        color: 'gray',
+        onClick: function(dialog, e)
+          {
+          }
+      },
+      {
+        text: 'CHECK-IN',
+        close:true,
+        onClick: function(dialog, e)
+          {            
+            let [file] = mybsmisocialcheckinuploadphoto.files
+            if (file) {
+              if (!$$('#mybsmi-socialcheckin-form')[0].checkValidity()) {
+                    //console.log('Check Validity!');
+                    return;
+              }
+              //var dataform = JSON.stringify(app.form.convertToData('#mybsmi-socialcheckin-form'));//console.log(dataform);
+              var dataform = app.form.convertToData('#mybsmi-socialcheckin-form')
+              const fr = new FileReader();
+              fr.onload = function(e) {
+                const obj = {
+                  filename: file.name,
+                  mimeType: file.type,
+                  bytes: [...new Int8Array(e.target.result)],
+                  data: dataform,
+                  photo:true,
+                  social:social
+                };
+                fsocialgetgeodata(obj);
+              };
+              fr.readAsArrayBuffer(file);
+            }
+            else
+            {
+                if (!$$('#mybsmi-socialcheckin-form')[0].checkValidity()) {
+                      //console.log('Check Validity!');
+                      return;
+                }
+                //var dataform = JSON.stringify(app.form.convertToData('#mybsmi-socialcheckin-form'));
+                var dataform = app.form.convertToData('#mybsmi-socialcheckin-form')              
+                const obj = {
+                  data: dataform,
+                  photo:false,
+                  social:social
+                };
+                fsocialgetgeodata(obj);
+            }
+          }
+      },
+    ]
+  });
+  dialog.open();
+}
+
+function faddkomentarcheckin(social,id)
+{
+  if (dashboarddata.user.userphoto === ''){flengkapidata();return;}
+  var dialog = app.dialog.create({
+    title: 'Komentar',
+    closeByBackdropClick: false,
+    destroyOnClose: true,
+    content: '<div style="width:100%;overflow:auto;">'
+      +'<form id="mybsmi-socialcheckin-form" runat="server" style="display:flex;flex-direction:column;align-items:center;justify-content: center;">'
+
+      +'  <div class="list no-hairlines-md" style="width:100%">'
+      +'    <ul>'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-input-wrap">'
+      +'            <textarea name="deskripsi" placeholder="Apa yang sedang anda lakukan?" validate></textarea>'
+      +'            </div></div>'
+      +'        </li>'
+      +'    </ul>'
+      +'  </div>'
+      +'</form>'
+      +'</div>',
+    on: {
+      opened: function () {       
+      }
+    },
+    buttons: [
+      {
+        text: 'Nanti Saja',
+        close:true,
+        color: 'gray',
+        onClick: function(dialog, e)
+          {
+          }
+      },
+      {
+        text: 'Kirim',
+        close:true,
+        onClick: function(dialog, e)
+          {            
+                if (!$$('#mybsmi-socialcheckin-form')[0].checkValidity()) {
+                      //console.log('Check Validity!');
+                      return;
+                }
+                //var dataform = JSON.stringify(app.form.convertToData('#mybsmi-socialcheckin-form'));
+                var dataform = app.form.convertToData('#mybsmi-socialcheckin-form')              
+                const obj = {
+                  data: dataform,
+                  photo:false,
+                  social:social,
+                  repplyto:id
+                };
+                fsocialgetgeodata(obj);
+          }
+      },
+    ]
+  });
+  dialog.open();
+}
+
+function fsocialgetgeodata(obj)
+{
+        let mypreloader = app.dialog.preloader();
+        app.request({
+          url: 'https://get.geojs.io/v1/ip/geo.json',
+          method: 'GET',
+          cache: false, 
+          success: function (data, status, xhr)
+            {
+              //console.log(data);
+              mypreloader.close();
+              fkirimbuatcheckin(obj,data)
+            },
+          error: function (xhr, status, message)
+            {
+              //console.log(message);
+              mypreloader.close();
+              app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
+            },
+        })
+}
+
+function fkirimbuatcheckin(obj,geodata)
+{
+  console.log(obj);
+  var data = JSON.stringify(obj);
+  const os = detectOS();
+  let mypreloader = app.dialog.preloader();
+  app.request({
+    url: apidataurl,
+    method: 'POST',
+    cache: false,
+    data : { token:mybsmiusertoken, command: 'buatsocialcheckin', data: data, geodata:geodata,os:os}, 
+    success: function (data, status, xhr)
+      {
+        mypreloader.close();        
+        var status = JSON.parse(data).status;
+        var content = JSON.parse(data).data;
+        if (status == "success")
+        {
+          console.log(content);
+          var toastBottom = app.toast.create({ text: 'Berhasil', closeTimeout: 5000,position: 'center', });toastBottom.open();
+          $$('.mybsmi-social-refresh').click()
+        }
+        else if (status == "failed")
+        {
+          app.dialog.alert(content,'Terjadi Kesalahan');
+        }
+        else
+        {
+          fcekexpiredtoken(content);
+        }
+      },
+    error: function (xhr, status, message)
+      {
+        //console.log(message);
+        mypreloader.close();
+        app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
+      },
+  });
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
