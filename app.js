@@ -2389,6 +2389,23 @@ function fpagecabangrun(content,cabangid)
         //console.log(url);
         app.views.main.router.navigate(url);
   });
+
+  $$('.mybsmi-cabang-share').on('click', function (e) {
+            let route = app.views.current.router.currentPageEl.baseURI
+            if (navigator.share) {
+              navigator
+                .share({
+                  title: "Share",
+                  //text: "Share",
+                  url: route
+                })
+                .then(() => console.log("thanks for share"))
+                .catch(error => console.log("error", error));
+            } 
+            
+  });
+  
+  $$('.mybsmi-cabang-share').css("cursor","pointer");
 }
 //////fpagecabang///////////////////////////////////////////////
 
@@ -2434,6 +2451,24 @@ function fpagerelawanrun(data)
   $$('.mybsmi-relawan-kirimpesan').on('click', function (e) {
         fkirimpesan(data[1],data[3],data[5])
   });
+
+  $$('.mybsmi-relawan-share').on('click', function (e) {
+            let route = app.views.current.router.currentPageEl.baseURI
+            if (navigator.share) {
+              navigator
+                .share({
+                  title: "Share",
+                  //text: "Share",
+                  url: route
+                })
+                .then(() => console.log("thanks for share"))
+                .catch(error => console.log("error", error));
+            } 
+            
+  });
+  
+  $$('.mybsmi-relawan-share').css("cursor","pointer");
+  
 }
 ////////////////////////////////////////////////////////////
 
@@ -5606,6 +5641,23 @@ function fpagetwibbonrun(data)
     let time = d.getTime();
     fdownloadtwibbon(canvas, 'twibbon-'+data[1]+'-'+time+'.png');
   });
+
+  $$('.mybsmi-twibbon-share').on('click', function (e) {
+            let route = app.views.current.router.currentPageEl.baseURI
+            if (navigator.share) {
+              navigator
+                .share({
+                  title: "Share",
+                  //text: "Share",
+                  url: route
+                })
+                .then(() => console.log("thanks for share"))
+                .catch(error => console.log("error", error));
+            } 
+            
+  });
+  
+  $$('.mybsmi-twibbon-share').css("cursor","pointer");
   
   ///////////////loadposter/////////////////////////////////////////////
   let IMG_URL = 'https://cors.bsmijatim.workers.dev/?https://lh3.googleusercontent.com/d/'+safe(data[8]);
