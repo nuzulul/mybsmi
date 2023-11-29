@@ -6611,7 +6611,7 @@ function fsocialcheckin(social)
     content: '<div style="width:100%;height:60vh;overflow:auto;">'
       +'<form id="mybsmi-socialcheckin-form" runat="server" style="display:flex;flex-direction:column;align-items:left;justify-content: left;">'
       +'  <div class="margin-top">'
-      +'      <span>Check-in @ '+social.placename+'</span><a href="#" class="button display-inline mybsmi-change-place">Ganti</a>'
+      +'      <span>Check-in @ '+social.placename+'</span> <a href="#" class="button display-inline mybsmi-change-place">Ganti</a>'
       +'  </div>'
       +'  <div class="list no-hairlines-md" style="width:100%">'
       +'    <ul>'
