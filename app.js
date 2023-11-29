@@ -211,6 +211,18 @@ routes: [
     },
   },
   {
+    path: '/dokumen/',
+    url: 'dokumen.html',
+    on: {
+      pageAfterIn: function test (e, page) {
+        fpagedokumen();
+      },
+    },
+    beforeEnter: function ({ resolve, reject }) {          
+        fperiksauserdata({ resolve, reject })
+    },
+  },
+  {
     path: '/twibbon/:aktivitasid',
     url: 'twibbon.html',
     on: {
@@ -6939,6 +6951,104 @@ function fkirimbuatcheckin(obj,geodata)
   });
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+function fpagedokumen(run = true){
+    if (typeof mybsmidokumendata === 'undefined' || mybsmidokumendata === null)
+    {
+        var api = "https://cors.bsmijatim.workers.dev/?";
+        var sourcedokumen = [
+            {jenis:"sertifikatmybsmi",sheeturl:"https://docs.google.com/spreadsheets/d/e/2PACX-1vT4LuWDBXuIFxrvHtpl1m2gqb65LUr-ch0NjGCXW7_I4Z7BYttMP90xkR_rSlQNprdCXV2IH09B9pIR/pub?gid=0&single=true&output=csv",uid:4,judul:9,index:13,nomor:14,fileid:16,download:17}
+          ]
+        var allrequest = []
+        sourcedokumen.forEach(function(arr,index){
+            let request =       fetch(api+arr.sheeturl)
+                                .then(response => response.text())
+                                .then(async(response) => {
+                                    sourcedokumen[index].data = response
+                                })
+            allrequest.push(request)
+        })
+        try{
+          Promise.all(allrequest)
+          .then(results => {
+              console.log('ok')
+              console.log(sourcedokumen)
+              window.mybsmidokumendata = sourcedokumen;
+              if (run) getdokumendatarun(sourcedokumen);
+           });
+        }catch {
+              console.log('error')
+        }
+    }
+    else
+    {
+        if (run) getdokumendatarun(mybsmidokumendata);
+    }
+}
+
+function CSVToArray( strData, strDelimiter ){
+        strDelimiter = (strDelimiter || ",");
+        var objPattern = new RegExp(
+            (
+                // Delimiters.
+                "(\\" + strDelimiter + "|\\r?\\n|\\r|^)" +
+
+                // Quoted fields.
+                "(?:\"([^\"]*(?:\"\"[^\"]*)*)\"|" +
+
+                // Standard fields.
+                "([^\"\\" + strDelimiter + "\\r\\n]*))"
+            ),
+            "gi"
+            );
+        var arrData = [[]];
+        var arrMatches = null;
+        while (arrMatches = objPattern.exec( strData )){
+            var strMatchedDelimiter = arrMatches[ 1 ];
+            if (
+                strMatchedDelimiter.length &&
+                strMatchedDelimiter !== strDelimiter
+                ){
+                arrData.push( [] );
+
+            }
+
+            var strMatchedValue;
+            if (arrMatches[ 2 ]){
+                strMatchedValue = arrMatches[ 2 ].replace(
+                    new RegExp( "\"\"", "g" ),
+                    "\""
+                    );
+
+            } else {
+                strMatchedValue = arrMatches[ 3 ];
+
+            }
+
+            arrData[ arrData.length - 1 ].push( strMatchedValue );
+        }
+        return( arrData );
+}
+
+function getdokumendatarun(dokumen){
+    let tabel = '<div class="card data-table">'+
+                    '<table><thead><tr><th>Judul</th><th>File</th></tr></thead><tbody>'
+    dokumen.forEach(function(arr,index){
+        let data = CSVToArray(arr.data)
+        data = data.filter((sertifikat) => sertifikat[arr.uid]==dashboarddata.user.useruid);
+        console.log(data)
+        data.forEach(function(ser,idx){
+            tabel += '<tr><td>'+ser[arr.judul]+'</td><td><a class="link external" href="'+ser[arr.download]+'" target="_blank">Download</a></td></tr>'
+        })
+    })
+    tabel += '</tbody></table></div>'
+    $$('.mybsmi-dokumen').html(tabel)
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
