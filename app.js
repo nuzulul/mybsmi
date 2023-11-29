@@ -6490,7 +6490,7 @@ function getsocialdatarun(socialdata)
                       '<div style="width:100%;aspect-ratio: auto 1 / 1;"><img class="social-avatar" src="avatar.png" style="width:100%;height:100%;aspet-ratio 1/1;object-fit:cover;"></div>'+
                     '</div>'+
                     '<div class="col-50">'+
-                      '<span style="font-weight:bold;">'+safe(usernama)+'</span></br><span>@</span> <span><a href="#" class="change-place">'+safe(placename)+'</a></span></br><span class="text-color-gray">'+last+'</span>'+
+                      '<span style="font-weight:bold;">'+safe(usernama)+'</span></br><span>@</span> <span>'+safe(placename)+'</span></br><span class="text-color-gray">'+last+'</span>'+
                     '</div>'+
                     '<div class="col-30">'+
                       '<button class="button button-fill mybsmi-social-checkin">Check-in</button>'+
@@ -6539,10 +6539,10 @@ function getsocialdatarun(socialdata)
                                         '</div>'+
                                         '<div class="col-100 text-color-gray margin-bottom" style="font-size:12px">'+
                                             '<div class="row">'+
-                                                '<div class="col-80">'+
+                                                '<div class="col-70 medium-80">'+
                                                   '<span class="text-color-gray">@ '+safe(arr[11])+'</span> - '+relative_time(date)+' via '+safe(arr[14])+
                                                 '</div>'+
-                                                '<div class="col-20">'+
+                                                '<div class="col-30 medium-20">'+
                                                   '<span class="add-comment-'+safe(arr[2])+'" data-id="'+safe(arr[2])+'"><i class="icon f7-icons size-10 color-red">bubble_left_fill</i> Komentar</span>'+
                                                 '</div>'+
                                             '</div>'+
@@ -6608,9 +6608,11 @@ function fsocialcheckin(social)
     title: 'Optional',
     closeByBackdropClick: false,
     destroyOnClose: true,
-    content: '<div style="width:100%;overflow:auto;">'
-      +'<form id="mybsmi-socialcheckin-form" runat="server" style="display:flex;flex-direction:column;align-items:center;justify-content: center;">'
-
+    content: '<div style="width:100%;height:60vh;overflow:auto;">'
+      +'<form id="mybsmi-socialcheckin-form" runat="server" style="display:flex;flex-direction:column;align-items:left;justify-content: left;">'
+      +'  <div class="margin-top">'
+      +'      <span>Check-in @ '+social.placename+'</span><a href="#" class="button display-inline mybsmi-change-place">Ganti</a>'
+      +'  </div>'
       +'  <div class="list no-hairlines-md" style="width:100%">'
       +'    <ul>'
       +'        <li class="item-content item-input"><div class="item-inner"><div class="item-input-wrap">'
@@ -6629,7 +6631,7 @@ function fsocialcheckin(social)
       +'</form>'
       +'</div>',
     on: {
-      opened: function () {       
+      opened: function (dialog,e) {       
           mybsmisocialcheckinuploadphoto.onchange = evt => {
             let [file] = mybsmisocialcheckinuploadphoto.files
             if (file) {
@@ -6650,6 +6652,10 @@ function fsocialcheckin(social)
               mybsmisocialcheckinphotopreview.src = 'photo.svg'
             }
           }
+          $$('.mybsmi-change-place').on('click', function () {
+            dialog.close()
+            fdeteksilokasi()
+          })
       }
     },
     buttons: [
@@ -6708,6 +6714,80 @@ function fsocialcheckin(social)
     ]
   });
   dialog.open();
+}
+
+function fdeteksilokasi()
+{
+        let mypreloader = app.dialog.preloader('Deteksi Lokasi');
+        app.request({
+          url: 'https://get.geojs.io/v1/ip/geo.json',
+          method: 'GET',
+          cache: false, 
+          success: function (data, status, xhr)
+            {
+              //console.log(data);
+              mypreloader.close();
+              let json = JSON.parse(data)
+              fgantilokasi(json)
+            },
+          error: function (xhr, status, message)
+            {
+              //console.log(message);
+              mypreloader.close();
+              app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
+            },
+        })
+}
+
+function fgantilokasi(data)
+{
+      let placename = data.city
+      let city = data.city
+      let region = data.region
+      let latitude = data.latitude
+      let longitude = data.longitude
+      var dialog = app.dialog.create({
+        content:''////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+          +'<div style="width:100%;">'
+          +'  <div style="display:flex;flex-direction:column;align-items:center;justify-content: center;">'
+          +'      <p class="lokasi-city">'+placename+'</p>'
+          +'      <div style="width:100%;aspect-ratio:1/1;"><iframe class="lokasi-map" src="https://mybsmi.netlify.app/map.html?latitude='+latitude+'&longitude='+longitude+'" width="100%" height="100%"></iframe></div>'
+          +'      <div class="data-table"></div>'
+          +'  </div>'
+          +'</div>',//////////////////////////////////////////////////////////////////////////////////////////////////
+        closeByBackdropClick: false,
+        destroyOnClose: true,
+        verticalButtons: false,
+        title: 'Lokasi',
+        on: {
+          opened: function () {
+            //console.log('Dialog opened')
+            
+          }
+        },
+        buttons: [
+          {
+            text: 'Batal',
+            close:true,
+            color: 'gray',
+            onClick: function(dialog, e)
+              {
+                  fsocialcheckin(window.mybsmisocialplace)
+              }
+          },
+          {
+            text: 'Ganti',
+            close:true,
+            color: 'red',
+            onClick: function(dialog, e)
+              {
+                  window.mybsmisocialplace = {placename,city,region,latitude,longitude}
+                  fsocialcheckin(window.mybsmisocialplace)
+              }
+          },
+        ]
+      });
+      dialog.open();
 }
 
 function faddkomentarcheckin(social,id)
@@ -6809,7 +6889,15 @@ function fkirimbuatcheckin(obj,geodata)
         var content = JSON.parse(data).data;
         if (status == "success")
         {
-          console.log(content);
+          console.log(content)
+          const d = new Date();
+          let time = d.getTime();
+          let usermydata = JSON.parse(dashboarddata.user.usermydata)
+          usermydata.social = obj.social
+          usermydata.social.time = time
+          usermydata.social.date = d.toUTCString()
+          usermydata = JSON.stringify(usermydata)
+          dashboarddata.user.usermydata = usermydata
           var toastBottom = app.toast.create({ text: 'Berhasil', closeTimeout: 5000,position: 'center', });toastBottom.open();
           $$('.mybsmi-social-refresh').click()
         }
