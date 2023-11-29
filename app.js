@@ -6623,7 +6623,7 @@ function fsocialcheckin(social)
     content: '<div style="width:100%;max-height:60vh;overflow:auto;">'
       +'<form id="mybsmi-socialcheckin-form" runat="server" style="display:flex;flex-direction:column;align-items:left;justify-content: left;">'
       +'  <div class="margin-top">'
-      +'      <span>Check-in @ '+social.placename+'</span> <a href="#" class="button display-inline mybsmi-change-place">Update</a>'
+      +'      <span>Check-in @ '+safe(social.placename)+'</span> <a href="#" class="button display-inline mybsmi-change-place">Update</a>'
       +'  </div>'
       +'  <div class="list no-hairlines-md" style="width:100%">'
       +'    <ul>'
@@ -6762,8 +6762,8 @@ function fgantilokasi(data)
         content:''////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
           +'<div style="width:100%;">'
           +'  <div style="display:flex;flex-direction:column;align-items:center;justify-content: center;">'
-          +'      <p class="lokasi-city">'+placename+'</p>'
-          +'      <div style="width:100%;aspect-ratio:1/1;"><iframe class="lokasi-map" src="https://mybsmi.netlify.app/map.html?latitude='+latitude+'&longitude='+longitude+'" width="100%" height="100%"></iframe><div style="width:40px;height:40px;position:relative;right:0px;bottom:60px;background:white;float:right;border-radius: 50%;display:flex;flex-direction:column;align-items:center;justify-content: center;" class="open-gps"><i class="icon f7-icons size-25 color-blue">scope</i></div></div>'
+          +'      <p class="lokasi-city">'+safe(placename)+'</p>'
+          +'      <div style="width:100%;aspect-ratio:1/1;"><iframe class="lokasi-map" src="https://mybsmi.netlify.app/map.html?latitude='+safe(latitude)+'&longitude='+safe(longitude)+'" width="100%" height="100%"></iframe><div style="width:40px;height:40px;position:relative;right:0px;bottom:60px;background:white;float:right;border-radius: 50%;display:flex;flex-direction:column;align-items:center;justify-content: center;" class="open-gps"><i class="icon f7-icons size-25 color-blue">scope</i></div></div>'
           +'      <div class="data-table"></div>'
           +'  </div>'
           +'</div>',//////////////////////////////////////////////////////////////////////////////////////////////////
@@ -6788,8 +6788,8 @@ function fgantilokasi(data)
                         region = data.principalSubdivision
                         latitude = data.latitude
                         longitude = data.longitude
-                        $$('.lokasi-map').attr('src','https://mybsmi.netlify.app/map.html?latitude='+latitude+'&longitude='+longitude)
-                        $$('.lokasi-city').html(placename)
+                        $$('.lokasi-map').attr('src','https://mybsmi.netlify.app/map.html?latitude='+safe(latitude)+'&longitude='+safe(longitude))
+                        $$('.lokasi-city').html(safe(placename))
                     });
                     reverseGeocoder.localityLanguage='id';
 
@@ -7053,7 +7053,7 @@ function getdokumendatarun(dokumen){
     let tabel = '<div class="card data-table">'+
                     '<table><thead><tr><th>Judul</th><th>File</th></tr></thead><tbody>'
     hasil.forEach(function(arr,index){
-          tabel += '<tr><td>'+arr.judul+'</td><td><a class="link external" href="'+arr.download+'" target="_blank">View</a></td></tr>'
+          tabel += '<tr><td>'+safe(arr.judul)+'</td><td><a class="link external" href="'+arr.download+'" target="_blank">View</a></td></tr>'
     })                
     tabel += '</tbody></table></div>'
     $$('.mybsmi-dokumen').html(tabel)
