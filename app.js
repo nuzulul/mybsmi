@@ -6929,7 +6929,7 @@ function fkirimbuatcheckin(obj,geodata)
           usermydata.social.time = time
           usermydata.social.date = d.toUTCString()
           usermydata = JSON.stringify(usermydata)
-          dashboarddata.user.usermydata = usermydata
+          if(!obj.repplyto)dashboarddata.user.usermydata = usermydata
           var toastBottom = app.toast.create({ text: 'Berhasil', closeTimeout: 5000,position: 'center', });toastBottom.open();
           $$('.mybsmi-social-refresh').click()
         }
