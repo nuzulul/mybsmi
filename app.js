@@ -6961,7 +6961,7 @@ function fpagedokumen(run = true){
     {
         var api = "https://cors.bsmijatim.workers.dev/?";
         var sourcedokumen = [
-            {jenis:"sertifikatmybsmi",sheeturl:"https://docs.google.com/spreadsheets/d/e/2PACX-1vT4LuWDBXuIFxrvHtpl1m2gqb65LUr-ch0NjGCXW7_I4Z7BYttMP90xkR_rSlQNprdCXV2IH09B9pIR/pub?gid=0&single=true&output=csv",uid:4,judul:9,index:13,nomor:14,fileid:16,download:17}
+            {jenis:"sertifikatmybsmi",sheeturl:"https://docs.google.com/spreadsheets/d/e/2PACX-1vT4LuWDBXuIFxrvHtpl1m2gqb65LUr-ch0NjGCXW7_I4Z7BYttMP90xkR_rSlQNprdCXV2IH09B9pIR/pub?gid=0&single=true&output=csv",tanggal:0,uid:4,judul:9,index:13,nomor:14,fileid:16,download:17}
           ]
         var allrequest = []
         sourcedokumen.forEach(function(arr,index){
@@ -7035,16 +7035,26 @@ function CSVToArray( strData, strDelimiter ){
 }
 
 function getdokumendatarun(dokumen){
-    let tabel = '<div class="card data-table">'+
-                    '<table><thead><tr><th>Judul</th><th>File</th></tr></thead><tbody>'
+    
+    let hasil = []
     dokumen.forEach(function(arr,index){
         let data = CSVToArray(arr.data)
         data = data.filter((sertifikat) => sertifikat[arr.uid]==dashboarddata.user.useruid);
         console.log(data)
         data.forEach(function(ser,idx){
-            tabel += '<tr><td>'+ser[arr.judul]+'</td><td><a class="link external" href="'+ser[arr.download]+'" target="_blank">Download</a></td></tr>'
+            let tanggal = ser[arr.tanggal]
+            let judul = ser[arr.judul]
+            let download = ser[arr.download]
+            hasil.push({tanggal,judul,download})
         })
     })
+    hasil.sort(function(a, b){return new Date(a.tanggal) - new Date(b.tanggal)});
+    
+    let tabel = '<div class="card data-table">'+
+                    '<table><thead><tr><th>Judul</th><th>File</th></tr></thead><tbody>'
+    hasil.forEach(function(arr,index){
+          tabel += '<tr><td>'+arr.judul+'</td><td><a class="link external" href="'+arr.download+'" target="_blank">View</a></td></tr>'
+    })                
     tabel += '</tbody></table></div>'
     $$('.mybsmi-dokumen').html(tabel)
 }
