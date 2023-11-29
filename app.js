@@ -6477,7 +6477,7 @@ function getsocialdatarun(socialdata)
     let mytime = timeConverter(usermydata.social.time)
     last = 'Anda check-in '+relative_time(mytime)
   }else{
-    placename = usermydata.geodata.city
+    placename = usermydata.geodata.city+' , '+usermydata.geodata.region
     city = usermydata.geodata.city
     region = usermydata.geodata.region
     latitude = usermydata.geodata.latitude
@@ -6741,7 +6741,7 @@ function fdeteksilokasi()
 
 function fgantilokasi(data)
 {
-      let placename = data.city
+      let placename = data.city+' , '+data.region
       let city = data.city
       let region = data.region
       let latitude = data.latitude
@@ -6751,7 +6751,7 @@ function fgantilokasi(data)
           +'<div style="width:100%;">'
           +'  <div style="display:flex;flex-direction:column;align-items:center;justify-content: center;">'
           +'      <p class="lokasi-city">'+placename+'</p>'
-          +'      <div style="width:100%;aspect-ratio:1/1;"><iframe class="lokasi-map" src="https://mybsmi.netlify.app/map.html?latitude='+latitude+'&longitude='+longitude+'" width="100%" height="100%"></iframe></div>'
+          +'      <div style="width:100%;aspect-ratio:1/1;"><iframe class="lokasi-map" src="https://mybsmi.netlify.app/map.html?latitude='+latitude+'&longitude='+longitude+'" width="100%" height="100%"></iframe><div style="width:40px;height:40px;position:relative;right:0px;bottom:60px;background:white;float:right;border-radius: 50%;display:flex;flex-direction:column;align-items:center;justify-content: center;" class="open-gps"><i class="icon f7-icons size-25 color-blue">scope</i></div></div>'
           +'      <div class="data-table"></div>'
           +'  </div>'
           +'</div>',//////////////////////////////////////////////////////////////////////////////////////////////////
@@ -6761,8 +6761,28 @@ function fgantilokasi(data)
         title: 'Lokasi',
         on: {
           opened: function () {
-            //console.log('Dialog opened')
-            
+              //console.log('Dialog opened')
+              $$('.open-gps').css("cursor","pointer");
+              $$('.open-gps').on('click', function () {
+                    var reverseGeocoder=new BDCReverseGeocode();
+                    reverseGeocoder.getClientCoordinates(function(result) {
+                        console.log(result);                    
+                    });
+                    reverseGeocoder.getClientLocation(function(result) {
+                        console.log(result);
+                        let data = result
+                        placename = data.city+' , '+data.principalSubdivision
+                        city = data.city
+                        region = data.principalSubdivision
+                        latitude = data.latitude
+                        longitude = data.longitude
+                        $$('.lokasi-map').attr('src','https://mybsmi.netlify.app/map.html?latitude='+latitude+'&longitude='+longitude)
+                        $$('.lokasi-city').html(placename)
+                    });
+                    reverseGeocoder.localityLanguage='id';
+
+              })            
+
           }
         },
         buttons: [
@@ -7265,3 +7285,140 @@ function updateOnlineStatus(event) {
   }
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//https://github.com/bigdatacloudapi/js-reverse-geocode-client
+	var BDCReverseGeocode=function(localityLanguage,endpoint,server) {
+		this.endpoint=endpoint ? endpoint : 'reverse-geocode-client';
+		this.server=server ? server : 'api.bigdatacloud.net';
+		this.localityLanguage=localityLanguage ? localityLanguage : 'en';
+	};
+	BDCReverseGeocode.prototype={
+		setApi:function(api) {
+			this.api=api;
+			return this;
+		},
+		getApi:function() {
+			return this.api;
+		},
+		getClientCoordinates:function(cb) {
+			if (!cb) return false;
+			if (!navigator.geolocation || !navigator.geolocation.getCurrentPosition) return cb(false);
+			return navigator.geolocation.getCurrentPosition(
+				(function(position) { return this.cb(position);}).bind({cb:cb}),
+				(function(err) { console.error(err); return this.cb(false);}).bind({cb:cb}),
+				{
+					enableHighAccuracy: true,
+					timeout: 5000,
+					maximumAge: 0
+				}
+				);
+		},
+		getClientLocation:function(latLng,cb) {
+			var _this=this;
+			if (typeof latLng=='function' && !cb) {
+				cb=latLng;
+				latLng=null;
+			} else if (latLng=='function') {
+				latLng=latLng();
+			}
+			if (!cb) return false;
+			if (!latLng && latLng!=-1) {
+				return this.getClientCoordinates(function(position) {
+					_this.getClientLocation(position ? position : -1,cb);
+				})
+			} else {
+				this.callApi(this.processLatLng(latLng),function(result) {
+					cb(result);
+				},function(err) {
+					console.error(err);
+					cb(false);
+				});
+			}
+		},
+		processLatLng:function(latLng) {
+			var result={};
+			if (!latLng || latLng==-1) return {};
+			if (latLng.coords) {
+				latLng=latLng.coords;
+			}
+			if (!typeof latLng.latitude) {
+				if (latLng.lat) {
+					latLng.latitude=latLng.lat;
+				}
+			}
+			if (!typeof latLng.longitude) {
+				if (latLng.long) {
+					latLng.longitude=latLng.long;
+				}
+				if (latLng.lng) {
+					latLng.longitude=latLng.lng;
+				}
+			}
+			if (typeof latLng.latitude!= 'undefined') {
+				result.latitude=parseFloat(parseFloat(latLng.latitude).toFixed(5));
+			}
+			if (typeof latLng.longitude!= 'undefined') {
+				result.longitude=parseFloat(parseFloat(latLng.longitude).toFixed(5));
+			}
+			return result;
+		},
+		callApi:function(payload,cb) {
+/*			var xhr = new XMLHttpRequest()
+			xhr.open(
+				'GET',
+				'https://'+this.server+'/data/'+this.endpoint+'?'+this.prepareData(payload),
+				true
+				);
+			xhr.onreadystatechange = function() {
+				if (this.readyState === XMLHttpRequest.DONE) {
+					if (this.status === 200) {
+						try {
+							cb(JSON.parse(this.responseText))
+						} catch (e) {
+							cb(false)
+						}
+					} else {
+						try {
+							var result=JSON.parse(this.responseText);
+							console.error(result,this.status);
+							cb(false);
+						} catch (e) {
+							console.error(this.responseText,this.status);
+							cb(false);
+						}
+					}
+				}
+			}
+			xhr.send();*/
+      fetch('https://'+this.server+'/data/'+this.endpoint+'?'+this.prepareData(payload), {
+          method: 'GET',
+          headers: {
+              'Accept': 'application/json',
+          },
+      })
+      .then(response => response.json())
+      .then(async(response) => {
+          cb(response);
+      })
+		},
+		prepareData:function(payload) {
+			var data=[];
+			var hasLocalityLanguage=false;
+			if (payload) {
+				for (var i in payload) {
+					switch(i) {
+						case 'localityLanguage':
+						hasLocalityLanguage=true;
+						break;
+					}
+					data.push(encodeURIComponent(i)+'='+encodeURIComponent(payload[i]));
+				}
+			}
+			if (!hasLocalityLanguage) data.push('localityLanguage='+this.localityLanguage);
+			data=data.join('&');
+			return data;
+		}
+	}
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
