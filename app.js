@@ -5581,6 +5581,8 @@ function fbuataktivitasrun()
                     //console.log('Check Validity!');
                     return;
               }
+              let val = "'"+$$('#mybsmi-buataktivitas-form input[name=tanggal').val()
+              $$('#mybsmi-buataktivitas-form input[name=tanggal').val(val)
               var dataform = JSON.stringify(app.form.convertToData('#mybsmi-buataktivitas-form'));//console.log(dataform);
               const blob = filetoblob(file)
               blob.then((value)=>{
