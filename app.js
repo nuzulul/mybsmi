@@ -5583,7 +5583,8 @@ function fbuataktivitasrun()
               }
               let tanggal = $$('#mybsmi-buataktivitas-form input[name=tanggal').val()
               if(tanggal == '')return
-              let val = "'"+tanggal
+              let val = tanggal
+              if(!val.startsWith("'"))let val = "'"+tanggal
               $$('#mybsmi-buataktivitas-form input[name=tanggal').val(val)
               if($$('#mybsmi-buataktivitas-form select[name=kategori]').val() == "Twibbon"){
                   if(file.type != "image/png"){
