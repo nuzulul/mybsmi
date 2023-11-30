@@ -2907,7 +2907,7 @@ function flengkapiphoto()
     closeByBackdropClick: false,
     destroyOnClose: true,
     content: '<div style="width:100%;">'
-      +'<p style="text-align:center; border:1px solid gray;padding:10px 10px;color:gray;">Pilih photo resmi direkomendasikan memakai rompi BSMI dengan ukuran 1:1. Anda tidak dapat melakukan perubahan photo setelah upload!</p>'
+      +'<p style="text-align:center; border:1px solid gray;padding:10px 10px;color:gray;">Pilih photo resmi direkomendasikan memakai rompi BSMI dengan bentuk persegi. Anda tidak dapat melakukan perubahan photo setelah upload!</p>'
       +'<form runat="server" style="display:flex;flex-direction:column;align-items:center;justify-content: center;">'
       +'<img id="mybsmiuploadphotopreview" src="avatar.png" style="width:150px;height:150px;margin: 10px 10px;border-radius: 50%;object-fit: cover;">'
       +'<input accept="image/jpeg" type="file" id="mybsmiuploadphoto" />'
@@ -2918,10 +2918,10 @@ function flengkapiphoto()
           mybsmiuploadphoto.onchange = evt => {
             const [file] = mybsmiuploadphoto.files
             if (file) {
-              if (file.size > 524288)
+              if (file.size > 10485760) //10MB
               {
                 //app.dialog.alert('File tidak boleh lebih dari 500 KB','Terjadi Kesalahan');
-                var toastBottom = app.toast.create({ text: 'File tidak boleh lebih dari 500 KB', closeTimeout: 5000,position: 'center', });toastBottom.open();
+                var toastBottom = app.toast.create({ text: 'File tidak boleh lebih dari 10 MB', closeTimeout: 5000,position: 'center', });toastBottom.open();
                 mybsmiuploadphoto.value = '';
                 mybsmiuploadphotopreview.src = 'avatar.png'
               }
@@ -2953,16 +2953,19 @@ function flengkapiphoto()
           {
             const [file] = mybsmiuploadphoto.files
             if (file) {
-              const fr = new FileReader();
-              fr.onload = function(e) {
-                const obj = {
-                  filename: file.name,
-                  mimeType: file.type,
-                  bytes: [...new Int8Array(e.target.result)]
-                };
-                fuploadphoto(dialog,obj);
-              };
-              fr.readAsArrayBuffer(file);
+                const blob = filetoblob(file)
+                blob.then((value)=>{
+                    const fr = new FileReader();
+                    fr.onload = function(e) {
+                      const obj = {
+                        filename: file.name,
+                        mimeType: file.type,
+                        bytes: [...new Int8Array(e.target.result)]
+                      };
+                      fuploadphoto(dialog,obj);
+                    };
+                    fr.readAsArrayBuffer(value);
+                })
             }
             else
             {
@@ -3145,10 +3148,10 @@ function fverifikasiidentitas()
           mybsmiuploadphoto.onchange = evt => {
             const [file] = mybsmiuploadphoto.files
             if (file) {
-              if (file.size > 524288)
+              if (file.size > 10485760) //10MB
               {
                 //app.dialog.alert('File tidak boleh lebih dari 500 KB','Terjadi Kesalahan');
-                var toastBottom = app.toast.create({ text: 'File tidak boleh lebih dari 500 KB', closeTimeout: 5000,position: 'center', });toastBottom.open();
+                var toastBottom = app.toast.create({ text: 'File tidak boleh lebih dari 10 MB', closeTimeout: 5000,position: 'center', });toastBottom.open();
                 mybsmiuploadphoto.value = '';
                 mybsmiuploadphotopreview.src = 'ktpplaceholder.png'
               }
@@ -3185,17 +3188,20 @@ function fverifikasiidentitas()
                     return;
               }
               var dataform = JSON.stringify(app.form.convertToData('#mybsmi-formverifikasiidentitas'));//console.log(dataform);
-              const fr = new FileReader();
-              fr.onload = function(e) {
-                const obj = {
-                  filename: file.name,
-                  mimeType: file.type,
-                  bytes: [...new Int8Array(e.target.result)],
-                  ktp: dataform
-                };
-                fkirimverifikasiidentitas(dialog,obj);
-              };
-              fr.readAsArrayBuffer(file);
+              const blob = filetoblob(file)
+              blob.then((value)=>{
+                  const fr = new FileReader();
+                  fr.onload = function(e) {
+                    const obj = {
+                      filename: file.name,
+                      mimeType: file.type,
+                      bytes: [...new Int8Array(e.target.result)],
+                      ktp: dataform
+                    };
+                    fkirimverifikasiidentitas(dialog,obj);
+                  };
+                  fr.readAsArrayBuffer(value);
+              })
             }
             else
             {
@@ -5536,10 +5542,10 @@ function fbuataktivitasrun()
           mybsmibuataktivitasuploadposter.onchange = evt => {
             let [file] = mybsmibuataktivitasuploadposter.files
             if (file) {
-              if (file.size > 524288)
+              if (file.size > 10485760) //10MB
               {
                 //app.dialog.alert('File tidak boleh lebih dari 500 KB','Terjadi Kesalahan');
-                var toastBottom = app.toast.create({ text: 'File tidak boleh lebih dari 500 KB', closeTimeout: 5000,position: 'center', });toastBottom.open();
+                var toastBottom = app.toast.create({ text: 'File tidak boleh lebih dari 10 MB', closeTimeout: 5000,position: 'center', });toastBottom.open();
                 mybsmibuataktivitasuploadposter.value = '';
                 mybsmibuataktivitasposeterpreview.src = 'photo.svg'
               }
@@ -5576,17 +5582,20 @@ function fbuataktivitasrun()
                     return;
               }
               var dataform = JSON.stringify(app.form.convertToData('#mybsmi-buataktivitas-form'));//console.log(dataform);
-              const fr = new FileReader();
-              fr.onload = function(e) {
-                const obj = {
-                  filename: file.name,
-                  mimeType: file.type,
-                  bytes: [...new Int8Array(e.target.result)],
-                  aktivitas: dataform
-                };
-                fkirimbuataktivitas(dialog,obj);
-              };
-              fr.readAsArrayBuffer(file);
+              const blob = filetoblob(file)
+              blob.then((value)=>{
+                    const fr = new FileReader();
+                    fr.onload = function(e) {
+                      const obj = {
+                        filename: file.name,
+                        mimeType: file.type,
+                        bytes: [...new Int8Array(e.target.result)],
+                        aktivitas: dataform
+                      };
+                      fkirimbuataktivitas(dialog,obj);
+                    };
+                    fr.readAsArrayBuffer(value);
+              })
             }
             else
             {
@@ -6443,6 +6452,62 @@ function myviewer1(data)
 
 
 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+function filetoblob(file)
+{
+  return new Promise(function(myResolve, myReject) {
+    if(file.size < 524288)return myResolve(file)
+    var sizeInMB = (file.size / (1024*1024)).toFixed(2);
+    console.log('size awal = '+sizeInMB)
+    const blobURL = URL.createObjectURL(file);
+    const img     = new Image();
+    img.src       = blobURL;
+
+    img.onerror = function () {
+      URL.revokeObjectURL(this.src);
+      // Handle the failure properly
+      console.log("Cannot load image");
+      return myReject()
+    };
+    
+    img.onload = function () {
+      if(img.width < 1000)return myResolve(file)
+      const canvas = document.createElement("canvas");
+      const context = canvas.getContext("2d");
+      const originalWidth = img.width;
+      const originalHeight = img.height;
+      const canvasWidth = 1000
+      const canvasHeight = canvasWidth * (originalHeight / originalWidth);
+      canvas.width = canvasWidth;
+      canvas.height = canvasHeight;
+      context.drawImage(
+        img,
+        0,
+        0,
+        canvasWidth,
+        canvasHeight
+      );    
+      const imageData = context.getImageData(0, 0, canvasWidth, canvasHeight);
+      var canvassizeInMB = (imageData.data.byteLength / (1024*1024)).toFixed(2);
+      console.log('size akhir = '+canvassizeInMB)
+      canvas.toBlob((blob) => {
+        const reader = new FileReader();
+        reader.addEventListener('loadend', () => {
+          const arrayBuffer = reader.result;
+          const blob = new Blob([arrayBuffer], {type: file.type});
+          if(blob.size > file.size) return myResolve(file)
+          return myResolve(blob)
+        });
+        reader.readAsArrayBuffer(blob);
+      }, file.type);
+    }
+  });
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 function fpagesocial(run = true)
 {
@@ -6664,18 +6729,18 @@ function fsocialcheckin(social)
     content: '<div style="width:100%;max-height:60vh;overflow:auto;">'
       +'<form id="mybsmi-socialcheckin-form" runat="server" style="display:flex;flex-direction:column;align-items:left;justify-content: left;">'
       +'  <div class="margin-top">'
-      +'      <span>Check-in @ '+safe(social.placename)+'</span> <a href="#" class="button display-inline mybsmi-change-place">Update</a>'
+      +'      <span>Check-in @ '+safe(social.placename)+'</span> <a href="#" class="button display-inline mybsmi-change-place">Update Lokasi</a>'
       +'  </div>'
       +'  <div class="list no-hairlines-md" style="width:100%">'
       +'    <ul>'
       +'        <li class="item-content item-input"><div class="item-inner"><div class="item-input-wrap">'
-      +'            <textarea name="deskripsi" placeholder="Apa yang sedang anda lakukan?" validate></textarea>'
+      +'            <textarea name="deskripsi" placeholder="Sedang apa?" validate></textarea>'
       +'            </div></div>'
       +'        </li>'
       +'    </ul>'
       +'  </div>'
       +'  <div class="accordion-item">'
-      +'      <div class="accordion-item-toggle">Tambah photo (Max 500KB)</div>'
+      +'      <div class="accordion-item-toggle"><i class="f7-icons size-12">camera</i> Tambah photo</div>'
       +'      <div class="accordion-item-content">'
       +'        <img id="mybsmisocialcheckinphotopreview" src="photo.svg" style="width:200px;height:150px;margin: 10px 10px;object-fit: contain;">'
       +'        <input accept="image/jpeg" type="file" name="mybsmisocialcheckinuploadphoto" id="mybsmisocialcheckinuploadphoto" validate/>'
@@ -6688,10 +6753,10 @@ function fsocialcheckin(social)
           mybsmisocialcheckinuploadphoto.onchange = evt => {
             let [file] = mybsmisocialcheckinuploadphoto.files
             if (file) {
-              if (file.size > 524288)
+              if (file.size > 10485760) //10MB
               {
                 //app.dialog.alert('File tidak boleh lebih dari 500 KB','Terjadi Kesalahan');
-                var toastBottom = app.toast.create({ text: 'File tidak boleh lebih dari 500 KB', closeTimeout: 5000,position: 'center', });toastBottom.open();
+                var toastBottom = app.toast.create({ text: 'File tidak boleh lebih dari 10 MB', closeTimeout: 5000,position: 'center', });toastBottom.open();
                 mybsmisocialcheckinuploadphoto.value = '';
                 mybsmisocialcheckinphotopreview.src = 'photo.svg'
               }
@@ -6708,6 +6773,12 @@ function fsocialcheckin(social)
           $$('.mybsmi-change-place').on('click', function () {
             dialog.close()
             fdeteksilokasi()
+          })
+          $$('#mybsmi-socialcheckin-form .accordion-item-toggle').on('click', function () {
+            $$('#mybsmi-socialcheckin-form #mybsmisocialcheckinuploadphoto').click()
+          })
+          $$('#mybsmi-socialcheckin-form #mybsmisocialcheckinphotopreview').on('click', function () {
+            $$('#mybsmi-socialcheckin-form #mybsmisocialcheckinuploadphoto').click()
           })
       }
     },
@@ -6733,19 +6804,22 @@ function fsocialcheckin(social)
               }
               //var dataform = JSON.stringify(app.form.convertToData('#mybsmi-socialcheckin-form'));//console.log(dataform);
               var dataform = app.form.convertToData('#mybsmi-socialcheckin-form')
-              const fr = new FileReader();
-              fr.onload = function(e) {
-                const obj = {
-                  filename: file.name,
-                  mimeType: file.type,
-                  bytes: [...new Int8Array(e.target.result)],
-                  data: dataform,
-                  photo:true,
-                  social:social
+              const blob = filetoblob(file)
+              blob.then((value)=>{
+                const fr = new FileReader();
+                fr.onload = function(e) {
+                  const obj = {
+                    filename: file.name,
+                    mimeType: file.type,
+                    bytes: [...new Int8Array(e.target.result)],
+                    data: dataform,
+                    photo:true,
+                    social:social
+                  };
+                  fsocialgetgeodata(obj);
                 };
-                fsocialgetgeodata(obj);
-              };
-              fr.readAsArrayBuffer(file);
+                fr.readAsArrayBuffer(value);
+              })
             }
             else
             {
