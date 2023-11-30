@@ -2618,6 +2618,7 @@ function fpageprofilku()
         let url = "/relawan/"+safe(data.useruid);
         app.views.main.router.navigate(url);          
     });
+    $$('.mybsmi-profilku-verifikasi').off('click');
     $$('.mybsmi-profilku-verifikasi').on('click', function (e) {
         //fverifikasiidentitas();     
         fverifikasidata()
@@ -3220,6 +3221,7 @@ function fkirimverifikasiidentitas(dialog,obj)
     data : { token:mybsmiusertoken, command: 'verifikasiidentitas', data: data}, 
     success: function (data, status, xhr)
       {
+        //console.log(data)
         mypreloader.close();        
         var status = JSON.parse(data).status;
         var content = JSON.parse(data).data;
