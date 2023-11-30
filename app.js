@@ -2202,7 +2202,7 @@ function getdefaultdatarun(data)
   kodecabang = data.kodecabang;
   $$('.mybsmi-currentusernama').text(safe(data.user.usernama));
   if (data.user.userphoto !== '') {$$('.mybsmi-avatar').attr('src','https://drive.google.com/uc?export=view&id='+safe(data.user.userphoto));}
-  if (data.user.userstatus === "Terverifikasi"){$$('.mybsmi-avatar-badge').css('display','flex');};
+  //if (data.user.userstatus === "Terverifikasi"){$$('.mybsmi-avatar-badge').css('display','flex');};
   flogout();
 
   let html = ''+
