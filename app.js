@@ -2907,7 +2907,7 @@ function flengkapiphoto()
     closeByBackdropClick: false,
     destroyOnClose: true,
     content: '<div style="width:100%;">'
-      +'<p style="text-align:center; border:1px solid gray;padding:10px 10px;color:gray;">Pilih photo resmi direkomendasikan memakai rompi BSMI dengan bentuk persegi. Anda tidak dapat melakukan perubahan photo setelah upload!</p>'
+      +'<p style="text-align:center; border:1px solid gray;padding:10px 10px;color:gray;">Pilih photo formal direkomendasikan memakai rompi BSMI. Anda tidak dapat melakukan perubahan photo setelah upload!</p>'
       +'<form runat="server" style="display:flex;flex-direction:column;align-items:center;justify-content: center;">'
       +'<img id="mybsmiuploadphotopreview" src="avatar.png" style="width:150px;height:150px;margin: 10px 10px;border-radius: 50%;object-fit: cover;">'
       +'<input accept="image/jpeg" type="file" id="mybsmiuploadphoto" />'
@@ -5478,7 +5478,7 @@ function fbuataktivitasrun()
       +'  <div class="list no-hairlines-md">'
       +'    <ul>'
       +'        <li class="item-content item-input"><div class="item-inner"><div class="item-input-wrap">'
-      +'            <p class="mybsmibuataktivitasinfo" style="font-size:0.7em;">Untuk kategori twibbon pilih poster berformat PNG dengan terdapat bagian transparant tempat menaruh foto.</p>'
+      +'            <p class="mybsmibuataktivitasinfo" style="font-size:0.7em;"></p>'
       +'            </div></div>'
       +'        </li>'
       +'        <li class="item-content item-input"><div class="item-inner"><div class="item-input-wrap">'
