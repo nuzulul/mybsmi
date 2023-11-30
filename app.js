@@ -2953,7 +2953,7 @@ function flengkapiphoto()
           {
             const [file] = mybsmiuploadphoto.files
             if (file) {
-                const blob = filetoblob(file)
+                const blob = imagetosquare(file)
                 blob.then((value)=>{
                     const fr = new FileReader();
                     fr.onload = function(e) {
@@ -3188,7 +3188,7 @@ function fverifikasiidentitas()
                     return;
               }
               var dataform = JSON.stringify(app.form.convertToData('#mybsmi-formverifikasiidentitas'));//console.log(dataform);
-              const blob = filetoblob(file)
+              const blob = imagetosmall(file)
               blob.then((value)=>{
                   const fr = new FileReader();
                   fr.onload = function(e) {
@@ -5473,7 +5473,7 @@ function fbuataktivitasrun()
     destroyOnClose: true,
     content: '<div style="width:100%;height:60vh;overflow:auto;">'
       +'<form id="mybsmi-buataktivitas-form" runat="server" style="display:flex;flex-direction:column;align-items:center;justify-content: center;">'
-      +'  <img id="mybsmibuataktivitasposeterpreview" src="photo.svg" style="width:200px;height:150px;margin: 10px 10px;object-fit: contain;">'
+      +'  <img id="mybsmibuataktivitasposeterpreview" src="photo.svg" style="width:200px;height:200px;margin: 10px 10px;object-fit: contain;background-image: url(transparent.jpg);">'
       +'  <input accept="image/png,image/jpeg" type="file" name="mybsmibuataktivitasuploadposter" id="mybsmibuataktivitasuploadposter" required validate/>'
       +'  <div class="list no-hairlines-md">'
       +'    <ul>'
@@ -5583,8 +5583,14 @@ function fbuataktivitasrun()
               }
               let val = "'"+$$('#mybsmi-buataktivitas-form input[name=tanggal').val()
               $$('#mybsmi-buataktivitas-form input[name=tanggal').val(val)
+              if($$('#mybsmi-buataktivitas-form select[name=kategori]').val() == "Twibbon"){
+                  if(file.type != "image/png"){
+                      var toastBottom = app.toast.create({ text: 'Twibbon harus memiliki bagian transparan', closeTimeout: 5000,position: 'center', });toastBottom.open();
+                      return
+                  }
+              }
               var dataform = JSON.stringify(app.form.convertToData('#mybsmi-buataktivitas-form'));//console.log(dataform);
-              const blob = filetoblob(file)
+              const blob = imagetosmall(file)
               blob.then((value)=>{
                     const fr = new FileReader();
                     fr.onload = function(e) {
@@ -6456,7 +6462,7 @@ function myviewer1(data)
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-function filetoblob(file)
+function imagetosmall(file)
 {
   return new Promise(function(myResolve, myReject) {
     if(file.size < 524288)return myResolve(file)
@@ -6499,6 +6505,85 @@ function filetoblob(file)
           const arrayBuffer = reader.result;
           const blob = new Blob([arrayBuffer], {type: file.type});
           if(blob.size > file.size) return myResolve(file)
+          return myResolve(blob)
+        });
+        reader.readAsArrayBuffer(blob);
+      }, file.type);
+    }
+  });
+}
+
+function imagetosquare(file)
+{
+  return new Promise(function(myResolve, myReject) {
+    var sizeInMB = (file.size / (1024*1024)).toFixed(2);
+    console.log('size awal = '+sizeInMB)
+    const blobURL = URL.createObjectURL(file);
+    const img     = new Image();
+    img.src       = blobURL;
+
+    img.onerror = function () {
+      URL.revokeObjectURL(this.src);
+      // Handle the failure properly
+      console.log("Cannot load image");
+      return myReject()
+    };
+    
+    img.onload = function () {
+
+      //contains = false => cover
+      function fit(contains,parentWidth, parentHeight, childWidth, childHeight, scale = 1, offsetX = 0.5, offsetY = 0.5) {
+        const childRatio = childWidth / childHeight
+        const parentRatio = parentWidth / parentHeight
+        let width = parentWidth * scale
+        let height = parentHeight * scale
+
+        if (contains ? (childRatio > parentRatio) : (childRatio < parentRatio)) {
+          height = width / childRatio
+        } else {
+          width = height * childRatio
+        }
+
+        return {
+          width,
+          height,
+          offsetX: (parentWidth - width) * offsetX,
+          offsetY: (parentHeight - height) * offsetY
+        }
+      }
+
+      const canvas = document.createElement("canvas");
+      const context = canvas.getContext("2d");
+      const originalWidth = img.width;
+      const originalHeight = img.height;
+      const canvasWidth = 1000
+      const canvasHeight = 1000;
+      canvas.width = canvasWidth;
+      canvas.height = canvasHeight;
+
+      const {
+        offsetX, 
+        offsetY, 
+        width, 
+        height
+      } = fit(false,canvasWidth, canvasHeight, originalWidth, originalHeight)
+
+      context.drawImage(
+        img,
+        offsetX,
+        offsetY,
+        width,
+        height
+      );
+          
+      const imageData = context.getImageData(0, 0, canvasWidth, canvasHeight);
+      var canvassizeInMB = (imageData.data.byteLength / (1024*1024)).toFixed(2);
+      console.log('size akhir = '+canvassizeInMB)
+      canvas.toBlob((blob) => {
+        const reader = new FileReader();
+        reader.addEventListener('loadend', () => {
+          const arrayBuffer = reader.result;
+          const blob = new Blob([arrayBuffer], {type: file.type});
           return myResolve(blob)
         });
         reader.readAsArrayBuffer(blob);
@@ -6806,7 +6891,7 @@ function fsocialcheckin(social)
               }
               //var dataform = JSON.stringify(app.form.convertToData('#mybsmi-socialcheckin-form'));//console.log(dataform);
               var dataform = app.form.convertToData('#mybsmi-socialcheckin-form')
-              const blob = filetoblob(file)
+              const blob = imagetosmall(file)
               blob.then((value)=>{
                 const fr = new FileReader();
                 fr.onload = function(e) {
@@ -7170,6 +7255,7 @@ function getdokumendatarun(dokumen){
     let tabel = '<div class="card data-table">'+
                     '<table><thead><tr><th>Judul</th><th>File</th></tr></thead><tbody>'
     hasil.forEach(function(arr,index){
+          if(arr.download == '')return
           tabel += '<tr><td>'+safe(arr.judul)+'</td><td><a class="link external" href="'+arr.download+'" target="_blank">View</a></td></tr>'
     })                
     tabel += '</tbody></table></div>'
