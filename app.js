@@ -1901,6 +1901,7 @@ function flogger(input)
       
       if (isLocal) return
       if(dashboarddata.user.userbid == 'BSMI3500AA')return
+      if(skipuid.include(dashboarddata.user.useruid)) return
       
       let login = input
       let nama = dashboarddata.user.usernama
