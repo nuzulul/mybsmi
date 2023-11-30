@@ -1848,7 +1848,7 @@ function fperiodikauth()
           
       if (localStorage.getItem("mybsmiuser") !== null) {
         var token = atob(window.localStorage["mybsmiuser"]);
-        //let mypreloader = app.dialog.preloader();
+        let mypreloader = app.dialog.preloader(' ');
         app.request({
           url: apiuserurl,
           method: 'POST',
@@ -1857,7 +1857,7 @@ function fperiodikauth()
           success: function (data, status, xhr)
             {
               //console.log(data);
-              //mypreloader.close();
+              mypreloader.close();
                       
               var status = JSON.parse(data).status;
               var data = JSON.parse(data).data;
@@ -1884,7 +1884,8 @@ function fperiodikauth()
           error: function (xhr, status, message)
             {
               //console.log(message);
-              //mypreloader.close();
+              mypreloader.close();
+              setTimeout(function(){ fperiodikauth(); }, 1000);
             },
         })
       } 
