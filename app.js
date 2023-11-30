@@ -5581,7 +5581,9 @@ function fbuataktivitasrun()
                     //console.log('Check Validity!');
                     return;
               }
-              let val = "'"+$$('#mybsmi-buataktivitas-form input[name=tanggal').val()
+              let tanggal = $$('#mybsmi-buataktivitas-form input[name=tanggal').val()
+              if(tanggal == '')return
+              let val = "'"+tanggal
               $$('#mybsmi-buataktivitas-form input[name=tanggal').val(val)
               if($$('#mybsmi-buataktivitas-form select[name=kategori]').val() == "Twibbon"){
                   if(file.type != "image/png"){
