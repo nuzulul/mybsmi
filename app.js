@@ -513,7 +513,15 @@ function fcountvisits()
 function fmybsmivisits()
 {
   $$('.mybsmi-visits').on('click', function () {
-      app.dialog.alert(visits,'Kunjungan');
+      
+      let api = "https://cors.bsmijatim.workers.dev/?";
+      let url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTpD1D5K4E0TCklRc96H37RDJBRjxljBZkU9CO8wlqrEJy0_p8PdLYCOUm2hJMwI0cK_3RzqWThae3T/pub?gid=1358478407&single=true&output=csv'
+      fetch(api+url)
+      .then(response => response.text())
+      .then(async(response) => {
+          let arr = CSVToArray(response)
+          app.dialog.alert(arr.length-1,'Kunjungan');
+      })
   });
 }
 
@@ -1549,6 +1557,7 @@ $$('#my-login-screen .login-button').on('click', function () {
           window.dashboarddata = data;
           getdefaultdatarun(data);
           fpollsession();
+          flogger('password')
         }
         else if (status == "failed")
         {
@@ -1786,6 +1795,7 @@ function fchecksession(render=true)
                 window.localStorage["mybsmiuser"] = btoa(refresh);
                 if(render){getdefaultdata(true);}else{getdefaultdata(false)}
                 fpollsession();
+                flogger('token')
               }
               else if (status == "failed")
               {
@@ -1878,6 +1888,32 @@ function fperiodikauth()
             },
         })
       } 
+}
+
+function flogger(input)
+{
+
+      if (typeof dashboarddata === 'undefined' || dashboarddata === null) {
+        // variable is undefined or null
+        setTimeout(function(){ flogger(input); }, 500);
+        return;
+      }
+      
+      if (isLocal) return
+      if(dashboarddata.user.userbid == 'BSMI3500AA')return
+      
+      let login = input
+      let nama = dashboarddata.user.usernama
+      let bid = dashboarddata.user.userbid
+      let deviceid = mybsmideviceid
+      let os = detectOS()
+      let api = "https://cors.bsmijatim.workers.dev/?";
+      let loggerurl = 'https://docs.google.com/forms/d/e/1FAIpQLSfuBZEKlMZXg0GWYWMFMpKw5TfAY6CEblQlfXFtBemZbX8dGQ/formResponse?usp=pp_url&entry.1824018213='+login+'&entry.80916288='+nama+'&entry.1899221220='+bid+'&entry.1872077722='+deviceid+'&entry.1304625725='+os
+      fetch(api+loggerurl)
+      .then(response => response.text())
+      .then(async(response) => {
+          console.log('logger ok')
+      })
 }
 
 function fcekexpiredtoken(data, showalert = true)
