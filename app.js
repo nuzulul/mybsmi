@@ -2472,7 +2472,7 @@ function fpagecabangrun(content,cabangid)
   for (i=content.length-1;i>-1;i--)
   {
     let url = 'https://drive.google.com/uc?export=view&id='+safe(content[i][5]);
-    $$('.mybsmi-admin-item-'+safe(content[i][1])+' img').attr('src',url);
+    if(content[i][5]!='')$$('.mybsmi-admin-item-'+safe(content[i][1])+' img').attr('src',url);
   }
 
   $$('.mybsmi-cabang a.mybsmi-cabangaction').on('click', function (e) {
@@ -2540,7 +2540,7 @@ function fpagerelawanrun(data)
 +'    <p class="mybsmi-relawan-data text-align-center"><span style="font-weight:bold;">'+safe(data[3])+'</span><br><span style="font-weight:normal;">No. KTA : '+safe(data[6])+'</span><br><span style="font-weight:normal;"><a href="/cabang/'+cabang[1]+'">'+safe(data[4])+'</a><span><br><span style="font-weight:normal;">STATUS : '+safe(data[8])+'<span><br><span style="font-weight:normal;display:none;">Poin : '+safe(data[7])+' Bintang</span><br><span style="font-weight:normal;font-size:12px;">Anggota sejak '+safe(date)+'</span><br><br><span><a href="#" class="button button-fill color-red display-none mybsmi-relawan-kirimpesan">Kirim Pesan</a></span><p>';
   $$('.mybsmi-relawan').html(html);
   let src = "https://drive.google.com/uc?export=view&id="+safe(data[5]);
-  $$('.mybsmi-relawan-userphoto').attr('src',src);
+  if(data[5]!='')$$('.mybsmi-relawan-userphoto').attr('src',src);
   if (data[2] === "Terverifikasi") $$('.mybsmi-relawan-avatar-badge').css("display","block");
   if (data[1] !== dashboarddata.user.useruid) $$('.mybsmi-relawan-kirimpesan').removeClass('display-none');
   $$('.mybsmi-relawan-kirimpesan').on('click', function (e) {
@@ -2592,7 +2592,7 @@ function grecaptchaexpired()
 function fpageprofilku()
 {
     var data = dashboarddata.user;
-    $$('.mybsmi-profilku .mybsmi-userphoto').attr('src','https://drive.google.com/uc?export=view&id='+safe(data.userphoto));
+    if(data.userphoto!='')$$('.mybsmi-profilku .mybsmi-userphoto').attr('src','https://drive.google.com/uc?export=view&id='+safe(data.userphoto));
     let bintang = JSON.parse(data.usermydata).bintang;//console.log(bintang);
     if (typeof bintang === 'undefined' || bintang === null) bintang = 0;
     $$('.mybsmi-profilku .mybsmi-bintang').text(safe(bintang)+' bintang');
