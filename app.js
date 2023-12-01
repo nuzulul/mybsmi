@@ -2596,6 +2596,7 @@ function fpageprofilku()
     let bintang = JSON.parse(data.usermydata).bintang;//console.log(bintang);
     if (typeof bintang === 'undefined' || bintang === null) bintang = 0;
     $$('.mybsmi-profilku .mybsmi-bintang').text(safe(bintang)+' bintang');
+    $$('.mybsmi-profilku .mybsmi-usernokta').text(safe(data.userbid));
     $$('.mybsmi-profilku .mybsmi-usernama').text(safe(data.usernama));
     $$('.mybsmi-profilku .mybsmi-userjeniskelamin').text(safe(data.userjeniskelamin));
     $$('.mybsmi-profilku .mybsmi-usertanggallahir').text(safe(data.usertanggallahir));
