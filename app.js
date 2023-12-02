@@ -2621,8 +2621,13 @@ function fpageprofilku()
     });
     $$('.mybsmi-profilku-verifikasi').off('click');
     $$('.mybsmi-profilku-verifikasi').on('click', function (e) {
-        //fverifikasiidentitas();     
-        fverifikasidata()
+        //fverifikasiidentitas();
+        let mydata = JSON.parse(dashboarddata.user.usermydata)   
+        if (!mydata.verifikasiidentitas){  
+            fverifikasidata()
+        }else{
+            app.dialog.alert('Proses verifikasi data','Proses');
+        }
     });
 }
 ////fpageprofilku////////////////////////////
