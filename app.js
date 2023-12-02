@@ -512,6 +512,7 @@ function fcountvisits()
 
 function fmybsmivisits()
 {
+  $$('.mybsmi-visits').off('click')
   $$('.mybsmi-visits').on('click', function () {
       
       let api = "https://cors.bsmijatim.workers.dev/?";
