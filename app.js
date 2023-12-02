@@ -7251,19 +7251,28 @@ function getdokumendatarun(dokumen){
             let tanggal = ser[arr.tanggal]
             let judul = ser[arr.judul]
             let download = ser[arr.download]
-            hasil.push({tanggal,judul,download})
+            let fileid = ser[arr.fileid]
+            hasil.push({tanggal,judul,download,fileid})
         })
     })
     hasil.sort(function(a, b){return new Date(a.tanggal) - new Date(b.tanggal)});
     
+    
     let tabel = '<div class="card data-table">'+
                     '<table><thead><tr><th>Judul</th><th>File</th></tr></thead><tbody>'
+    
     hasil.forEach(function(arr,index){
           if(arr.download == '')return
-          tabel += '<tr><td>'+safe(arr.judul)+'</td><td><a class="link external" href="'+arr.download+'" target="_blank">View</a></td></tr>'
+          //tabel += '<tr class="download-item"><td>'+safe(arr.judul)+'</td><td><a class="link" href="#" data-url="'+arr.download+'" target="_blank">View</a></td></tr>'
+          tabel += '<tr class="download-item"><td>'+safe(arr.judul)+'</td><td><a class="link" href="#" data-id="'+arr.fileid+'" data-url="'+arr.download+'" target="_blank">View</a></td></tr>'
     })                
     tabel += '</tbody></table></div>'
     $$('.mybsmi-dokumen').html(tabel)
+    $$('.download-item a').on('click', function (e) {
+        let id = $$(this).data('id')
+        let url = 'https://drive.google.com/file/d/'+id+'/preview'
+        myviewer(url);
+    });    
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
