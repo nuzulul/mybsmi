@@ -6166,7 +6166,7 @@ function fpagetwibbonrun(data)
 
     let canvas = document.getElementById("mybsmi-twibbon-canvas");
     let context = canvas.getContext("2d", { willReadFrequently: true });
-    let txt = dashboarddata.user.userbid+' - '+dashboarddata.user.usernama   
+    let txt = dashboarddata.user.usernama+' ( '+dashboarddata.user.userbid+' )'
     drawTextBG(context, txt, "25px arial", 10, 940, 20);
     
   }
