@@ -5817,6 +5817,34 @@ function fpagetwibbonrun(data)
     fdownloadtwibbon(canvas, 'twibbon-'+data[1]+'-'+time+'.png');
   });
 
+  $$('.mybsmi-twibbon-photo-bagikan').on('click', async function (e) {
+
+    const canvasElement = document.getElementById("mybsmi-twibbon-canvas");
+    const dataUrl = canvasElement.toDataURL();
+    const blob = await (await fetch(dataUrl)).blob();
+    const d = new Date();
+    let time = d.getTime();
+    let filename = 'twibbon-'+data[1]+'-'+time+'.png'
+    let route = app.views.current.router.currentPageEl.baseURI
+    const filesArray = [
+      new File(
+        [blob],
+        filename,
+        {
+          type: blob.type,
+          lastModified: new Date().getTime()
+        }
+      )
+    ];
+    const shareData = {
+      files: filesArray,
+      text: "Join twibbon "+route,
+    };
+    navigator.share(shareData);
+    
+  });
+
+
   $$('.mybsmi-twibbon-share').on('click', function (e) {
             let route = app.views.current.router.currentPageEl.baseURI
             if (navigator.share) {
@@ -5877,6 +5905,7 @@ function fpagetwibbonrun(data)
           context.drawImage(imgposter, 0, 0, canvas.width, canvas.height );
           $$('.mybsmi-twibbon-photo-button').hide();
           $$('.mybsmi-twibbon-photo-download').removeClass('display-none');
+          $$('.mybsmi-twibbon-photo-bagikan').removeClass('display-none');
           $$('#zoom-slider').removeClass('display-none');
           if (!exists) fjadipendukung(data[1]);
           fgesertwibbonphoto();
