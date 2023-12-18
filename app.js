@@ -5881,6 +5881,7 @@ function fpagetwibbonrun(data)
           if (!exists) fjadipendukung(data[1]);
           fgesertwibbonphoto();
           zoomtwibbonpoto()
+          addUserWatermark()
         }
 
     }
@@ -5905,6 +5906,7 @@ function fpagetwibbonrun(data)
           var imgData = contextphoto.getImageData(0, 0, canvasphoto.width, canvasphoto.height);
           context.putImageData(imgData, 0, 0);
           context.drawImage(imgposter, 0, 0, canvas.width, canvas.height);
+          addUserWatermark()
   }
   
   function zoomtwibbonpoto()
@@ -6113,6 +6115,31 @@ function fpagetwibbonrun(data)
           context.drawImage(imgposter, 0, 0, canvas.width, canvas.height);
     }
 
+  }
+
+  function addUserWatermark(){
+    function drawTextBG(ctx, txt, font, x, y, padding) {
+      ctx.font = font;
+      ctx.textBaseline = "top";
+      ctx.fillStyle = "#fff";
+
+      var width = ctx.measureText(txt).width;
+      ctx.fillRect(x, y, width + padding, parseInt(font, 10) + padding);
+
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = "#009ddf";
+      ctx.strokeRect(x, y, width + padding, parseInt(font, 10) + padding);
+
+      ctx.fillStyle = "#009ddf";
+      //ctx.textAlign = "right";
+      ctx.fillText(txt, x + padding / 2, y + padding / 2);
+    }
+
+    let canvas = document.getElementById("mybsmi-twibbon-canvas");
+    let context = canvas.getContext("2d", { willReadFrequently: true });
+    let txt = dashboarddata.user.userbid+' - '+dashboarddata.user.usernama   
+    drawTextBG(context, txt, "25px arial", 10, 940, 20);
+    
   }
   
 }
