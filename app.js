@@ -2202,7 +2202,7 @@ function getdefaultdatarun(data)
 { //console.log(data)
   kodecabang = data.kodecabang;
   $$('.mybsmi-currentusernama').text(safe(data.user.usernama));
-  if (data.user.userphoto !== '') {$$('.mybsmi-avatar').attr('src','https://drive.google.com/uc?export=view&id='+safe(data.user.userphoto));}
+  if (data.user.userphoto !== '') {$$('.mybsmi-avatar').attr('src','https://lh3.googleusercontent.com/d/'+safe(data.user.userphoto));}
   //if (data.user.userstatus === "Terverifikasi"){$$('.mybsmi-avatar-badge').css('display','flex');};
   flogout();
 
@@ -2472,7 +2472,7 @@ function fpagecabangrun(content,cabangid)
   
   for (i=content.length-1;i>-1;i--)
   {
-    let url = 'https://drive.google.com/uc?export=view&id='+safe(content[i][5]);
+    let url = 'https://lh3.googleusercontent.com/d/'+safe(content[i][5]);
     if(content[i][5]!='')$$('.mybsmi-admin-item-'+safe(content[i][1])+' img').attr('src',url);
   }
 
@@ -2540,7 +2540,7 @@ function fpagerelawanrun(data)
 +'    <img class="mybsmi-relawan-userphoto" src="avatar.png" style="width:150px;height:150px;margin: 20px 10px 0px;border-radius: 50%;object-fit: cover;"><span class="badge color-blue mybsmi-relawan-avatar-badge" style="bottom:20px;right:-40px;display:none;"><i class="icon f7-icons" style="font-size:12px;">checkmark_seal</i></span>'
 +'    <p class="mybsmi-relawan-data text-align-center"><span style="font-weight:bold;">'+safe(data[3])+'</span><br><span style="font-weight:normal;">No. KTA : '+safe(data[6])+'</span><br><span style="font-weight:normal;"><a href="/cabang/'+cabang[1]+'">'+safe(data[4])+'</a><span><br><span style="font-weight:normal;">STATUS : '+safe(data[8])+'<span><br><span style="font-weight:normal;display:none;">Poin : '+safe(data[7])+' Bintang</span><br><span style="font-weight:normal;font-size:12px;">Anggota sejak '+safe(date)+'</span><br><br><span><a href="#" class="button button-fill color-red display-none mybsmi-relawan-kirimpesan">Kirim Pesan</a></span><p>';
   $$('.mybsmi-relawan').html(html);
-  let src = "https://drive.google.com/uc?export=view&id="+safe(data[5]);
+  let src = "https://lh3.googleusercontent.com/d/"+safe(data[5]);
   if(data[5]!='')$$('.mybsmi-relawan-userphoto').attr('src',src);
   if (data[2] === "Terverifikasi") $$('.mybsmi-relawan-avatar-badge').css("display","block");
   if (data[1] !== dashboarddata.user.useruid) $$('.mybsmi-relawan-kirimpesan').removeClass('display-none');
@@ -2593,7 +2593,7 @@ function grecaptchaexpired()
 function fpageprofilku()
 {
     var data = dashboarddata.user;
-    if(data.userphoto!='')$$('.mybsmi-profilku .mybsmi-userphoto').attr('src','https://drive.google.com/uc?export=view&id='+safe(data.userphoto));
+    if(data.userphoto!='')$$('.mybsmi-profilku .mybsmi-userphoto').attr('src','https://lh3.googleusercontent.com/d/'+safe(data.userphoto));
     let bintang = JSON.parse(data.usermydata).bintang;//console.log(bintang);
     if (typeof bintang === 'undefined' || bintang === null) bintang = 0;
     $$('.mybsmi-profilku .mybsmi-bintang').text(safe(bintang)+' bintang');
@@ -3409,7 +3409,7 @@ function fgetekta(getdefault = false)
               //console.log(content);
               window.mybsmiekta = content;
               //$$('.mybsmi-ektabsmi').html('<img id="imgekta" src="" style="width:100%;max-width:200px;cursor:pointer;" onclick="javascript:myimage(this)">');
-              //let src = "https://drive.google.com/uc?export=view&id="+safe(content);
+              //let src = "https://lh3.googleusercontent.com/d/"+safe(content);
               //$$('#imgekta').attr('src',src);
               showekta();
               if (getdefault) getdefaultdata(false);
@@ -3443,7 +3443,7 @@ function fgetekta(getdefault = false)
   {
         console.log('ekta = '+mybsmiekta);
         $$('.mybsmi-ektabsmi').html('<img id="imgekta" src="" style="width:100%;max-width:200px;cursor:pointer;">');
-        let src = "https://drive.google.com/uc?export=view&id="+safe(mybsmiekta);
+        let src = "https://lh3.googleusercontent.com/d/"+safe(mybsmiekta);
         $$('#imgekta').attr('src',src);
         $$('.mybsmi-ektabsmi-download').html('<a href="#" class="button mybsmi-ektabsmi-download-button">Download</a>');
         $$('.mybsmi-ektabsmi-download-button').on('click', function () {
@@ -3687,7 +3687,7 @@ function fpageverifikatoridentitasrun(base64,content)
     on: {
       opened: function () {
         //console.log('Dialog opened')
-        let src = "https://drive.google.com/uc?export=view&id="+safe(data[13]);
+        let src = "https://lh3.googleusercontent.com/d/"+safe(data[13]);
         $$('#img').attr('src',src);
       }
     },
@@ -4002,7 +4002,7 @@ function fpageadminrun(content)
 
   for (i=content.length-1;i>-1;i--)
   {
-    let url = 'https://drive.google.com/uc?export=view&id='+safe(content[i][13]);
+    let url = 'https://lh3.googleusercontent.com/d/'+safe(content[i][13]);
     $$('.mybsmi-admin-item-'+safe(content[i][1])+' img').attr('src',url);
   }
 
@@ -4055,7 +4055,7 @@ function fpageadminidentitas(base64)
     on: {
       opened: function () {
         //console.log('Dialog opened')
-        let src = "https://drive.google.com/uc?export=view&id="+safe(data[13]);
+        let src = "https://lh3.googleusercontent.com/d/"+safe(data[13]);
         $$('#img').attr('src',src);
       }
     },
@@ -4802,7 +4802,7 @@ function fpagemasteridentitas(base64,index)
     on: {
       opened: function () {
         //console.log('Dialog opened')
-        let src = "https://drive.google.com/uc?export=view&id="+safe(data[13]);
+        let src = "https://lh3.googleusercontent.com/d/"+safe(data[13]);
         $$('#img').attr('src',src);
       }
     },
@@ -4975,7 +4975,7 @@ function getpesandatarun(content)
     if (content[i][5] == dashboarddata.user.useruid)
     {
       $$('.mybsmi-pesan-masuk').append(data);
-      $$('.mybsmi-pesan-item-'+content[i][1]+' img').attr('src','https://drive.google.com/uc?export=view&id='+safe(content[i][4]));
+      $$('.mybsmi-pesan-item-'+content[i][1]+' img').attr('src','https://lh3.googleusercontent.com/d/'+safe(content[i][4]));
       $$('.mybsmi-pesan-item-'+content[i][1]+' .item-title').html(safe(content[i][3]));
       $$('.mybsmi-pesan-item-'+content[i][1]+' .item-subtitle').html(safe(content[i][8]));
       $$('.mybsmi-pesan-item-'+content[i][1]+' .item-text').html(safe(content[i][9]));
@@ -4990,7 +4990,7 @@ function getpesandatarun(content)
     else if (content[i][2] == dashboarddata.user.useruid)
     {
       $$('.mybsmi-pesan-terkirim').append(data);
-      $$('.mybsmi-pesan-item-'+content[i][1]+' img').attr('src','https://drive.google.com/uc?export=view&id='+safe(content[i][7]));
+      $$('.mybsmi-pesan-item-'+content[i][1]+' img').attr('src','https://lh3.googleusercontent.com/d/'+safe(content[i][7]));
       $$('.mybsmi-pesan-item-'+content[i][1]+' .item-title').html('Kepada: '+safe(content[i][6]));
       $$('.mybsmi-pesan-item-'+content[i][1]+' .item-subtitle').html(safe(content[i][8]));
       $$('.mybsmi-pesan-item-'+content[i][1]+' .item-text').html(safe(content[i][9]));
@@ -5031,7 +5031,7 @@ function fpagebacapesan(id)
             $$('.mybsmi-bacapesan .card-content').html(pengirim);
             $$('.mybsmi-bacapesan .card-footer').html(safe(data[9]));
             $$('.mybsmi-bacapesan .item-title').html(safe(data[3]));
-            if (data[4] !== '') $$('.mybsmi-bacapesan img').attr('src','https://drive.google.com/uc?export=view&id='+safe(data[4]));
+            if (data[4] !== '') $$('.mybsmi-bacapesan img').attr('src','https://lh3.googleusercontent.com/d/'+safe(data[4]));
             $$('.mybsmi-bacapesan .item-subtitle').html('kepada saya');
             if (data[10] === false)
             {
@@ -5061,7 +5061,7 @@ function fpagebacapesan(id)
             $$('.mybsmi-bacapesan .card-content').html(pengirim);
             $$('.mybsmi-bacapesan .card-footer').html(safe(data[9]));
             $$('.mybsmi-bacapesan .item-title').html('Kepada: '+safe(data[6]));
-            if (data[4] !== '') $$('.mybsmi-bacapesan img').attr('src','https://drive.google.com/uc?export=view&id='+safe(data[7]));
+            if (data[4] !== '') $$('.mybsmi-bacapesan img').attr('src','https://lh3.googleusercontent.com/d/'+safe(data[7]));
             $$('.mybsmi-bacapesan .item-subtitle').html('dari saya');
             $$('.mybsmi-bacapesan .item-title').on('click', function (e) {
                 let url = "/relawan/"+safe(data[5]);
@@ -5181,8 +5181,8 @@ function fkirimpesan(uid,nama,photo,replyto = '')
     on: {
       opened: function () {
         //console.log('Dialog opened')
-        $$('.mybsmi-dariphoto').attr('src','https://drive.google.com/uc?export=view&id='+safe(dashboarddata.user.userphoto));
-        if (photo !== '') $$('.mybsmi-kepadaphoto').attr('src','https://drive.google.com/uc?export=view&id='+safe(photo));
+        $$('.mybsmi-dariphoto').attr('src','https://lh3.googleusercontent.com/d/'+safe(dashboarddata.user.userphoto));
+        if (photo !== '') $$('.mybsmi-kepadaphoto').attr('src','https://lh3.googleusercontent.com/d/'+safe(photo));
       }
     },
     buttons: [
@@ -5407,8 +5407,8 @@ function getaktivitasdatarun(content)
     //data += '<div class="timeline-item"><div class="timeline-item-date"><small>'+date+'</small></div><div class="timeline-item-divider"></div><div class="timeline-item-content"><div class="timeline-item-inner"><div class="timeline-item-time"></div><div class="timeline-item-text">'+safe(content[i][5])+'</div></div></div></div>';
     let data = '<div class="col-100 xsmall-75 small-50 medium-33 large-33 xlarge-33 mybsmi-aktivitas-item-'+safe(content[i][1])+'" data-user="'+btoa(JSON.stringify(content[i]))+'" style="cursor:pointer;"> <div class="card"> <div class="card-header no-padding" style="overflow:hidden;"><img class="poster" src="photo.svg" style="width:100%;aspect-ratio: 1 / 1;object-fit:cover;background-image:none;"></div> <div class="card-content card-content-padding"> <div style="font-weight:bold;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">'+safe(content[i][6])+'</div> <div></div> </div> <div class="card-footer"> <div class="row" style="width:100%"> <div class="col-100 margin-bottom margin-top" style="width:100%;"> <div class="float-left" style="width:3em;"><img class="avatar" src="avatar.png" style="width:2em;aspet-ratio 1 / 1;height:2em;object-fit:cover;border-radius:50% 50%;overflow:hidden;"></div> <div class="float-left" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;width:70%;">'+safe(content[i][3])+'</div> </div> <div class="col-100 margin-bottom"> <div class="float-left" style="width:3em;"><i class="icons f7-icons">person_2</i></div> <div class="float-left" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">'+safe(JSON.parse(content[i][12]).length)+' Pendukung</div> </div> <div class="col-100 margin-bottom"> <div class="float-left" style="width:3em;"><i class="icons f7-icons">paperclip</i></div> <div class="float-left" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">'+safe(content[i][5])+'</div> </div><div class="col-100 margin-bottom"> <div class="float-left" style="width:3em;"><i class="icons f7-icons">calendar</i></div> <div class="float-left" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">'+safe(content[i][9])+'</div> </div> </div>   </div> </div> </div>';
     $$('.mybsmi-aktivitas').append(data);
-    $$('.mybsmi-aktivitas-item-'+content[i][1]+' img.poster').attr('src','https://drive.google.com/uc?export=view&id='+safe(content[i][8]));
-    $$('.mybsmi-aktivitas-item-'+content[i][1]+' img.avatar').attr('src','https://drive.google.com/uc?export=view&id='+safe(content[i][4]));
+    $$('.mybsmi-aktivitas-item-'+content[i][1]+' img.poster').attr('src','https://lh3.googleusercontent.com/d/'+safe(content[i][8]));
+    $$('.mybsmi-aktivitas-item-'+content[i][1]+' img.avatar').attr('src','https://lh3.googleusercontent.com/d/'+safe(content[i][4]));
     $$('.mybsmi-aktivitas-item-'+content[i][1]).on('click', function (e) {
           let base64 = this.attributes["data-user"].value;
           let json = atob(base64);
@@ -5700,7 +5700,7 @@ function dapatbintang(jumlah)
     on: {
       opened: function () {
         //console.log('Dialog opened')
-        let src = "https://drive.google.com/uc?export=view&id="+safe(dashboarddata.user.userphoto);
+        let src = "https://lh3.googleusercontent.com/d/"+safe(dashboarddata.user.userphoto);
         $$('#img').attr('src',src);
       }
     },
@@ -5755,7 +5755,7 @@ function fpagetwibbonrun(data)
   $$('.mybsmi-twibbon-judul').text(data[6]);
   $$('.mybsmi-twibbon-pendukung').text(JSON.parse(data[12]).length);
   $$('.mybsmi-twibbon-deskripsi').text(data[7]);
-  $$('.mybsmi-twibbon-avatar').attr('src','https://drive.google.com/uc?export=view&id='+safe(data[4]));
+  $$('.mybsmi-twibbon-avatar').attr('src','https://lh3.googleusercontent.com/d/'+safe(data[4]));
 
   let cabangid = '';
   for (i=0;i<kodecabang.length;i++)
@@ -6357,7 +6357,7 @@ function fjadipendukungrun(mydata)
 +'          <div class="float-left" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;width:70%">'+safe(pendukung[i].nama)+'</div>'
 +'          </div>'
     $$('.mybsmi-twibbon-pendukungdetail').append(data);
-    $$('.mybsmi-twibbon-pendukungdetail-item-'+pendukung[i].uid+' img').attr('src','https://drive.google.com/uc?export=view&id='+safe(pendukung[i].photo));
+    $$('.mybsmi-twibbon-pendukungdetail-item-'+pendukung[i].uid+' img').attr('src','https://lh3.googleusercontent.com/d/'+safe(pendukung[i].photo));
     $$('.mybsmi-twibbon-pendukungdetail-item-'+pendukung[i].uid).on('click', function (e) {
         let url = "/relawan/"+safe(pendukung[i].uid);
         //console.log(url);
@@ -6481,8 +6481,8 @@ function getbukusakudatarun(data)
     $$('.mybsmi-bukusaku-item-'+i).on('click', function (e) {
        //console.log($$(this).attr('data-index')) 
        let url = 'https://drive.google.com/file/d/'+safe(data[i][0])+'/preview';
-       //let url = 'https://drive.google.com/uc?export=view&id='+safe(data[i][0]);
-       //let url = 'https://drive.google.com/uc?export=view&id='+safe(data[i][0])+'#toolbar=0&navpanes=0&scrollbar=0&statusbar=0&messages=0&scrollbar=0';
+       //let url = 'https://lh3.googleusercontent.com/d/'+safe(data[i][0]);
+       //let url = 'https://lh3.googleusercontent.com/d/'+safe(data[i][0])+'#toolbar=0&navpanes=0&scrollbar=0&statusbar=0&messages=0&scrollbar=0';
        myviewer(url);         
     });
   }
@@ -6771,7 +6771,7 @@ function getsocialdatarun(socialdata)
                 '<div class="mybsmi-social-list"></div>'
   $$('.mybsmi-social-content').append(header)
   //let url = 'https://lh3.googleusercontent.com/d/'+safe(userphoto);
-  let url = 'https://drive.google.com/uc?export=view&id='+safe(userphoto);
+  let url = 'https://lh3.googleusercontent.com/d/'+safe(userphoto);
   $$('.social-avatar').attr('src',url);
 
   $$('.mybsmi-social-checkin').on('click', function () {
@@ -6824,10 +6824,10 @@ function getsocialdatarun(socialdata)
                             '</div>'+
                         '</div>'
             $$('.mybsmi-social-list').prepend(item)
-            let url = 'https://drive.google.com/uc?export=view&id='+safe(arr[8]);
+            let url = 'https://lh3.googleusercontent.com/d/'+safe(arr[8]);
             $$('.item-'+safe(arr[2])+' .social-avatar').attr('src',url);
             if(arr[10]!=''){
-              let url = 'https://drive.google.com/uc?export=view&id='+safe(arr[10]);
+              let url = 'https://lh3.googleusercontent.com/d/'+safe(arr[10]);
               $$('.item-'+safe(arr[2])+' .social-photo').attr('src',url);
               $$('.item-'+safe(arr[2])+' .social-photo').on('click', function () {
                 myimage(this);
@@ -6865,7 +6865,7 @@ function getsocialdatarun(socialdata)
                             '</div>'+
                         '</div>'
             $$('.item-'+repplytoid+' .comment').append(item)
-            let url = 'https://drive.google.com/uc?export=view&id='+safe(arr[8]);
+            let url = 'https://lh3.googleusercontent.com/d/'+safe(arr[8]);
             $$('.item-'+safe(arr[2])+' .social-avatar').attr('src',url);
         }
   })
