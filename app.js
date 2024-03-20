@@ -5907,6 +5907,8 @@ function fpagetwibbonrun(data)
           $$('.mybsmi-twibbon-photo-download').removeClass('display-none');
           $$('.mybsmi-twibbon-photo-bagikan').removeClass('display-none');
           $$('#zoom-slider').removeClass('display-none');
+		  $$('#mybsmi-twibbon-photo-watermark').removeClass('display-none');
+		  $$('#mybsmi-twibbon-photo-watermark').addClass('display-inline-block');
           if (!exists) fjadipendukung(data[1]);
           fgesertwibbonphoto();
           zoomtwibbonpoto()
@@ -5915,6 +5917,10 @@ function fpagetwibbonrun(data)
 
     }
   }
+  
+  //wattermark change
+  let toggle = app.toggle.get('#mybsmi-twibbon-photo-watermark .toggle');
+  toggle.on('change', ()=>{drawcanvas()})
   
   /////////////////////zoomandpan///////////////////////////////////////
   let canvas = document.getElementById("mybsmi-twibbon-canvas");
@@ -6167,8 +6173,11 @@ function fpagetwibbonrun(data)
     let canvas = document.getElementById("mybsmi-twibbon-canvas");
     let context = canvas.getContext("2d", { willReadFrequently: true });
     let txt = dashboarddata.user.usernama+' ( '+dashboarddata.user.userbid+' )'
-    drawTextBG(context, txt, "25px arial", 10, 940, 20);
     
+    var toggle = app.toggle.get('#mybsmi-twibbon-photo-watermark .toggle');
+	if (toggle.checked) {
+	  drawTextBG(context, txt, "25px arial", 10, 940, 20);
+	}	
   }
   
 }
