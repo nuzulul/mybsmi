@@ -4045,6 +4045,10 @@ function fpageadminrun(content)
         //console.log(url);
         app.views.main.router.navigate(url);
   });
+  
+  $$('.buat-link').on('click', function () {
+		fbuatlinkaktivasi()
+  })
 }
 
 function fpageadminidentitas(base64)
@@ -4405,7 +4409,7 @@ function fbuatlinkaktivasi(){
 						  url: link
 						})
 						.then(() => console.log("thanks for share"))
-						.catch(error => console.log("error", error));
+						.catch(error => app.dialog.alert("Ulangi beberapa saat lagi",'Terjadi Kesalahan'));
 					} 
 					
 				  }
