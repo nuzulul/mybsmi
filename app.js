@@ -4401,17 +4401,30 @@ function fbuatlinkaktivasi(){
 					let tempdata = Array.prototype.map.call(new Uint8Array(buf), x=>(('00'+x.toString(16)).slice(-2))).join('');
 
 					let link = 'https://mybsmi.bsmijatim.org/?pin='+tempdata
+					
+					app.dialog.create({
+						title: 'Link aktivasi siap',
+						buttons: [
+						  {
+							text: 'Bagikan',
+							onClick: function(dialog, e){
+								if (navigator.share) {
+								  navigator
+									.share({
+									  title: "Link Aktivasi",
+									  //text: "Share",
+									  url: link
+									})
+									.then(() => console.log("thanks for share"))
+									.catch(error => app.dialog.alert("Ulangi beberapa saat lagi",'Terjadi Kesalahan'));
+								} 								
+							}
+						  },
+						],
+						verticalButtons: true,
+					}).open();
 
-					if (navigator.share) {
-					  navigator
-						.share({
-						  title: "Link Aktivasi",
-						  //text: "Share",
-						  url: link
-						})
-						.then(() => console.log("thanks for share"))
-						.catch(error => app.dialog.alert("Ulangi beberapa saat lagi",'Terjadi Kesalahan'));
-					} 
+
 					
 				  }
 				  else if (status == "failed")
