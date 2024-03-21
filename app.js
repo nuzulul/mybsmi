@@ -4822,7 +4822,7 @@ function fpagemasteradminlaporan(content)
 
 function fpagemasterdatabase(content)
 {
-  var data = '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th>Nama</th><th>Email</th><th>Cabang</th><th>Profesi</th><th></th></tr></thead><tbody>';
+  var data = '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th></th><th>Nama</th><th>Email</th><th>Cabang</th><th>Profesi</th><th></th></tr></thead><tbody>';
   var jumlahrelawan = 0;
   for (i=content.length-1;i>-1;i--)
   {
@@ -4830,12 +4830,25 @@ function fpagemasterdatabase(content)
       
       if ((content[i][3] === 'Terbatas')||(content[i][3] === 'Terverifikasi')||(content[i][3] === 'Tertolak')){}else{continue;}
       
-      data += '<tr class="mybsmi-master-item-'+safe(content[i][1])+'"><td data-collapsible-title="Nama">'+safe(content[i][4])+'</td><td data-collapsible-title="Email">'+safe(content[i][2])+'</td><td data-collapsible-title="Cabang">'+safe(content[i][11])+'</td><td data-collapsible-title="Profesi">'+safe(content[i][8])+'</td><td><a class="button button-fill mybsmi-masteraction" data-index="'+i+'" data-user="'+btoa(JSON.stringify(content[i]))+'">Detail</a></td></tr>';
+      data += '<tr class="mybsmi-master-item-'+safe(content[i][1])+'"><td data-collapsible-title=""><img src="avatar.png" style="width:1.5em;aspet-ratio 1/1;object-fit:cover;border-radius:50% 50%;overflow:hidden;"></td><td data-collapsible-title="Nama"><a class="mybsmi-cabang-relawan" data-user="'+safe(content[i][1])+'">'+safe(content[i][4])+'</a></td><td data-collapsible-title="Email">'+safe(content[i][2])+'</td><td data-collapsible-title="Cabang">'+safe(content[i][11])+'</td><td data-collapsible-title="Profesi">'+safe(content[i][8])+'</td><td><a class="button button-fill mybsmi-masteraction" data-index="'+i+'" data-user="'+btoa(JSON.stringify(content[i]))+'">Detail</a></td></tr>';
       jumlahrelawan++;
   }
   data += '</tbody></table></div>';
   $$('.mybsmi-master').html(data);
   $$('.jumlahrelawan').html('Jumlah : '+jumlahrelawan);
+
+  for (i=content.length-1;i>-1;i--)
+  {
+    let url = 'https://lh3.googleusercontent.com/d/'+safe(content[i][13]);
+    $$('.mybsmi-master-item-'+safe(content[i][1])+' img').attr('src',url);
+  }
+
+  $$('.mybsmi-cabang-relawan').on('click', function (e) {
+        let data = this.attributes["data-user"].value;
+        let url = "/relawan/"+safe(data);
+        //console.log(url);
+        app.views.main.router.navigate(url);
+  });
 
   $$('.mybsmi-master a.mybsmi-masteraction').on('click', function (e) {
         
