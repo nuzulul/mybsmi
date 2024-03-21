@@ -4315,8 +4315,8 @@ function fpagemasterrun(content)
 }
 
 function fpagemasterpengaturan(){
-  let html = '<button class="button ganti-pin">GANTI PIN AKTIVASI</button>'+
-			'<button class="button buat-link">BUAT LINK AKTIVASI</button>'
+  let html = '<button class="button button-fill ganti-pin">GANTI PIN AKTIVASI</button></br>'+
+			'<button class="button button-fill buat-link">BUAT LINK AKTIVASI</button>'
   $$(".mybsmi-master-pengaturan").html(html)
   $$('.ganti-pin').on('click', function () {
         app.dialog.prompt('', 'GANTI PIN AKTIVASI', async function (pin){
@@ -4468,7 +4468,7 @@ function fpagemasteradmincabang(alluser)
           admin += item.nama+'\n';
         })
       }
-      data += '<tr class="mybsmi-master-admincabang-item-'+safe(content[i][1])+'"><td data-collapsible-title="Cabang"><a href="/cabang/'+safe(content[i][1])+'">'+safe(content[i][0])+'</a></td><td data-collapsible-title="Alamat">'+safe(content[i][2])+'</td><td data-collapsible-title="Telepon">'+safe(content[i][3])+'</td><td data-collapsible-title="Instagram">'+safe(content[i][4])+'</td><td data-collapsible-title="Ketua"><a class="mybsmi-master-admincabang-detail" data-user="'+safe(content[i][5])+'">'+safe(content[i][6])+'<a></td><td data-collapsible-title="Admin"><a class="mybsmi-master-admincabang-detail" data-user="'+safe(content[i][5])+'">'+safe(admin)+'</a></td><td><a class="button button-fill mybsmi-master-admincabang-action" data-cabang="'+btoa(JSON.stringify(content[i]))+'">Edit</a></td></tr>';
+      data += '<tr class="mybsmi-master-admincabang-item-'+safe(content[i][1])+'"><td data-collapsible-title="Cabang"><a href="/cabang/'+safe(content[i][1])+'">'+safe(content[i][0])+'</a></td><td data-collapsible-title="Alamat">'+safe(content[i][2])+'</td><td data-collapsible-title="Telepon">'+safe(content[i][3])+'</td><td data-collapsible-title="Instagram">'+safe(content[i][4])+'</td><td data-collapsible-title="Ketua"><a class="mybsmi-master-admincabang-detail" data-user="'+safe(content[i][5])+'">'+safe(content[i][6])+'<a></td><td data-collapsible-title="Admin"><a class="mybsmi-master-admincabang-detail" data-user="'+safe(content[i][8].length==0?'0':content[i][8][0].uid)+'">'+safe(content[i][8].length==0?'':content[i][8][0].nama)+'</a></td><td><a class="button button-fill mybsmi-master-admincabang-action" data-cabang="'+btoa(JSON.stringify(content[i]))+'">Edit</a></td></tr>';
   }
   data += '</tbody></table></div>';
   $$('.mybsmi-master-admincabang').html(data);
@@ -4484,7 +4484,6 @@ function fpagemasteradmincabang(alluser)
   $$('.mybsmi-master-admincabang a.mybsmi-master-admincabang-detail').on('click', function (e) {
       var useruid = this.attributes["data-user"].value;
       alluser.forEach(function(item,index){
-        
         if (item[1] == useruid)
         {
           var base64 = btoa(JSON.stringify(item));
