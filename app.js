@@ -4021,8 +4021,10 @@ function fpageadminrun(content)
 
   for (i=content.length-1;i>-1;i--)
   {
-    let url = 'https://lh3.googleusercontent.com/d/'+safe(content[i][13]);
-    $$('.mybsmi-admin-item-'+safe(content[i][1])+' img').attr('src',url);
+    if(content[i][13]!==''){
+		let url = 'https://lh3.googleusercontent.com/d/'+safe(content[i][13]);
+		$$('.mybsmi-admin-item-'+safe(content[i][1])+' img').attr('src',url);
+	}
   }
 
   $$('.mybsmi-admin a.mybsmi-adminaction').on('click', function (e) {
@@ -4839,8 +4841,10 @@ function fpagemasterdatabase(content)
 
   for (i=content.length-1;i>-1;i--)
   {
-    let url = 'https://lh3.googleusercontent.com/d/'+safe(content[i][13]);
-    $$('.mybsmi-master-item-'+safe(content[i][1])+' img').attr('src',url);
+    if(content[i][13]!==''){
+		let url = 'https://lh3.googleusercontent.com/d/'+safe(content[i][13]);
+		$$('.mybsmi-master-item-'+safe(content[i][1])+' img').attr('src',url);
+	}
   }
 
   $$('.mybsmi-cabang-relawan').on('click', function (e) {
