@@ -1389,54 +1389,73 @@ fdeviceid();
 
 //form-aktivasi/////////////////////////////
 $$('.mybsmi-aktivasiscreen').on('click', function () {
-  app.dialog.prompt("PIN", "MyBSMI", async function (pin) {
-    
-    const buf = await crypto.subtle.digest("SHA-256", new TextEncoder("utf-8").encode(pin));
-    var pinhash = Array.prototype.map.call(new Uint8Array(buf), x=>(('00'+x.toString(16)).slice(-2))).join('');
-    //console.log(pinhash);
-        let mypreloader = app.dialog.preloader();
-        app.request({
-          url: apidataurl,
-          method: 'GET',
-          cache: false,
-          data : { command: 'getpinaktivasi'}, 
-          success: function (data, status, xhr)
-            {
-              //console.log(data);
-              mypreloader.close();
+	
+	async function aktivasi(pinhash){
 
-              var status = JSON.parse(data).status;
-              var data = JSON.parse(data).data;
-              if (status == "success")
-              {
-                  if (pinhash === data)
-                  {
-                    app.loginScreen.open('#my-aktivasi-screen');
-                    try{window.grecaptchaid = grecaptcha.render( 'mybsmi-grecaptchaaktivasi');}catch{}
-                  }
-                  else
-                  {
-                    var toastBottom = app.toast.create({ text: 'Salah', closeTimeout: 5000,position: 'center', });toastBottom.open();
-                  }            
-              }
-              else if (status == "failed")
-              {
-                app.dialog.alert(data,'Terjadi Kesalahan');
-              }
-              else
-              {
-                app.dialog.alert(data,'Terjadi Kesalahan');
-              }
-            },
-          error: function (xhr, status, message)
-            {
-              //console.log(message);
-              mypreloader.close();
-              app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
-            },
-        })
-  }
-  )
+			let mypreloader = app.dialog.preloader();
+			app.request({
+			  url: apidataurl,
+			  method: 'GET',
+			  cache: false,
+			  data : { command: 'getpinaktivasi'}, 
+			  success: async function (data, status, xhr)
+				{
+				  //console.log(data);
+				  mypreloader.close();
+
+				  var status = JSON.parse(data).status;
+				  var data = JSON.parse(data).data;
+				  if (status == "success")
+				  {
+
+					let yourDate = new Date()
+					const offset = yourDate.getTimezoneOffset()
+					yourDate = new Date(yourDate.getTime() - (offset*60*1000))
+					let today = yourDate.toISOString().split('T')[0]
+					let temp = data+today
+					const buf = await crypto.subtle.digest("SHA-256", new TextEncoder("utf-8").encode(temp));
+					let tempdata = Array.prototype.map.call(new Uint8Array(buf), x=>(('00'+x.toString(16)).slice(-2))).join('');
+
+					  if (pinhash === data || pinhash === tempdata)
+					  {
+						app.loginScreen.open('#my-aktivasi-screen');
+						try{window.grecaptchaid = grecaptcha.render( 'mybsmi-grecaptchaaktivasi');}catch{}
+					  }
+					  else
+					  {
+						var toastBottom = app.toast.create({ text: 'Salah', closeTimeout: 5000,position: 'center', });toastBottom.open();
+					  }            
+				  }
+				  else if (status == "failed")
+				  {
+					app.dialog.alert(data,'Terjadi Kesalahan');
+				  }
+				  else
+				  {
+					app.dialog.alert(data,'Terjadi Kesalahan');
+				  }
+				},
+			  error: function (xhr, status, message)
+				{
+				  //console.log(message);
+				  mypreloader.close();
+				  app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
+				},
+			})
+	}
+  
+	var pin = params.pin;
+	if (pin !== undefined)
+	{
+		aktivasi(pin)
+	}else{
+		app.dialog.prompt("PIN", "MyBSMI", async function (pin) {
+			const buf = await crypto.subtle.digest("SHA-256", new TextEncoder("utf-8").encode(pin));
+			var pinhash = Array.prototype.map.call(new Uint8Array(buf), x=>(('00'+x.toString(16)).slice(-2))).join('');
+			//console.log(pinhash);
+			 aktivasi(pinhash)
+		})
+	}
 });
 
 $$('.persetujuanaktivasi').on('click', function () {
@@ -4296,7 +4315,8 @@ function fpagemasterrun(content)
 }
 
 function fpagemasterpengaturan(){
-  let html = '<button class="button ganti-pin">GANTI PIN AKTIVASI</button>'
+  let html = '<button class="button ganti-pin">GANTI PIN AKTIVASI</button>'+
+			'<button class="button buat-link">BUAT LINK AKTIVASI</button>'
   $$(".mybsmi-master-pengaturan").html(html)
   $$('.ganti-pin').on('click', function () {
         app.dialog.prompt('', 'GANTI PIN AKTIVASI', async function (pin){
@@ -4304,6 +4324,9 @@ function fpagemasterpengaturan(){
           var pinhash = Array.prototype.map.call(new Uint8Array(buf), x=>(('00'+x.toString(16)).slice(-2))).join('');
           fgantipin(pinhash);
         })
+  })
+  $$('.buat-link').on('click', function () {
+		fbuatlinkaktivasi()
   })
 }
 
@@ -4343,6 +4366,63 @@ function fgantipin(pin){
             app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
           },
       })
+}
+
+function fbuatlinkaktivasi(){
+			let mypreloader = app.dialog.preloader();
+			app.request({
+			  url: apidataurl,
+			  method: 'GET',
+			  cache: false,
+			  data : { command: 'getpinaktivasi'}, 
+			  success: async function (data, status, xhr)
+				{
+				  //console.log(data);
+				  mypreloader.close();
+
+				  var status = JSON.parse(data).status;
+				  var data = JSON.parse(data).data;
+				  if (status == "success")
+				  {
+
+					let yourDate = new Date()
+					const offset = yourDate.getTimezoneOffset()
+					yourDate = new Date(yourDate.getTime() - (offset*60*1000))
+					let today = yourDate.toISOString().split('T')[0]
+					let temp = data+today
+					const buf = await crypto.subtle.digest("SHA-256", new TextEncoder("utf-8").encode(temp));
+					let tempdata = Array.prototype.map.call(new Uint8Array(buf), x=>(('00'+x.toString(16)).slice(-2))).join('');
+
+					let link = 'https://mybsmi.bsmijatim.org/?pin='+tempdata
+
+					if (navigator.share) {
+					  navigator
+						.share({
+						  title: "Link Aktivasi",
+						  //text: "Share",
+						  url: link
+						})
+						.then(() => console.log("thanks for share"))
+						.catch(error => console.log("error", error));
+					} 
+					
+				  }
+				  else if (status == "failed")
+				  {
+					app.dialog.alert(data,'Terjadi Kesalahan');
+				  }
+				  else
+				  {
+					app.dialog.alert(data,'Terjadi Kesalahan');
+				  }
+				},
+			  error: function (xhr, status, message)
+				{
+				  //console.log(message);
+				  mypreloader.close();
+				  app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
+				},
+			})
 }
 
 function fpagemasteradmincabang(alluser)
