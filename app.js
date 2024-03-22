@@ -1390,7 +1390,7 @@ fdeviceid();
 //form-aktivasi/////////////////////////////
 $$('.mybsmi-aktivasiscreen').on('click', function () {
 	
-	async function aktivasi(pinhash){
+	async function aktivasi(pinhash,redirect){
 
 			let mypreloader = app.dialog.preloader();
 			app.request({
@@ -1421,6 +1421,10 @@ $$('.mybsmi-aktivasiscreen').on('click', function () {
 						app.loginScreen.open('#my-aktivasi-screen');
 						try{window.grecaptchaid = grecaptcha.render( 'mybsmi-grecaptchaaktivasi');}catch{}
 					  }
+					  else if (redirect)
+					  {
+						  app.dialog.alert('Link aktivasi kedaluwarsa','Terjadi Kesalahan',()=>{window.location = 'https://bsmijatim.org'});
+					  }
 					  else
 					  {
 						var toastBottom = app.toast.create({ text: 'Salah', closeTimeout: 5000,position: 'center', });toastBottom.open();
@@ -1447,13 +1451,13 @@ $$('.mybsmi-aktivasiscreen').on('click', function () {
 	var pin = params.pin;
 	if (pin !== undefined)
 	{
-		aktivasi(pin)
+		aktivasi(pin,true)
 	}else{
 		app.dialog.prompt("PIN", "MyBSMI", async function (pin) {
 			const buf = await crypto.subtle.digest("SHA-256", new TextEncoder("utf-8").encode(pin));
 			var pinhash = Array.prototype.map.call(new Uint8Array(buf), x=>(('00'+x.toString(16)).slice(-2))).join('');
 			//console.log(pinhash);
-			 aktivasi(pinhash)
+			 aktivasi(pinhash,false)
 		})
 	}
 });
