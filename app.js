@@ -4563,6 +4563,9 @@ function fpagemasteradmincabangedit(datacabang,datarelawan)
         datarelawan.forEach(function(item,index){
           let statusincludes = ["Terbatas","Terverifikasi","Tertolak"]
           if (!statusincludes.includes(item[3]))return
+          if (!isLocal) {
+            if (skipuid.includes(item[1]))return
+          }
           if(item[11] == datacabang[0])
           {
             var opt = document.createElement('option');
@@ -4714,6 +4717,9 @@ function  fpagemasteradmincabanggantiadmin(datacabang,datarelawan)
         datarelawan.forEach(function(item,index){
           let statusincludes = ["Terbatas","Terverifikasi","Tertolak"]
           if (!statusincludes.includes(item[3]))return
+          if (!isLocal) {
+            if (skipuid.includes(item[1]))return
+          }
           if(item[11] == datacabang[0])
           {
             var opt = document.createElement('option');
