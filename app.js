@@ -4828,6 +4828,7 @@ function fpagemasteradmincabanggantiadminupdate(inputdata)
 
 function fpagemasteradminlaporan(content)
 {
+  var jumlahadminlaporan = 0
   var data = '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th>Nama</th><th>Cabang</th><th></th></tr></thead><tbody>';
   for (i=content.length-1;i>-1;i--)
   {
@@ -4840,9 +4841,11 @@ function fpagemasteradminlaporan(content)
       if (json.adminlaporan){}else{continue;}
       
       data += '<tr class="mybsmi-master-item-'+safe(content[i][1])+'"><td data-collapsible-title="Nama">'+safe(content[i][4])+'</td><td data-collapsible-title="Cabang">'+safe(content[i][11])+'</td><td><a class="button button-fill mybsmi-masteraction" data-user="'+i+'">DELETE</a></td></tr>';
+      jumlahadminlaporan++
   }
   data += '</tbody></table></div>';
   $$('.mybsmi-master-adminlaporan').html(data);
+  $$('.jumlahadminlaporan').html('Jumlah : '+jumlahadminlaporan);
 
   $$('.mybsmi-master-adminlaporan a.mybsmi-masteraction').on('click', function (e) {
               var index = this.attributes["data-user"].value;
