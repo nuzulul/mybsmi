@@ -7370,7 +7370,7 @@ function fpagedokumen(run = true){
     {
         var api = "https://cors.bsmijatim.workers.dev/?";
         var sourcedokumen = [
-            {jenis:"sertifikatmybsmi",sheeturl:"https://docs.google.com/spreadsheets/d/e/2PACX-1vT4LuWDBXuIFxrvHtpl1m2gqb65LUr-ch0NjGCXW7_I4Z7BYttMP90xkR_rSlQNprdCXV2IH09B9pIR/pub?gid=0&single=true&output=csv",tanggal:0,uid:4,judul:9,index:13,nomor:14,fileid:16,download:17}
+            {jenis:"sertifikatmybsmi",sheeturl:"https://docs.google.com/spreadsheets/d/e/2PACX-1vT4LuWDBXuIFxrvHtpl1m2gqb65LUr-ch0NjGCXW7_I4Z7BYttMP90xkR_rSlQNprdCXV2IH09B9pIR/pub?gid=0&single=true&output=csv",tanggal:0,uid:4,judul:9,index:16,nomor:17,fileid:19,download:20}
           ]
         var allrequest = []
         sourcedokumen.forEach(function(arr,index){
