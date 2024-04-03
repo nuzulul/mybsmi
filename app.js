@@ -5319,7 +5319,7 @@ function fpagemasterdokumenrunsertifikatshow(index,content)
     destroyOnClose: true,
     verticalButtons: true,
     on: {
-      opened: function () {
+      opened: function (dialog,e) {
 			//console.log('Dialog opened')
 			var div = document.getElementById('relawan');
 			
@@ -5331,9 +5331,15 @@ function fpagemasterdokumenrunsertifikatshow(index,content)
 			  
 				var child = document.createElement('div');
 				child.value = index;
-				child.innerHTML = '<button class="button">'+item.nama+' ('+item.bid+')</button>';            
+				child.innerHTML = '<button class="button mybsmi-masterdokumensertifikat-showitem" data-index="'+index+'">'+item.nama+' ('+item.bid+')</button>';            
 				div.appendChild(child);
 			});
+			
+			  $$('.mybsmi-masterdokumensertifikat-showitem').on('click', function (e) {
+					dialog.close()
+					var index = this.attributes["data-index"].value;
+					fpagemasterdokumenshowitem(index,datarelawan,item)
+			  })
       }
     },
     buttons: [
@@ -5359,6 +5365,49 @@ function fpagemasterdokumenrunsertifikatshow(index,content)
     ]
   });
   dialog.open();
+}
+
+function fpagemasterdokumenshowitem(index,datarelawan,item)
+{
+  let mypreloader = app.dialog.preloader()
+  fpagedokumen(false)
+  function fperiksakesiapan()
+  {
+      if (typeof mybsmidokumendata === 'undefined' || mybsmidokumendata === null) {
+        setTimeout(function(){ fperiksakesiapan(); }, 1000);
+        return;
+      }
+	  mypreloader.close()
+      fpagemasterdokumenshowitemrun(index,datarelawan,item,mybsmidokumendata)
+  }
+  fperiksakesiapan()
+}
+
+function fpagemasterdokumenshowitemrun(index,datarelawan,item,mybsmidokumendata)
+{
+	let uid = datarelawan[index].uid
+	let kode = item.kode
+    let hasil = []
+    mybsmidokumendata.forEach(function(arr,index){
+        let data = CSVToArray(arr.data)
+		data = data.filter((sertifikat) => sertifikat[arr.uid]==uid && sertifikat[arr.kode] == kode)
+        data.forEach(function(ser,idx){
+            let tanggal = ser[arr.tanggal]
+            let judul = ser[arr.judul]
+            let download = ser[arr.download]
+            let fileid = ser[arr.fileid]
+            hasil.push({tanggal,judul,download,fileid})
+        })
+    })
+    hasil.sort(function(a, b){return new Date(a.tanggal) - new Date(b.tanggal)});
+	
+	if(hasil.length > 0)
+	{
+		let item = hasil[0]
+		let id = item.fileid
+		let url = 'https://drive.google.com/file/d/'+id+'/preview'
+		myviewer(url)
+	}
 }
 
 function fpagemasterdokumenaddrelawan(index,content)
@@ -7843,7 +7892,7 @@ function fpagedokumen(run = true){
     {
         var api = "https://cors.bsmijatim.workers.dev/?";
         var sourcedokumen = [
-            {jenis:"sertifikatmybsmi",sheeturl:"https://docs.google.com/spreadsheets/d/e/2PACX-1vT4LuWDBXuIFxrvHtpl1m2gqb65LUr-ch0NjGCXW7_I4Z7BYttMP90xkR_rSlQNprdCXV2IH09B9pIR/pub?gid=0&single=true&output=csv",tanggal:0,uid:4,judul:9,index:16,nomor:17,fileid:19,download:20}
+            {jenis:"sertifikatmybsmi",sheeturl:"https://docs.google.com/spreadsheets/d/e/2PACX-1vT4LuWDBXuIFxrvHtpl1m2gqb65LUr-ch0NjGCXW7_I4Z7BYttMP90xkR_rSlQNprdCXV2IH09B9pIR/pub?gid=0&single=true&output=csv",tanggal:0,uid:4,kode:8,judul:9,index:16,nomor:17,fileid:19,download:20}
           ]
         var allrequest = []
         sourcedokumen.forEach(function(arr,index){
