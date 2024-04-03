@@ -5215,8 +5215,19 @@ function fpagemasterdokumenaddsertifikat(){
 							//console.log('Check Validity!');
 							return;
 						} 
-						var dataform = JSON.stringify(app.form.convertToData('#tambahdokumen'));
-						fpagemasterdokumenaddrun(dialog,dataform);
+						var dataform = app.form.convertToData('#tambahdokumen');
+						let kode = ["a"]
+						mybsmimasterdokumen.forEach((item,index)=>{
+							if(index==0)return
+							let json = JSON.parse(item[6])
+							kode.push(json.kode.toLowerCase())
+						})
+						if(kode.includes(dataform.kode.toLowerCase()))
+						{
+							var toastBottom = app.toast.create({ text: 'Kode sudah digunakan', closeTimeout: 3000,position: 'center', });toastBottom.open();
+							return
+						}
+						fpagemasterdokumenaddrun(dialog,JSON.stringify(dataform));
               }
           },
         ]
@@ -5295,7 +5306,7 @@ function fpagemasterdokumenrunsertifikat(content)
   $$('.mybsmi-masterdokumensertifikat-show').on('click', function (e) {
 
         var index = this.attributes["data-index"].value;
-        fpagemasterdokumenrunsertifikatshow(index,content)
+        fpagemasterdokumenshow(index,content)
   })
 
   $$('.mybsmi-masterdokumensertifikat-kode-a').on('click', function (e) {
@@ -5345,10 +5356,10 @@ function fpagemasterdokumenkodearun(mybsmidokumendata)
 	let item = JSON.stringify({kode:"A"})
 	let peserta = JSON.stringify(hasil)
 	let content = [["","","","","","Sertifikat",item,peserta]]
-	fpagemasterdokumenrunsertifikatshow(index,content,false)
+	fpagemasterdokumenshow(index,content,false)
 }
 
-function fpagemasterdokumenrunsertifikatshow(index,content,add = true)
+function fpagemasterdokumenshow(index,content,add = true)
 {
   let cssclass = ''
   if(!add)cssclass = 'display-none'
@@ -5358,7 +5369,7 @@ function fpagemasterdokumenrunsertifikatshow(index,content,add = true)
     title: 'Lihat '+content[index][5],
     content:''
       +'<div style="width:100%;height:50vh;overflow:auto;">'
-      +'  <div style="display:flex;flex-direction:column;align-items:center;justify-content: center;">'
+      +'  <div style="display:flex;align-items:center;">'
       +'  <div class="list no-hairlines-md">'
       +'    <ul>'
       +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label text-align-center">Relawan</div><div class="item-input-wrap">'
