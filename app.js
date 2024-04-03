@@ -5198,7 +5198,7 @@ function fpagemasterdokumenaddsertifikat(){
         buttons: [
           {
             text: 'Nanti Saja',
-            close:false,
+            close:true,
             color: 'gray',
             onClick: function(dialog, e)
               {
@@ -5275,7 +5275,7 @@ function fpagemasterdokumenrunsertifikat(content)
 		if (content[i][5] === 'Sertifikat')
 		{
 			let item = JSON.parse(content[i][6])
-			data += '<tr class="mybsmi-masterdokumensertifikat-item-'+safe(content[i][1])+'"><td data-collapsible-title="Kode">'+safe(item.kode)+'</td><td data-collapsible-title="Deskripsi"><a class="mybsmi-masterdokumensertifikat-show" data-user="'+safe(content[i][7])+'">'+safe(item.deskripsi)+'</a></td><td data-collapsible-title="Sertifikat">'+safe(item.sertifikat)+'</td><td data-collapsible-title="Background">'+safe(item.background)+'</td><td data-collapsible-title="Judul">'+safe(item.judul)+'</td><td data-collapsible-title="Sebagai">'+safe(item.sebagai)+'</td><td data-collapsible-title="Keterangan">'+safe(item.keterangan)+'</td><td><a class="button button-fill mybsmi-masterdokumensertifikat-action" data-index="'+i+'">Add</a></td></tr>'
+			data += '<tr class="mybsmi-masterdokumensertifikat-item-'+safe(content[i][1])+'"><td data-collapsible-title="Kode">'+safe(item.kode)+'</td><td data-collapsible-title="Deskripsi"><a class="mybsmi-masterdokumensertifikat-show" data-index="'+i+'">'+safe(item.deskripsi)+'</a></td><td data-collapsible-title="Sertifikat">'+safe(item.sertifikat)+'</td><td data-collapsible-title="Background">'+safe(item.background)+'</td><td data-collapsible-title="Judul">'+safe(item.judul)+'</td><td data-collapsible-title="Sebagai">'+safe(item.sebagai)+'</td><td data-collapsible-title="Keterangan">'+safe(item.keterangan)+'</td><td><a class="button button-fill mybsmi-masterdokumensertifikat-action" data-index="'+i+'">Add</a></td></tr>'
 		}
 	{
 	}
@@ -5288,6 +5288,77 @@ function fpagemasterdokumenrunsertifikat(content)
         fpagemasterdokumenaddrelawan(index,content)
   })
 
+  $$('.mybsmi-masterdokumensertifikat-show').on('click', function (e) {
+
+        var index = this.attributes["data-index"].value;
+        fpagemasterdokumenrunsertifikatshow(index,content)
+  })
+
+}
+
+function fpagemasterdokumenrunsertifikatshow(index,content)
+{
+  let item = JSON.parse(content[index][6])
+  let dokumenid = content[index][1]
+  var dialog = app.dialog.create({
+    title: 'Lihat '+content[index][5],
+    content:''
+      +'<div style="width:100%;height:50vh;overflow:auto;">'
+      +'  <div style="display:flex;flex-direction:column;align-items:center;justify-content: center;">'
+      +'  <div class="list no-hairlines-md">'
+      +'    <ul>'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label text-align-center">Relawan</div><div class="item-input-wrap">'
+      +'                            <div id="relawan"></div>'
+      +'            </div></div>'
+      +'        </li>'
+      +'    </ul>'
+      +'  </div>'
+      +'  </div>'
+      +'</div>',
+    closeByBackdropClick: false,
+    destroyOnClose: true,
+    verticalButtons: true,
+    on: {
+      opened: function () {
+			//console.log('Dialog opened')
+			var div = document.getElementById('relawan');
+			
+			let datarelawan = JSON.parse(content[index][7])
+			datarelawan.forEach(function(item,index){
+				  if (!isLocal) {
+					if (skipuid.includes(item.uid))return
+				  }
+			  
+				var child = document.createElement('div');
+				child.value = index;
+				child.innerHTML = '<button class="button">'+item.nama+' ('+item.bid+')</button>';            
+				div.appendChild(child);
+			});
+      }
+    },
+    buttons: [
+      {
+        text: 'Add',
+        close:false,
+        color: 'red',
+        onClick: function(dialog, e)
+          {
+              dialog.close()
+			  fpagemasterdokumenaddrelawan(index,content)
+          }
+      },
+      {
+        text: 'Batal',
+        close:true,
+        color: 'gray',
+        onClick: function(dialog, e)
+          {
+
+          }
+      },
+    ]
+  });
+  dialog.open();
 }
 
 function fpagemasterdokumenaddrelawan(index,content)
