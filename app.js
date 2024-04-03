@@ -404,6 +404,36 @@ routes: [
     },
   },
   {
+    path: '/masterdokumen/',
+    url: 'masterdokumen.html',
+    on: {
+      pageAfterIn: function test (e, page) {
+        fpagemasterdokumen();
+      },
+    },
+    beforeEnter: function ({ resolve, reject }) {
+      function fperiksakesiapan({ resolve, reject })
+      {
+          if (typeof dashboarddata === 'undefined' || dashboarddata === null) {
+            // variable is undefined or null
+            setTimeout(function(){ fperiksakesiapan({ resolve, reject }); }, 1000);
+            return;
+          }
+            let data = JSON.parse(dashboarddata.user.usermydata)
+            if (data.master)
+            {
+                resolve();
+            }
+            else
+            {
+                app.dialog.alert('Tidak punya izin', 'Status')
+                reject();
+            }
+      }
+      fperiksakesiapan({ resolve, reject })
+    },
+  },
+  {
     path: '(.*)',
     url: '404.html',
   },
@@ -4265,7 +4295,7 @@ function fpageadmineditcabangupdate(inputdata)
 
 
 ///////fpagemaster();///////////////////////////////////////////
-function fpagemaster()
+function fpagemaster(run = true)
 {
   if (typeof mybsmimasterdata === 'undefined' || mybsmimasterdata === null)
   {
@@ -4284,7 +4314,7 @@ function fpagemaster()
             {
               //console.log(content);
               window.mybsmimasterdata = content;
-              fpagemasterrun(content);
+              if(run)fpagemasterrun(content);
             }
             else if (status == "failed")
             {
@@ -4308,7 +4338,7 @@ function fpagemaster()
   }
   else
   {
-    fpagemasterrun(mybsmimasterdata);
+    if(run)fpagemasterrun(mybsmimasterdata);
   }
 
   $$('.mybsmi-masterrefresh').on('click', function () {
@@ -4326,7 +4356,8 @@ function fpagemasterrun(content)
 }
 
 function fpagemasterpengaturan(){
-  let html = '<button class="button button-fill ganti-pin">GANTI PIN AKTIVASI</button></br>'+
+  let html = '<button class="button button-fill master-dokumen">MASTER DOKUMEN</button></br>'+
+			'<button class="button button-fill ganti-pin">GANTI PIN AKTIVASI</button></br>'+
 			'<button class="button button-fill buat-link">BUAT LINK AKTIVASI</button>'
   $$(".mybsmi-master-pengaturan").html(html)
   $$('.ganti-pin').on('click', function () {
@@ -4338,6 +4369,10 @@ function fpagemasterpengaturan(){
   })
   $$('.buat-link').on('click', function () {
 		fbuatlinkaktivasi()
+  })
+  $$('.master-dokumen').on('click', function () {
+        let url = "/masterdokumen/";
+        app.views.main.router.navigate(url);
   })
 }
 
@@ -5028,6 +5063,373 @@ function fpagemasteradminlaporanupdate(inputdata)
   fpagemasterrun(mybsmimasterdata);
 }
 ///////fpagemaster////////////////////////////////////////////////////////
+
+
+///////fpagemasterdokumen();///////////////////////////////////////////
+function fpagemasterdokumen()
+{
+  if (typeof mybsmimasterdokumen === 'undefined' || mybsmimasterdokumen === null)
+  {
+      let mypreloader = app.dialog.preloader();
+      app.request({
+        url: apidataurl,
+        method: 'POST',
+        cache: false,
+        data : { token:mybsmiusertoken, command: 'getmasterdokumen'}, 
+        success: function (data, status, xhr)
+          {
+            mypreloader.close();
+            var status = JSON.parse(data).status;
+            var content = JSON.parse(data).data;
+            if (status == "success")
+            {
+              //console.log(content);
+              window.mybsmimasterdokumen = content;
+              fpagemasterdokumenrun(content);
+            }
+            else if (status == "failed")
+            {
+              //console.log("failed");
+              app.dialog.alert(content,'Terjadi Kesalahan');
+            }
+            else
+            {
+              //console.log("failed");
+              //app.dialog.alert(content,'Terjadi Kesalahan');
+              fcekexpiredtoken(content);
+            }
+          },
+        error: function (xhr, status, message)
+          {
+            //console.log(message);
+            mypreloader.close();
+            app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
+          },
+      })
+  }
+  else
+  {
+    fpagemasterdokumenrun(mybsmimasterdokumen);
+  }
+  
+  $$('.mybsmi-masterdokumen-addsertifikat').html('<i class="icons f7-icons mybsmi-masterdokumen-addsertifikatbutton">plus_app_fill</i>')
+
+  $$('.mybsmi-masterdokumen-addsertifikatbutton').on('click', function () {
+    fpagemasterdokumenaddsertifikat()
+  })
+
+  $$('.mybsmi-masterdokumen-refresh').on('click', function () {
+    mybsmimasterdokumen = null
+    fpagemasterdokumen()
+  })
+
+}
+
+function fpagemasterdokumenrefresh()
+{
+	mybsmimasterdokumen = null
+    fpagemasterdokumen()
+}
+
+function fpagemasterdokumenaddsertifikat(){
+      var dialog = app.dialog.create({
+        title: 'Tambah Sertifikat',
+		content:''+
+          '<div style="width:100%;height:60vh;overflow:auto;">'+
+				'<div style="display:flex;flex-direction:column;align-items:center;justify-content: center;">'+
+					'<form id="tambahdokumen">'+
+						'<div class="list no-hairlines-md">'+
+							'<ul>'+
+								'<li class="item-content item-input"><div class="item-inner"><div class="item-input-wrap">'+
+									'<select name="kategori" required validate>'+
+										'<option value="" disabled selected>-- Kategori --</option>'+
+										'<option value="Sertifikat">Sertifikat</option>'+
+									'</select>'+
+								'</div></div></li>'+
+								'<li class="item-content item-input"><div class="item-inner"><div class="item-input-wrap">'+
+									'<input type="text" name="kode" placeholder="Kode" required validate/>'+
+								'</div></div></li>'+
+								'<li class="item-content item-input"><div class="item-inner"><div class="item-input-wrap">'+
+									'<input type="text" name="deskripsi" placeholder="Deskripsi" required validate/>'+
+								'</div></div></li>'+
+								'<li class="item-content item-input"><div class="item-inner"><div class="item-input-wrap">'+
+									'<input type="text" name="sertifikat" placeholder="Sertifikat" list="sertifikat" required validate/>'+
+									'<datalist id="sertifikat">'+
+										'<option>Sertifikat</option>'+
+										'<option>Piagam Kemanusiaan</option>'+
+									'</datalist>'+
+								'</div></div></li>'+
+								'<li class="item-content item-input"><div class="item-inner"><div class="item-input-wrap">'+
+									'<input type="text" name="background" placeholder="Background" list="background" required validate/>'+
+									'<datalist id="background">'+
+										'<option>https://nuzulul.github.io/uploads/template-5656464.png</option>'+
+									'</datalist>'+
+								'</div></div></li>'+
+								'<li class="item-content item-input"><div class="item-inner"><div class="item-input-wrap">'+
+									'<input type="text" name="judul" placeholder="Judul" list="judul" required validate/>'+
+									'<datalist id="judul">'+
+										'<option>Penghargaan Setinggi-Tingginya Kepada</option>'+
+										'<option>Terima Kasih Kepada</option>'+
+									'</datalist>'+
+								'</div></div></li>'+
+								'<li class="item-content item-input"><div class="item-inner"><div class="item-input-wrap">'+
+									'<input type="text" name="sebagai" placeholder="Sebagai" list="sebagai" required validate/>'+
+									'<datalist id="sebagai">'+
+										'<option>RELAWAN KEMANUSIAAN</option>'+
+										'<option>DONATUR KEMANUSIAAN</option>'+
+									'</datalist>'+
+								'</div></div></li>'+
+								'<li class="item-content item-input"><div class="item-inner"><div class="item-input-wrap">'+
+									'<input type="text" name="keterangan" placeholder="Keterangan" required validate/>'+
+								'</div></div></li>'+
+							'</ul>'+
+						'</div>'+
+					'</form>'+
+				'</div>'+
+          '</div>',
+        closeByBackdropClick: false,
+        destroyOnClose: true,
+        verticalButtons: false,
+        on: {
+          opened: function () {
+            
+          }
+        },
+        buttons: [
+          {
+            text: 'Nanti Saja',
+            close:false,
+            color: 'gray',
+            onClick: function(dialog, e)
+              {
+
+              }
+          },
+          {
+            text: 'Simpan',
+            close:false,
+            color: 'red',
+            onClick: function(dialog, e)
+              {
+						if (!$$('#tambahdokumen')[0].checkValidity()) {
+							//console.log('Check Validity!');
+							return;
+						} 
+						var dataform = JSON.stringify(app.form.convertToData('#tambahdokumen'));
+						fpagemasterdokumenaddrun(dialog,dataform);
+              }
+          },
+        ]
+      });
+      dialog.open();
+}
+
+function fpagemasterdokumenaddrun(dialog,inputdata){
+	 dialog.close()
+      let mypreloader = app.dialog.preloader();
+      app.request({
+        url: apidataurl,
+        method: 'POST',
+        cache: false,
+        data : { token:mybsmiusertoken, command: 'masterdokumenadd', inputdata}, 
+        success: function (data, status, xhr)
+          {
+            mypreloader.close();
+            var status = JSON.parse(data).status;
+            var content = JSON.parse(data).data;
+            if (status == "success")
+            {
+              fpagemasterdokumenrefresh()
+			  var toastBottom = app.toast.create({ text: 'Berhasil', closeTimeout: 3000,position: 'center', });toastBottom.open();
+            }
+            else if (status == "failed")
+            {
+              //console.log("failed");
+              app.dialog.alert(content,'Terjadi Kesalahan');
+            }
+            else
+            {
+              //console.log("failed");
+              //app.dialog.alert(content,'Terjadi Kesalahan');
+              fcekexpiredtoken(content);
+            }
+          },
+        error: function (xhr, status, message)
+          {
+            //console.log(message);
+            mypreloader.close();
+            app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
+          },
+      })
+}
+
+function fpagemasterdokumenrun(content)
+{
+		fpagemasterdokumenrunsertifikat(content)
+}
+
+function fpagemasterdokumenrunsertifikat(content)
+{
+	var data = '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th>Kode</th><th>Deskripsi</th><th>Sertifikat</th><th>Background</th><th>Judul</th><th>Sebagai</th><th>Keterangan</th><th></th></tr></thead><tbody>'
+	for (i=content.length-1;i>-1;i--)
+		if (content[i][5] === 'Sertifikat')
+		{
+			let item = JSON.parse(content[i][6])
+			data += '<tr class="mybsmi-masterdokumensertifikat-item-'+safe(content[i][1])+'"><td data-collapsible-title="Kode">'+safe(item.kode)+'</td><td data-collapsible-title="Deskripsi"><a class="mybsmi-masterdokumensertifikat-show" data-user="'+safe(content[i][7])+'">'+safe(item.deskripsi)+'</a></td><td data-collapsible-title="Sertifikat">'+safe(item.sertifikat)+'</td><td data-collapsible-title="Background">'+safe(item.background)+'</td><td data-collapsible-title="Judul">'+safe(item.judul)+'</td><td data-collapsible-title="Sebagai">'+safe(item.sebagai)+'</td><td data-collapsible-title="Keterangan">'+safe(item.keterangan)+'</td><td><a class="button button-fill mybsmi-masterdokumensertifikat-action" data-index="'+i+'">Add</a></td></tr>'
+		}
+	{
+	}
+	data += '</tbody></table></div>'
+	$$('.mybsmi-masterdokumen-sertifikat').html(data)
+
+  $$('.mybsmi-masterdokumensertifikat-action').on('click', function (e) {
+
+        var index = this.attributes["data-index"].value;
+        fpagemasterdokumenaddrelawan(index,content)
+  })
+
+}
+
+function fpagemasterdokumenaddrelawan(index,content)
+{
+  fpagemaster(false)
+  function fperiksakesiapan()
+  {
+      if (typeof mybsmimasterdata === 'undefined' || mybsmimasterdata === null) {
+        setTimeout(function(){ fperiksakesiapan(); }, 1000);
+        return;
+      }
+
+      fpagemasterdokumenaddrelawanform(index,content,mybsmimasterdata)
+  }
+  fperiksakesiapan()
+}
+
+function  fpagemasterdokumenaddrelawanform(index,content,datarelawan)
+{
+  let item = JSON.parse(content[index][6])
+  let dokumenid = content[index][1]
+  var dialog = app.dialog.create({
+    title: 'Tambah '+content[index][5],
+    content:''////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      +'<div style="width:100%;height:50vh;overflow:auto;">'
+      +'  <div style="display:flex;flex-direction:column;align-items:center;justify-content: center;">'
+      +'      <img id="img" src="icon512.png" style="width:150px;height:150px;margin: 10px 10px;border-radius: 0%;object-fit: cover;">'
+      +'      <p style="font-weight:bold;">'+safe(item.deskripsi)+'</p>'
+      +'  <div class="list no-hairlines-md">'
+      +'    <ul>'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Relawan</div><div class="item-input-wrap">'
+      +'                            <select id="relawan" name="relawan">'
+      +'                              <option value="-1" selected>-</option>'
+      +'                            </select>'
+      +'            </div></div>'
+      +'        </li>'
+      +'    </ul>'
+      +'  </div>'
+      +'  </div>'
+      +'</div>',//////////////////////////////////////////////////////////////////////////////////////////////////
+    closeByBackdropClick: false,
+    destroyOnClose: true,
+    verticalButtons: true,
+    on: {
+      opened: function () {
+        //console.log('Dialog opened')
+        var select = document.getElementById('relawan');
+		let peserta = []
+		let arr = JSON.parse(content[index][7])
+		arr.forEach((item)=>{
+			peserta.push(item.uid)
+		})
+        datarelawan.forEach(function(item,index){
+			  let statusincludes = ["Terbatas","Terverifikasi","Tertolak"]
+			  if (!statusincludes.includes(item[3]))return
+			  if (!isLocal) {
+				if (skipuid.includes(item[1]))return
+			  }
+          
+            var opt = document.createElement('option');
+            opt.value = index;
+            opt.innerHTML = item[4]+" ("+item[18]+")";
+            if(peserta.includes(item[1]))opt.disabled = true            
+            select.appendChild(opt);          
+        });
+      }
+    },
+    buttons: [
+      {
+        text: 'Simpan',
+        close:false,
+        color: 'red',
+        onClick: function(dialog, e)
+          {
+              var indexrelawan =  parseInt($$('#relawan').val());
+			  if (indexrelawan == -1)return
+			  let uid = datarelawan[indexrelawan][1]
+			  let nama = datarelawan[indexrelawan][4]
+			  let photo = datarelawan[indexrelawan][13]
+			  let email = datarelawan[indexrelawan][2]
+			  let bid = datarelawan[indexrelawan][18]
+			  let user = {nama,uid,email,photo,bid}
+			  let dokumen = JSON.parse(content[index][6])
+			  let kategori = content[index][5]
+			  let inputdata = JSON.stringify({index,kategori,dokumen,user})
+              fpagemasterdokumenaddrelawanrun(dialog,inputdata)
+          }
+      },
+      {
+        text: 'Batal',
+        close:true,
+        color: 'gray',
+        onClick: function(dialog, e)
+          {
+
+          }
+      },
+    ]
+  });
+  dialog.open();
+}
+
+function fpagemasterdokumenaddrelawanrun(dialog,inputdata)
+{
+      dialog.close()
+      let mypreloader = app.dialog.preloader();
+      app.request({
+        url: apidataurl,
+        method: 'POST',
+        cache: false,
+        data : { token:mybsmiusertoken, command: 'masterdokumenaddrelawan', inputdata}, 
+        success: function (data, status, xhr)
+          {
+            mypreloader.close();
+            var status = JSON.parse(data).status;
+            var content = JSON.parse(data).data;
+            if (status == "success")
+            {
+              fpagemasterdokumenrefresh()
+			  var toastBottom = app.toast.create({ text: 'Berhasil', closeTimeout: 3000,position: 'center', });toastBottom.open();
+            }
+            else if (status == "failed")
+            {
+              //console.log("failed");
+              app.dialog.alert(content,'Terjadi Kesalahan');
+            }
+            else
+            {
+              //console.log("failed");
+              //app.dialog.alert(content,'Terjadi Kesalahan');
+              fcekexpiredtoken(content);
+            }
+          },
+        error: function (xhr, status, message)
+          {
+            //console.log(message);
+            mypreloader.close();
+            app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
+          },
+      })
+}
+///////////////////////////////////////////////////////////////////////////
 
 
 /////fpagepesan//////////////////////////////////////////////////////////////
