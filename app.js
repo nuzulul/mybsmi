@@ -5272,13 +5272,17 @@ function fpagemasterdokumenrunsertifikat(content)
 {
 	var data = '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th>Kode</th><th>Deskripsi</th><th>Sertifikat</th><th>Background</th><th>Judul</th><th>Sebagai</th><th>Keterangan</th><th></th></tr></thead><tbody>'
 	for (i=content.length-1;i>-1;i--)
+	{
 		if (content[i][5] === 'Sertifikat')
 		{
 			let item = JSON.parse(content[i][6])
 			data += '<tr class="mybsmi-masterdokumensertifikat-item-'+safe(content[i][1])+'"><td data-collapsible-title="Kode">'+safe(item.kode)+'</td><td data-collapsible-title="Deskripsi"><a class="mybsmi-masterdokumensertifikat-show" data-index="'+i+'">'+safe(item.deskripsi)+'</a></td><td data-collapsible-title="Sertifikat">'+safe(item.sertifikat)+'</td><td data-collapsible-title="Background">'+safe(item.background)+'</td><td data-collapsible-title="Judul">'+safe(item.judul)+'</td><td data-collapsible-title="Sebagai">'+safe(item.sebagai)+'</td><td data-collapsible-title="Keterangan">'+safe(item.keterangan)+'</td><td><a class="button button-fill mybsmi-masterdokumensertifikat-action" data-index="'+i+'">Add</a></td></tr>'
 		}
-	{
+	
 	}
+	
+	data += '<tr class="mybsmi-masterdokumensertifikat-item-"><td data-collapsible-title="Kode">A</td><td data-collapsible-title="Deskripsi"><a class="mybsmi-masterdokumensertifikat-kode-a" data-index="">Sertifikat Pengangkatan Anggota Muda</a></td><td data-collapsible-title="Sertifikat">Sertifikat</td><td data-collapsible-title="Background">https://nuzulul.github.io/uploads/template-5656464.png</td><td data-collapsible-title="Judul">Surat Keterangan Pengangkatan</td><td data-collapsible-title="Sebagai">ANGGOTA MUDA</td><td data-collapsible-title="Keterangan">Untuk menjalankan tugas-tugas yang diamanahkan oleh Perhimpunan</td><td><a class="button button-fill mybsmi-masterdokumensertifikat-kode-a" data-index="">Detail</a></td></tr>'
+	
 	data += '</tbody></table></div>'
 	$$('.mybsmi-masterdokumen-sertifikat').html(data)
 
@@ -5294,10 +5298,60 @@ function fpagemasterdokumenrunsertifikat(content)
         fpagemasterdokumenrunsertifikatshow(index,content)
   })
 
+  $$('.mybsmi-masterdokumensertifikat-kode-a').on('click', function (e) {
+
+        fpagemasterdokumenkodea()
+  })
+
 }
 
-function fpagemasterdokumenrunsertifikatshow(index,content)
+function fpagemasterdokumenkodea()
 {
+  let mypreloader = app.dialog.preloader()
+  fpagedokumen(false)
+  function fperiksakesiapan()
+  {
+      if (typeof mybsmidokumendata === 'undefined' || mybsmidokumendata === null) {
+        setTimeout(function(){ fperiksakesiapan(); }, 1000);
+        return;
+      }
+	  mypreloader.close()
+      fpagemasterdokumenkodearun(mybsmidokumendata)
+  }
+  fperiksakesiapan()
+}
+
+function fpagemasterdokumenkodearun(mybsmidokumendata)
+{
+    let hasil = []
+    mybsmidokumendata.forEach(function(arr,index){
+        let kode = "A"
+		let data = CSVToArray(arr.data)
+		data = data.filter((sertifikat) => sertifikat[arr.kode] == kode)
+        data.forEach(function(ser,idx){
+            let nama = ser[3]
+            let uid = ser[4]
+            let email = ser[5]
+            let photo = ser[6]
+			let bid = ser[7]
+			  if (!isLocal) {
+				if (skipuid.includes(uid))return
+			  }
+            hasil.push({nama,uid,email,photo,bid})
+        })
+    })
+    hasil.sort(function(a, b){return new Date(a.tanggal) - new Date(b.tanggal)});
+	let index = 0
+	let item = JSON.stringify({kode:"A"})
+	let peserta = JSON.stringify(hasil)
+	let content = [["","","","","","Sertifikat",item,peserta]]
+	fpagemasterdokumenrunsertifikatshow(index,content,false)
+}
+
+function fpagemasterdokumenrunsertifikatshow(index,content,add = true)
+{
+  let cssclass = ''
+  if(!add)cssclass = 'display-none'
   let item = JSON.parse(content[index][6])
   let dokumenid = content[index][1]
   var dialog = app.dialog.create({
@@ -5347,10 +5401,11 @@ function fpagemasterdokumenrunsertifikatshow(index,content)
         text: 'Add',
         close:false,
         color: 'red',
+		cssClass: cssclass,
         onClick: function(dialog, e)
           {
               dialog.close()
-			  fpagemasterdokumenaddrelawan(index,content)
+			  if(add)fpagemasterdokumenaddrelawan(index,content)
           }
       },
       {
