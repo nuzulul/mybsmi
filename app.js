@@ -5373,7 +5373,7 @@ function fpagemasterdokumenshow(index,content,add = true)
       +'  <div class="list no-hairlines-md">'
       +'    <ul>'
       +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label text-align-center">Relawan</div><div class="item-input-wrap">'
-      +'                            <div id="relawan"></div>'
+      +'                            <div id="showrelawan"></div>'
       +'            </div></div>'
       +'        </li>'
       +'    </ul>'
@@ -5386,7 +5386,7 @@ function fpagemasterdokumenshow(index,content,add = true)
     on: {
       opened: function (dialog,e) {
 			//console.log('Dialog opened')
-			var div = document.getElementById('relawan');
+			var div = document.getElementById('showrelawan');
 			
 			let datarelawan = JSON.parse(content[index][7])
 			datarelawan.forEach(function(item,index){
@@ -5410,12 +5410,12 @@ function fpagemasterdokumenshow(index,content,add = true)
     buttons: [
       {
         text: 'Add',
-        close:false,
+        close:true,
         color: 'red',
 		cssClass: cssclass,
         onClick: function(dialog, e)
           {
-              dialog.close()
+              
 			  if(add)fpagemasterdokumenaddrelawan(index,content)
           }
       },
@@ -5520,7 +5520,6 @@ function  fpagemasterdokumenaddrelawanform(index,content,datarelawan)
     verticalButtons: true,
     on: {
       opened: function () {
-        //console.log('Dialog opened')
         var select = document.getElementById('relawan');
 		let peserta = []
 		let arr = JSON.parse(content[index][7])
@@ -5665,7 +5664,7 @@ function  fpagemasterdokumenaddrelawanmultiform(index,content,datarelawan)
             opt.value = index;
             opt.innerHTML = item[4]+" ("+item[18]+")";
             if(peserta.includes(item[1]))opt.disabled = true            
-            select.appendChild(opt);          
+            select.appendChild(opt); 			
         });
 		relawan.onchange = evt => {
 			var indexrelawan =  parseInt($$('#relawan').val())
@@ -5700,6 +5699,7 @@ function  fpagemasterdokumenaddrelawanmultiform(index,content,datarelawan)
 				  let index = $$(el).data('index')
 				  indexall.push(index)
 			  })
+			  if (indexall.length == 0)return
 			  
 			  let userall = []
 				  indexall.forEach((item)=>{
