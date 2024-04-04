@@ -5372,7 +5372,7 @@ function fpagemasterdokumenshow(index,content,add = true)
       +'  <div style="display:flex;align-items:center;">'
       +'  <div class="list no-hairlines-md">'
       +'    <ul>'
-      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label text-align-center">Relawan</div><div class="item-input-wrap">'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label text-align-left">Relawan</div><div class="item-input-wrap">'
       +'                            <div id="showrelawan"></div>'
       +'            </div></div>'
       +'        </li>'
@@ -5396,7 +5396,7 @@ function fpagemasterdokumenshow(index,content,add = true)
 			  
 				var child = document.createElement('div');
 				child.value = index;
-				child.innerHTML = '<button class="button mybsmi-masterdokumensertifikat-showitem" data-index="'+index+'">'+item.nama+' ('+item.bid+')</button>';            
+				child.innerHTML = '<button class="button mybsmi-masterdokumensertifikat-showitem" data-index="'+index+'" style="width:auto">'+item.nama+' ('+item.bid+')</button>';            
 				div.appendChild(child);
 			});
 			
