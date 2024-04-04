@@ -5486,7 +5486,8 @@ function fpagemasterdokumenaddrelawan(index,content)
         return;
       }
 
-      fpagemasterdokumenaddrelawanform(index,content,mybsmimasterdata)
+      //fpagemasterdokumenaddrelawanform(index,content,mybsmimasterdata)
+	  fpagemasterdokumenaddrelawanmultiform(index,content,mybsmimasterdata)
   }
   fperiksakesiapan()
 }
@@ -5585,6 +5586,161 @@ function fpagemasterdokumenaddrelawanrun(dialog,inputdata)
         method: 'POST',
         cache: false,
         data : { token:mybsmiusertoken, command: 'masterdokumenaddrelawan', inputdata}, 
+        success: function (data, status, xhr)
+          {
+            mypreloader.close();
+            var status = JSON.parse(data).status;
+            var content = JSON.parse(data).data;
+            if (status == "success")
+            {
+              fpagemasterdokumenrefresh()
+			  var toastBottom = app.toast.create({ text: 'Berhasil', closeTimeout: 3000,position: 'center', });toastBottom.open();
+            }
+            else if (status == "failed")
+            {
+              //console.log("failed");
+              app.dialog.alert(content,'Terjadi Kesalahan');
+            }
+            else
+            {
+              //console.log("failed");
+              //app.dialog.alert(content,'Terjadi Kesalahan');
+              fcekexpiredtoken(content);
+            }
+          },
+        error: function (xhr, status, message)
+          {
+            //console.log(message);
+            mypreloader.close();
+            app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
+          },
+      })
+}
+
+function  fpagemasterdokumenaddrelawanmultiform(index,content,datarelawan)
+{
+  let item = JSON.parse(content[index][6])
+  let dokumenid = content[index][1]
+  let indexrelawanmulti = []
+  var dialog = app.dialog.create({
+    title: 'Tambah '+content[index][5],
+    content:''////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      +'<div style="width:100%;height:50vh;overflow:auto;">'
+      +'  <div style="display:flex;flex-direction:column;align-items:center;justify-content: center;">'
+      +'      <img id="img" src="icon512.png" style="width:150px;height:150px;margin: 10px 10px;border-radius: 0%;object-fit: cover;">'
+      +'      <p style="font-weight:bold;">'+safe(item.deskripsi)+'</p>'
+      +'  </div>'
+	  +'		<div id="chips"></div>'
+      +'  <div class="list no-hairlines-md">'
+      +'    <ul>'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Relawan</div><div class="item-input-wrap">'
+      +'                            <select id="relawan" name="relawan">'
+      +'                              <option value="-1" selected>-</option>'
+      +'                            </select>'
+      +'            </div></div>'
+      +'        </li>'
+      +'    </ul>'
+      +'  </div>'
+      +'</div>',//////////////////////////////////////////////////////////////////////////////////////////////////
+    closeByBackdropClick: false,
+    destroyOnClose: true,
+    verticalButtons: true,
+    on: {
+      opened: function () {
+        //console.log('Dialog opened')
+        var select = document.getElementById('relawan');
+		let peserta = []
+		let arr = JSON.parse(content[index][7])
+		arr.forEach((item)=>{
+			peserta.push(item.uid)
+		})
+        datarelawan.forEach(function(item,index){
+			  let statusincludes = ["Terbatas","Terverifikasi","Tertolak"]
+			  if (!statusincludes.includes(item[3]))return
+			  if (!isLocal) {
+				if (skipuid.includes(item[1]))return
+			  }
+          
+            var opt = document.createElement('option');
+            opt.value = index;
+            opt.innerHTML = item[4]+" ("+item[18]+")";
+            if(peserta.includes(item[1]))opt.disabled = true            
+            select.appendChild(opt);          
+        });
+		relawan.onchange = evt => {
+			var indexrelawan =  parseInt($$('#relawan').val())
+			if (indexrelawan == -1)return
+			let nama = datarelawan[indexrelawan][4]
+			let bid = datarelawan[indexrelawan][18]
+			var opt = document.createElement('div')
+			opt.classList.add('chip')
+			opt.style.cssText = 'height:auto'
+			opt.dataset.index = indexrelawan
+			opt.innerHTML = '<div class="chip-label" style="white-space: normal">'+nama+' ('+bid+')</div><a class="chip-delete" data-index="'+indexrelawan+'"></a>'
+			document.getElementById('chips').appendChild(opt)
+			$$('#relawan option[value="'+indexrelawan+'"]').attr('disabled',true)
+			
+			  $$('.chip-delete').on('click', function (e) {
+					let indexrelawan = this.attributes["data-index"].value;
+					$$(this).parent().remove()
+					$$('#relawan option[value="'+indexrelawan+'"]').removeAttr('disabled')
+			  })
+		}
+      }
+    },
+    buttons: [
+      {
+        text: 'Simpan',
+        close:false,
+        color: 'red',
+        onClick: function(dialog, e)
+          {
+			  let indexall = []
+			  $$('.chip').each((el)=>{
+				  let index = $$(el).data('index')
+				  indexall.push(index)
+			  })
+			  
+			  let userall = []
+				  indexall.forEach((item)=>{
+				  let uid = datarelawan[item][1]
+				  let nama = datarelawan[item][4]
+				  let photo = datarelawan[item][13]
+				  let email = datarelawan[item][2]
+				  let bid = datarelawan[item][18]
+				  let user = {nama,uid,email,photo,bid}	
+					userall.push(user)
+			  })
+
+			  let dokumen = JSON.parse(content[index][6])
+			  let kategori = content[index][5]
+			  let inputdata = JSON.stringify({index,kategori,dokumen,userall})
+              fpagemasterdokumenaddrelawanmultirun(dialog,inputdata)
+          }
+      },
+      {
+        text: 'Batal',
+        close:true,
+        color: 'gray',
+        onClick: function(dialog, e)
+          {
+
+          }
+      },
+    ]
+  });
+  dialog.open();
+}
+
+function fpagemasterdokumenaddrelawanmultirun(dialog,inputdata)
+{
+      dialog.close()
+      let mypreloader = app.dialog.preloader();
+      app.request({
+        url: apidataurl,
+        method: 'POST',
+        cache: false,
+        data : { token:mybsmiusertoken, command: 'masterdokumenaddrelawanmulti', inputdata}, 
         success: function (data, status, xhr)
           {
             mypreloader.close();
