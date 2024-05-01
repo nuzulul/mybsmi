@@ -1506,6 +1506,8 @@ $$('#my-aktivasi-screen .register-button').on('click', function () {
         return;
   }
   
+  grecaptcha.execute(grecaptchaid);
+  
   if ((grecaptcharesponsedata == undefined) || (grecaptcharesponsedata == '')){return;}
 
   var email = $$('#my-aktivasi-screen [name="email"]').val();
@@ -1578,6 +1580,8 @@ $$('#my-login-screen .login-button').on('click', function () {
         //console.log('Check Validity!');
         return;
   }
+  
+  grecaptcha.execute();
   
   if ((grecaptcharesponsedata == undefined) || (grecaptcharesponsedata == '')){return;}
   
@@ -2705,24 +2709,26 @@ function resetpasswordopen()
       content: '<div class="popup" style="background:#fff">'+
       '<div class="block">'+
       
-        '<form id="resetpasswordform" class="login-screen-content"><div class="login-screen-title">Reset Password</div> <div class="list"> <ul> <li class="item-content item-input"> <div class="item-inner"> <div class="item-title item-label">Email</div> <div class="item-input-wrap"> <input id="resetpasswordemail" type="email" name="email" placeholder="Masukkan email" required validate> </div> </div> </li> <li class="item-content item-input"> <div style="padding:20px 20px;justify-content:center;align-items:center;display:flex;width:100%;"> <div id="mybsmi-lupapassword" class="g-recaptcha" data-sitekey="6LcP1RskAAAAANtjMoK9vf0tL37hI_uRIxsQm9-k" data-callback="grecaptcharesponse" data-expired-callback="grecaptchaexpired"></div> </div> <li> </ul> </div> <div class="list"> <div class="block-footer"><a href="#" class="button button-raised button-fill resetpasswordemailsubmit">SUBMIT</a><center><a href="#" class="item-link list-button actions-close popup-close">Batal</a></center></div> </div></form>'+
+        '<form id="resetpasswordform" class="login-screen-content"><div class="login-screen-title">Reset Password</div> <div class="list"> <ul> <li class="item-content item-input"> <div class="item-inner"> <div class="item-title item-label">Email</div> <div class="item-input-wrap"> <input id="resetpasswordemail" type="email" name="email" placeholder="Masukkan email" required validate> </div> </div> </li> <li class="item-content item-input"> <div style="padding:20px 20px;justify-content:center;align-items:center;display:flex;width:100%;"> <div id="mybsmi-lupapassword" class="g-recaptcha" data-sitekey="6LckvswpAAAAAK93msw3SHb4x4TKkwlH1bRT16LR" data-callback="grecaptcharesponse" data-expired-callback="grecaptchaexpired" data-size="invisible"></div> </div> <li> </ul> </div> <div class="list"> <div class="block-footer"><a href="#" class="button button-raised button-fill resetpasswordemailsubmit">SUBMIT</a><center><a href="#" class="item-link list-button actions-close popup-close">Batal</a></center></div> </div></form>'+
         
        '</div></div>',
     });     
     dynamicPopup.open();
-    grecaptcha.render( 'mybsmi-lupapassword');
+    let widgetid = grecaptcha.render( 'mybsmi-lupapassword');
         
     $$(".resetpasswordemailsubmit").click(function(){
-      resetpasswordemail(dynamicPopup);
+      resetpasswordemail(dynamicPopup,widgetid);
     });  
 }
 
-function resetpasswordemail(dynamicPopup)
+function resetpasswordemail(dynamicPopup,widgetid)
 {
     if (!$$('#resetpasswordform')[0].checkValidity()) {
         //console.log('Check Validity!');
         return;
     }
+	
+	grecaptcha.execute(widgetid);
     
     if ((grecaptcharesponsedata == undefined) || (grecaptcharesponsedata == '')){return;}
     
@@ -2770,6 +2776,7 @@ function resetpasswordemail(dynamicPopup)
               
             }
       }); 
+	  grecaptcha.reset(widgetid);grecaptcharesponsedata = '';
       
 }
 function resetpasswordotpform(email,hash)
@@ -2778,7 +2785,7 @@ function resetpasswordotpform(email,hash)
       content: '<div class="popup" style="background:#fff">'+
       '<div class="block">'+
       
-        '<form id="resetpasswordotpform" class="login-screen-content"><div class="login-screen-title">Reset Password</div><center><p>Kode OTP telah dikirimkan ke email anda. Periksa di inbox atau folder spam. </p><p>Kedaluwarsa dalam <span id="otpexpired">120</span> detik</p></center> <div class="list"> <ul> <li class="item-content item-input"> <div class="item-inner"> <div class="item-title item-label">Kode OTP</div> <div class="item-input-wrap"> <input id="resetpasswordotp" type="text" name="otp" placeholder="Masukkan kode OTP" pattern="[0-9]{6}" required validate> </div> </div> </li> <li class="item-content item-input"> <div style="padding:20px 20px;justify-content:center;align-items:center;display:flex;width:100%;"> <div id="mybsmi-lupapasswordotp" class="g-recaptcha" data-sitekey="6LcP1RskAAAAANtjMoK9vf0tL37hI_uRIxsQm9-k" data-callback="grecaptcharesponse" data-expired-callback="grecaptchaexpired"></div> </div> <li></ul> </div> <div class="list"> <div class="block-footer"><a href="#" class="button button-raised button-fill resetpasswordotpsubmit">SUBMIT</a><center><a href="#" class="item-link list-button actions-close popup-close">Batal</a></center></div> </div></form>'+
+        '<form id="resetpasswordotpform" class="login-screen-content"><div class="login-screen-title">Reset Password</div><center><p>Kode OTP telah dikirimkan ke email anda. Periksa di inbox atau folder spam. </p><p>Kedaluwarsa dalam <span id="otpexpired">120</span> detik</p></center> <div class="list"> <ul> <li class="item-content item-input"> <div class="item-inner"> <div class="item-title item-label">Kode OTP</div> <div class="item-input-wrap"> <input id="resetpasswordotp" type="text" name="otp" placeholder="Masukkan kode OTP" pattern="[0-9]{6}" required validate> </div> </div> </li> <li class="item-content item-input"> <div style="padding:20px 20px;justify-content:center;align-items:center;display:flex;width:100%;"> <div id="mybsmi-lupapasswordotp" class="g-recaptcha" data-sitekey="6LckvswpAAAAAK93msw3SHb4x4TKkwlH1bRT16LR" data-callback="grecaptcharesponse" data-expired-callback="grecaptchaexpired" data-size="invisible"></div> </div> <li></ul> </div> <div class="list"> <div class="block-footer"><a href="#" class="button button-raised button-fill resetpasswordotpsubmit">SUBMIT</a><center><a href="#" class="item-link list-button actions-close popup-close">Batal</a></center></div> </div></form>'+
         
        '</div></div>',
     });     
@@ -2811,6 +2818,8 @@ function resetpasswordotp(dynamicPopup,email,hash,widgetid)
         //console.log('Check Validity!');
         return;
     }
+	
+	grecaptcha.execute(widgetid);
     
     if ((grecaptcharesponsedata == undefined) || (grecaptcharesponsedata == '')){return;}
     
