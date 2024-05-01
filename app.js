@@ -2492,7 +2492,7 @@ function fpagecabangrun(content,cabangid)
     if (kodecabang[i][1] === cabangid) {cabangnama = kodecabang[i][0];datacabang = kodecabang[i];}
   }
   //console.log(cabangnama);
-  var ig;if (datacabang[4] != ''){ig = 'https://instagram.com/'+datacabang[4];}else{ig='';}
+  var ig;if (datacabang[4] != ''){ig = 'IG : @'+datacabang[4];}else{ig='';}
   var profil = safe(datacabang[0])+'<p style="font-size:10px;">'+safe(datacabang[2])+'</br>'+safe(datacabang[3])+'</br>'+safe(ig)+'</p>';
   //$$('.mybsmi-cabangnama').text(cabangnama);
   $$('.mybsmi-cabangnama').html(profil);
@@ -4037,7 +4037,7 @@ function fpageadminrun(content)
     data += '<tr><td>Relawan</td><td><span class="jumlahrelawan"></span></td></tr>';
     data += '<tr><td>Alamat</td><td>'+safe(datacabang[2])+'</td></tr>';
     data += '<tr><td>Telepon</td><td>'+safe(datacabang[3])+'</td></tr>';
-    var ig;if (datacabang[4] != ''){ig = 'https://instagram.com/'+safe(datacabang[4]);}else{ig='';}
+    var ig;if (datacabang[4] != ''){ig = safe(datacabang[4]);}else{ig='';}
     data += '<tr><td>Instagram</td><td>'+ig+'</td></tr>';
     data += '<tr><td>Ketua</td><td>'+safe(datacabang[6])+'</td></tr>';
     data += '</tbody></table></div>';
@@ -4216,9 +4216,12 @@ function fpageadmincabang(datacabang,datarelawan)
         onClick: function(dialog, e)
           {
                 var namacabang = datacabang[0];
-                var alamatcabang = $$('#alamatcabang').val();
-                var teleponcabang = $$('#teleponcabang').val();
-                var instagramcabang = $$('#instagramcabang').val();
+                var alamatcabangasli = $$('#alamatcabang').val();
+                var teleponcabangasli = $$('#teleponcabang').val();
+                var instagramcabangasli = $$('#instagramcabang').val();
+                var alamatcabang = "'"+$$('#alamatcabang').val();
+                var teleponcabang = "'"+$$('#teleponcabang').val();
+                var instagramcabang = "'"+$$('#instagramcabang').val();
                 var ketuacabangid = $$('#ketuacabang').val();
                 var ketuacabangnama = '',ketuacabangphoto='';
                 datarelawan.forEach(function(item,index){
@@ -4228,7 +4231,7 @@ function fpageadmincabang(datacabang,datarelawan)
                     ketuacabangphoto = item[13];
                   }
                 });
-                var data = {namacabang,alamatcabang,teleponcabang,instagramcabang,ketuacabangid,ketuacabangnama,ketuacabangphoto};
+                var data = {namacabang,alamatcabangasli,teleponcabangasli,instagramcabangasli,alamatcabang,teleponcabang,instagramcabang,ketuacabangid,ketuacabangnama,ketuacabangphoto};
                 fpageadmineditcabang(data);
           }
       },
@@ -4293,9 +4296,9 @@ function fpageadmineditcabangupdate(inputdata)
   kodecabang.forEach(function(item,index){
     if(item[0] == inputdata.namacabang)
     {
-      kodecabang[index][2] = inputdata.alamatcabang;
-      kodecabang[index][3] = inputdata.teleponcabang;
-      kodecabang[index][4] = inputdata.instagramcabang; 
+      kodecabang[index][2] = inputdata.alamatcabangasli;
+      kodecabang[index][3] = inputdata.teleponcabangasli;
+      kodecabang[index][4] = inputdata.instagramcabangasli; 
       kodecabang[index][5] = inputdata.ketuacabangid;
       kodecabang[index][6] = inputdata.ketuacabangnama;
       kodecabang[index][7] = inputdata.ketuacabangphoto;
@@ -4635,9 +4638,12 @@ function fpagemasteradmincabangedit(datacabang,datarelawan)
         onClick: function(dialog, e)
           {
                 var namacabang = datacabang[0];
-                var alamatcabang = $$('#alamatcabang').val();
-                var teleponcabang = $$('#teleponcabang').val();
-                var instagramcabang = $$('#instagramcabang').val();
+                var alamatcabangasli = $$('#alamatcabang').val();
+                var teleponcabangasli = $$('#teleponcabang').val();
+                var instagramcabangasli = $$('#instagramcabang').val();
+                var alamatcabang = "'"+$$('#alamatcabang').val();
+                var teleponcabang = "'"+$$('#teleponcabang').val();
+                var instagramcabang = "'"+$$('#instagramcabang').val();
                 var ketuacabangid = $$('#ketuacabang').val();
                 var ketuacabangnama = '',ketuacabangphoto='';
                 datarelawan.forEach(function(item,index){
@@ -4647,7 +4653,7 @@ function fpagemasteradmincabangedit(datacabang,datarelawan)
                     ketuacabangphoto = item[13];
                   }
                 });
-                var data = {namacabang,alamatcabang,teleponcabang,instagramcabang,ketuacabangid,ketuacabangnama,ketuacabangphoto};
+                var data = {namacabang,alamatcabangasli,teleponcabangasli,instagramcabangasli,alamatcabang,teleponcabang,instagramcabang,ketuacabangid,ketuacabangnama,ketuacabangphoto};
                 fpagemasteradmincabangsave(data);
           }
       },
@@ -4721,9 +4727,9 @@ function fpagemasteradmincabangeditupdate(inputdata)
   kodecabang.forEach(function(item,index){
     if(item[0] == inputdata.namacabang)
     {
-      kodecabang[index][2] = inputdata.alamatcabang;
-      kodecabang[index][3] = inputdata.teleponcabang;
-      kodecabang[index][4] = inputdata.instagramcabang; 
+      kodecabang[index][2] = inputdata.alamatcabangasli;
+      kodecabang[index][3] = inputdata.teleponcabangasli;
+      kodecabang[index][4] = inputdata.instagramcabangasli; 
       kodecabang[index][5] = inputdata.ketuacabangid;
       kodecabang[index][6] = inputdata.ketuacabangnama;
       kodecabang[index][7] = inputdata.ketuacabangphoto;
@@ -5702,7 +5708,7 @@ function  fpagemasterdokumenaddrelawanmultiform(index,content,datarelawan)
     buttons: [
       {
         text: 'Simpan',
-        close:false,
+        close:true,
         color: 'red',
         onClick: function(dialog, e)
           {
@@ -5727,7 +5733,7 @@ function  fpagemasterdokumenaddrelawanmultiform(index,content,datarelawan)
 			  let dokumen = JSON.parse(content[index][6])
 			  let kategori = content[index][5]
 			  let inputdata = JSON.stringify({index,kategori,dokumen,userall})
-              fpagemasterdokumenaddrelawanmultirun(dialog,inputdata)
+			  app.dialog.confirm('Apakah yakin?', 'Buat Sertifikat', function (){fpagemasterdokumenaddrelawanmultirun(dialog,inputdata)})
           }
       },
       {
@@ -5746,7 +5752,7 @@ function  fpagemasterdokumenaddrelawanmultiform(index,content,datarelawan)
 
 function fpagemasterdokumenaddrelawanmultirun(dialog,inputdata)
 {
-      dialog.close()
+      try{dialog.close()}catch{}
       let mypreloader = app.dialog.preloader();
       app.request({
         url: apidataurl,
