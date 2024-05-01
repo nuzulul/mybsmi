@@ -1564,7 +1564,7 @@ $$('#my-aktivasi-screen .register-button').on('click', function () {
         app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
       },
   })
-  grecaptcha.reset(grecaptchaid);grecaptcharesponsedata = '';
+  grecaptcharesponsedata = '';grecaptcha.reset(grecaptchaid);
 });
 //end form aktivasi//////////////////////////
 
@@ -1707,7 +1707,7 @@ $$('#my-login-screen .login-button').on('click', function () {
         app.dialog.alert('Server sedang sibuk','Terjadi Kesalahan');
       },
   })
-  grecaptcha.reset();grecaptcharesponsedata = '';
+  grecaptcharesponsedata = '';grecaptcha.reset();
 });
 document.getElementById('my-login-screen').onkeydown = function(e){
    if(e.keyCode == 13){
@@ -2776,7 +2776,7 @@ function resetpasswordemail(dynamicPopup,widgetid)
               
             }
       }); 
-	  grecaptcha.reset(widgetid);grecaptcharesponsedata = '';
+	  grecaptcharesponsedata = '';grecaptcha.reset(widgetid);
       
 }
 function resetpasswordotpform(email,hash)
@@ -2865,7 +2865,7 @@ function resetpasswordotp(dynamicPopup,email,hash,widgetid)
               }
             }
       }); 
-	  grecaptcha.reset(widgetid);grecaptcharesponsedata = '';
+	  grecaptcharesponsedata = '';grecaptcha.reset(widgetid);
 }
 
 function resetpasswordinputform(data,email)
