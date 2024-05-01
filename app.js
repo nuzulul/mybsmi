@@ -2783,12 +2783,12 @@ function resetpasswordotpform(email,hash)
        '</div></div>',
     });     
     dynamicPopup.open();
-    grecaptcha.render( 'mybsmi-lupapasswordotp');
+    let widgetid = grecaptcha.render( 'mybsmi-lupapasswordotp');
     
     otpexpired();
     
     $$(".resetpasswordotpsubmit").click(function(){
-      resetpasswordotp(dynamicPopup,email,hash);
+      resetpasswordotp(dynamicPopup,email,hash,widgetid);
     }); 
 }
 
@@ -2805,7 +2805,7 @@ function otpexpired()
     }, 1000);
 }
 
-function resetpasswordotp(dynamicPopup,email,hash)
+function resetpasswordotp(dynamicPopup,email,hash,widgetid)
 {
     if (!$$('#resetpasswordotpform')[0].checkValidity()) {
         //console.log('Check Validity!');
@@ -2834,26 +2834,29 @@ function resetpasswordotp(dynamicPopup,email,hash)
             {
               //console.log(data);
               mypreloader.close(); 
-              dynamicPopup.close();
+              //dynamicPopup.close();
               var json = JSON.parse(data); 
               var status = json['status'];
               var msg = json['data'];
               if (status === "success")
               {
-              resetpasswordinputform(msg,email);
+				dynamicPopup.close();
+				resetpasswordinputform(msg,email);
               }
               else if (status === "failed")
               {
-                //var toastBottom = app.toast.create({ text: msg, closeTimeout: 5000,position: 'center', });toastBottom.open();
-                app.dialog.alert(msg,'Terjadi Kesalahan');
+                var toastBottom = app.toast.create({ text: msg, closeTimeout: 5000,position: 'center', });toastBottom.open();
+                //app.dialog.alert(msg,'Terjadi Kesalahan');
               }
               else
               {
                 //var toastBottom = app.toast.create({ text: msg, closeTimeout: 5000,position: 'center', });toastBottom.open();
-                app.dialog.alert(msg,'Terjadi Kesalahan');
+                dynamicPopup.close();
+				app.dialog.alert(msg,'Terjadi Kesalahan');
               }
             }
       }); 
+	  grecaptcha.reset(widgetid);grecaptcharesponsedata = '';
 }
 
 function resetpasswordinputform(data,email)
