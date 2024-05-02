@@ -1506,9 +1506,7 @@ $$('#my-aktivasi-screen .register-button').on('click', function () {
         return;
   }
   
-  grecaptcha.execute(grecaptchaid);
-  
-  if ((grecaptcharesponsedata == undefined) || (grecaptcharesponsedata == '')){return;}
+  if ((grecaptcharesponsedata == undefined) || (grecaptcharesponsedata == '')){grecaptcha.execute(grecaptchaid);return;}
 
   var email = $$('#my-aktivasi-screen [name="email"]').val();
   var password = $$('#my-aktivasi-screen [name="password"]').val();
@@ -1581,9 +1579,7 @@ $$('#my-login-screen .login-button').on('click', function () {
         return;
   }
   
-  grecaptcha.execute();
-  
-  if ((grecaptcharesponsedata == undefined) || (grecaptcharesponsedata == '')){return;}
+  if ((grecaptcharesponsedata == undefined) || (grecaptcharesponsedata == '')){grecaptcha.execute();return;}
   
   var email = $$('#my-login-screen [name="email"]').val();
   var password = $$('#my-login-screen [name="password"]').val();
@@ -2745,10 +2741,8 @@ function resetpasswordemail(dynamicPopup,widgetid)
         //console.log('Check Validity!');
         return;
     }
-	
-	grecaptcha.execute(widgetid);
     
-    if ((grecaptcharesponsedata == undefined) || (grecaptcharesponsedata == '')){return;}
+    if ((grecaptcharesponsedata == undefined) || (grecaptcharesponsedata == '')){grecaptcha.execute(widgetid);return;}
     
     var email = $$('#resetpasswordform [name="email"]').val();
     //console.log(email);
@@ -2842,10 +2836,8 @@ function resetpasswordotp(dynamicPopup,email,hash,widgetid)
         //console.log('Check Validity!');
         return;
     }
-	
-	grecaptcha.execute(widgetid);
     
-    if ((grecaptcharesponsedata == undefined) || (grecaptcharesponsedata == '')){return;}
+    if ((grecaptcharesponsedata == undefined) || (grecaptcharesponsedata == '')){grecaptcha.execute(widgetid);return;}
     
     var otp = $$('#resetpasswordotpform [name="otp"]').val();
     //console.log(email);
