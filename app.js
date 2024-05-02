@@ -7978,9 +7978,14 @@ function fgantilokasi(data)
                     reverseGeocoder.getClientLocation(function(result) {
                         console.log(result);
                         let data = result
-                        placename = data.city+' , '+data.principalSubdivision
-                        city = data.city
-                        region = data.principalSubdivision
+						let administrative = data.localityInfo.administrative
+						let mycity = administrative.find(item => item.adminLevel === 5)
+						if(mycity == undefined){mycity = data.city}else{mycity = mycity.name}
+						let myregion = administrative.find(item => item.adminLevel === 4)
+						if(myregion == undefined){myregion = data.principalSubdivision}else{myregion = myregion.name}
+                        placename = mycity+' , '+myregion
+                        city = mycity
+                        region = myregion
                         latitude = data.latitude
                         longitude = data.longitude
                         $$('.lokasi-map').attr('src','https://mybsmi.netlify.app/map.html?latitude='+safe(latitude)+'&longitude='+safe(longitude))
