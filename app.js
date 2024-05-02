@@ -2337,6 +2337,12 @@ function getdefaultdatarun(data)
     value: ratiocabang,
     valueText: cabang,
   })
+
+  $$('.beranda-toggle-statistik').on('click', function () {
+    $$('.beranda-data-statistik').toggleClass('display-none')
+  })
+  
+  $$('.beranda-toggle-statistik').css("cursor","pointer");
   
   let usermydata = JSON.parse(data.user.usermydata)
   if (usermydata.verifikasiidentitas)
