@@ -7714,6 +7714,8 @@ function getsocialdatarun(socialdata)
         //console.log(index)
         console.log(arr)
         if(arr[2]=='Id')return
+		
+		if (!isLocal && skipuid.includes(arr[6]))return
         
         if(arr[3]==''){
         
@@ -8125,6 +8127,7 @@ function fkirimbuatcheckin(obj,geodata)
           if(!obj.repplyto)dashboarddata.user.usermydata = usermydata
           var toastBottom = app.toast.create({ text: 'Berhasil', closeTimeout: 5000,position: 'center', });toastBottom.open();
           $$('.mybsmi-social-refresh').click()
+		  dapatbintang(1);
         }
         else if (status == "failed")
         {
@@ -8271,12 +8274,13 @@ function fwebworker()
 {
   (function() {
 
-     var xhrOpenRequestUrl; 
-     var requestBodyOri;
+
 	 
 	 var oldXMLHttpRequest = XMLHttpRequest;
 
      XMLHttpRequest = function() {
+		 var xhrOpenRequestUrl; 
+		 var requestBodyOri;
           var actual = new oldXMLHttpRequest();
           var self = this;
 
