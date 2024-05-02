@@ -8247,89 +8247,19 @@ function getdokumendatarun(dokumen){
 ////////////////webworker///////////////////////////////////////////////////////////////////////////////////////
 function fwebworker()
 {
-  (function(open, send) {
+  (function() {
 
-    const urlmock = "https://script.google.com/macros/s/AKfycbxxFFn50YljC_Ke6D6-EUNQHgzTVuFWv91okYmh2RwuDSXNkfdHr4RxUQIbS3PFrhzo/exec";
-
-     // Closure/state var's
-     var xhrOpenRequestUrl;  // captured in open override/monkey patch
-     var xhrSendResponseUrl; // captured in send override/monkey patch
-     var responseData;       // captured in send override/monkey patch
+     var xhrOpenRequestUrl; 
      var requestBodyOri;
-     var requestMethod;
+	 
+	 var oldXMLHttpRequest = XMLHttpRequest;
 
-     //...overrides of the XHR open and send methods are now encapsulated within a closure
-
-     XMLHttpRequest.prototype.open = function(method, url, async, user, password) {
-        xhrOpenRequestUrl = url;     // update request url, closure variable
-        console.log('xhrOpenRequestUrl = '+url);
-        requestMethod = method;
-        
-        if ((xhrOpenRequestUrl.indexOf("https://script.google.com/macros/s/") > -1)||(xhrOpenRequestUrl.indexOf("https://script.googleusercontent.com/macros/echo") > -1))
-        {
-          url = urlmock;
-        }
-        open.apply(this, arguments); // reset/reapply original open method
-     };
-
-     XMLHttpRequest.prototype.send = function(data) {
-        if (data == null)
-        {
-            requestBodyOri = 'get';
-        }
-        else
-        {
-            console.log('body = '+data);
-            requestBodyOri = data;
-            requestBody = Object.fromEntries(new URLSearchParams(requestBodyOri))
-            delete requestBody.password;
-            delete requestBody.grecaptcharesponsedata;
-            delete requestBody.deviceid;
-            delete requestBody.email;
-            requestBody = new URLSearchParams(requestBody).toString();  
-            data = requestBody;  
-        }      
-        
-        //...what ever code you need, i.e. capture response, etc.
-        if (this.readyState == 4 && this.status >= 200 && this.status < 300) {
-           xhrSendResponseUrl = this.responseURL;
-           responseData = this.data;  // now you have the data, JSON or whatever, hehehe!
-           console.log('respondata =');
-           console.log(responseData);
-        }
-        send.apply(this, arguments); // reset/reapply original send method
-     }
-
-
-      // create XMLHttpRequest proxy object
-      var oldXMLHttpRequest = XMLHttpRequest;
-
-      // define constructor for my proxy object
-      XMLHttpRequest = function() {
+     XMLHttpRequest = function() {
           var actual = new oldXMLHttpRequest();
           var self = this;
 
           this.onreadystatechange = null;
-
-          // this is the actual handler on the real XMLHttpRequest object
           actual.onreadystatechange = async function() {
-
-              
-              //if (this.responseText) {
-                  //log("actual ajax response (readyState = " + this.readyState + "): " + this.responseText);
-                  //self.responseText = '{"msg": "Hello"}';
-                  
-              //}
-              if (this.readyState == 4) {
-              
-                  //self.responseText = this.responseText;
-                  //let data = await fproses(xhrOpenRequestUrl,requestBodyOri);
-                  //console.log('data = '+data);
-                  //self.responseText = data;
-                  //self.response = data;
-                  //self.response = this.response;
-
-              }
               if (self.onreadystatechange) {
                   return self.onreadystatechange();
               }
@@ -8339,9 +8269,7 @@ function fwebworker()
           actual.onload = async function() {
               console.log('onload status = '+this.status+' | state = '+this.readyState);
               if ((this.status >= 200 && this.status < 300) || this.status === 0) {
-                  console.log('onload step = url: '+xhrOpenRequestUrl+' | body: '+requestBodyOri);
-                  console.log('onload respontype ='+this.responseType);
-                  console.log('onload response = '+this.response);        
+                  console.log('onload step = url: '+xhrOpenRequestUrl+' | body: '+requestBodyOri);      
                   if (this.responseType === 'blob')
                   {
                   }
@@ -8389,16 +8317,65 @@ function fwebworker()
           });
 
           // add all pure proxy pass-through methods 
-          ["addEventListener", "open", "send", "abort", "getAllResponseHeaders",
+          ["addEventListener",  "abort", "getAllResponseHeaders",
            "getResponseHeader", "overrideMimeType", "setRequestHeader"].forEach(function(item) {
               Object.defineProperty(self, item, {
                   value: function() {return actual[item].apply(actual, arguments);}
               });
           });
+
+              Object.defineProperty(self, "open", {
+				   
+                  value: function() {
+						xhrOpenRequestUrl = arguments[1]
+						return actual["open"].apply(actual, arguments);
+					  }
+              });
+		  
+			Object.defineProperty(self, "send", {
+				value: function(data) {
+					if ((xhrOpenRequestUrl.indexOf("https://script.google.com/macros/s/") > -1)||(xhrOpenRequestUrl.indexOf("https://script.googleusercontent.com/macros/echo") > -1))
+					{
+						if (data == null)
+						{
+							requestBodyOri = 'get';
+						}
+						else
+						{
+							console.log('body = '+data);
+							requestBodyOri = data;
+							requestBody = Object.fromEntries(new URLSearchParams(requestBodyOri))
+							delete requestBody.password;
+							delete requestBody.grecaptcharesponsedata;
+							delete requestBody.deviceid;
+							delete requestBody.email;
+							requestBody = new URLSearchParams(requestBody).toString();  
+							data = requestBody;  
+						} 
+						
+						actual.onload()
+						return
+					}else{
+						return actual["send"].apply(actual, arguments);
+					}
+				}
+			});
+
+			Object.defineProperty(actual, 'readyState', {
+				writable: true,
+				configurable: true
+			});
+			Object.defineProperty(actual, 'status', {
+				writable: true,
+				configurable: true
+			});
+			
+			actual.readyState = 4;
+			actual.status = 200;
       }
      
 
-  })(XMLHttpRequest.prototype.open, XMLHttpRequest.prototype.send)
+  })()
 
 
   function workerFunction() {
