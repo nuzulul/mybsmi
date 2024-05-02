@@ -5216,6 +5216,12 @@ function fpagemasterdokumenaddsertifikat(){
 								'<li class="item-content item-input"><div class="item-inner"><div class="item-input-wrap">'+
 									'<input type="text" name="keterangan" placeholder="Keterangan" required validate/>'+
 								'</div></div></li>'+
+								'<li class="item-content item-input"><div class="item-inner"><div class="item-input-wrap">'+
+									'<input type="text" name="pencapaian" placeholder="Tambah Pencapaian" list="pencapaian" required validate/>'+
+									'<datalist id="pencapaian">'+
+										'<option>TIDAK</option>'+
+									'</datalist>'+
+								'</div></div></li>'+
 							'</ul>'+
 						'</div>'+
 					'</form>'+
