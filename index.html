@@ -157,6 +157,10 @@
 	.grecaptcha-badge { 
 		visibility: hidden !important;
 	}
+	
+	.beranda-icon-size {
+		font-size:5em !important;
+	}
   </style>
 </head>
 <body class="color-theme-red">
@@ -436,97 +440,156 @@
 						
 							  <div class="dashboard-cards">
 
-										<div class="row margin-horizontal margin-top">
-											  <div class="col-100 medium-66" >
-												<div class="card">
-												  
-												  <div class="card-content card-content-padding">
-													  <img src="banner.jpg" width="100%"/>
-												  </div>
-												  
+										<div class="row margin-horizontal">
+										
+											  <div class="col-100 medium-66 margin-top" >
+													<div class="row">
+														<div class="col-100">
+															<div class="card">
+															  
+															  <div class="card-content card-content-padding">
+																  <img src="banner.jpg" width="100%"/>
+															  </div>
+															  
+															</div>
+														</div>
+
+														  <div class="col-50 margin-top beranda-toggle-statistik">
+															<div class="card">
+															  <div class="card-header">Cabang</div>
+															  <div class="card-content card-content-padding text-align-center">
+																<div
+																  class="gauge gauge-init"
+																  id="mybsmi-cabang" 
+																  data-type="circle"
+																  data-value="0.00"
+																  data-value-text="0"
+																  data-label-text="Kota/Kabupaten"
+																  data-value-text-color="#f44336"
+																  data-border-color="#f44336"
+																  data-border-width="30"
+																></div>
+															  </div>
+															</div>
+														  </div>
+														  <div class="col-50 margin-top beranda-toggle-statistik">
+															<div class="card">
+															  <div class="card-header">Relawan</div>
+															  <div class="card-content card-content-padding text-align-center">
+																<div
+																  class="gauge gauge-init"
+																  id="mybsmi-relawan" 
+																  data-type="circle"
+																  data-value="0.00"
+																  data-value-text="0"
+																  data-label-text="Orang"
+																  data-value-text-color="#ff9800"
+																  data-border-color="#ff9800"
+																  data-border-width="30"
+																></div>
+															  </div>
+															</div>
+														  </div>
+
+														  <div class="col-100 margin-top margin-bottom mybsmi-statistik beranda-data-statistik display-none">
+															<div class="card data-table">
+															  <div class="card-header">Statistik</div>
+															  <div class="card-content">
+																<table>
+																  <thead>
+																	<tr>
+																	  <th class="label-cell">BSMI Provinsi</th>
+																	  <th class="numeric-cell">Relawan</th>
+																	</tr>
+																  </thead>
+																  <tbody class="mybsmi-rekapitulasiprov">
+																  </tbody>
+																</table>
+																<table>
+																  <thead>
+																	<tr>
+																	  <th class="label-cell">BSMI Kota/Kabupaten</th>
+																	  <th class="numeric-cell">Relawan</th>
+																	</tr>
+																  </thead>
+																  <tbody class="mybsmi-rekapitulasicabang">
+																  </tbody>
+																</table>
+																<div class="data-table-footer">
+																</div>
+															  </div>
+
+															</div>
+														  </div>
+
 												</div>
+											  </div>
+
+											  <div class="col-100 medium-33 margin-bottom" >
+													<div class="row">
+														<div class="col-33 medium-50 margin-top">
+															<a href="/profilku/" class="">
+																<div class="card">
+																	<div class="card-header">Profilku</div>
+																	<div class="card-content card-content-padding text-align-center">
+																		<i class="icon f7-icons beranda-icon-size">person_circle_fill</i>
+																	</div>
+																</div>
+															</a>
+														</div>
+														<div class="col-33 medium-50 margin-top">
+															<a href="/ekta/" class="">
+																<div class="card">
+																	<div class="card-header">E-KTA</div>
+																	<div class="card-content card-content-padding text-align-center">
+																		<i class="icon f7-icons beranda-icon-size">creditcard_fill</i>
+																	</div>
+																</div>
+															</a>
+														</div>
+														<div class="col-33 medium-50 margin-top">
+															<a href="/aktivitas/" class="">
+																<div class="card">
+																	<div class="card-header">Aktivitas</div>
+																	<div class="card-content card-content-padding text-align-center">
+																		<i class="icon f7-icons beranda-icon-size">person_2_square_stack_fill</i>
+																	</div>
+																</div>
+															</a>
+														</div>
+														<div class="col-33 medium-50 margin-top">
+															<a href="/bukusaku/" class="">
+																<div class="card">
+																	<div class="card-header">Bukusaku</div>
+																	<div class="card-content card-content-padding text-align-center">
+																		<i class="icon f7-icons beranda-icon-size">bookmark_fill</i>
+																	</div>
+																</div>
+															</a>
+														</div>
+														<div class="col-33 medium-50 margin-top">
+															<a href="/dokumen/" class="">
+																<div class="card">
+																	<div class="card-header">Dokumen</div>
+																	<div class="card-content card-content-padding text-align-center">
+																		<i class="icon f7-icons beranda-icon-size">doc_circle</i>
+																	</div>
+																</div>
+															</a>
+														</div>
+														<div class="col-33 medium-50 margin-top">
+															<a href="/social/" class="">
+																<div class="card">
+																	<div class="card-header">Socialita</div>
+																	<div class="card-content card-content-padding text-align-center">
+																		<i class="icon f7-icons beranda-icon-size">bubble_left_bubble_right_fill</i>
+																	</div>
+																</div>
+															</a>
+														</div>
+													</div>
 											  </div>
 										</div> 
-
-
-										<div class="row margin-horizontal beranda-toggle-statistik">
-										  
-										  <div class="col-100 medium-66 margin-top charts-col">
-											<div class="row">
-											  <div class="col-50">
-												<div class="card">
-												  <div class="card-header">Cabang</div>
-												  <div class="card-content card-content-padding text-align-center">
-													<div
-													  class="gauge gauge-init"
-													  id="mybsmi-cabang" 
-													  data-type="circle"
-													  data-value="0.00"
-													  data-value-text="0"
-													  data-label-text="Kota/Kabupaten"
-													  data-value-text-color="#f44336"
-													  data-border-color="#f44336"
-													  data-border-width="30"
-													></div>
-												  </div>
-												</div>
-											  </div>
-											  <div class="col-50">
-												<div class="card">
-												  <div class="card-header">Relawan</div>
-												  <div class="card-content card-content-padding text-align-center">
-													<div
-													  class="gauge gauge-init"
-													  id="mybsmi-relawan" 
-													  data-type="circle"
-													  data-value="0.00"
-													  data-value-text="0"
-													  data-label-text="Orang"
-													  data-value-text-color="#ff9800"
-													  data-border-color="#ff9800"
-													  data-border-width="30"
-													></div>
-												  </div>
-												</div>
-											  </div>
-
-											</div>
-										  </div>
-										</div>
-
-
-										<div class="row margin-horizontal margin-bottom beranda-data-statistik display-none">
-										  <div class="col-100 medium-66 margin-top mybsmi-statistik">
-											<div class="card data-table">
-											  <div class="card-header">Statistik</div>
-											  <div class="card-content">
-												<table>
-												  <thead>
-													<tr>
-													  <th class="label-cell">BSMI Provinsi</th>
-													  <th class="numeric-cell">Relawan</th>
-													</tr>
-												  </thead>
-												  <tbody class="mybsmi-rekapitulasiprov">
-												  </tbody>
-												</table>
-												<table>
-												  <thead>
-													<tr>
-													  <th class="label-cell">BSMI Kota/Kabupaten</th>
-													  <th class="numeric-cell">Relawan</th>
-													</tr>
-												  </thead>
-												  <tbody class="mybsmi-rekapitulasicabang">
-												  </tbody>
-												</table>
-												<div class="data-table-footer">
-												</div>
-											  </div>
-
-											</div>
-										  </div>
-										</div>             
 								  
 							  </div> <!-- dashboard-cards -->
 

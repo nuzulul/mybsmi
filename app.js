@@ -2337,6 +2337,8 @@ function getdefaultdatarun(data)
     value: ratiocabang,
     valueText: cabang,
   })
+  
+  $$('.beranda-toggle-statistik').off('click')
 
   $$('.beranda-toggle-statistik').on('click', function () {
     $$('.beranda-data-statistik').toggleClass('display-none')
