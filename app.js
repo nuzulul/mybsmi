@@ -1722,6 +1722,7 @@ document.getElementById('my-login-screen').onkeydown = function(e){
 ///logout button/////////////////////////
 function flogout()
 {
+$$('.my-logout').off('click')
 $$('.my-logout').on('click', function () {
   app.popover.close('.profile-popover', false);
   flogoutkonfirm()
@@ -2344,10 +2345,8 @@ function getdefaultdatarun(data)
     valueText: cabang,
   })
   
-  $$('.beranda-toggle-statistik').off('click')
-  
   let statistik = $$('.beranda-data-statistik').html()
-
+  $$('.beranda-toggle-statistik').off('click')
   $$('.beranda-toggle-statistik').on('click', function () {
     //$$('.beranda-data-statistik').toggleClass('display-none')
 	
