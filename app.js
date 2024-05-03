@@ -434,6 +434,12 @@ routes: [
     },
   },
   {
+    path: '/data/',
+    name: 'data',
+	redirect: '/',
+	//keepAlive: true,
+  },
+  {
     path: '(.*)',
     url: '404.html',
   },
@@ -2339,9 +2345,33 @@ function getdefaultdatarun(data)
   })
   
   $$('.beranda-toggle-statistik').off('click')
+  
+  let statistik = $$('.beranda-data-statistik').html()
 
   $$('.beranda-toggle-statistik').on('click', function () {
-    $$('.beranda-data-statistik').toggleClass('display-none')
+    //$$('.beranda-data-statistik').toggleClass('display-none')
+	
+	let page = ''+
+		'<div class="page" data-name="Statistik">'+
+		  '<div class="navbar">'+
+			'<div class="navbar-bg"></div>'+
+			'<div class="navbar-inner sliding">'+
+			  '<div class="left">'+
+				'<a href="#" class="link back">'+
+				  '<i class="icon icon-back"></i>'+
+				  '<span class="ios-only">Back</span>'+
+				'</a>'+
+			  '</div>'+
+			  '<div class="title">Statistik</div>'+
+			'</div>'+
+		  '</div>'+
+		  '<div class="page-content">'+
+				statistik+	  
+		  '</div>'+
+		'</div>'
+		
+	app.views.main.router.navigate({url:"/data/", route:{content:page}});
+
   })
   
   $$('.beranda-toggle-statistik').css("cursor","pointer");
