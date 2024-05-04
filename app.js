@@ -1571,6 +1571,13 @@ $$('#my-aktivasi-screen .register-button').on('click', function () {
   })
   grecaptcharesponsedata = '';grecaptcha.reset(grecaptchaid);
 });
+
+$$("#my-aktivasi-screen").on("keydown",function(e){
+   if(e.keyCode == 13){
+	 e.preventDefault();
+	 $$('#my-aktivasi-screen .register-button').click();
+   }
+});
 //end form aktivasi//////////////////////////
 
 
@@ -1712,11 +1719,13 @@ $$('#my-login-screen .login-button').on('click', function () {
   })
   grecaptcharesponsedata = '';grecaptcha.reset();
 });
-document.getElementById('my-login-screen').onkeydown = function(e){
+
+$$("#my-login-screen").on("keydown",function(e){
    if(e.keyCode == 13){
-     $$('#my-login-screen .login-button').click();
+	 e.preventDefault();
+	 $$('#my-login-screen .login-button').click();
    }
-};
+});
 //end form-login/////////////////////////////
 
 
@@ -2764,7 +2773,16 @@ function resetpasswordopen()
         
     $$(".resetpasswordemailsubmit").click(function(){
       resetpasswordemail(dynamicPopup,widgetid);
-    });  
+    });
+
+	$$("#resetpasswordform").on("keydown",function(e){
+	   if(e.keyCode == 13){
+		 e.preventDefault();
+		 $$('.resetpasswordemailsubmit').click();
+	   }
+	});
+	
+	//$$("#resetpasswordform").focus()
 }
 
 function grecaptcharesponseresetpasswordemail(data)
@@ -2847,6 +2865,13 @@ function resetpasswordotpform(email,hash)
     $$(".resetpasswordotpsubmit").click(function(){
       resetpasswordotp(dynamicPopup,email,hash,widgetid);
     }); 
+
+	$$("#resetpasswordotpform").on("keydown",function(e){
+	   if(e.keyCode == 13){
+		 e.preventDefault();
+		 $$('.resetpasswordotpsubmit').click();
+	   }
+	});
 }
 
 function grecaptcharesponseresetpasswordotp(data)
