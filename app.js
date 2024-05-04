@@ -64,6 +64,7 @@ var isLocal = false;
 var DEBUG = true;
 var visits = 1;
 var skipuid = ["0OOBNq02038mf3ZfIdV7","0OeN3LUg0AcX3qtLZkPj"];
+const usecaptcha = false
 
 if ((window.location.href.indexOf("localhost") > -1)||(window.location.href.indexOf("127.0.0.1") > -1)) 
 {
@@ -1512,7 +1513,7 @@ $$('#my-aktivasi-screen .register-button').on('click', function () {
         return;
   }
   
-  if ((grecaptcharesponsedata == undefined) || (grecaptcharesponsedata == '')){grecaptcha.execute(grecaptchaid);return;}
+  if ((grecaptcharesponsedata == undefined || grecaptcharesponsedata == '')&& (usecaptcha)){grecaptcha.execute(grecaptchaid);return;}
 
   var email = $$('#my-aktivasi-screen [name="email"]').val();
   var password = $$('#my-aktivasi-screen [name="password"]').val();
@@ -1585,7 +1586,7 @@ $$('#my-login-screen .login-button').on('click', function () {
         return;
   }
   
-  if ((grecaptcharesponsedata == undefined) || (grecaptcharesponsedata == '')){grecaptcha.execute();return;}
+  if ((grecaptcharesponsedata == undefined || grecaptcharesponsedata == '')&& (usecaptcha)){grecaptcha.execute();return;}
   
   var email = $$('#my-login-screen [name="email"]').val();
   var password = $$('#my-login-screen [name="password"]').val();
@@ -2779,7 +2780,7 @@ function resetpasswordemail(dynamicPopup,widgetid)
         return;
     }
     
-    if ((grecaptcharesponsedata == undefined) || (grecaptcharesponsedata == '')){grecaptcha.execute(widgetid);return;}
+    if ((grecaptcharesponsedata == undefined || grecaptcharesponsedata == '')&& (usecaptcha)){grecaptcha.execute(widgetid);return;}
     
     var email = $$('#resetpasswordform [name="email"]').val();
     //console.log(email);
@@ -2874,7 +2875,7 @@ function resetpasswordotp(dynamicPopup,email,hash,widgetid)
         return;
     }
     
-    if ((grecaptcharesponsedata == undefined) || (grecaptcharesponsedata == '')){grecaptcha.execute(widgetid);return;}
+    if ((grecaptcharesponsedata == undefined || grecaptcharesponsedata == '')&& (usecaptcha)){grecaptcha.execute(widgetid);return;}
     
     var otp = $$('#resetpasswordotpform [name="otp"]').val();
     //console.log(email);
