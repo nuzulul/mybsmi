@@ -7291,6 +7291,7 @@ function fdownloadtwibbon(canvas, filename) {
 function fjadipendukung(aktivitasid)
 {
     //console.log(aktivitasid)
+	if(skipuid.includes(dashboarddata.user.useruid))return
     let mypreloader = app.dialog.preloader();
     app.request({
       url: apidataurl,
