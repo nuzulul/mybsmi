@@ -3444,12 +3444,13 @@ function fpageekta()
             app.dialog.confirm('Pembuatan e-KTA memerlukan waktu sekitar 2-5 menit harap ditunggu.', 'Pemberitahuan', function (){fbuatekta();})
       });
     }
-    let status = data.statuskeanggotaan.status
-    let statustanggal = data.statuskeanggotaan.statustanggal
-    let jenjang = data.statuskeanggotaan.jenjang
-    let jenjangtanggal = data.statuskeanggotaan.jenjangtanggal
-    let statushtml = '<table><tr><td>STATUS</td><td>:</td><td>'+status+'</td></tr><tr><td>JENJANG</td><td>:</td><td>'+jenjang+'</td></tr></table>'
-    $$('.mybsmi-statuskeanggotaancontent').html(statushtml)
+    try{let status = data.statuskeanggotaan.status
+		let statustanggal = data.statuskeanggotaan.statustanggal
+		let jenjang = data.statuskeanggotaan.jenjang
+		let jenjangtanggal = data.statuskeanggotaan.jenjangtanggal
+		let statushtml = '<table><tr><td>STATUS</td><td>:</td><td>'+status+'</td></tr><tr><td>JENJANG</td><td>:</td><td>'+jenjang+'</td></tr></table>'
+		$$('.mybsmi-statuskeanggotaancontent').html(statushtml)
+	}catch{}	
 }
 
 function fbuatekta()
@@ -7776,7 +7777,7 @@ function getsocialdatarun(socialdata)
   
   socialdata.forEach(function(arr,index){
         //console.log(index)
-        console.log(arr)
+        //console.log(arr)
         if(arr[2]=='Id')return
 		
 		if (!isLocal && skipuid.includes(arr[6]))return
@@ -8362,9 +8363,9 @@ function fwebworker()
           
           this.onload = null;
           actual.onload = async function() {
-              console.log('onload status = '+this.status+' | state = '+this.readyState);
+              //console.log('onload status = '+this.status+' | state = '+this.readyState);
               if ((this.status >= 200 && this.status < 300) || this.status === 0) {
-                  console.log('onload step = url: '+xhrOpenRequestUrl+' | body: '+requestBodyOri);      
+                  //console.log('onload step = url: '+xhrOpenRequestUrl+' | body: '+requestBodyOri);      
                   if (this.responseType === 'blob')
                   {
                   }
@@ -8373,9 +8374,9 @@ function fwebworker()
                     if ((xhrOpenRequestUrl.indexOf("https://script.google.com/macros/s/") > -1)||(xhrOpenRequestUrl.indexOf("https://script.googleusercontent.com/macros/echo") > -1))
                     {
                       try {
-                        console.log('send request to worker = '+requestBodyOri);
+                        //console.log('send request to worker = '+requestBodyOri);
                         let data = await fproses(xhrOpenRequestUrl,requestBodyOri);
-                        console.log('data from worker= '+data);
+                        //console.log('data from worker= '+data);
                         self.responseText = data;
                       }
                       catch
@@ -8622,7 +8623,7 @@ function fwebworker()
       if (data.error) {
         rej(data.error);
       }else {
-        console.log('receive msg from worker = '+data.result);
+        //console.log('receive msg from worker = '+data.result);
         res(data.result);
       }
     };
