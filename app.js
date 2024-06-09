@@ -1503,7 +1503,7 @@ $$('.persetujuanaktivasi').on('click', function () {
    let url = $$(this).attr('data-url');
    //console.log(url);
    //window.open(url);
-   myviewer('https://mybsmi.netlify.app/'+url);
+   myviewer1('https://mybsmi.netlify.app/'+url);
 });
 
 $$('#my-aktivasi-screen .register-button').on('click', function () {
@@ -7502,14 +7502,14 @@ function myviewer1(data)
 {
   
   const para = document.createElement("div");
-  para.innerHTML = '<div style="background: rgba(0, 0, 0, 0.8);position: fixed;z-index: 1000000000000000;align-items: center;justify-content: center;display: flex;bottom: 0;left: 0;right: 0;top: 0;"><iframe id="mybsmi-iframe" src="" style="border-radius: 1em;display: block;margin: auto;height: 70vh;width: 90vw;object-fit: contain;background-image:none;background:#fff;"></div>';
+  para.innerHTML = '<div style="background: rgba(0, 0, 0, 0.8);position: fixed;z-index: 1000000000000000;align-items: center;justify-content: center;display: flex;bottom: 0;left: 0;right: 0;top: 0;"><iframe id="mybsmi-iframe" src="'+safe(data)+'" style="border-radius: 1em;display: block;margin: auto;height: 70vh;width: 90vw;object-fit: contain;background-image:none;background:#fff;"></iframe></div>';
   
   para.addEventListener("click",()=>{
     para.remove(); 
   })
 
   document.body.appendChild(para);
-  $$('#mybsmi-iframe').attr('src',data);
+  //$$('#mybsmi-iframe').attr('src',data);
 
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
