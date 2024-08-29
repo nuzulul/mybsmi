@@ -164,6 +164,10 @@ routes: [
     },
   },
   {
+    path: '/lainnya/',
+    url: 'lainnya.html',
+  },
+  {
     path: '/ekta/',
     url: 'ekta.html',
     on: {
