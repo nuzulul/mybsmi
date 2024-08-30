@@ -164,6 +164,15 @@ routes: [
     },
   },
   {
+    path: '/event/',
+    url: 'event.html',
+    on: {
+      pageAfterIn: function test (e, page) {
+        fpageevent();
+      },
+    },
+  },
+  {
     path: '/lainnya/',
     url: 'lainnya.html',
   },
@@ -8445,6 +8454,52 @@ function getdokumendatarun(dokumen){
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+const eventScraper = 5
+var eventstartIndex = 1
+var eventmaxResults = eventScraper
+function fpageevent(first = true){
+	if(first){
+		eventstartIndex = 1
+		eventmaxResults = eventScraper
+	}
+	const api = "https://cors.bsmijatim.workers.dev/?";
+	const url = "https://www.bsmijatim.org/feeds/posts/default/-/Event?alt=json&orderby=published&start-index=" + eventstartIndex + "&max-results=" + eventmaxResults;
+	fetch(api+url)
+	.then(response => response.json())
+	.then(async(response) => {
+		//console.log('response',response)
+		if(first){$$('.mybsmi-event').html("")}
+		fpageeventrun(response)
+	})
+	eventstartIndex += eventScraper;
+	eventmaxResults += eventScraper;
+}
+function fpageeventrun(data){
+	data.feed.entry.forEach(function(arr,index){
+		const title = arr.title.$t
+		const thumb = arr.media$thumbnail.url
+		const content = arr.content.$t
+		const link = arr.link.find((item) => item.rel == "alternate").href
+		//console.log("link",link)
+		let html = '<div class="card" data-url="'+link+'">'+
+						'<div class="card-header">'+safe(title)+'</div>'+
+						'<div class="card-content card-content-padding">'+content+'</div>'+
+						'<div class="card-footer">'+
+					'</div>'
+		$$('.mybsmi-event').append(html)
+	})
+	$$('.mybsmi-event a').each(a => a.outerHTML = a.innerHTML)
+	$$('.mybsmi-event .card').css('cursor','pointer')
+	$$('.mybsmi-event .card img').css('max-width','100%')
+	$$('.mybsmi-event .card').on('click', function (e) {
+		const url = $$(this).attr('data-url')
+		//console.log('url',url)
+		window.open(url,'_system', 'location=yes')
+	})
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 ////////////////webworker///////////////////////////////////////////////////////////////////////////////////////
