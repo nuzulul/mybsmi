@@ -8474,7 +8474,12 @@ function fpageevent(first = true){
 		fpageeventrun(response)
 	})
 	eventstartIndex += eventScraper;
-	eventmaxResults += eventScraper;
+	
+	$$('.mybsmi-event-more').css('cursor','pointer')
+	$$('.mybsmi-event-more').off('click')
+	$$('.mybsmi-event-more').on('click', function (e) {
+		fpageevent(false)
+	})	
 }
 function fpageeventrun(data){
 	data.feed.entry.forEach(function(arr,index){
