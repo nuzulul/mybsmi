@@ -8592,41 +8592,60 @@ var materiPrevFolder = []
 
 function fpagemateri(){
 	materiPrevFolder = []
+	if (typeof mybsmimateridata === 'undefined' || mybsmimateridata === null){
+		window.mybsmimateridata = []
+	}
 	const parrentId = "1sxqQcTCI-ZCs1ogwhDvf_lIDixO3go4D"
 	fgetfolder(parrentId)
 }
 
 function fgetfolder(parrentId){
 	$$('.mybsmi-materi').html("")
-	const api = "https://cors.bsmijatim.workers.dev/?"
-	const url = "https://drive.google.com/embeddedfolderview?id="+parrentId
-	fetch(api+url)
-	.then(response => response.text())
-	.then(async(response) => {
-		const parser = new DOMParser();
-		const htmlDoc = parser.parseFromString(response, 'text/html');
-		if(materiPrevFolder.length > 0){
-			console.log('materiPrevFolder1',materiPrevFolder)
-			const id = materiPrevFolder.slice(-1)
-			let prev = ""
-			if(materiPrevFolder.length > 0){
-				console.log('materiPrevFolder2',materiPrevFolder)
-				prev = materiPrevFolder.slice(-1)
-			}
-			fmateriadditem(id,"UP ...","up",prev)
-		}
-		$$('.flip-entry',htmlDoc).each((html)=>{
-			const id = $$(html).attr('id').replace("entry-","")
-			const title = ($$('.flip-entry-title',html))[0].innerText
-			const a = $$('a',html)[0]
-			const link = $$(a).attr('href')
-			let type = ""
-			if(link.includes("/folders/"))type = "folders"
-			if(link.includes("/file/"))type = "file"
-			fmateriadditem(id,title,type,parrentId)
+	
+	const find = mybsmimateridata.find((item)=>item.parrentId == parrentId)
+	
+	if(find == undefined){
+		const api = "https://cors.bsmijatim.workers.dev/?"
+		const url = "https://drive.google.com/embeddedfolderview?id="+parrentId
+		fetch(api+url)
+		.then(response => response.text())
+		.then(async(response) => {
+			const folders = {parrentId,response}
+			mybsmimateridata.push(folders)
+			fmateriparse(parrentId,response)
 		})
+	}else{
+		const parrentId = find.parrentId
+		const response = find.response
+		fmateriparse(parrentId,response)
+	}
+}
+
+function fmateriparse(parrentId,response){
+	const parser = new DOMParser();
+	const htmlDoc = parser.parseFromString(response, 'text/html');
+	if(materiPrevFolder.length > 0){
+		//console.log('materiPrevFolder1',materiPrevFolder)
+		const id = materiPrevFolder.slice(-1)
+		let prev = ""
+		if(materiPrevFolder.length > 0){
+			//console.log('materiPrevFolder2',materiPrevFolder)
+			prev = materiPrevFolder.slice(-1)
+		}
+		fmateriadditem(id,"UP ...","up",prev)
+	}
+	$$('.flip-entry',htmlDoc).each((html)=>{
+		const id = $$(html).attr('id').replace("entry-","")
+		const title = ($$('.flip-entry-title',html))[0].innerText
+		const a = $$('a',html)[0]
+		const link = $$(a).attr('href')
+		let type = ""
+		if(link.includes("/folders/"))type = "folders"
+		if(link.includes("/file/"))type = "file"
+		fmateriadditem(id,title,type,parrentId)
 	})
 }
+
 function fmateriadditem(id,title,type,parrentId){
 	if(type=="file"){
 		const html = 	'<div class="col-100 xsmall-75 small-50 medium-33 large-33 xlarge-25">'+
