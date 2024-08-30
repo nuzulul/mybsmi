@@ -8591,6 +8591,7 @@ function fpagemajalahquery(){
 var materiPrevFolder = []
 
 function fpagemateri(){
+	materiPrevFolder = []
 	const parrentId = "1sxqQcTCI-ZCs1ogwhDvf_lIDixO3go4D"
 	fgetfolder(parrentId)
 }
