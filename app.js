@@ -4179,6 +4179,10 @@ function fpageadminrun(content)
   $$('.buat-link').on('click', function () {
 		fbuatlinkaktivasi()
   })
+
+  $$('.undang-relawan').on('click', function () {
+		fundangrelawan()
+  })
 }
 
 function fpageadminidentitas(base64)
@@ -4457,7 +4461,8 @@ function fpagemasterrun(content)
 function fpagemasterpengaturan(){
   let html = '<button class="button button-fill master-dokumen">MASTER DOKUMEN</button></br>'+
 			'<button class="button button-fill ganti-pin">GANTI PIN AKTIVASI</button></br>'+
-			'<button class="button button-fill buat-link">BUAT LINK AKTIVASI</button>'
+			'<button class="button button-fill buat-link">BUAT LINK AKTIVASI</button></br>'+
+			'<button class="button button-fill undang-relawan">UNDANG RELAWAN</button>'
   $$(".mybsmi-master-pengaturan").html(html)
   $$('.ganti-pin').on('click', function () {
         app.dialog.prompt('', 'GANTI PIN AKTIVASI', async function (pin){
@@ -4472,6 +4477,9 @@ function fpagemasterpengaturan(){
   $$('.master-dokumen').on('click', function () {
         let url = "/masterdokumen/";
         app.views.main.router.navigate(url);
+  })
+  $$('.undang-relawan').on('click', function () {
+		fundangrelawan()
   })
 }
 
@@ -4581,6 +4589,102 @@ function fbuatlinkaktivasi(){
 				  app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
 				},
 			})
+}
+
+function fundangrelawan(){
+			let mypreloader = app.dialog.preloader();
+			app.request({
+			  url: apidataurl,
+			  method: 'GET',
+			  cache: false,
+			  data : { command: 'getpinaktivasi'}, 
+			  success: async function (data, status, xhr)
+				{
+				  //console.log(data);
+				  mypreloader.close();
+
+				  var status = JSON.parse(data).status;
+				  var data = JSON.parse(data).data;
+				  if (status == "success")
+				  {
+
+					let yourDate = new Date()
+					const offset = yourDate.getTimezoneOffset()
+					yourDate = new Date(yourDate.getTime() - (offset*60*1000))
+					let today = yourDate.toISOString().split('T')[0]
+					let temp = data+today
+					const buf = await crypto.subtle.digest("SHA-256", new TextEncoder("utf-8").encode(temp));
+					let tempdata = Array.prototype.map.call(new Uint8Array(buf), x=>(('00'+x.toString(16)).slice(-2))).join('');
+
+					let link = 'https://mybsmi.bsmijatim.org/?pin='+tempdata
+					
+					app.dialog.prompt('', 'ALAMAT EMAIL', async function (email){
+						const validateEmail = (email) => {
+						  return email.match(
+							/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+						  );
+						}
+						if(validateEmail(email)){
+							fundangrelawanrun(link,email)
+							
+						}else{
+							app.dialog.alert("Alamat email tidak valid",'Terjadi Kesalahan');
+						}
+					})
+
+
+					
+				  }
+				  else if (status == "failed")
+				  {
+					app.dialog.alert(data,'Terjadi Kesalahan');
+				  }
+				  else
+				  {
+					app.dialog.alert(data,'Terjadi Kesalahan');
+				  }
+				},
+			  error: function (xhr, status, message)
+				{
+				  //console.log(message);
+				  mypreloader.close();
+				  app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
+				},
+			})
+}
+
+function fundangrelawanrun(link,email){
+      let mypreloader = app.dialog.preloader();
+      app.request({
+        url: apidataurl,
+        method: 'POST',
+        cache: false,
+        data : { token:mybsmiusertoken, command: 'undangrelawan', link,email}, 
+        success: function (data, status, xhr)
+          {
+            mypreloader.close();
+            var status = JSON.parse(data).status;
+            var content = JSON.parse(data).data;
+            if (status == "success")
+            {
+              console.log(content); 
+              var toastBottom = app.toast.create({ text: 'Undangan berhasil dikirim', closeTimeout: 3000,position: 'center', });toastBottom.open();
+            }
+            else if (status == "failed")
+            {
+              app.dialog.alert(content,'Terjadi Kesalahan');
+            }
+            else
+            {
+              fcekexpiredtoken(content);
+            }
+          },
+        error: function (xhr, status, message)
+          {
+            mypreloader.close();
+            app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
+          },
+      })	
 }
 
 function fpagemasteradmincabang(alluser)
