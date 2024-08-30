@@ -182,6 +182,15 @@ routes: [
     },
   },
   {
+    path: '/materi/',
+    url: 'materi.html',
+    on: {
+      pageAfterIn: function test (e, page) {
+        fpagemateri();
+      },
+    },
+  },
+  {
     path: '/lainnya/',
     url: 'lainnya.html',
   },
@@ -8576,6 +8585,94 @@ function fpagemajalahquery(){
 	})
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+var materiPrevFolder = []
+
+function fpagemateri(){
+	const parrentId = "1sxqQcTCI-ZCs1ogwhDvf_lIDixO3go4D"
+	fgetfolder(parrentId)
+}
+
+function fgetfolder(parrentId){
+	$$('.mybsmi-materi').html("")
+	const api = "https://cors.bsmijatim.workers.dev/?"
+	const url = "https://drive.google.com/embeddedfolderview?id="+parrentId
+	fetch(api+url)
+	.then(response => response.text())
+	.then(async(response) => {
+		const parser = new DOMParser();
+		const htmlDoc = parser.parseFromString(response, 'text/html');
+		if(materiPrevFolder.length > 0){
+			console.log('materiPrevFolder1',materiPrevFolder)
+			const id = materiPrevFolder.slice(-1)
+			let prev = ""
+			if(materiPrevFolder.length > 0){
+				console.log('materiPrevFolder2',materiPrevFolder)
+				prev = materiPrevFolder.slice(-1)
+			}
+			fmateriadditem(id,"UP ...","up",prev)
+		}
+		$$('.flip-entry',htmlDoc).each((html)=>{
+			const id = $$(html).attr('id').replace("entry-","")
+			const title = ($$('.flip-entry-title',html))[0].innerText
+			const a = $$('a',html)[0]
+			const link = $$(a).attr('href')
+			let type = ""
+			if(link.includes("/folders/"))type = "folders"
+			if(link.includes("/file/"))type = "file"
+			fmateriadditem(id,title,type,parrentId)
+		})
+	})
+}
+function fmateriadditem(id,title,type,parrentId){
+	if(type=="file"){
+		const html = 	'<div class="col-100 xsmall-75 small-50 medium-33 large-33 xlarge-25">'+
+							'<div class="card mybsmi-materi-item-'+id+'" data-id="'+id+'">'+
+								'<div class="card-header no-padding" style="overflow:hidden;"><img src="photo.svg" style="width:100%;aspect-ratio: 1 / 1;object-fit:cover;"></div>'+
+								'<div class="card-content card-content-padding">'+
+									'<div style="font-weight:bold;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">'+safe(title)+'</div>'
+								'</div>'+
+							'</div>'+
+						'</div>'
+		$$('.mybsmi-materi').append(html)
+		const img = 'https://lh3.googleusercontent.com/d/'+safe(id);
+		$$('.mybsmi-materi-item-'+id+' img').attr('src',img)
+		$$('.mybsmi-materi-item-'+id).on('click', function (e) {
+			let id = $$(this).data('id')
+			let url = 'https://drive.google.com/file/d/'+id+'/preview'
+			myviewer(url);
+		});
+		$$('.mybsmi-materi-item-'+id).css('cursor','pointer')
+	}
+	if(type=="folders" || type=="up"){
+		const html = 	'<div class="col-100 xsmall-75 small-50 medium-33 large-33 xlarge-25">'+
+							'<div class="card mybsmi-materi-item-'+id+'" data-id="'+id+'" data-type="'+type+'">'+
+								'<div class="card-header no-padding" style="overflow:hidden;"><div class="padding" style="width:100%;aspect-ratio: 1 / 1;overflow: hidden;text-overflow: ellipsis;white-space: wrap;">'+title+'</div></div>'+
+								'<div class="card-content card-content-padding">'+
+									'<div style="font-weight:bold;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">Folder</div>'
+								'</div>'+
+							'</div>'+
+						'</div>'
+		$$('.mybsmi-materi').append(html)
+		$$('.mybsmi-materi-item-'+id).on('click', function (e) {
+			let type = $$(this).data('type')
+			if(type == "up"){
+				materiPrevFolder.splice(-1)
+			}else{
+				if(parrentId != "")materiPrevFolder.push(parrentId)
+			}
+			let id = $$(this).data('id')
+
+			fgetfolder(id)
+		});
+		$$('.mybsmi-materi-item-'+id).css('cursor','pointer')
+	}
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 
 
 ////////////////webworker///////////////////////////////////////////////////////////////////////////////////////
