@@ -173,6 +173,15 @@ routes: [
     },
   },
   {
+    path: '/majalah/',
+    url: 'majalah.html',
+    on: {
+      pageAfterIn: function test (e, page) {
+        fpagemajalah();
+      },
+    },
+  },
+  {
     path: '/lainnya/',
     url: 'lainnya.html',
   },
@@ -8499,6 +8508,66 @@ function fpageeventrun(data){
 	$$('.mybsmi-event .card').css('cursor','pointer')
 	$$('.mybsmi-event .card img').css('max-width','100%')
 	$$('.mybsmi-event .card').on('click', function (e) {
+		const url = $$(this).attr('data-url')
+		//console.log('url',url)
+		window.open(url,'_system', 'location=yes')
+	})
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+const majalahScraper = 2
+var majalahIndex = 0
+function fpagemajalah(){
+	if (typeof mybsmimajalahdata === 'undefined' || mybsmimajalahdata === null){
+		const api = "https://cors.bsmijatim.workers.dev/?"
+		const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTZEiolmUm4E-2v6CORSzS9KYl_qt0wFPoseFY3dlParwWtDW10xZIJLLVVpnHbw0TDzV2BjB9y84l4/pub?output=csv"
+		fetch(api+url)
+		.then(response => response.text())
+		.then(async(response) => {
+			//console.log('response',response)
+			const majalah = CSVToArray(response)
+			window.mybsmimajalahdata = majalah
+			$$('.mybsmi-majalah').html("")
+			fpagemajalahquery()
+		})
+	}else{
+		fpagemajalahquery()
+	}
+
+	$$('.mybsmi-majalah-more').css('cursor','pointer')
+	$$('.mybsmi-majalah-more').off('click')
+	$$('.mybsmi-majalah-more').on('click', function (e) {
+		fpagemajalahquery()
+	})
+}
+
+function fpagemajalahquery(){
+	const data = mybsmimajalahdata
+	for (var i = data.length-1-majalahIndex ; i > data.length-1-(majalahScraper+majalahIndex)  ; i--) {
+		if (i < 1){break}
+		const edisi = data[i][0]
+		const bulan = data[i][1]
+		const tahun = data[i][2]
+		const id = data[i][3]
+		const link = "https://www.bsmijatim.org/p/majalah.html?fileid="+safe(id)
+		const html = 	'<div class="col-100 xsmall-75 small-50 medium-33 large-33 xlarge-33">'+
+							'<div class="card mybsmi-majalah-item-'+id+'" data-url="'+link+'">'+
+								'<div class="card-header no-padding" style="overflow:hidden;"><img src="photo.svg" style="width:100%;aspect-ratio: 1 / 1.5;object-fit:cover;"></div>'+
+								'<div class="card-content card-content-padding">'+
+									'<div style="font-weight:bold;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">Edisi '+safe(edisi)+' - '+bulan+' '+tahun+'</div>'
+								'</div>'+
+							'</div>'+
+						'</div>'
+		$$('.mybsmi-majalah').append(html)
+		const img = 'https://lh3.googleusercontent.com/d/'+safe(id);
+		$$('.mybsmi-majalah-item-'+id+' img').attr('src',img)
+	}
+	majalahIndex += majalahScraper
+	
+	$$('.mybsmi-majalah .card').css('cursor','pointer')
+	$$('.mybsmi-majalah .card').on('click', function (e) {
 		const url = $$(this).attr('data-url')
 		//console.log('url',url)
 		window.open(url,'_system', 'location=yes')
