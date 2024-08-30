@@ -8517,9 +8517,10 @@ function fpageeventrun(data){
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
-const majalahScraper = 2
+const majalahScraper = 3
 var majalahIndex = 0
 function fpagemajalah(){
+	majalahIndex = 0
 	if (typeof mybsmimajalahdata === 'undefined' || mybsmimajalahdata === null){
 		const api = "https://cors.bsmijatim.workers.dev/?"
 		const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTZEiolmUm4E-2v6CORSzS9KYl_qt0wFPoseFY3dlParwWtDW10xZIJLLVVpnHbw0TDzV2BjB9y84l4/pub?output=csv"
@@ -8533,6 +8534,7 @@ function fpagemajalah(){
 			fpagemajalahquery()
 		})
 	}else{
+		$$('.mybsmi-majalah').html("")
 		fpagemajalahquery()
 	}
 
