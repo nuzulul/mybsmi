@@ -7590,7 +7590,7 @@ function getbukusakudatarun(data)
     let html = ''
     +'            <div class="col-100 xsmall-75 small-50 medium-33 large-33 xlarge-33 mybsmi-bukusaku-item-'+i+'" data-index="'+i+'">'
     +'              <div class="card">'
-    +                '<div class="card-header no-padding" style="overflow:hidden;"><img src="photo.svg" style="width:100%;aspect-ratio: 1 / 1;object-fit:cover;"></div>'
+    +                '<div class="card-header no-padding" style="overflow:hidden;"><img src="photo.svg" style="width:100%;aspect-ratio: 1.5 / 1;object-fit:cover;"></div>'
     +'                <div class="card-content card-content-padding">'
     +'                  <div style="font-weight:bold;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">'+safe(data[i][1])+'</div>'
     +'                  <div></div>'
