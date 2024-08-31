@@ -8650,7 +8650,7 @@ function fmateriadditem(id,title,type,parrentId){
 	if(type=="file"){
 		const html = 	'<div class="col-100 xsmall-75 small-50 medium-33 large-33 xlarge-25">'+
 							'<div class="card mybsmi-materi-item-'+id+'" data-id="'+id+'">'+
-								'<div class="card-header no-padding" style="overflow:hidden;"><img src="photo.svg" style="width:100%;aspect-ratio: 1 / 1;object-fit:cover;"></div>'+
+								'<div class="card-header no-padding" style="overflow:hidden;"><img src="photo.svg" style="width:100%;aspect-ratio: 1.5 / 1;object-fit:cover;"></div>'+
 								'<div class="card-content card-content-padding">'+
 									'<div style="font-weight:bold;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">'+safe(title)+'</div>'
 								'</div>'+
@@ -8669,7 +8669,7 @@ function fmateriadditem(id,title,type,parrentId){
 	if(type=="folders" || type=="up"){
 		const html = 	'<div class="col-100 xsmall-75 small-50 medium-33 large-33 xlarge-25">'+
 							'<div class="card mybsmi-materi-item-'+id+'" data-id="'+id+'" data-type="'+type+'">'+
-								'<div class="card-header no-padding" style="overflow:hidden;"><div class="padding" style="width:100%;aspect-ratio: 1 / 1;overflow: hidden;text-overflow: ellipsis;white-space: wrap;"><i class="icon f7-icons color-red" style="font-size:5em">folder_fill</i></br>'+title+'</div></div>'+
+								'<div class="card-header no-padding" style="overflow:hidden;"><div class="padding" style="width:100%;aspect-ratio: 1.5 / 1;overflow: hidden;text-overflow: ellipsis;white-space: wrap;"><i class="icon f7-icons color-red" style="font-size:5em">folder_fill</i></br>'+title+'</div></div>'+
 								'<div class="card-content card-content-padding">'+
 									'<div style="font-weight:bold;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">Folder</div>'
 								'</div>'+
