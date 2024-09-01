@@ -2456,10 +2456,10 @@ function fkirimgeodata()
   })
   .then(response => response.json())
   .then(async(response) => {
-	  if(response.city && response.region){
-		fkirimgeodatarun(response);
-	  }else{
+	  if(response.city == undefined || response.region == undefined){
 		fkirimgeodataupdate(response)
+	  }else{
+		fkirimgeodatarun(response);
 	  }
   })
 }
@@ -8155,13 +8155,13 @@ function fdeteksilokasi()
           cache: false, 
           success: function (data, status, xhr)
             {
-              //console.log(data);
+              //console.log('geodata1',data);
               mypreloader.close();
               let json = JSON.parse(data)
-              if(json.city && json.region){
-				  fgantilokasi(json)
-			  }else{
+              if(json.city == undefined || json.region == undefined){
 				  fdeteksilokasiupdate(json)
+			  }else{
+				  fgantilokasi(json)
 			  }
             },
           error: function (xhr, status, message)
@@ -8182,7 +8182,7 @@ function fdeteksilokasiupdate(geodata)
           cache: false, 
           success: function (data, status, xhr)
             {
-              //console.log(data);
+              //console.log('geodata2',data);
               mypreloader.close();
               let json = JSON.parse(data)
 			  geodata.city = json.cityName
