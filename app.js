@@ -8164,6 +8164,8 @@ function fdeteksilokasiupdate(geodata)
               let json = JSON.parse(data)
 			  geodata.city = json.cityName
 			  geodata.region = json.regionName
+			  geodata.latitude = json.latitude
+			  geodata.longitude = json.longitude
               fgantilokasi(geodata)
             },
           error: function (xhr, status, message)
@@ -8227,6 +8229,14 @@ function fgantilokasi(data)
 					//console.log('state',result.state)
 					if (result.state === "granted") {
 						$$('.open-gps').click()
+					}
+					result.onchange = () => {
+						 console.log(
+							`geolocation permission state has changed to ${result.state}`,
+						)
+						if (result.state === "granted") {
+							$$('.open-gps').click()
+						}
 					}
 				})
           }
