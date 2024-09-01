@@ -8223,7 +8223,12 @@ function fgantilokasi(data)
                     reverseGeocoder.localityLanguage='id';
 
               })            
-
+				navigator.permissions.query({ name: "geolocation" }).then((result) => {
+					//console.log('state',result.state)
+					if (result.state === "granted") {
+						$$('.open-gps').click()
+					}
+				})
           }
         },
         buttons: [
