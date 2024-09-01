@@ -8596,10 +8596,10 @@ function fpagemateri(){
 		window.mybsmimateridata = []
 	}
 	const parrentId = "1sxqQcTCI-ZCs1ogwhDvf_lIDixO3go4D"
-	fgetfolder(parrentId)
+	fmaterigetfolder(parrentId)
 }
 
-function fgetfolder(parrentId){
+function fmaterigetfolder(parrentId){
 	$$('.mybsmi-materi').html("")
 	
 	const find = mybsmimateridata.find((item)=>item.parrentId == parrentId)
@@ -8607,9 +8607,11 @@ function fgetfolder(parrentId){
 	if(find == undefined){
 		const api = "https://cors.bsmijatim.workers.dev/?"
 		const url = "https://drive.google.com/embeddedfolderview?id="+parrentId
+		$$('.mybsmi-materi').html('<div class="progressbar-infinite"></div>')
 		fetch(api+url)
 		.then(response => response.text())
 		.then(async(response) => {
+			$$('.mybsmi-materi').html('')
 			const folders = {parrentId,response}
 			mybsmimateridata.push(folders)
 			fmateriparse(parrentId,response)
@@ -8685,7 +8687,7 @@ function fmateriadditem(id,title,type,parrentId){
 			}
 			let id = $$(this).data('id')
 
-			fgetfolder(id)
+			fmaterigetfolder(id)
 		});
 		$$('.mybsmi-materi-item-'+id).css('cursor','pointer')
 	}
