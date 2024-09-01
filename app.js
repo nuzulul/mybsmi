@@ -2456,7 +2456,30 @@ function fkirimgeodata()
   })
   .then(response => response.json())
   .then(async(response) => {
-      fkirimgeodatarun(response);
+	  if(response.city && response.region){
+		fkirimgeodatarun(response);
+	  }else{
+		fkirimgeodataupdate(response)
+	  }
+  })
+}
+
+function fkirimgeodataupdate(geodata)
+{
+  fetch('https://freeipapi.com/api/json', {
+      method: 'GET',
+      headers: {
+          'Accept': 'application/json',
+      },
+  })
+  .then(response => response.json())
+  .then(async(response) => {
+		const json = response
+		geodata.city = json.cityName
+		geodata.region = json.regionName
+		geodata.latitude = json.latitude
+		geodata.longitude = json.longitude
+		fkirimgeodatarun(geodata);
   })
 }
 
