@@ -8135,7 +8135,36 @@ function fdeteksilokasi()
               //console.log(data);
               mypreloader.close();
               let json = JSON.parse(data)
-              fgantilokasi(json)
+              if(json.city && json.region){
+				  fgantilokasi(json)
+			  }else{
+				  fdeteksilokasiupdate(json)
+			  }
+            },
+          error: function (xhr, status, message)
+            {
+              //console.log(message);
+              mypreloader.close();
+              app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
+            },
+        })
+}
+
+function fdeteksilokasiupdate(geodata)
+{
+        let mypreloader = app.dialog.preloader('Deteksi Lokasi');
+        app.request({
+          url: 'https://freeipapi.com/api/json',
+          method: 'GET',
+          cache: false, 
+          success: function (data, status, xhr)
+            {
+              //console.log(data);
+              mypreloader.close();
+              let json = JSON.parse(data)
+			  geodata.city = json.cityName
+			  geodata.region = json.regionName
+              fgantilokasi(geodata)
             },
           error: function (xhr, status, message)
             {
