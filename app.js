@@ -7679,7 +7679,7 @@ function myviewer2(data)
 {
   
   const para = document.createElement("div");
-  para.innerHTML = '<div style="background: rgba(0, 0, 0, 0.8);position: fixed;z-index: 1000000000000000;align-items: center;justify-content: center;display: flex;bottom: 0;left: 0;right: 0;top: 0;"><div class="paraxmark" style="width:50px;height:50px;background:#000;position:fixed;top:0px;right:0px;border-radius:50% 50% 50% 50%;margin:3px 3px;"><i class="icon f7-icons" style="font-size:50px;color:#fff;">xmark_circle</i></div><iframe id="mybsmi-iframe" src="'+safe(data)+'" style="border-radius: 0em;display: block;margin: 0px 0px;height: 100%;width: 100vw;object-fit: contain;background-image:none;background:none;"></iframe></div>';
+  para.innerHTML = '<div style="background: rgba(0, 0, 0, 0.8);position: fixed;z-index: 1000000000000000;align-items: center;justify-content: center;display: flex;bottom: 0;left: 0;right: 0;top: 0;"><div class="paraxmark" style="width:50px;height:50px;background:#000;position:fixed;top:0px;right:0px;border-radius:50% 50% 50% 50%;margin:3px 3px;"><i class="icon f7-icons" style="font-size:50px;color:#fff;">xmark_circle</i></div><iframe id="mybsmi-iframe" src="'+safe(data)+'" style="border-radius: 0em;display: block;margin: 0px 0px;height: 100%;width: 100vw;object-fit: contain;background-image:none;background:none;border:none;"></iframe></div>';
   
   para.addEventListener("click",()=>{
     para.remove(); 
