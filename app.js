@@ -7637,7 +7637,11 @@ function getbukusakudatarun(data)
   $$('.mybsmi-bukusaku').append('<div class="col-100 xsmall-75 small-50 medium-33 large-33 xlarge-33" ></div>');
   $$('.mybsmi-bukusaku').append('<div class="col-100 xsmall-75 small-50 medium-33 large-33 xlarge-33" ></div>');
 }
+///////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
 function myviewer(data)
 {
   
@@ -7668,6 +7672,23 @@ function myviewer1(data)
 
   document.body.appendChild(para);
   //$$('#mybsmi-iframe').attr('src',data);
+
+}
+
+function myviewer2(data)
+{
+  
+  const para = document.createElement("div");
+  para.innerHTML = '<div style="background: rgba(0, 0, 0, 0.8);position: fixed;z-index: 1000000000000000;align-items: center;justify-content: center;display: flex;bottom: 0;left: 0;right: 0;top: 0;"><div class="paraxmark" style="width:50px;height:50px;background:#000;position:fixed;top:0px;right:0px;border-radius:50% 50% 50% 50%;margin:3px 3px;"><i class="icon f7-icons" style="font-size:50px;color:#fff;">xmark_circle</i></div><iframe id="mybsmi-iframe" src="'+safe(data)+'" style="border-radius: 0em;display: block;margin: 0px 0px;height: 100%;width: 100vw;object-fit: contain;background-image:none;background:none;"></iframe></div>';
+  
+  para.addEventListener("click",()=>{
+    para.remove(); 
+  })
+
+  document.body.appendChild(para);
+  //$$('#mybsmi-iframe').attr('src',data);
+  
+  $$('.paraxmark').css('cursor','pointer')
 
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -8631,7 +8652,7 @@ function fpagemajalahquery(){
 		const id = data[i][3]
 		const link = "https://www.bsmijatim.org/p/majalah.html?fileid="+safe(id)
 		const html = 	'<div class="col-100 xsmall-75 small-50 medium-33 large-33 xlarge-33">'+
-							'<div class="card mybsmi-majalah-item-'+id+'" data-url="'+link+'">'+
+							'<div class="card mybsmi-majalah-item-'+safe(id)+'" data-url="'+link+'" data-id="'+safe(id)+'">'+
 								'<div class="card-header no-padding" style="overflow:hidden;"><img src="photo.svg" style="width:100%;aspect-ratio: 1 / 1.5;object-fit:cover;"></div>'+
 								'<div class="card-content card-content-padding">'+
 									'<div style="font-weight:bold;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">Edisi '+safe(edisi)+' - '+bulan+' '+tahun+'</div>'
@@ -8646,9 +8667,13 @@ function fpagemajalahquery(){
 	
 	$$('.mybsmi-majalah .card').css('cursor','pointer')
 	$$('.mybsmi-majalah .card').on('click', function (e) {
-		const url = $$(this).attr('data-url')
+		//const url = $$(this).attr('data-url')
 		//console.log('url',url)
-		window.open(url,'_system', 'location=yes')
+		//window.open(url,'_system', 'location=yes')
+		//myviewer2('https://mybsmi.netlify.app/')
+		const id = $$(this).attr('data-id')
+		const url = 'https://mybsmi.netlify.app/app/pdfflipbook/gdrivepdf.html?fileid='+id
+		myviewer2(url)
 	})
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
