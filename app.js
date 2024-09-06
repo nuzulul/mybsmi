@@ -8601,13 +8601,24 @@ function fpageeventrun(data){
 					'</div>'
 		$$('.mybsmi-event').append(html)
 	})
-	$$('.mybsmi-event a').each(a => a.outerHTML = a.innerHTML)
-	$$('.mybsmi-event .card').css('cursor','pointer')
+	//$$('.mybsmi-event a').each(a => a.outerHTML = a.innerHTML)
+	$$('.mybsmi-event a').each(a => $$(a).addClass('external'))
+	$$('.mybsmi-event a').each(a => $$(a).addClass('openinbrowser'))
+	//$$('.mybsmi-event .card').css('cursor','pointer')
 	$$('.mybsmi-event .card img').css('max-width','100%')
 	$$('.mybsmi-event .card').on('click', function (e) {
 		const url = $$(this).attr('data-url')
 		//console.log('url',url)
-		window.open(url,'_system', 'location=yes')
+		//window.open(url,'_system', 'location=yes')
+	})
+	$$('.mybsmi-event .card .openinbrowser').off('click')
+	$$('.mybsmi-event .card .openinbrowser').on('click', function (e) {
+		e.preventDefault()
+		const url = $$(this).attr('href')
+		console.log('url',url)
+		app.dialog.confirm('Buka link di browser','Link', ()=>{
+			window.open(url,'_system', 'location=yes')
+		})
 	})
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
