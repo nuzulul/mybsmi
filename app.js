@@ -8200,7 +8200,7 @@ function fdeteksilokasiupdate(geodata)
         app.request({
           url: 'https://freeipapi.com/api/json',
           method: 'GET',
-          cache: false, 
+          cache: true, 
           success: function (data, status, xhr)
             {
               //console.log('geodata2',data);
