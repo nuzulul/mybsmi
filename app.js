@@ -8562,7 +8562,7 @@ function getdokumendatarun(dokumen){
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
-const eventScraper = 5
+const eventScraper = 3
 var eventstartIndex = 1
 var eventmaxResults = eventScraper
 function fpageevent(first = true){
@@ -8616,9 +8616,19 @@ function fpageeventrun(data){
 		e.preventDefault()
 		const url = $$(this).attr('href')
 		console.log('url',url)
-		app.dialog.confirm('Buka link di browser','Link', ()=>{
-			window.open(url,'_system', 'location=yes')
-		})
+		if(url.includes('/img/')){
+			var photoBrowser = app.photoBrowser.create({
+			  photos: [
+				url
+			  ],
+			  routableModals:true
+			});
+			photoBrowser.open()
+		}else{
+			app.dialog.confirm('Buka link di browser','Link', ()=>{
+				window.open(url,'_system', 'location=yes')
+			})
+		}
 	})
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
