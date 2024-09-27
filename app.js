@@ -2616,7 +2616,7 @@ function fpagecabangrun(content,cabangid)
       
       let date = new Intl.DateTimeFormat("id-ID", { hour12:false,dateStyle: "short" , timeStyle: "short",  timeZone: "Asia/Jakarta"}).format(new Date(content[i][0]));date = date.split(' ');date = date[0];
       
-      data += '<tr class="mybsmi-admin-item-'+safe(content[i][1])+'"><td data-collapsible-title=""><img src="avatar.png" style="width:1.5em;aspet-ratio 1/1;object-fit:cover;border-radius:50% 50%;overflow:hidden;"></td><td data-collapsible-title="Nama"><a class="mybsmi-cabangaction" data-user="'+btoa(JSON.stringify(content[i]))+'">'+safe(content[i][3])+'</a></td><td data-collapsible-title="No. KTA">'+safe(content[i][6])+'</td><td data-collapsible-title="Status">'+safe(content[i][8])+'</td></tr>';
+      data += '<tr class="mybsmi-admin-item-'+safe(content[i][1])+'"><td data-collapsible-title=""><img src="avatar.png" style="width:1.5em;aspect-ratio:1/1;object-fit:cover;border-radius:50% 50%;overflow:hidden;"></td><td data-collapsible-title="Nama"><a class="mybsmi-cabangaction" data-user="'+btoa(JSON.stringify(content[i]))+'">'+safe(content[i][3])+'</a></td><td data-collapsible-title="No. KTA">'+safe(content[i][6])+'</td><td data-collapsible-title="Status">'+safe(content[i][8])+'</td></tr>';
       
       jumlahrelawan++;
   }
@@ -4188,7 +4188,7 @@ function fpageadminrun(content)
       
       if ((json.adminlaporan)&&(json.admincabang)){}else if((json.admincabang) && (content[i][11] !== usercabang)){continue;}
       
-      data += '<tr class="mybsmi-admin-item-'+safe(content[i][1])+'"><td data-collapsible-title=""><img src="avatar.png" style="width:1.5em;aspet-ratio 1/1;object-fit:cover;border-radius:50% 50%;overflow:hidden;"></td><td data-collapsible-title="Nama"><a class="mybsmi-cabang-relawan" data-user="'+safe(content[i][1])+'">'+safe(content[i][4])+'</a></td><td data-collapsible-title="No. KTA">'+safe(content[i][18])+'</td><td data-collapsible-title="Cabang">'+safe(content[i][11])+'</td><td data-collapsible-title="Profesi">'+safe(content[i][8])+'</td><td><a class="button button-fill mybsmi-adminaction" data-user="'+btoa(JSON.stringify(content[i]))+'">Detail</a></td></tr>';
+      data += '<tr class="mybsmi-admin-item-'+safe(content[i][1])+'"><td data-collapsible-title=""><img src="avatar.png" style="width:1.5em;aspect-ratio:1/1;object-fit:cover;border-radius:50% 50%;overflow:hidden;"></td><td data-collapsible-title="Nama"><a class="mybsmi-cabang-relawan" data-user="'+safe(content[i][1])+'">'+safe(content[i][4])+'</a></td><td data-collapsible-title="No. KTA">'+safe(content[i][18])+'</td><td data-collapsible-title="Cabang">'+safe(content[i][11])+'</td><td data-collapsible-title="Profesi">'+safe(content[i][8])+'</td><td><a class="button button-fill mybsmi-adminaction" data-user="'+btoa(JSON.stringify(content[i]))+'">Detail</a></td></tr>';
       
       jumlahrelawan++;
       
@@ -5158,7 +5158,7 @@ function fpagemasterdatabase(content)
       
       if ((content[i][3] === 'Terbatas')||(content[i][3] === 'Terverifikasi')||(content[i][3] === 'Tertolak')){}else{continue;}
       
-      data += '<tr class="mybsmi-master-item-'+safe(content[i][1])+'"><td data-collapsible-title=""><img src="avatar.png" style="width:1.5em;aspet-ratio 1/1;object-fit:cover;border-radius:50% 50%;overflow:hidden;"></td><td data-collapsible-title="Nama"><a class="mybsmi-cabang-relawan" data-user="'+safe(content[i][1])+'">'+safe(content[i][4])+'</a></td><td data-collapsible-title="No. KTA">'+safe(content[i][18])+'</td><td data-collapsible-title="Email">'+safe(content[i][2])+'</td><td data-collapsible-title="Cabang">'+safe(content[i][11])+'</td><td data-collapsible-title="Profesi">'+safe(content[i][8])+'</td><td><a class="button button-fill mybsmi-masteraction" data-index="'+i+'" data-user="'+btoa(JSON.stringify(content[i]))+'">Detail</a></td></tr>';
+      data += '<tr class="mybsmi-master-item-'+safe(content[i][1])+'"><td data-collapsible-title=""><img src="avatar.png" style="width:1.5em;aspect-ratio:1/1;object-fit:cover;border-radius:50% 50%;overflow:hidden;"></td><td data-collapsible-title="Nama"><a class="mybsmi-cabang-relawan" data-user="'+safe(content[i][1])+'">'+safe(content[i][4])+'</a></td><td data-collapsible-title="No. KTA">'+safe(content[i][18])+'</td><td data-collapsible-title="Email">'+safe(content[i][2])+'</td><td data-collapsible-title="Cabang">'+safe(content[i][11])+'</td><td data-collapsible-title="Profesi">'+safe(content[i][8])+'</td><td><a class="button button-fill mybsmi-masteraction" data-index="'+i+'" data-user="'+btoa(JSON.stringify(content[i]))+'">Detail</a></td></tr>';
       jumlahrelawan++;
   }
   data += '</tbody></table></div>';
@@ -6543,7 +6543,7 @@ function getaktivitasdatarun(content)
     //let date = new Date(content[i][0]).toLocaleString('en-US', { timeZone: 'Asia/Jakarta' });
     let date = new Intl.DateTimeFormat("id-ID", { hour12:false,dateStyle: "short" , timeStyle: "short",  timeZone: "Asia/Jakarta"}).format(new Date(content[i][0]));date = date.split(' ');date = date[0];
     //data += '<div class="timeline-item"><div class="timeline-item-date"><small>'+date+'</small></div><div class="timeline-item-divider"></div><div class="timeline-item-content"><div class="timeline-item-inner"><div class="timeline-item-time"></div><div class="timeline-item-text">'+safe(content[i][5])+'</div></div></div></div>';
-    let data = '<div class="col-100 xsmall-75 small-50 medium-33 large-33 xlarge-33 mybsmi-aktivitas-item-'+safe(content[i][1])+'" data-user="'+btoa(JSON.stringify(content[i]))+'" style="cursor:pointer;"> <div class="card"> <div class="card-header no-padding" style="overflow:hidden;"><img class="poster" src="photo.svg" style="width:100%;aspect-ratio: 1 / 1;object-fit:cover;background-image:none;"></div> <div class="card-content card-content-padding"> <div style="font-weight:bold;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">'+safe(content[i][6])+'</div> <div></div> </div> <div class="card-footer"> <div class="row" style="width:100%"> <div class="col-100 margin-bottom margin-top" style="width:100%;"> <div class="float-left" style="width:3em;"><img class="avatar" src="avatar.png" style="width:2em;aspet-ratio 1 / 1;height:2em;object-fit:cover;border-radius:50% 50%;overflow:hidden;"></div> <div class="float-left" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;width:70%;">'+safe(content[i][3])+'</div> </div> <div class="col-100 margin-bottom"> <div class="float-left" style="width:3em;"><i class="icons f7-icons">person_2</i></div> <div class="float-left" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">'+safe(JSON.parse(content[i][12]).length)+' Pendukung</div> </div> <div class="col-100 margin-bottom"> <div class="float-left" style="width:3em;"><i class="icons f7-icons">paperclip</i></div> <div class="float-left" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">'+safe(content[i][5])+'</div> </div><div class="col-100 margin-bottom"> <div class="float-left" style="width:3em;"><i class="icons f7-icons">calendar</i></div> <div class="float-left" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">'+safe(content[i][9])+'</div> </div> </div>   </div> </div> </div>';
+    let data = '<div class="col-100 xsmall-75 small-50 medium-33 large-33 xlarge-33 mybsmi-aktivitas-item-'+safe(content[i][1])+'" data-user="'+btoa(JSON.stringify(content[i]))+'" style="cursor:pointer;"> <div class="card"> <div class="card-header no-padding" style="overflow:hidden;"><img class="poster" src="photo.svg" style="width:100%;aspect-ratio: 1 / 1;object-fit:cover;background-image:none;"></div> <div class="card-content card-content-padding"> <div style="font-weight:bold;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">'+safe(content[i][6])+'</div> <div></div> </div> <div class="card-footer"> <div class="row" style="width:100%"> <div class="col-100 margin-bottom margin-top" style="width:100%;"> <div class="float-left" style="width:3em;"><img class="avatar" src="avatar.png" style="width:2em;aspect-ratio:1 / 1;height:2em;object-fit:cover;border-radius:50% 50%;overflow:hidden;"></div> <div class="float-left" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;width:70%;">'+safe(content[i][3])+'</div> </div> <div class="col-100 margin-bottom"> <div class="float-left" style="width:3em;"><i class="icons f7-icons">person_2</i></div> <div class="float-left" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">'+safe(JSON.parse(content[i][12]).length)+' Pendukung</div> </div> <div class="col-100 margin-bottom"> <div class="float-left" style="width:3em;"><i class="icons f7-icons">paperclip</i></div> <div class="float-left" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">'+safe(content[i][5])+'</div> </div><div class="col-100 margin-bottom"> <div class="float-left" style="width:3em;"><i class="icons f7-icons">calendar</i></div> <div class="float-left" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">'+safe(content[i][9])+'</div> </div> </div>   </div> </div> </div>';
     $$('.mybsmi-aktivitas').append(data);
     $$('.mybsmi-aktivitas-item-'+content[i][1]+' img.poster').attr('src','https://lh3.googleusercontent.com/d/'+safe(content[i][8]));
     $$('.mybsmi-aktivitas-item-'+content[i][1]+' img.avatar').attr('src','https://lh3.googleusercontent.com/d/'+safe(content[i][4]));
@@ -7501,7 +7501,7 @@ function fjadipendukungrun(mydata)
     if (pendukung[i].uid === dashboarddata.user.useruid) exists = true;
     let data = ''
 +'          <div class="col-100 margin-bottom mybsmi-twibbon-pendukungdetail-item-'+safe(pendukung[i].uid)+'" style="width:100%">'
-+'          <div class="float-left" style="width:3em;"><img src="avatar.png" style="width:1.5em;aspet-ratio 1/1;object-fit:cover;border-radius:50% 50%;overflow:hidden;"></div>'
++'          <div class="float-left" style="width:3em;"><img src="avatar.png" style="width:1.5em;aspect-ratio:1/1;object-fit:cover;border-radius:50% 50%;overflow:hidden;"></div>'
 +'          <div class="float-left" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;width:70%">'+safe(pendukung[i].nama)+'</div>'
 +'          </div>'
     $$('.mybsmi-twibbon-pendukungdetail').append(data);
@@ -7927,7 +7927,7 @@ function getsocialdatarun(socialdata)
   window.mybsmisocialplace = {placename,city,region,latitude,longitude}
   let header = '<div class="row bg-color-white margin-bottom" style="padding:10px 10px;">'+
                     '<div class="col-20">'+
-                      '<div style="width:100%;aspect-ratio: auto 1 / 1;"><img class="social-avatar" src="avatar.png" style="width:100%;height:100%;aspet-ratio 1/1;object-fit:cover;"></div>'+
+                      '<div style="width:100%;aspect-ratio: auto 1 / 1;"><img class="social-avatar" src="avatar.png" style="width:100%;height:100%;aspect-ratio:1/1;object-fit:cover;"></div>'+
                     '</div>'+
                     '<div class="col-50">'+
                       '<span style="font-weight:bold;">'+safe(usernama)+'</span></br><span>@</span> <span>'+safe(placename)+'</span></br><span class="text-color-gray">'+last+'</span>'+
@@ -7967,12 +7967,12 @@ function getsocialdatarun(socialdata)
             
             let img = ''
             if(arr[10]!=''){
-              img = '<div class="margin-right" style="width:50%;aspect-ratio: auto 1 / 1;float:left;"><img class="social-photo" src="avatar.png" style="width:100%;height:100%;aspet-ratio 1/1;object-fit:cover;"></div>'
+              img = '<div class="margin-right" style="width:50%;aspect-ratio: auto 1 / 1;float:left;"><img class="social-photo" src="avatar.png" style="width:100%;height:100%;aspect-ratio:1/1;object-fit:cover;"></div>'
             }
             
             let item = '<div class="row margin-bottom padding-top item-'+safe(arr[2])+'" style="border-style:inset hidden hidden hidden">'+
                             '<div class="col-20">'+
-                                '<div style="width:100%;aspect-ratio: auto 1 / 1;"><a href="/relawan/'+safe(arr[6])+'"><img class="social-avatar" src="avatar.png" style="width:100%;height:100%;aspet-ratio 1/1;object-fit:cover;"></a></div>'+
+                                '<div style="width:100%;aspect-ratio: auto 1 / 1;"><a href="/relawan/'+safe(arr[6])+'"><img class="social-avatar" src="avatar.png" style="width:100%;height:100%;aspect-ratio:1/1;object-fit:cover;"></a></div>'+
                             '</div>'+
                             '<div class="col-80">'+
                                   '<div class="row">'+
@@ -8018,7 +8018,7 @@ function getsocialdatarun(socialdata)
             
             let item = '<div class="row margin-bottom padding-top padding-left padding-right item-'+safe(arr[2])+'" style="border-style:inset hidden hidden hidden">'+
                             '<div class="col-20">'+
-                                '<div style="width:100%;aspect-ratio: auto 1 / 1;"><a href="/relawan/'+safe(arr[6])+'"><img class="social-avatar" src="avatar.png" style="width:100%;height:100%;aspet-ratio 1/1;object-fit:cover;"></a></div>'+
+                                '<div style="width:100%;aspect-ratio: auto 1 / 1;"><a href="/relawan/'+safe(arr[6])+'"><img class="social-avatar" src="avatar.png" style="width:100%;height:100%;aspect-ratio:1/1;object-fit:cover;"></a></div>'+
                             '</div>'+
                             '<div class="col-80">'+
                                   '<div class="row">'+
