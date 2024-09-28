@@ -3112,7 +3112,7 @@ function flengkapiphoto()
     closeByBackdropClick: false,
     destroyOnClose: true,
     content: '<div style="width:100%;">'
-      +'<p style="text-align:center; border:1px solid gray;padding:10px 10px;color:gray;">Pilih photo formal direkomendasikan memakai rompi BSMI. Anda tidak dapat melakukan perubahan photo setelah upload!</p>'
+      +'<p style="text-align:center; border:1px solid gray;padding:10px 10px;color:gray;">Pilih swafoto paskan wajah ditengah. Direkomendasikan memakai rompi BSMI jika ada. Anda tidak dapat melakukan penggantian setelah upload!</p>'
       +'<form runat="server" style="display:flex;flex-direction:column;align-items:center;justify-content: center;">'
       +'<img id="mybsmiuploadphotopreview" src="avatar.png" style="width:150px;height:150px;margin: 10px 10px;border-radius: 50%;object-fit: cover;">'
       +'<input accept="image/jpeg" type="file" id="mybsmiuploadphoto" />'
