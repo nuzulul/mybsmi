@@ -182,6 +182,24 @@ routes: [
     },
   },
   {
+    path: '/voting/',
+    url: 'musprov4voting20bacalon.html',
+    on: {
+      pageAfterIn: function test (e, page) {
+        fpagemusprov4voting20bacalon();
+      },
+    },
+  },
+  {
+    path: '/hasilvoting/',
+    url: 'musprov4voting20bacalonhasil.html',
+    on: {
+      pageAfterIn: function test (e, page) {
+        fpagemusprov4voting20bacalonhasil();
+      },
+    },
+  },
+  {
     path: '/materi/',
     url: 'materi.html',
     on: {
@@ -562,6 +580,40 @@ window.addEventListener('DOMContentLoaded', () => {
   
   
 });
+
+function CountDownTimer(dt, id)
+{
+	var end = new Date(dt);
+
+	var _second = 1000;
+	var _minute = _second * 60;
+	var _hour = _minute * 60;
+	var _day = _hour * 24;
+	var timer;
+
+	function showRemaining() {
+		var now = new Date();
+		var distance = end - now;
+		if (distance < 0) {
+
+			clearInterval(timer);
+			document.getElementById(id).innerHTML = 'EXPIRED!';
+
+			return;
+		}
+		var days = Math.floor(distance / _day);
+		var hours = Math.floor((distance % _day) / _hour);
+		var minutes = Math.floor((distance % _hour) / _minute);
+		var seconds = Math.floor((distance % _minute) / _second);
+
+		document.getElementById(id).innerHTML = days + 'days ';
+		document.getElementById(id).innerHTML += hours + 'hrs ';
+		document.getElementById(id).innerHTML += minutes + 'mins ';
+		document.getElementById(id).innerHTML += seconds + 'secs';
+	}
+
+	timer = setInterval(showRemaining, 1000);
+}
 
 function fcountvisits()
 {
@@ -4514,7 +4566,9 @@ function fpagemasterpengaturan(){
 			'<button class="button button-fill ganti-pin">GANTI PIN AKTIVASI</button></br>'+
 			'<button class="button button-fill buat-link">BUAT LINK AKTIVASI</button></br>'+
 			'<button class="button button-fill undang-relawan">UNDANG RELAWAN</button></br>'+
-			'<button class="button button-fill donasi-bsmijatimorg">DONASI BSMIJATIM.ORG</button>'
+			'<button class="button button-fill donasi-bsmijatimorg">DONASI BSMIJATIM.ORG</button></br>'+
+			'<button class="button button-fill musprov4voting20bacalon">musprov4voting20bacalon</button></br>'+
+			'<button class="button button-fill musprov4voting20bacalonhasil">musprov4voting20bacalonhasil</button></br>'
   $$(".mybsmi-master-pengaturan").html(html)
   $$('.ganti-pin').on('click', function () {
         app.dialog.prompt('', 'GANTI PIN AKTIVASI', async function (pin){
@@ -4535,6 +4589,14 @@ function fpagemasterpengaturan(){
   })
   $$('.donasi-bsmijatimorg').on('click', function () {
 		fdonasibsmijatimorg()
+  })
+  $$('.musprov4voting20bacalon').on('click', function () {
+        let url = "/voting/";
+        app.views.main.router.navigate(url);
+  })
+  $$('.musprov4voting20bacalonhasil').on('click', function () {
+        let url = "/hasilvoting/";
+        app.views.main.router.navigate(url);
   })
 }
 
@@ -8967,6 +9029,183 @@ function fmateriadditem(id,title,type,parrentId){
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
+
+
+////////////////////////////////////////////////////////////////////////////////////
+async function fpagemusprov4voting20bacalon(){
+	const limit = 20
+	let terpilih = 0
+	const res = await fetch('datajson.json')
+	const json = await res.json()
+	const bakalcalonpengurus20252030 = json.bakalcalonpengurus20252030
+	for(let i=0;i<bakalcalonpengurus20252030.length;i++){
+		let html = `
+							  <li>
+								<label class="item-checkbox item-checkbox-icon-start item-content">
+								  <input type="checkbox" name="${i}" value="${i}" />
+								  <i class="icon icon-checkbox"></i>
+								  <div class="item-inner">
+									<div class="item-title" style="white-space: normal;overflow: auto;">${bakalcalonpengurus20252030[i]}</div>
+								  </div>
+								</label>
+							  </li>
+		`
+		$$('#musprov4voting20bacalon #formulir ul').append(html)
+	}
+	
+	$$('#musprov4voting20bacalon #formulir ul li input').on("click",(e)=>{
+
+		const check = e.target.checked
+		if(check){
+			if(terpilih == limit){
+				e.target.checked = false
+				return
+			}
+			terpilih++
+			$$('#musprov4voting20bacalon .terpilih').text(terpilih)
+		}else{
+			terpilih--
+			$$('#musprov4voting20bacalon .terpilih').text(terpilih)
+		}
+
+
+
+	})	
+	
+	$$('#musprov4voting20bacalon #submitvoting').on("click",(e)=>{
+		
+		if(terpilih < limit){
+			var toastBottom = app.toast.create({ text: 'Pilih '+limit+' nama', closeTimeout: 5000,position: 'center', });toastBottom.open();
+			return
+		}
+		
+		let list = []
+		
+		if(terpilih == limit){
+			var dataform = app.form.convertToData('#musprov4voting20bacalon #formulir')
+			const keys = Object.keys(dataform)
+			for(const key of keys){
+				const data = dataform[key]
+				if(data.length > 0){
+					const value = data[0]
+					list.push(value)
+				}
+			}
+		}
+		
+		fSubmitmusprov4voting20bacalon(JSON.stringify(list))
+	})
+	
+	CountDownTimer('11/9/2024 11:30 PM', 'countdownbakal')
+}
+function fSubmitmusprov4voting20bacalon(list){
+  let mypreloader = app.dialog.preloader();
+  app.request({
+    url: apidataurl,
+    method: 'POST',
+    cache: false,
+    data : { token:mybsmiusertoken, command: 'submitmusprov4voting20bacalon', list}, 
+    success: function (data, status, xhr)
+      {
+        mypreloader.close();        
+        var status = JSON.parse(data).status;
+        var content = JSON.parse(data).data;
+        if (status == "success")
+        {
+          console.log(content)
+          var toastBottom = app.toast.create({ text: 'Berhasil dikirim', closeTimeout: 5000,position: 'center', });toastBottom.open();
+		  dapatbintang(10);
+		  let url = "/hasilvoting/";
+		  app.views.main.router.navigate(url);
+        }
+        else if (status == "failed")
+        {
+          app.dialog.alert(content,'Terjadi Kesalahan');
+        }
+        else
+        {
+          fcekexpiredtoken(content);
+        }
+      },
+    error: function (xhr, status, message)
+      {
+        //console.log(message);
+        mypreloader.close();
+        app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
+      },
+  });
+}
+async function fpagemusprov4voting20bacalonhasil(){
+			let mypreloader = app.dialog.preloader();
+			app.request({
+			  url: apidataurl,
+			  method: 'GET',
+			  cache: false,
+			  data : { command: 'getmusprov4voting20bacalon'}, 
+			  success: async function (data, status, xhr)
+				{
+				  //console.log(data);
+				  mypreloader.close();
+
+				  var status = JSON.parse(data).status;
+				  var data = JSON.parse(data).data;
+				  if (status == "success")
+				  {
+					  const res = await fetch('datajson.json')
+					  const json = await res.json()
+					  const calon = json.bakalcalonpengurus20252030
+					  fpagemusprov4voting20bacalonhasilrun(calon,JSON.parse(data))    
+				  }
+				  else if (status == "failed")
+				  {
+					app.dialog.alert(data,'Terjadi Kesalahan');
+				  }
+				  else
+				  {
+					app.dialog.alert(data,'Terjadi Kesalahan');
+				  }
+				},
+			  error: function (xhr, status, message)
+				{
+				  //console.log(message);
+				  mypreloader.close();
+				  app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
+				},
+			})
+}
+function fpagemusprov4voting20bacalonhasilrun(calon,data){
+	let hasil = new Map()
+	for(const pemilih of data){
+		const list = pemilih.list
+		for(const item of list){
+			let current = hasil.get(item)
+			if(current == undefined){
+				hasil.set(item,1)
+			}else{
+				const now = current++
+				hasil.set(item,now)
+			}
+		}
+	}
+	
+	var html = '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th>Nama</th><th>Jumlah</th></tr></thead><tbody>'
+	
+	for(let i=0;i<calon.length;i++){
+		const nama = calon[i]
+		const item = i.toString()
+		const jumlah = hasil.get(item) == undefined ? 0 : hasil.get(item)
+		html += `<tr><td data-collapsible-title="Nama">${nama}</td><td data-collapsible-title="Jumlah">${jumlah}</td></tr>`
+	}
+	
+	html += '</tbody></table></div>'
+	
+	$$('#musprov4voting20bacalonhasil .hasilvoting').append(html)
+	
+	$$('#musprov4voting20bacalonhasil .totalpemilih').text(data.length)
+	
+	CountDownTimer('11/9/2024 11:30 PM', 'countdown')
+}
+///////////////////////////////////////////////////////////////////////////////////////////
 
 
 ////////////////webworker///////////////////////////////////////////////////////////////////////////////////////
