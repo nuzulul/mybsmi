@@ -9200,11 +9200,56 @@ function fpagemusprov4voting20bacalonhasilrun(calon,data){
 	
 	html += '</tbody></table></div>'
 	
-	$$('#musprov4voting20bacalonhasil .hasilvoting').append(html)
+	$$('#musprov4voting20bacalonhasil .hasilvoting').html(html)
 	
 	$$('#musprov4voting20bacalonhasil .totalpemilih').text(data.length)
 	
 	CountDownTimer('11/9/2024 11:30 PM', 'countdown')
+	
+	$$('#musprov4voting20bacalonhasil #urutkan').on("click",()=>{
+		fpagemusprov4voting20bacalonhasilrunurutkan(calon,data)
+	})
+}
+function fpagemusprov4voting20bacalonhasilrunurutkan(calon,data){
+	let hasil = []
+	for(const pemilih of data){
+		const list = pemilih.list
+		for(const item of list){
+			const idx = hasil.findIndex((obj)=>obj.calon == item)
+			if(idx < 0){
+				const data = {calon:item,jumlah:1}
+				hasil.push(data)
+			}else{
+				let data = hasil[idx].jumlah
+				data++
+				hasil[idx].jumlah = data
+			}
+		}
+	}
+	hasil.sort(function(a, b){return b.jumlah - a.jumlah});
+	
+	var html = '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th>Nama</th><th>Jumlah</th></tr></thead><tbody>'
+	
+	for(const item of hasil){
+		const idx = parseInt(item.calon)
+		const nama = calon[idx]
+		const jumlah = item.jumlah
+		html += `<tr><td data-collapsible-title="Nama">${nama}</td><td data-collapsible-title="Jumlah">${jumlah}</td></tr>`
+	}
+	
+	const terpilih = hasil.map((obj)=>obj.calon)
+	
+	for(let i=0;i<calon.length;i++){
+		if(!terpilih.includes(i.toString())){
+			const nama = calon[i]
+			const jumlah = 0
+			html += `<tr><td data-collapsible-title="Nama">${nama}</td><td data-collapsible-title="Jumlah">${jumlah}</td></tr>`
+		}
+	}
+	
+	html += '</tbody></table></div>'
+	
+	$$('#musprov4voting20bacalonhasil .hasilvoting').html(html)
 }
 ///////////////////////////////////////////////////////////////////////////////////////////
 
