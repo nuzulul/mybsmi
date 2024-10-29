@@ -9114,7 +9114,7 @@ function fSubmitmusprov4voting20bacalon(list){
         {
           console.log(content)
           var toastBottom = app.toast.create({ text: 'Berhasil dikirim', closeTimeout: 5000,position: 'center', });toastBottom.open();
-		  dapatbintang(10);
+		  //dapatbintang(10);
 		  let url = "/hasilvoting/";
 		  app.views.main.router.navigate(url);
         }
