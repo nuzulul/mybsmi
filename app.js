@@ -9182,7 +9182,8 @@ function fpagemusprov4voting20bacalonhasilrun(calon,data){
 			if(current == undefined){
 				hasil.set(item,1)
 			}else{
-				const now = current++
+				let now = current
+				now++
 				hasil.set(item,now)
 			}
 		}
