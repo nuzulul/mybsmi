@@ -1582,7 +1582,8 @@ $$('#my-aktivasi-screen .register-button').on('click', function () {
           app.loginScreen.close('#my-aktivasi-screen');
           $$('#my-aktivasi-screen')[0].reset();
           //$$('#overlay-welcome').hide();
-          app.dialog.alert('Pembuatan akun telah berhasil. Klik halaman login untuk masuk menggunakan email dan password. Hubungi admin jika butuh bantuan. Terima kasih.','Berhasil');
+          app.dialog.alert('Pembuatan akun telah berhasil. Silahkan login menggunakan email dan password anda. Terima kasih.','Berhasil');
+		  app.loginScreen.open('#my-login-screen')
         }
         else if (status == "failed")
         {

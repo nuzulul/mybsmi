@@ -6,11 +6,8 @@
                 "paths": ["/*"]
             }
         },
-        {
-            "manifest": "https://mybsmi.netlify.app/manifest.json",
-            "details": {
-                "paths": ["/*"]
-            }
-        }
+		{
+		  "web_app_identity": "https://mybsmi.bsmijatim.org/"
+		}
     ]
 }
