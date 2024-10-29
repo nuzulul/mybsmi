@@ -200,6 +200,15 @@ routes: [
     },
   },
   {
+    path: '/pemilihvoting/',
+    url: 'musprov4voting20bacalonpemilih.html',
+    on: {
+      pageAfterIn: function test (e, page) {
+        fpagemusprov4voting20bacalonpemilih();
+      },
+    },
+  },
+  {
     path: '/materi/',
     url: 'materi.html',
     on: {
@@ -9209,6 +9218,11 @@ function fpagemusprov4voting20bacalonhasilrun(calon,data){
 	$$('#musprov4voting20bacalonhasil #urutkan').on("click",()=>{
 		fpagemusprov4voting20bacalonhasilrunurutkan(calon,data)
 	})
+
+	$$('.musprov4voting20bacalonhasil .total').on('click', function () {
+        let url = "/pemilihvoting/";
+        app.views.main.router.navigate(url);
+	})
 }
 function fpagemusprov4voting20bacalonhasilrunurutkan(calon,data){
 	let hasil = []
@@ -9250,6 +9264,90 @@ function fpagemusprov4voting20bacalonhasilrunurutkan(calon,data){
 	html += '</tbody></table></div>'
 	
 	$$('#musprov4voting20bacalonhasil .hasilvoting').html(html)
+}
+
+function fpagemusprov4voting20bacalonpemilih(){
+    if (typeof dashboarddata === 'undefined' || dashboarddata === null) {
+      // variable is undefined or null
+      setTimeout(function(){ fpagemusprov4voting20bacalonpemilih(); }, 1000);
+      return;
+    }
+			let mypreloader = app.dialog.preloader();
+			app.request({
+			  url: apidataurl,
+			  method: 'GET',
+			  cache: false,
+			  data : { command: 'getmusprov4voting20bacalon'}, 
+			  success: async function (data, status, xhr)
+				{
+				  //console.log(data);
+				  mypreloader.close();
+
+				  var status = JSON.parse(data).status;
+				  var data = JSON.parse(data).data;
+				  if (status == "success")
+				  {
+					  fpagemusprov4voting20bacalonpemilihrun(JSON.parse(data))    
+				  }
+				  else if (status == "failed")
+				  {
+					app.dialog.alert(data,'Terjadi Kesalahan');
+				  }
+				  else
+				  {
+					app.dialog.alert(data,'Terjadi Kesalahan');
+				  }
+				},
+			  error: function (xhr, status, message)
+				{
+				  //console.log(message);
+				  mypreloader.close();
+				  app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
+				},
+			})
+}
+function fpagemusprov4voting20bacalonpemilihrun(voting){
+	let hasil = []
+	for(const item of voting){
+		const cabang = item.cabang
+		let idx = hasil.findIndex((obj)=>obj.cabang == cabang)
+		if(idx < 0){
+			const data = {cabang:cabang,jumlah:1}
+			hasil.push(data)
+		}else{
+			let now = hasil[idx].jumlah
+			now++
+			hasil[idx].jumlah = now
+		}
+	}
+	
+	hasil.sort(function(a, b){return b.jumlah - a.jumlah})
+	let kodecabang = window.dashboarddata.kodecabang
+	
+	for(const item of kodecabang){
+		cabang = item[0]
+		let idx = hasil.findIndex((obj)=>obj.cabang == cabang)
+		if(idx < 0){
+			const data = {cabang:cabang,jumlah:0}
+			hasil.push(data)
+		}
+	}
+	
+	var html = '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th>Cabang</th><th>Jumlah</th></tr></thead><tbody>'
+	
+	for(const item of hasil){
+		const cabang = item.cabang
+		const jumlah = item.jumlah
+		html += `<tr><td data-collapsible-title="Cabang">${cabang}</td><td data-collapsible-title="Jumlah">${jumlah}</td></tr>`
+	}
+	
+	html += '</tbody></table></div>'
+	
+	$$('#musprov4voting20bacalonpemilih .voting').html(html)
+
+	$$('#musprov4voting20bacalonpemilih .totalpemilih').text(voting.length)
+	
+	CountDownTimer('11/9/2024 11:30 PM', 'countdownpemilih')
 }
 ///////////////////////////////////////////////////////////////////////////////////////////
 
