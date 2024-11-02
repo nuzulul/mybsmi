@@ -9160,10 +9160,15 @@ async function fpagemusprov4voting20bacalonhasil(){
 				  var data = JSON.parse(data).data;
 				  if (status == "success")
 				  {
+					  let dataall = []
+					  for(const item of data[0]){
+						  const json = JSON.parse(item)
+						  dataall = dataall.concat(json)
+					  }
 					  const res = await fetch('datajson.json')
 					  const json = await res.json()
 					  const calon = json.bakalcalonpengurus20252030
-					  fpagemusprov4voting20bacalonhasilrun(calon,JSON.parse(data))    
+					  fpagemusprov4voting20bacalonhasilrun(calon,dataall)    
 				  }
 				  else if (status == "failed")
 				  {
@@ -9287,7 +9292,12 @@ function fpagemusprov4voting20bacalonpemilih(){
 				  var data = JSON.parse(data).data;
 				  if (status == "success")
 				  {
-					  fpagemusprov4voting20bacalonpemilihrun(JSON.parse(data))    
+					  let dataall = []
+					  for(const item of data[0]){
+						  const json = JSON.parse(item)
+						  dataall = dataall.concat(json)
+					  }
+					  fpagemusprov4voting20bacalonpemilihrun(dataall)    
 				  }
 				  else if (status == "failed")
 				  {
