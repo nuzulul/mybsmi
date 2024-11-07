@@ -8122,7 +8122,7 @@ function timeConverter(UNIX_timestamp){
   return time;
 }
 
-function getsocialdatarun(socialdata)
+async function getsocialdatarun(socialdata)
 {
   //console.log(socialdata)
   $$('.mybsmi-social-content').html('')
@@ -8139,6 +8139,11 @@ function getsocialdatarun(socialdata)
   let last = ''
   if(usermydata.social){
     placename = usermydata.social.placename
+	if(placename.includes("undefined")){
+		const res = await fetch("https://freeipapi.com/api/json")
+		const json = await res.json()
+		placename = json.cityName+' , '+json.regionName
+	}
     city = usermydata.social.city
     region = usermydata.social.region
     latitude = usermydata.social.latitude
@@ -8148,6 +8153,11 @@ function getsocialdatarun(socialdata)
     last = 'Anda check-in '+relative_time(mytime)
   }else{
     placename = usermydata.geodata.city+' , '+usermydata.geodata.region
+	if(placename.includes("undefined")){
+		const res = await fetch("https://freeipapi.com/api/json")
+		const json = await res.json()
+		placename = json.cityName+' , '+json.regionName
+	}
     city = usermydata.geodata.city
     region = usermydata.geodata.region
     latitude = usermydata.geodata.latitude
