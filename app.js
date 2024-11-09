@@ -3557,7 +3557,7 @@ function fpageekta()
       $$('.mybsmi-ektabsmi').html('<a class="button button-fill">'+label+'</a>');
       $$('.mybsmi-ektabsmi a').on('click', function () {
             
-            app.dialog.confirm('Pembuatan e-KTA memerlukan waktu sekitar 2-5 menit harap ditunggu.', 'Pemberitahuan', function (){fbuatekta();})
+            app.dialog.confirm('Penerbitan e-KTA memerlukan waktu sekitar 2-5 menit harap ditunggu.', 'Pemberitahuan', function (){fbuatekta();})
       });
     }
     try{let status = data.statuskeanggotaan.status
