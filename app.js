@@ -8150,7 +8150,7 @@ async function getsocialdatarun(socialdata)
     longitude = usermydata.social.longitude
     let date = usermydata.social.date
     let mytime = timeConverter(usermydata.social.time)
-    last = 'Anda check-in '+relative_time(mytime)
+    last = 'Anda terakhir check-in '+relative_time(mytime)
   }else{
     placename = usermydata.geodata.city+' , '+usermydata.geodata.region
 	if(placename.includes("undefined")){
