@@ -8989,7 +8989,12 @@ function fmateriparse(parrentId,response){
 		}
 		fmateriadditem(id,"UP ...","up",prev)
 	}
+	let arr = []
 	$$('.flip-entry',htmlDoc).each((html)=>{
+		arr.push(html)
+	})
+	arr.reverse()
+	arr.forEach((html)=>{
 		const id = $$(html).attr('id').replace("entry-","")
 		const title = ($$('.flip-entry-title',html))[0].innerText
 		const a = $$('a',html)[0]
