@@ -2754,7 +2754,7 @@ function fpagerelawanrun(data)
   const cabang= dashboarddata.kodecabang.find((cabang) => cabang[0]==data[4]);
   let html = ''
 +'    <img class="mybsmi-relawan-userphoto" src="avatar.png" style="width:150px;height:150px;margin: 20px 10px 0px;border-radius: 50%;object-fit: cover;"><span class="badge color-blue mybsmi-relawan-avatar-badge" style="bottom:20px;right:-40px;display:none;"><i class="icon f7-icons" style="font-size:12px;">checkmark_seal</i></span>'
-+'    <p class="mybsmi-relawan-data text-align-center"><span style="font-weight:bold;">'+safe(data[3])+'</span><br><span style="font-weight:normal;">No. KTA : '+safe(data[6])+'</span><br><span style="font-weight:normal;"><a href="/cabang/'+cabang[1]+'">'+safe(data[4])+'</a><span><br><span style="font-weight:normal;">STATUS : '+safe(data[8])+'<span><br><span style="font-weight:normal;display:none;">Poin : '+safe(data[7])+' Bintang</span><br><span style="font-weight:normal;font-size:12px;">Anggota sejak '+safe(date)+'</span><br><br><span><a href="#" class="button button-fill color-red display-none mybsmi-relawan-kirimpesan">Kirim Pesan</a></span><p>';
++'    <p class="mybsmi-relawan-data text-align-center"><span style="font-weight:bold;">'+safe(data[3])+'</span><br><span style="font-weight:normal;">No. KTA : '+safe(data[6])+'</span><br><span style="font-weight:normal;"><a href="/cabang/'+cabang[1]+'">'+safe(data[4])+'</a><span><br><span style="font-weight:normal;">STATUS : '+safe(data[8])+'<span><br><span style="font-weight:normal;display:none;">Poin : '+safe(data[7])+' Bintang</span><br><span style="font-weight:normal;font-size:12px;">Aktivasi '+safe(date)+'</span><br><br><span><a href="#" class="button button-fill color-red display-none mybsmi-relawan-kirimpesan">Kirim Pesan</a></span><p>';
   $$('.mybsmi-relawan').html(html);
   let src = "https://lh3.googleusercontent.com/d/"+safe(data[5]);
   if(data[5]!='')$$('.mybsmi-relawan-userphoto').attr('src',src);
@@ -4230,7 +4230,7 @@ function fpageadminrun(content)
     $$('.mybsmi-admincabangmenu').show();
     var data = '<div class="data-table"><table><tbody>';
     data += '<tr><td>Cabang</td><td><a href="/cabang/'+safe(datacabang[1])+'">'+safe(datacabang[0])+'</a></td></tr>';
-    data += '<tr><td>Relawan</td><td><span class="jumlahrelawan"></span></td></tr>';
+    data += '<tr><td>Anggota</td><td><span class="jumlahrelawan"></span></td></tr>';
     data += '<tr><td>Alamat</td><td>'+safe(datacabang[2])+'</td></tr>';
     data += '<tr><td>Telepon</td><td>'+safe(datacabang[3])+'</td></tr>';
     var ig;if (datacabang[4] != ''){ig = safe(datacabang[4]);}else{ig='';}
