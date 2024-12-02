@@ -5649,6 +5649,7 @@ function fpagemasterdokumenaddsertifikat(){
 									'<input type="text" name="background" placeholder="Background" list="background" required validate/>'+
 									'<datalist id="background">'+
 										'<option>https://nuzulul.github.io/uploads/template-5656464.png</option>'+
+										'<option>https://nuzulul.github.io/uploads/back-sertifikat-1600x900-bsmijatim-red.png</option>'+
 									'</datalist>'+
 								'</div></div></li>'+
 								'<li class="item-content item-input"><div class="item-inner"><div class="item-input-wrap">'+
