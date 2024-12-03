@@ -65,6 +65,11 @@ var DEBUG = true;
 var visits = 1;
 var skipuid = ["0OOBNq02038mf3ZfIdV7","0OeN3LUg0AcX3qtLZkPj"];
 const usecaptcha = false
+var userstatusnormal = [
+	"Terbatas", //User belum verifikasi identitas
+	"Terverifikasi", //User sudah verifikasi identitas
+	"Tertolak" //Permintaan verifikasi user ditolak
+]
 
 if ((window.location.href.indexOf("localhost") > -1)||(window.location.href.indexOf("127.0.0.1") > -1)) 
 {
@@ -6020,7 +6025,7 @@ function  fpagemasterdokumenaddrelawanform(index,content,datarelawan)
 			peserta.push(item.uid)
 		})
         datarelawan.forEach(function(item,index){
-			  let statusincludes = ["Terbatas","Terverifikasi","Tertolak"]
+			  let statusincludes = userstatusnormal
 			  if (!statusincludes.includes(item[3]))return
 			  if (!isLocal) {
 				if (skipuid.includes(item[1]))return
