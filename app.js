@@ -5230,16 +5230,16 @@ function fpagemasteradminlaporan(content)
 
 
 function fpagemasterdatabase(content)
-{
-  var data = '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th></th><th>Nama</th><th>No. KTA</th><th>Email</th><th>Cabang</th><th>Profesi</th><th></th></tr></thead><tbody>';
+{console.log(content)
+  var data = '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th></th><th>Nama</th><th>No. KTA</th><th>Status</th><th>Cabang</th><th>Profesi</th><th></th></tr></thead><tbody>';
   var jumlahrelawan = 0;
   for (i=content.length-1;i>-1;i--)
   {
       if ((skipuid.includes(content[i][1]))&&(dashboarddata.user.useruid !== '0ONjeb65X5OunuRI6Ap8')){continue;}else{if ((skipuid.includes(content[i][1]))&&(!isLocal)) continue;}
       
-      if ((content[i][3] === 'Terbatas')||(content[i][3] === 'Terverifikasi')||(content[i][3] === 'Tertolak')){}else{continue;}
+      //if ((content[i][3] === 'Terbatas')||(content[i][3] === 'Terverifikasi')||(content[i][3] === 'Tertolak')){}else{continue;}
       
-      data += '<tr class="mybsmi-master-item-'+safe(content[i][1])+'"><td data-collapsible-title=""><img src="avatar.png" style="width:1.5em;aspect-ratio:1/1;object-fit:cover;border-radius:50% 50%;overflow:hidden;"></td><td data-collapsible-title="Nama"><a class="mybsmi-cabang-relawan" data-user="'+safe(content[i][1])+'">'+safe(content[i][4])+'</a></td><td data-collapsible-title="No. KTA">'+safe(content[i][18])+'</td><td data-collapsible-title="Email">'+safe(content[i][2])+'</td><td data-collapsible-title="Cabang">'+safe(content[i][11])+'</td><td data-collapsible-title="Profesi">'+safe(content[i][8])+'</td><td><a class="button button-fill mybsmi-masteraction" data-index="'+i+'" data-user="'+btoa(JSON.stringify(content[i]))+'">Detail</a></td></tr>';
+      data += '<tr class="mybsmi-master-item-'+safe(content[i][1])+'"><td data-collapsible-title=""><img src="avatar.png" style="width:1.5em;aspect-ratio:1/1;object-fit:cover;border-radius:50% 50%;overflow:hidden;"></td><td data-collapsible-title="Nama"><a class="mybsmi-cabang-relawan" data-user="'+safe(content[i][1])+'">'+safe(content[i][4])+'</a></td><td data-collapsible-title="No. KTA">'+safe(content[i][18])+'</td><td data-collapsible-title="Status">'+safe(content[i][3])+'</td><td data-collapsible-title="Cabang">'+safe(content[i][11])+'</td><td data-collapsible-title="Profesi">'+safe(content[i][8])+'</td><td><a class="button button-fill mybsmi-masteraction" data-index="'+i+'" data-user="'+btoa(JSON.stringify(content[i]))+'">Detail</a></td></tr>';
       jumlahrelawan++;
   }
   data += '</tbody></table></div>';
@@ -5280,7 +5280,7 @@ function fpagemasteridentitas(base64,index)
 {
   var data = atob(base64);data = JSON.parse(data);
   var dialog = app.dialog.create({
-    title: 'Data Relawan',
+    title: 'Data Anggota',
     content:''////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       +'<div style="width:100%;height:50vh;overflow:auto;">'
       +'  <div style="display:flex;flex-direction:column;align-items:center;justify-content: center;">'
@@ -5312,14 +5312,59 @@ function fpagemasteridentitas(base64,index)
     },
     buttons: [
       {
-        text: 'Add Admin Laporan',
+        text: 'Edit',
         close:true,
         color: 'red',
         onClick: function(dialog, e)
           {
               index = parseInt(index);
+              fpagemastereditanggota(data,index)
+          }
+      },
+      {
+        text: 'Tutup',
+        close:true,
+        color: 'gray',
+        onClick: function(dialog, e)
+          {
+
+          }
+      },
+    ]
+  });
+  dialog.open();
+}
+
+function fpagemastereditanggota(data,index){
+  var dialog = app.dialog.create({
+    title: 'Edit Anggota',
+    content:''+safe(data[4])+'</br>'+safe(data[18])+'',
+    closeByBackdropClick: false,
+    destroyOnClose: true,
+    verticalButtons: true,
+    on: {
+      opened: function () {
+        
+      }
+    },
+    buttons: [
+      {
+        text: 'Tambah Admin Laporan',
+        close:true,
+        color: 'red',
+        onClick: function(dialog, e)
+          {
               let inputdata = {"instruksi":"add",index}
               fpagemasteradminlaporansave(inputdata);
+          }
+      },
+      {
+        text: 'Ganti Status',
+        close:true,
+        color: 'red',
+        onClick: function(dialog, e)
+          {
+              fpagemasterchangestatus(data,index);
           }
       },
       {
@@ -5531,6 +5576,92 @@ function fdonasibsmijatimorgrun(judul,kode,expired){
             if (status == "success")
             {
               console.log(content); 
+              var toastBottom = app.toast.create({ text: 'Berhasil', closeTimeout: 3000,position: 'center', });toastBottom.open();
+            }
+            else if (status == "failed")
+            {
+              //console.log("failed");
+              app.dialog.alert(content,'Terjadi Kesalahan');
+            }
+            else
+            {
+              //console.log("failed");
+              //app.dialog.alert(content,'Terjadi Kesalahan');
+              fcekexpiredtoken(content);
+            }
+          },
+        error: function (xhr, status, message)
+          {
+            //console.log(message);
+            mypreloader.close();
+            app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
+          },
+      })
+}
+
+function fpagemasterchangestatus(data,index){
+  var dialog = app.dialog.create({
+    title: 'Ganti Status Anggota',
+    content:''+safe(data[4])+'</br>'+safe(data[18])+'',
+    closeByBackdropClick: false,
+    destroyOnClose: true,
+    verticalButtons: true,
+    on: {
+      opened: function () {
+        
+      }
+    },
+    buttons: [
+      {
+        text: 'Terbatas',
+        close:true,
+        color: 'red',
+        onClick: function(dialog, e)
+          {
+              fpagemastereditanggotasave(index,"status","Terbatas","Terbatas")
+          }
+      },
+      {
+        text: 'Terduplikat',
+        close:true,
+        color: 'red',
+        onClick: function(dialog, e)
+          {
+              fpagemastereditanggotasave(index,"status","Terduplikat","Terduplikat")
+          }
+      },
+      {
+        text: 'Tutup',
+        close:true,
+        color: 'gray',
+        onClick: function(dialog, e)
+          {
+
+          }
+      },
+    ]
+  });
+  dialog.open();
+}
+
+function fpagemastereditanggotasave(index,instruksi,judul,isi)
+{
+      let inputdata = JSON.stringify({index,instruksi,judul,isi})
+      let mypreloader = app.dialog.preloader();
+      app.request({
+        url: apidataurl,
+        method: 'POST',
+        cache: false,
+        data : { token:mybsmiusertoken, command: 'mastereditanggota', inputdata}, 
+        success: function (data, status, xhr)
+          {
+			console.log(data)
+            mypreloader.close();
+            var status = JSON.parse(data).status;
+            var content = JSON.parse(data).data;
+            if (status == "success")
+            {
+              //console.log(content);
               var toastBottom = app.toast.create({ text: 'Berhasil', closeTimeout: 3000,position: 'center', });toastBottom.open();
             }
             else if (status == "failed")
