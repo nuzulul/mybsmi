@@ -4217,7 +4217,14 @@ function fpageadmin()
   })
 }
 
-function fpageadminrun(content)
+function fpageadminrun(content){
+	let json = JSON.parse(dashboarddata.user.usermydata);
+	if (json.admincabang){
+		fpageadmincabang(content)
+	}
+}
+
+function fpageadmincabang(content)
 {
   let json = JSON.parse(dashboarddata.user.usermydata);
   let usercabang = dashboarddata.user.usercabang;
@@ -4229,7 +4236,7 @@ function fpageadminrun(content)
       datacabang = currentElement;
     }
   })
-
+	console.log('datacabang',datacabang)
   if (json.admincabang)
   {
     $$('.mybsmi-admincabangmenu').show();
@@ -4283,7 +4290,7 @@ function fpageadminrun(content)
 
   $$('.mybsmi-editcabang').off('click');
   $$('.mybsmi-editcabang').on('click', function (e) {
-        fpageadmincabang(datacabang,datarelawan)
+        fpageadmincabangprofileedit(datacabang,datarelawan)
   });
 
   $$('.mybsmi-cabang-relawan').on('click', function (e) {
@@ -4300,6 +4307,40 @@ function fpageadminrun(content)
   $$('.undang-relawan').on('click', function () {
 		fundangrelawan()
   })
+  
+  let struktur = datacabang[8]
+  fpageadmincabangdrawstruktur(struktur,datacabang,datarelawan)
+
+	app.on('sortableSort', function (itemEl, data, listEl) {
+		  // do something on page init
+
+		const reorderArray = (event, originalArray) => {
+		  const movedItem = originalArray.filter((item, index) => index === event.oldIndex);
+		  const remainingItems = originalArray.filter((item, index) => index !== event.oldIndex);
+		  
+		  const reorderedItems = [
+			...remainingItems.slice(0, event.newIndex),
+			movedItem[0],
+			...remainingItems.slice(event.newIndex)
+		  ];
+		  
+		  return reorderedItems;
+		}
+		  
+		  let target = $$(listEl).hasClass('struktur')
+		  if(target)
+		  {
+			  //console.log(itemEl, data, listEl)
+			  //console.log('mybsmiadmindatacabang',mybsmiadmindatacabang)
+			  let namacabang = datacabang[0]
+			  let oldstruktur = JSON.parse(mybsmiadmindatacabang[8])
+			  const newevent = {newIndex: data.to, oldIndex: data.from};
+			  let newstruktur = reorderArray(newevent, oldstruktur)
+			  let struktur = JSON.stringify(newstruktur)
+			  var datainput = {namacabang,struktur};
+			  fpageadmincabangstruktursave(datainput,datacabang,datarelawan);
+		  }
+	});	
 }
 
 function fpageadminidentitas(base64)
@@ -4361,7 +4402,7 @@ function fpageadminidentitas(base64)
   dialog.open();
 }
 
-function fpageadmincabang(datacabang,datarelawan)
+function fpageadmincabangprofileedit(datacabang,datarelawan)
 {
   var dialog = app.dialog.create({
     title: 'Edit Cabang',
@@ -4462,7 +4503,7 @@ function fpageadmineditcabang(inputdata)
         url: apidataurl,
         method: 'POST',
         cache: false,
-        data : { token:mybsmiusertoken, command: 'updateprofilcabang', inputdata}, 
+        data : { token:mybsmiusertoken, command: 'admincabangupdateprofilcabang', inputdata}, 
         success: function (data, status, xhr)
           {
             mypreloader.close();
@@ -4510,6 +4551,161 @@ function fpageadmineditcabangupdate(inputdata)
       fpageadminrun(mybsmiadmindata);
     }
   })
+}
+
+function fpageadmincabangstrukturtambah(datacabang,datarelawan)
+{
+  var dialog = app.dialog.create({
+    title: 'Tambah Pengurus',
+    content:''////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      +'<div style="width:100%;height:50vh;overflow:auto;">'
+      +'  <div style="display:flex;flex-direction:column;align-items:center;justify-content: center;">'
+      +'      <img id="img" src="icon512.png" style="width:150px;height:150px;margin: 10px 10px;border-radius: 0%;object-fit: cover;">'
+      +'      <p style="font-weight:bold;">'+safe(datacabang[0])+'</p>'
+      +'  <div class="list no-hairlines-md">'
+      +'    <ul>'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Jabatan</div><div class="item-input-wrap">'
+      +'            <input type="text" id="jabatanpengurus" name="jabatanpengurus" placeholder="Jabatan Pengurus" value="">'
+      +'            </div></div>'
+      +'        </li>'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Nama Pengurus</div><div class="item-input-wrap">'
+      +'                            <select id="namapengurus" name="namapengurus">'
+      +'                              <option value="" selected> </option>'
+      +'                            </select>'
+      +'            </div></div>'
+      +'        </li>'
+      +'    </ul>'
+      +'  </div>'
+      +'  </div>'
+      +'</div>',//////////////////////////////////////////////////////////////////////////////////////////////////
+    closeByBackdropClick: false,
+    destroyOnClose: true,
+    verticalButtons: true,
+    on: {
+      opened: function () {
+        //console.log('Dialog opened')
+        var select = document.getElementById('namapengurus');
+        datarelawan.forEach(function(item,index){
+            var opt = document.createElement('option');
+            opt.value = item[1];
+            opt.innerHTML = item[4];            
+            select.appendChild(opt);
+            if (item[1] == datacabang[5])
+            {
+              select.value = item[1];
+            }
+        });
+      }
+    },
+    buttons: [
+      {
+        text: 'Simpan',
+        close:true,
+        color: 'red',
+        onClick: function(dialog, e)
+          {
+                var namacabang = datacabang[0];
+                var jabatanpengurus = $$('#jabatanpengurus').val();
+                var namapengurusid = $$('#namapengurus').val();
+				var arr = JSON.parse(datacabang[8])
+				arr.push({jabatanpengurus,namapengurusid})
+				var struktur = JSON.stringify(arr)
+                var data = {namacabang,struktur};
+                fpageadmincabangstruktursave(data,datacabang,datarelawan);
+          }
+      },
+      {
+        text: 'Batal',
+        close:true,
+        color: 'gray',
+        onClick: function(dialog, e)
+          {
+
+          }
+      },
+    ]
+  });
+  dialog.open();
+}
+
+function fpageadmincabangstruktursave(inputdata,datacabang,datarelawan)
+{
+      inputdata=JSON.stringify(inputdata);
+      let mypreloader = app.dialog.preloader();
+      app.request({
+        url: apidataurl,
+        method: 'POST',
+        cache: false,
+        data : { token:mybsmiusertoken, command: 'admincabangstruktursave', inputdata}, 
+        success: function (data, status, xhr)
+          {
+            mypreloader.close();
+            var status = JSON.parse(data).status;
+            var content = JSON.parse(data).data;
+            if (status == "success")
+            {
+              //console.log(content);
+			  fpageadmincabangdrawstruktur(content,datacabang,datarelawan)
+              var toastBottom = app.toast.create({ text: 'Berhasil', closeTimeout: 3000,position: 'center', });toastBottom.open();
+            }
+            else if (status == "failed")
+            {
+              //console.log("failed");
+              app.dialog.alert(content,'Terjadi Kesalahan');
+            }
+            else
+            {
+              //console.log("failed");
+              //app.dialog.alert(content,'Terjadi Kesalahan');
+              fcekexpiredtoken(content);
+            }
+          },
+        error: function (xhr, status, message)
+          {
+            //console.log(message);
+            mypreloader.close();
+            app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
+          },
+      })
+}
+
+function fpageadmincabangdrawstruktur(struktur,datacabang,datarelawan)
+{
+	datacabang[8] = struktur
+	window.mybsmiadmindatacabang = datacabang
+	$$('.mybsmi-admincabangstrukturtambah').off('click')
+	$$('.mybsmi-admincabangstrukturtambah').on('click', function () {
+		fpageadmincabangstrukturtambah(datacabang,datarelawan)
+	})
+	
+	let html = ''+
+		'<div class="list sortable struktur">'+
+			'<ul>'
+	
+	let arr = JSON.parse(struktur)
+	for(const item of arr)
+	{
+		//console.log('item',item)
+		//console.log('datarelawan',datarelawan)
+		let data = datarelawan.find((arr)=>arr[1]==item.namapengurusid)
+		let el = ''+
+          '<li>'+
+            '<div class="item-content">'+
+              '<div class="item-media"><img src="https://lh3.googleusercontent.com/d/'+safe(data[13])+'" style="width:1.5em;aspect-ratio:1/1;object-fit:cover;border-radius:50% 50%;overflow:hidden;"></div>'+
+              '<div class="item-inner">'+
+                '<div class="item-title">'+safe(data[4])+'</div>'+
+                '<div class="item-after">'+safe(item.jabatanpengurus)+'</div>'+
+              '</div>'+
+            '</div>'+
+            '<div class="sortable-handler"></div>'+
+          '</li>'
+		  
+		 html += el
+	}
+	
+	html += '</ul></div>'
+	
+	$$('.mybsmi-admincabangstrukturlist').html(html)
 }
 ///////fpageadmin////////////////////////////////////////////////////////
 
