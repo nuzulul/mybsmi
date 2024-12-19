@@ -4272,6 +4272,11 @@ function fpageadmincabang(content)
   $$('.mybsmi-admin').html(data);
   $$('.jumlahrelawan').html(jumlahrelawan);
   $$('.totalrelawan').html('Total : '+jumlahrelawan);
+  
+  if(datacabang[0] == "BSMI Jawa Timur")
+  {
+	  datarelawan = content
+  }
 
   for (i=content.length-1;i>-1;i--)
   {
@@ -4683,18 +4688,19 @@ function fpageadmincabangdrawstruktur(struktur,datacabang,datarelawan)
 			'<ul>'
 	
 	let arr = JSON.parse(struktur)
-	for(const item of arr)
+	for(let i=0;i<arr.length;i++)
 	{
 		//console.log('item',item)
 		//console.log('datarelawan',datarelawan)
+		let item = arr[i]
 		let data = datarelawan.find((arr)=>arr[1]==item.namapengurusid)
 		let el = ''+
           '<li>'+
             '<div class="item-content">'+
               '<div class="item-media"><img src="https://lh3.googleusercontent.com/d/'+safe(data[13])+'" style="width:1.5em;aspect-ratio:1/1;object-fit:cover;border-radius:50% 50%;overflow:hidden;"></div>'+
               '<div class="item-inner">'+
-                '<div class="item-title">'+safe(data[4])+'</div>'+
-                '<div class="item-after">'+safe(item.jabatanpengurus)+'</div>'+
+                '<div class="item-title"><a class="mybsmi-adminaction" data-user="'+btoa(JSON.stringify(data))+'">'+safe(data[4])+'</a></div>'+
+                '<div class="item-after"><a class="mybsmi-struktur-delete" data-idx="'+i+'">'+safe(item.jabatanpengurus)+'</a></div>'+
               '</div>'+
             '</div>'+
             '<div class="sortable-handler"></div>'+
@@ -4706,6 +4712,23 @@ function fpageadmincabangdrawstruktur(struktur,datacabang,datarelawan)
 	html += '</ul></div>'
 	
 	$$('.mybsmi-admincabangstrukturlist').html(html)
+
+	$$('.struktur a.mybsmi-adminaction').on('click', function (e) {
+			var base64 = this.attributes["data-user"].value;
+			fpageadminidentitas(base64)
+	});
+
+	$$('.struktur a.mybsmi-struktur-delete').on('click', function (e) {
+		var idx = this.attributes["data-idx"].value;
+		app.dialog.confirm('Hapus item ini?', 'Konfirmasi', function (){
+			let namacabang = datacabang[0]
+			let oldstruktur = JSON.parse(datacabang[8])
+			oldstruktur.splice(parseInt(idx), 1)
+			let struktur = JSON.stringify(oldstruktur)
+			var datainput = {namacabang,struktur};
+			fpageadmincabangstruktursave(datainput,datacabang,datarelawan);
+		})
+	});
 }
 ///////fpageadmin////////////////////////////////////////////////////////
 
