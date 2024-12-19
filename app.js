@@ -4450,7 +4450,7 @@ function fpageadmincabangprofileedit(datacabang,datarelawan)
         datarelawan.forEach(function(item,index){
             var opt = document.createElement('option');
             opt.value = item[1];
-            opt.innerHTML = item[4];            
+            opt.innerHTML = item[4]+' ('+item[18]+')';            
             select.appendChild(opt);
             if (item[1] == datacabang[5])
             {
@@ -4593,11 +4593,11 @@ function fpageadmincabangstrukturtambah(datacabang,datarelawan)
         datarelawan.forEach(function(item,index){
             var opt = document.createElement('option');
             opt.value = item[1];
-            opt.innerHTML = item[4];            
+            opt.innerHTML = item[4]+' ('+item[18]+')';            
             select.appendChild(opt);
             if (item[1] == datacabang[5])
             {
-              select.value = item[1];
+              //select.value = item[1];
             }
         });
       }
