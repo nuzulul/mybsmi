@@ -4217,6 +4217,65 @@ function fpageadmin()
   })
 }
 
+function fpageadminidentitas(base64)
+{
+  var data = atob(base64);data = JSON.parse(data);
+  var dialog = app.dialog.create({
+    title: 'Data Relawan',
+    content:''////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      +'<div style="width:100%;height:50vh;overflow:auto;">'
+      +'  <div style="display:flex;flex-direction:column;align-items:center;justify-content: center;">'
+      +'      <img id="img" src="" style="width:150px;height:150px;margin: 10px 10px;border-radius: 50%;object-fit: cover;">'
+      +'      <p style="font-weight:bold;"></p>'
+      +'      <div class="data-table" style="width:100%"><table><tbody>'
+      +'          <tr><td>Nama</td><td>'+safe(data[4])+'</td></tr>'
+	  +'          <tr><td>No. KTA</td><td>'+safe(data[18])+'</td></tr>'
+      +'          <tr><td>Email</td><td>'+safe(data[2])+'</td></tr>'
+      +'          <tr><td>Cabang</td><td>'+safe(data[11])+'</td></tr>'
+      +'          <tr><td>Jenis Kelamin</td><td>'+safe(data[5])+'</td></tr>'
+      +'          <tr><td>Alamat</td><td>'+safe(data[7])+'</td></tr>'
+      +'          <tr><td>Profesi</td><td>'+safe(data[8])+'</td></tr>'
+      +'          <tr><td>Golongan Darah</td><td>'+safe(data[9])+'</td></tr>'
+      +'          <tr><td>No HP</td><td>'+safe(data[10])+'</td></tr>'
+      +'          <tr><td>Tahun Bergabung</td><td>'+safe(data[12])+'</td></tr>'
+      +'      </tbody></table></div>'
+      +'  </div>'
+      +'</div>',//////////////////////////////////////////////////////////////////////////////////////////////////
+    closeByBackdropClick: false,
+    destroyOnClose: true,
+    verticalButtons: true,
+    on: {
+      opened: function () {
+        //console.log('Dialog opened')
+        let src = "https://lh3.googleusercontent.com/d/"+safe(data[13]);
+        $$('#img').attr('src',src);
+      }
+    },
+    buttons: [
+       {
+        text: 'Profil',
+        close:true,
+        color: 'red',
+        onClick: function(dialog, e)
+          {
+            let url = "/relawan/"+safe(data[1]);
+            app.views.main.router.navigate(url);
+          }
+      },
+      {
+        text: 'Tutup',
+        close:true,
+        color: 'gray',
+        onClick: function(dialog, e)
+          {
+
+          }
+      },
+    ]
+  });
+  dialog.open();
+}
+
 function fpageadminrun(content){
 	let json = JSON.parse(dashboarddata.user.usermydata);
 	if (json.admincabang){
@@ -4255,7 +4314,7 @@ function fpageadmincabang(content)
     $$('.mybsmi-admincabangisi').html(data);
   }
 
-  var data = '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th></th><th>Nama</th><th>No. KTA</th><th>Cabang</th><th>Profesi</th><th>Status</th><th></th></tr></thead><tbody>';
+  var data = '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th></th><th>Nama</th><th>No. KTA</th><th>Cabang</th><th>Profesi</th><th>Status Keanggotaan</th><th>Jenjang Keanggotaan</th><th></th></tr></thead><tbody>';
   var jumlahrelawan = 0;
   for (i=content.length-1;i>-1;i--)
   {
@@ -4267,8 +4326,9 @@ function fpageadmincabang(content)
       
 	  let statuskeanggotaan = (JSON.parse(content[i][14])).statuskeanggotaan
 	  let status = statuskeanggotaan ? statuskeanggotaan.status : '-'
+	  let jenjang = statuskeanggotaan ? statuskeanggotaan.jenjang : '-'
 	  
-      data += '<tr class="mybsmi-admin-item-'+safe(content[i][1])+'"><td data-collapsible-title=""><img src="avatar.png" style="width:1.5em;aspect-ratio:1/1;object-fit:cover;border-radius:50% 50%;overflow:hidden;"></td><td data-collapsible-title="Nama"><a class="mybsmi-cabang-relawan" data-user="'+safe(content[i][1])+'">'+safe(content[i][4])+'</a></td><td data-collapsible-title="No. KTA">'+safe(content[i][18])+'</td><td data-collapsible-title="Cabang">'+safe(content[i][11])+'</td><td data-collapsible-title="Profesi">'+safe(content[i][8])+'</td><td data-collapsible-title="Status">'+safe(status)+'</td><td><a class="button button-fill mybsmi-adminaction" data-user="'+btoa(JSON.stringify(content[i]))+'">Detail</a></td></tr>';
+      data += '<tr class="mybsmi-admin-item-'+safe(content[i][1])+'"><td data-collapsible-title=""><img src="avatar.png" style="width:1.5em;aspect-ratio:1/1;object-fit:cover;border-radius:50% 50%;overflow:hidden;"></td><td data-collapsible-title="Nama"><a class="mybsmi-cabang-relawan" data-user="'+safe(content[i][1])+'">'+safe(content[i][4])+'</a></td><td data-collapsible-title="No. KTA">'+safe(content[i][18])+'</td><td data-collapsible-title="Cabang">'+safe(content[i][11])+'</td><td data-collapsible-title="Profesi">'+safe(content[i][8])+'</td><td data-collapsible-title="Status Keanggotaan">'+safe(status)+'</td><td data-collapsible-title="Jenjang Keanggotaan">'+safe(jenjang)+'</td><td><a class="button button-fill mybsmi-adminaction" data-user="'+btoa(JSON.stringify(content[i]))+'">Detail</a></td></tr>';
       
       jumlahrelawan++;
       
@@ -4297,7 +4357,7 @@ function fpageadmincabang(content)
         
         //app.dialog.confirm('Pembuatan e-KTA memerlukan waktu 2-4 menit.', 'Pemberitahuan', function (){fbuatekta();})
         var base64 = this.attributes["data-user"].value;
-        fpageadminidentitas(base64)
+        fpageadmincabangidentitas(base64)
   });
 
   $$('.mybsmi-editcabang').off('click');
@@ -4355,7 +4415,7 @@ function fpageadmincabang(content)
 	});	
 }
 
-function fpageadminidentitas(base64)
+function fpageadmincabangidentitas(base64)
 {
   var data = atob(base64);data = JSON.parse(data);
   var dialog = app.dialog.create({
@@ -4744,7 +4804,7 @@ function fpageadminlaporan(content)
   $$('.mybsmi-adminlaporanmenu').show();
   let json = JSON.parse(dashboarddata.user.usermydata);
   
-  var data = '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th></th><th>Nama</th><th>No. KTA</th><th>Cabang</th><th>Profesi</th><th>Status</th><th></th></tr></thead><tbody>';
+  var data = '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th></th><th>Nama</th><th>No. KTA</th><th>Cabang</th><th>Profesi</th><th>Status Keanggotaan</th><th>Jenjang Keanggotaan</th><th></th></tr></thead><tbody>';
   var jumlahrelawan = 0;
   for (i=content.length-1;i>-1;i--)
   {
@@ -4756,8 +4816,9 @@ function fpageadminlaporan(content)
       
 	  let statuskeanggotaan = (JSON.parse(content[i][14])).statuskeanggotaan
 	  let status = statuskeanggotaan ? statuskeanggotaan.status : '-'
+	  let jenjang = statuskeanggotaan ? statuskeanggotaan.jenjang : '-'
 	  
-      data += '<tr class="mybsmi-admin-item-'+safe(content[i][1])+'"><td data-collapsible-title=""><img src="avatar.png" style="width:1.5em;aspect-ratio:1/1;object-fit:cover;border-radius:50% 50%;overflow:hidden;"></td><td data-collapsible-title="Nama"><a class="mybsmi-cabang-relawan" data-user="'+safe(content[i][1])+'">'+safe(content[i][4])+'</a></td><td data-collapsible-title="No. KTA">'+safe(content[i][18])+'</td><td data-collapsible-title="Cabang">'+safe(content[i][11])+'</td><td data-collapsible-title="Profesi">'+safe(content[i][8])+'</td><td data-collapsible-title="Status">'+safe(status)+'</td><td><a class="button button-fill mybsmi-adminaction" data-user="'+btoa(JSON.stringify(content[i]))+'">Detail</a></td></tr>';
+      data += '<tr class="mybsmi-admin-item-'+safe(content[i][1])+'"><td data-collapsible-title=""><img src="avatar.png" style="width:1.5em;aspect-ratio:1/1;object-fit:cover;border-radius:50% 50%;overflow:hidden;"></td><td data-collapsible-title="Nama"><a class="mybsmi-cabang-relawan" data-user="'+safe(content[i][1])+'">'+safe(content[i][4])+'</a></td><td data-collapsible-title="No. KTA">'+safe(content[i][18])+'</td><td data-collapsible-title="Cabang">'+safe(content[i][11])+'</td><td data-collapsible-title="Profesi">'+safe(content[i][8])+'</td><td data-collapsible-title="Status Keanggotaan">'+safe(status)+'</td><td data-collapsible-title="Jenjang Keanggotaan">'+safe(jenjang)+'</td><td><a class="button button-fill mybsmi-adminaction" data-user="'+btoa(JSON.stringify(content[i]))+'">Detail</a></td></tr>';
       
       jumlahrelawan++;
   }
