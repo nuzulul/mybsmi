@@ -394,7 +394,7 @@ routes: [
             return;
           }
             let data = JSON.parse(dashboarddata.user.usermydata)
-            if (data.verifikator)
+            if (data.verifikator || data.admincabang)
             {
                 resolve();
             }
@@ -3846,8 +3846,10 @@ function fpageverifikator()
 }
 
 function fpageverifikatorrun(content)
-{
-  var data = '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th>Nama</th><th>Email</th><th>Cabang</th><th></th></tr></thead><tbody>';
+{console.log(content)
+  let json = JSON.parse(dashboarddata.user.usermydata);
+  let usercabang = dashboarddata.user.usercabang;
+  var data = '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th>Nama</th><th>No. KTA</th><th>Email</th><th>Cabang</th><th></th></tr></thead><tbody>';
   for (i=content.length-1;i>-1;i--)
   {
       if ((skipuid.includes(content[i][1]))&&(dashboarddata.user.useruid !== '0ONjeb65X5OunuRI6Ap8')){continue;}else{if ((skipuid.includes(content[i][1]))&&(!isLocal)){continue;}else{
@@ -3856,7 +3858,9 @@ function fpageverifikatorrun(content)
         
       }}
       
-      data += '<tr class="mybsmi-verifikator-item-'+safe(content[i][1])+'"><td data-collapsible-title="Nama">'+safe(content[i][4])+'</td><td data-collapsible-title="Email">'+safe(content[i][2])+'</td><td data-collapsible-title="Cabang">'+safe(content[i][11])+'</td><td><a class="button button-fill mybsmi-verifikatoraction" data-user="'+btoa(JSON.stringify(content[i]))+'">Periksa</a></td></tr>';
+	  if(!json.verifikator && usercabang != content[i][11])continue
+	  
+      data += '<tr class="mybsmi-verifikator-item-'+safe(content[i][1])+'"><td data-collapsible-title="Nama">'+safe(content[i][4])+'</td><td data-collapsible-title="No. KTA">'+safe(content[i][18])+'</td><td data-collapsible-title="Email">'+safe(content[i][2])+'</td><td data-collapsible-title="Cabang">'+safe(content[i][11])+'</td><td><a class="button button-fill mybsmi-verifikatoraction" data-user="'+btoa(JSON.stringify(content[i]))+'">Periksa</a></td></tr>';
   }
   data += '</tbody></table></div>';
   $$('.mybsmi-verifikator').html(data);
@@ -3920,8 +3924,9 @@ function fpageverifikatoridentitasrun(base64,content)
       +'  <div style="display:flex;flex-direction:column;align-items:center;justify-content: center;">'
       +'      <img id="img" src="" style="width:150px;height:150px;margin: 10px 10px;border-radius: 50%;object-fit: cover;">'
       +'      <p style="font-weight:bold;">Data Akun</p>'
-      +'      <div class="data-table"><table><tbody>'
+      +'      <div class="data-table" style="width:100%"><table><tbody>'
       +'          <tr><td>Nama</td><td>'+safe(data[4])+'</td></tr>'
+	  +'          <tr><td>No. KTA</td><td>'+safe(data[18])+'</td></tr>'
       +'          <tr><td>Email</td><td>'+safe(data[2])+'</td></tr>'
       +'          <tr><td>Cabang</td><td>'+safe(data[11])+'</td></tr>'
       +'          <tr><td>Jenis Kelamin</td><td>'+safe(data[5])+'</td></tr>'
@@ -3932,8 +3937,8 @@ function fpageverifikatoridentitasrun(base64,content)
       +'          <tr><td>Tahun Bergabung</td><td>'+safe(data[12])+'</td></tr>'
       +'      </tbody></table></div>'
 
-      +'      <p style="font-weight:bold;">Data Sesuai Identitas</p>'
-      +'      <div class="data-table"><table><tbody>'
+      +'      <p style="font-weight:bold;">Data Sesuai Kartu Identitas</p>'
+      +'      <div class="data-table" style="width:100%"><table><tbody>'
       +'          <tr><td>NIK</td><td>'+safe(content[0][4])+'</td></tr>'
       +'          <tr><td>Nama</td><td>'+safe(content[0][5])+'</td></tr>'
       +'          <tr><td>TTL</td><td>'+safe(content[0][6])+'</td></tr>'
@@ -4383,6 +4388,11 @@ function fpageadmincabang(content)
   $$('.undang-relawan').on('click', function () {
 		fundangrelawan()
   })
+
+  $$('.verifikasi-anggota').on('click', function (e) {
+        let url = "/verifikator/";
+        app.views.main.router.navigate(url);
+  });
   
   let struktur = datacabang[8]
   fpageadmincabangdrawstruktur(struktur,datacabang,datarelawan)
