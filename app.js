@@ -1429,13 +1429,13 @@ app.on('pageAfterIn', function (page) {
   
   fonimgerror();
 
-let myprofile = ''
-+'      <div class="right">'
-+'        <a class="link popover-open" data-popover=".profile-popover">'
-+'          <span class="margin-right-half"></span>'
-+'          <img src="avatar.png" class="avatar mybsmi-avatar"><span class="badge color-blue mybsmi-avatar-badge" style="left:-8px;bottom:-5px;display:none;"><i class="icon f7-icons" style="font-size:12px;">checkmark_seal</i></span>'
-+'        </a>'
-+'      </div>'
+	let myprofile = ''
+	+'      <div class="right">'
+	+'        <a class="link popover-open" data-popover=".profile-popover">'
+	+'          <span class="margin-right-half"></span>'
+	+'          <img src="avatar.png" class="avatar mybsmi-avatar"><span class="badge color-blue mybsmi-avatar-badge" style="left:-8px;bottom:-5px;display:none;"><i class="icon f7-icons" style="font-size:12px;">checkmark_seal</i></span>'
+	+'        </a>'
+	+'      </div>'
 
   //$$('.navbar-inner .title').append(myprofile);
  
@@ -2499,6 +2499,8 @@ function getdefaultdatarun(data)
   if (usermydata.master)
   {
     $$('.mybsmi-mastermenu').show();
+  }else{
+	$$('#experiment').remove();
   }
   if (!usermydata.geodata)
   {
