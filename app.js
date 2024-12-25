@@ -126,6 +126,15 @@ if (params.mybsmi !== undefined )
   }
 }
 
+if (params.mode !== undefined )
+{
+	let mode = params.mode
+	if(mode == 'full')
+	{
+		$$('select[name="cabang"]')[0][1].disabled = false
+	}
+}
+
 var app = new Framework7({
 el: '#app',
 theme: 'aurora',
@@ -4923,6 +4932,7 @@ function fpagemasterpengaturan(){
   let html = '<button class="button button-fill master-dokumen">MASTER DOKUMEN</button></br>'+
 			'<button class="button button-fill ganti-pin">GANTI PIN AKTIVASI</button></br>'+
 			'<button class="button button-fill buat-link">BUAT LINK AKTIVASI</button></br>'+
+			'<button class="button button-fill buat-link-full">BUAT LINK AKTIVASI FULL</button></br>'+
 			'<button class="button button-fill undang-relawan">UNDANG RELAWAN</button></br>'+
 			'<button class="button button-fill donasi-bsmijatimorg">DONASI BSMIJATIM.ORG</button></br>'+
 			'<button class="button button-fill musprov4voting20bacalon">musprov4voting20bacalon</button></br>'+
@@ -4936,7 +4946,10 @@ function fpagemasterpengaturan(){
         })
   })
   $$('.buat-link').on('click', function () {
-		fbuatlinkaktivasi()
+		fbuatlinkaktivasi('normal')
+  })
+  $$('.buat-link-full').on('click', function () {
+		fbuatlinkaktivasi('full')
   })
   $$('.master-dokumen').on('click', function () {
         let url = "/masterdokumen/";
@@ -4996,7 +5009,7 @@ function fgantipin(pin){
       })
 }
 
-function fbuatlinkaktivasi(){
+function fbuatlinkaktivasi(mode){
 			let mypreloader = app.dialog.preloader();
 			app.request({
 			  url: apidataurl,
@@ -5021,7 +5034,9 @@ function fbuatlinkaktivasi(){
 					const buf = await crypto.subtle.digest("SHA-256", new TextEncoder("utf-8").encode(temp));
 					let tempdata = Array.prototype.map.call(new Uint8Array(buf), x=>(('00'+x.toString(16)).slice(-2))).join('');
 
-					let link = 'https://mybsmi.bsmijatim.org/?pin='+tempdata
+					let link = ''
+					if(mode == 'normal')link='https://mybsmi.bsmijatim.org/?pin='+tempdata
+					if(mode == 'full')link='https://mybsmi.bsmijatim.org/?pin='+tempdata+'&mode=full'
 					
 					app.dialog.create({
 						title: 'Link aktivasi siap',
@@ -5279,11 +5294,11 @@ function fpagemasteradmincabangedit(datacabang,datarelawan)
           if (!isLocal) {
             if (skipuid.includes(item[1]))return
           }
-          if(item[11] == datacabang[0])
+          if(item[11] == datacabang[0] || datacabang[0] == "BSMI Jawa Timur")
           {
             var opt = document.createElement('option');
             opt.value = item[1];
-            opt.innerHTML = item[4];            
+            opt.innerHTML = item[4]+' ('+item[18]+')';             
             select.appendChild(opt);
             if (item[1] == datacabang[5])
             {
@@ -5436,11 +5451,11 @@ function  fpagemasteradmincabanggantiadmin(datacabang,datarelawan)
           if (!isLocal) {
             if (skipuid.includes(item[1]))return
           }
-          if(item[11] == datacabang[0])
+          if(item[11] == datacabang[0] || datacabang[0] == "BSMI Jawa Timur")
           {
             var opt = document.createElement('option');
             opt.value = index;
-            opt.innerHTML = item[4];            
+            opt.innerHTML = item[4]+' ('+item[18]+')';           
             select.appendChild(opt);
             let json = JSON.parse(item[14]);
             if (json.admincabang)
