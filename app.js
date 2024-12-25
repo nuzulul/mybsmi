@@ -4542,7 +4542,10 @@ function fpageadmincabangprofileedit(datacabang,datarelawan)
             var opt = document.createElement('option');
             opt.value = item[1];
             opt.innerHTML = item[4]+' ('+item[18]+')';            
-            select.appendChild(opt);
+            if(userstatusnormal.includes(item[3]))
+			{
+				select.appendChild(opt);
+			}
             if (item[1] == datacabang[5])
             {
               select.value = item[1];
@@ -4685,7 +4688,10 @@ function fpageadmincabangstrukturtambah(datacabang,datarelawan)
             var opt = document.createElement('option');
             opt.value = item[1];
             opt.innerHTML = item[4]+' ('+item[18]+')';            
-            select.appendChild(opt);
+            if(userstatusnormal.includes(item[3]))
+			{
+				select.appendChild(opt);
+			}
             if (item[1] == datacabang[5])
             {
               //select.value = item[1];
