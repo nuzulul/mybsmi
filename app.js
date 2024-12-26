@@ -6018,6 +6018,24 @@ function fpagemasterchangestatus(data,index){
           }
       },
       {
+        text: 'Terverifikasi',
+        close:true,
+        color: 'red',
+        onClick: function(dialog, e)
+          {
+              fpagemastereditanggotasave(index,"status","Terverifikasi","Terverifikasi")
+          }
+      },
+      {
+        text: 'Tertolak',
+        close:true,
+        color: 'red',
+        onClick: function(dialog, e)
+          {
+              fpagemastereditanggotasave(index,"status","Tertolak","Tertolak")
+          }
+      },
+      {
         text: 'Terduplikat',
         close:true,
         color: 'red',
