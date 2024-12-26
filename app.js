@@ -2666,7 +2666,7 @@ function fpagecabangrun(content,cabangid)
   {
     if (kodecabang[i][1] === cabangid) {cabangnama = kodecabang[i][0];datacabang = kodecabang[i];}
   }
-  //console.log(cabangnama);
+  //console.log(datacabang);
   var ig;if (datacabang[4] != ''){ig = 'IG : @'+datacabang[4];}else{ig='';}
   var profil = safe(datacabang[0])+'<p style="font-size:10px;">'+safe(datacabang[2])+'</br>'+safe(datacabang[3])+'</br>'+safe(ig)+'</p>';
   //$$('.mybsmi-cabangnama').text(cabangnama);
@@ -2681,8 +2681,39 @@ function fpagecabangrun(content,cabangid)
           app.views.main.router.navigate(url);
     });
   }
-  $$('.mybsmi-cabang').append('<p style="font-size:10px;">Jumlah Relawan : <span class="jumlahrelawan"></span> Orang</p>');
-  var data = '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th></th><th>Nama</th><th>No. KTA</th><th>Status Keanggotaan</th></tr></thead><tbody>';
+  $$('.mybsmi-cabang').append('<p style="font-size:10px;">Relawan : <span class="jumlahrelawan"></span> Orang</p>');
+  let struktur = JSON.parse(datacabang[8])
+  if(struktur.length > 0)
+  {
+		let html = '<p>Struktur Pengurus</p>'+
+			'<div class="list struktur">'+
+				'<ul>'
+		
+		let arr = struktur
+		let datarelawan = content
+		for(let i=0;i<arr.length;i++)
+		{
+			let item = arr[i]
+			let data = datarelawan.find((arr)=>arr[1]==item.namapengurusid)
+			console.log(data)
+			let el = ''+
+			  '<li>'+
+				'<div class="item-content">'+
+				  '<div class="item-media"><img src="https://lh3.googleusercontent.com/d/'+safe(data[5])+'" style="width:1.5em;aspect-ratio:1/1;object-fit:cover;border-radius:50% 50%;overflow:hidden;"></div>'+
+				  '<div class="item-inner">'+
+					'<div class="item-title"><a href="/relawan/'+safe(data[1])+'" class="mybsmi-adminaction" data-user="'+btoa(JSON.stringify(data))+'">'+safe(data[3])+'</a> <span style="font-size:10px;">('+safe(data[6])+')</span></div>'+
+					'<div class="item-after"><a class="mybsmi-struktur-delete" data-idx="'+i+'">'+safe(item.jabatanpengurus)+'</a></div>'+
+				  '</div>'+
+				'</div>'+
+			  '</li>'
+			  
+			 html += el
+		}
+		
+		html += '</ul></div>'	  
+		$$('.mybsmi-cabang').append(html)
+  }
+  var data = '<p>Anggota Relawan</p><div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th></th><th>Nama</th><th>No. KTA</th><th>Cabang</th></tr></thead><tbody>';
   var jumlahrelawan = 0;
   for (i=content.length-1;i>-1;i--)
   {
@@ -2696,7 +2727,7 @@ function fpagecabangrun(content,cabangid)
 	  
 	  let badge = content[i][2] === 'Terverifikasi' ? '<i class="icon f7-icons" style="font-size:12px;color:blue;">checkmark_seal</i>' : '';badge = ''
       
-      data += '<tr class="mybsmi-admin-item-'+safe(content[i][1])+'"><td data-collapsible-title=""><img src="avatar.png" style="width:1.5em;aspect-ratio:1/1;object-fit:cover;border-radius:50% 50%;overflow:hidden;"></td><td data-collapsible-title="Nama"><a class="mybsmi-cabangaction" data-user="'+btoa(JSON.stringify(content[i]))+'">'+safe(content[i][3])+'</a> '+badge+'</td><td data-collapsible-title="No. KTA">'+safe(content[i][6])+'</td><td data-collapsible-title="Status Keanggotaan">'+safe(content[i][8])+'</td></tr>';
+      data += '<tr class="mybsmi-admin-item-'+safe(content[i][1])+'"><td data-collapsible-title=""><img src="avatar.png" style="width:1.5em;aspect-ratio:1/1;object-fit:cover;border-radius:50% 50%;overflow:hidden;"></td><td data-collapsible-title="Nama"><a class="mybsmi-cabangaction" data-user="'+btoa(JSON.stringify(content[i]))+'">'+safe(content[i][3])+'</a> '+badge+'</td><td data-collapsible-title="No. KTA">'+safe(content[i][6])+'</td><td data-collapsible-title="Cabang">'+safe(content[i][4])+'</td></tr>';
       
       jumlahrelawan++;
   }
