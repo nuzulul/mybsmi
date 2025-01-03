@@ -4362,8 +4362,8 @@ function fpageadmincabang(content)
     data += '</tbody></table></div>';
     $$('.mybsmi-admincabangisi').html(data);
   }
-
-  var data = '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th></th><th>Nama</th><th>No. KTA</th><th>Cabang</th><th>Profesi</th><th>Status Keanggotaan</th><th>Jenjang Keanggotaan</th><th></th></tr></thead><tbody>';
+  data = '<div class="list"><ul><li class="item-content item-input item-input-outline"><div class="item-inner"><div class="item-title item-label">Pencarian</div><div class="item-input-wrap"><input id="pencarian" type="text" placeholder="katakunci"><span class="input-clear-button"></span></div></div></li></ul></div>'
+  data += '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th></th><th>Nama</th><th>No. KTA</th><th>Cabang</th><th>Profesi</th><th>Status Keanggotaan</th><th>Jenjang Keanggotaan</th><th></th></tr></thead><tbody>';
   var jumlahrelawan = 0;
   for (i=content.length-1;i>-1;i--)
   {
@@ -4408,6 +4408,18 @@ function fpageadmincabang(content)
         //app.dialog.confirm('Pembuatan e-KTA memerlukan waktu 2-4 menit.', 'Pemberitahuan', function (){fbuatekta();})
         var base64 = this.attributes["data-user"].value;
         fpageadmincabangidentitas(base64)
+  });
+
+  $$(".mybsmi-admincabangmenu #pencarian").on("input", function() {
+    var value = $$(this).val().toLowerCase();
+    $$(".mybsmi-admincabangmenu .mybsmi-admincabangdb tr").each(function() {
+	  if($$(this).text().toLowerCase().indexOf(value) > -1)
+	  {
+		  $$(this).show()
+	  }else{
+		  $$(this).hide()
+	  }
+    });
   });
 
   $$('.mybsmi-editcabang').off('click');
@@ -4865,7 +4877,9 @@ function fpageadminlaporan(content)
   $$('.mybsmi-adminlaporanmenu').show();
   let json = JSON.parse(dashboarddata.user.usermydata);
   
-  var data = '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th></th><th>Nama</th><th>No. KTA</th><th>Cabang</th><th>Profesi</th><th>Status Keanggotaan</th><th>Jenjang Keanggotaan</th><th></th></tr></thead><tbody>';
+  let data = '<div class="list"><ul><li class="item-content item-input item-input-outline"><div class="item-inner"><div class="item-title item-label">Pencarian</div><div class="item-input-wrap"><input id="pencarian" type="text" placeholder="katakunci"><span class="input-clear-button"></span></div></div></li></ul></div>'
+  
+  data += '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th></th><th>Nama</th><th>No. KTA</th><th>Cabang</th><th>Profesi</th><th>Status Keanggotaan</th><th>Jenjang Keanggotaan</th><th></th></tr></thead><tbody>';
   var jumlahrelawan = 0;
   for (i=content.length-1;i>-1;i--)
   {
@@ -4873,7 +4887,7 @@ function fpageadminlaporan(content)
       
       if ((content[i][3] === 'Terbatas')||(content[i][3] === 'Terverifikasi')||(content[i][3] === 'Tertolak')){}else{continue;}
       
-      if ((json.adminlaporan)&&(json.admincabang)){}else if((json.admincabang) && (content[i][11] !== usercabang)){continue;}
+      //if ((json.adminlaporan)&&(json.admincabang)){}else if((json.admincabang) && (content[i][11] !== usercabang)){continue;}
       
 	  let statuskeanggotaan = (JSON.parse(content[i][14])).statuskeanggotaan
 	  let status = statuskeanggotaan ? statuskeanggotaan.status : '-'
@@ -4884,22 +4898,33 @@ function fpageadminlaporan(content)
       jumlahrelawan++;
   }
   data += '</tbody></table></div>';
-  $$('.mybsmi-adminlaporanmenu .mybsmi-admincabangdb').html(data);
+  $$('.mybsmi-adminlaporanmenu .mybsmi-adminlaporandb').html(data);
   $$('.mybsmi-adminlaporanmenu .totalrelawan').html('Total : '+jumlahrelawan);
 
   for (i=content.length-1;i>-1;i--)
   {
     if(content[i][13]!==''){
 		let url = 'https://lh3.googleusercontent.com/d/'+safe(content[i][13]);
-		$$('.mybsmi-adminlaporanmenu .mybsmi-admincabangdb .mybsmi-admin-item-'+safe(content[i][1])+' img').attr('src',url);
+		$$('.mybsmi-adminlaporanmenu .mybsmi-adminlaporandb .mybsmi-admin-item-'+safe(content[i][1])+' img').attr('src',url);
 	}
   }
 
-  $$('.mybsmi-adminlaporanmenu .mybsmi-admincabangdb a.mybsmi-adminaction').on('click', function (e) {
+  $$('.mybsmi-adminlaporanmenu .mybsmi-adminlaporandb a.mybsmi-adminaction').on('click', function (e) {
         var base64 = this.attributes["data-user"].value;
         fpageadminidentitas(base64)
   });
 
+  $$(".mybsmi-adminlaporanmenu #pencarian").on("input", function() {
+    var value = $$(this).val().toLowerCase();
+    $$(".mybsmi-adminlaporanmenu .mybsmi-adminlaporandb tr").each(function() {
+	  if($$(this).text().toLowerCase().indexOf(value) > -1)
+	  {
+		  $$(this).show()
+	  }else{
+		  $$(this).hide()
+	  }
+    });
+  });
 }
 ///////fpageadmin////////////////////////////////////////////////////////
 
