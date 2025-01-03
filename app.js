@@ -4873,59 +4873,139 @@ function fpageadmincabangdrawstruktur(struktur,datacabang,datarelawan)
 //----------------------------------------------------------------------
 function fpageadminlaporan(content)
 {
+	//console.log('kodecabang',kodecabang)
+	
+	$$('.mybsmi-adminlaporanmenu').show();
+	let json = JSON.parse(dashboarddata.user.usermydata);
+	
+	//-------profil-----
 
-  $$('.mybsmi-adminlaporanmenu').show();
-  let json = JSON.parse(dashboarddata.user.usermydata);
-  
-  let data = '<div class="list"><ul><li class="item-content item-input item-input-outline"><div class="item-inner"><div class="item-title item-label">Pencarian</div><div class="item-input-wrap"><input id="pencarian" type="text" placeholder="katakunci"><span class="input-clear-button"></span></div></div></li></ul></div>'
-  
-  data += '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th></th><th>Nama</th><th>No. KTA</th><th>Cabang</th><th>Profesi</th><th>Status Keanggotaan</th><th>Jenjang Keanggotaan</th><th></th></tr></thead><tbody>';
-  var jumlahrelawan = 0;
-  for (i=content.length-1;i>-1;i--)
-  {
-      if ((skipuid.includes(content[i][1]))&&(dashboarddata.user.useruid !== '0ONjeb65X5OunuRI6Ap8')){continue;}else{if ((skipuid.includes(content[i][1]))&&(!isLocal)) continue;}
-      
-      if ((content[i][3] === 'Terbatas')||(content[i][3] === 'Terverifikasi')||(content[i][3] === 'Tertolak')){}else{continue;}
-      
-      //if ((json.adminlaporan)&&(json.admincabang)){}else if((json.admincabang) && (content[i][11] !== usercabang)){continue;}
-      
+    let datacabang = kodecabang[0]
+	let profilhtml = '<div class="data-table"><table><tbody>';
+    profilhtml += '<tr><td>Cabang</td><td><a href="/cabang/'+safe(datacabang[1])+'">'+safe(datacabang[0])+'</a></td></tr>';
+    profilhtml += '<tr><td>Alamat</td><td>'+safe(datacabang[2])+'</td></tr>';
+    profilhtml += '<tr><td>Telepon</td><td>'+safe(datacabang[3])+'</td></tr>';
+    var ig;if (datacabang[4] != ''){ig = safe(datacabang[4]);}else{ig='';}
+    profilhtml += '<tr><td>Instagram</td><td>'+ig+'</td></tr>';
+    profilhtml += '<tr><td>Ketua</td><td><a href="/relawan/'+safe(datacabang[5])+'">'+safe(datacabang[6])+'</a></td></tr>';
+    profilhtml += '</tbody></table></div>';
+    $$('.mybsmi-adminlaporanmenu .mybsmi-adminlaporan-profil').html(profilhtml);
+	
+	//-------struktur-----
+
+	let strukturhtml = '<div class="list struktur">'+
+			'<ul>'
+	
+	let arr = JSON.parse(kodecabang[0][8])
+	let datarelawan = content
+	for(let i=0;i<arr.length;i++)
+	{
+		let item = arr[i]
+		let data = datarelawan.find((arr)=>arr[1]==item.namapengurusid)
+		//console.log('data',data)
+		let el = ''+
+		  '<li>'+
+			'<div class="item-content">'+
+			  '<div class="item-media"><img src="https://lh3.googleusercontent.com/d/'+safe(data[13])+'" style="width:1.5em;aspect-ratio:1/1;object-fit:cover;border-radius:50% 50%;overflow:hidden;"></div>'+
+			  '<div class="item-inner">'+
+				'<div class="item-title"><a href="/relawan/'+safe(data[1])+'" class="mybsmi-adminaction" data-user="'+btoa(JSON.stringify(data))+'">'+safe(data[4])+'</a> <span style="font-size:10px;">('+safe(data[18])+')</span></div>'+
+				'<div class="item-after"><a class="mybsmi-struktur-delete" data-idx="'+i+'">'+safe(item.jabatanpengurus)+'</a></div>'+
+			  '</div>'+
+			'</div>'+
+		  '</li>'
+		  
+		 strukturhtml += el
+	}
+	
+	strukturhtml += '</ul></div>'	  
+	$$('.mybsmi-adminlaporanmenu .mybsmi-adminlaporan-struktur').html(strukturhtml)
+	
+	//-------status-----
+	
+	let statushtml = '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th>Cabang</th><th>Ketua</th><th>Pengurus</th><th>Total Anggota</th></tr></thead><tbody>'
+	
+	let totalanggota = new Map()
+
+	content.forEach((anggota)=>{
+		if(!skipuid.includes(anggota[1]) && userstatusnormal.includes(anggota[3])){
+			if(totalanggota.has(anggota[11])){
+				let value = totalanggota.get(anggota[11])
+				value++
+				totalanggota.set(anggota[11],value)
+			}else{
+				totalanggota.set(anggota[11],1)
+			}
+		}
+	})
+	
+	kodecabang.forEach((data)=>{
+		if(data[0] !== 'BSMI Jawa Timur'){
+			let jabatan = JSON.parse(data[8])
+			let total = totalanggota.has(data[0]) ? totalanggota.get(data[0]) : 0
+			statushtml += 	'<tr>'+
+								'<td data-collapsible-title="Cabang"><a href="/cabang/'+safe(data[1])+'">'+safe(data[0])+'</a></td>'+
+								'<td data-collapsible-title="Ketua"><a href="/relawan/'+safe(data[5])+'">'+safe(data[6])+'</a></td>'+
+								'<td data-collapsible-title="Pengurus">'+jabatan.length+'</td>'+
+								'<td data-collapsible-title="Total Anggota">'+total+'</td>'+
+							'</tr>'
+		}
+	})
+	
+	statushtml += '</tbody></table></div>'
+	
+	$$('.mybsmi-adminlaporanmenu .mybsmi-adminlaporan-statuscabang').html(statushtml)
+	
+	//-------database-----
+
+	let data = '<div class="list"><ul><li class="item-content item-input item-input-outline"><div class="item-inner"><div class="item-title item-label">Pencarian</div><div class="item-input-wrap"><input id="pencarian" type="text" placeholder="katakunci"><span class="input-clear-button"></span></div></div></li></ul></div>'
+
+	data += '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th></th><th>Nama</th><th>No. KTA</th><th>Cabang</th><th>Profesi</th><th>Status Keanggotaan</th><th>Jenjang Keanggotaan</th><th></th></tr></thead><tbody>';
+	var jumlahrelawan = 0;
+	for (i=content.length-1;i>-1;i--)
+	{
+	  if ((skipuid.includes(content[i][1]))&&(dashboarddata.user.useruid !== '0ONjeb65X5OunuRI6Ap8')){continue;}else{if ((skipuid.includes(content[i][1]))&&(!isLocal)) continue;}
+	  
+	  if ((content[i][3] === 'Terbatas')||(content[i][3] === 'Terverifikasi')||(content[i][3] === 'Tertolak')){}else{continue;}
+	  
+	  //if ((json.adminlaporan)&&(json.admincabang)){}else if((json.admincabang) && (content[i][11] !== usercabang)){continue;}
+	  
 	  let badge = content[i][3] === 'Terverifikasi' ? '<i class="icon f7-icons" style="font-size:12px;color:blue;">checkmark_seal</i>' : '';
 	  let statuskeanggotaan = (JSON.parse(content[i][14])).statuskeanggotaan
 	  let status = statuskeanggotaan ? statuskeanggotaan.status : '-'
 	  let jenjang = statuskeanggotaan ? statuskeanggotaan.jenjang : '-'
 	  
-      data += '<tr class="mybsmi-admin-item-'+safe(content[i][1])+'"><td data-collapsible-title=""><img src="avatar.png" style="width:1.5em;aspect-ratio:1/1;object-fit:cover;border-radius:50% 50%;overflow:hidden;"></td><td data-collapsible-title="Nama"><a class="mybsmi-cabang-relawan" data-user="'+safe(content[i][1])+'">'+safe(content[i][4])+'</a> '+badge+'</td><td data-collapsible-title="No. KTA">'+safe(content[i][18])+'</td><td data-collapsible-title="Cabang">'+safe(content[i][11])+'</td><td data-collapsible-title="Profesi">'+safe(content[i][8])+'</td><td data-collapsible-title="Status Keanggotaan">'+safe(status)+'</td><td data-collapsible-title="Jenjang Keanggotaan">'+safe(jenjang)+'</td><td><a class="button button-fill mybsmi-adminaction" data-user="'+btoa(JSON.stringify(content[i]))+'">Detail</a></td></tr>';
-      
-      jumlahrelawan++;
-  }
-  data += '</tbody></table></div>';
-  $$('.mybsmi-adminlaporanmenu .mybsmi-adminlaporandb').html(data);
-  $$('.mybsmi-adminlaporanmenu .totalrelawan').html('Total : '+jumlahrelawan);
+	  data += '<tr class="mybsmi-admin-item-'+safe(content[i][1])+'"><td data-collapsible-title=""><img src="avatar.png" style="width:1.5em;aspect-ratio:1/1;object-fit:cover;border-radius:50% 50%;overflow:hidden;"></td><td data-collapsible-title="Nama"><a class="mybsmi-cabang-relawan" data-user="'+safe(content[i][1])+'">'+safe(content[i][4])+'</a> '+badge+'</td><td data-collapsible-title="No. KTA">'+safe(content[i][18])+'</td><td data-collapsible-title="Cabang">'+safe(content[i][11])+'</td><td data-collapsible-title="Profesi">'+safe(content[i][8])+'</td><td data-collapsible-title="Status Keanggotaan">'+safe(status)+'</td><td data-collapsible-title="Jenjang Keanggotaan">'+safe(jenjang)+'</td><td><a class="button button-fill mybsmi-adminaction" data-user="'+btoa(JSON.stringify(content[i]))+'">Detail</a></td></tr>';
+	  
+	  jumlahrelawan++;
+	}
+	data += '</tbody></table></div>';
+	$$('.mybsmi-adminlaporanmenu .mybsmi-adminlaporandb').html(data);
+	$$('.mybsmi-adminlaporanmenu .totalrelawan').html('Total : '+jumlahrelawan);
 
-  for (i=content.length-1;i>-1;i--)
-  {
-    if(content[i][13]!==''){
+	for (i=content.length-1;i>-1;i--)
+	{
+	if(content[i][13]!==''){
 		let url = 'https://lh3.googleusercontent.com/d/'+safe(content[i][13]);
 		$$('.mybsmi-adminlaporanmenu .mybsmi-adminlaporandb .mybsmi-admin-item-'+safe(content[i][1])+' img').attr('src',url);
 	}
-  }
+	}
 
-  $$('.mybsmi-adminlaporanmenu .mybsmi-adminlaporandb a.mybsmi-adminaction').on('click', function (e) {
-        var base64 = this.attributes["data-user"].value;
-        fpageadminidentitas(base64)
-  });
+	$$('.mybsmi-adminlaporanmenu .mybsmi-adminlaporandb a.mybsmi-adminaction').on('click', function (e) {
+		var base64 = this.attributes["data-user"].value;
+		fpageadminidentitas(base64)
+	});
 
-  $$(".mybsmi-adminlaporanmenu #pencarian").on("input", function() {
-    var value = $$(this).val().toLowerCase();
-    $$(".mybsmi-adminlaporanmenu .mybsmi-adminlaporandb tr").each(function() {
+	$$(".mybsmi-adminlaporanmenu #pencarian").on("input", function() {
+	var value = $$(this).val().toLowerCase();
+	$$(".mybsmi-adminlaporanmenu .mybsmi-adminlaporandb tr").each(function() {
 	  if($$(this).text().toLowerCase().indexOf(value) > -1)
 	  {
 		  $$(this).show()
 	  }else{
 		  $$(this).hide()
 	  }
-    });
-  });
+	});
+	});
 }
 ///////fpageadmin////////////////////////////////////////////////////////
 
