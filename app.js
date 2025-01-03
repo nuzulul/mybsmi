@@ -4889,11 +4889,12 @@ function fpageadminlaporan(content)
       
       //if ((json.adminlaporan)&&(json.admincabang)){}else if((json.admincabang) && (content[i][11] !== usercabang)){continue;}
       
+	  let badge = content[i][3] === 'Terverifikasi' ? '<i class="icon f7-icons" style="font-size:12px;color:blue;">checkmark_seal</i>' : '';
 	  let statuskeanggotaan = (JSON.parse(content[i][14])).statuskeanggotaan
 	  let status = statuskeanggotaan ? statuskeanggotaan.status : '-'
 	  let jenjang = statuskeanggotaan ? statuskeanggotaan.jenjang : '-'
 	  
-      data += '<tr class="mybsmi-admin-item-'+safe(content[i][1])+'"><td data-collapsible-title=""><img src="avatar.png" style="width:1.5em;aspect-ratio:1/1;object-fit:cover;border-radius:50% 50%;overflow:hidden;"></td><td data-collapsible-title="Nama"><a class="mybsmi-cabang-relawan" data-user="'+safe(content[i][1])+'">'+safe(content[i][4])+'</a></td><td data-collapsible-title="No. KTA">'+safe(content[i][18])+'</td><td data-collapsible-title="Cabang">'+safe(content[i][11])+'</td><td data-collapsible-title="Profesi">'+safe(content[i][8])+'</td><td data-collapsible-title="Status Keanggotaan">'+safe(status)+'</td><td data-collapsible-title="Jenjang Keanggotaan">'+safe(jenjang)+'</td><td><a class="button button-fill mybsmi-adminaction" data-user="'+btoa(JSON.stringify(content[i]))+'">Detail</a></td></tr>';
+      data += '<tr class="mybsmi-admin-item-'+safe(content[i][1])+'"><td data-collapsible-title=""><img src="avatar.png" style="width:1.5em;aspect-ratio:1/1;object-fit:cover;border-radius:50% 50%;overflow:hidden;"></td><td data-collapsible-title="Nama"><a class="mybsmi-cabang-relawan" data-user="'+safe(content[i][1])+'">'+safe(content[i][4])+'</a> '+badge+'</td><td data-collapsible-title="No. KTA">'+safe(content[i][18])+'</td><td data-collapsible-title="Cabang">'+safe(content[i][11])+'</td><td data-collapsible-title="Profesi">'+safe(content[i][8])+'</td><td data-collapsible-title="Status Keanggotaan">'+safe(status)+'</td><td data-collapsible-title="Jenjang Keanggotaan">'+safe(jenjang)+'</td><td><a class="button button-fill mybsmi-adminaction" data-user="'+btoa(JSON.stringify(content[i]))+'">Detail</a></td></tr>';
       
       jumlahrelawan++;
   }
