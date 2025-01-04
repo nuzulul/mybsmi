@@ -5489,7 +5489,7 @@ function fpageadminlaporan(content)
 	
 	//-------status-----
 	
-	let statushtml = '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th>Cabang</th><th>Ketua</th><th>Pengurus</th><th>Total Anggota</th><th>BSMR</th></tr></thead><tbody>'
+	let statushtml = '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th>Cabang</th><th>Ketua</th><th>Pengurus</th><th>Total Anggota</th><th>BSMR</th><th>Klinik</th></tr></thead><tbody>'
 	
 	let totalanggota = new Map()
 
@@ -5509,6 +5509,7 @@ function fpageadminlaporan(content)
 		if((cabang[0] !== 'BSMI Jawa Timur' && !isLocal)||isLocal){
 			let jabatan = JSON.parse(cabang[8])
 			let bsmr = JSON.parse(cabang[9])
+			let klinik = JSON.parse(cabang[10])
 			let anggota = totalanggota.has(cabang[0]) ? totalanggota.get(cabang[0]) : 0
 			let ketua = datarelawan.find((arr)=>arr[1]==cabang[5])
 			statushtml += 	'<tr>'+
@@ -5517,6 +5518,7 @@ function fpageadminlaporan(content)
 								'<td data-collapsible-title="Pengurus">'+jabatan.length+'</td>'+
 								'<td data-collapsible-title="Total Anggota">'+anggota+'</td>'+
 								'<td data-collapsible-title="BSMR">'+bsmr.length+'</td>'+
+								'<td data-collapsible-title="Klinik">'+klinik.length+'</td>'+
 							'</tr>'
 		}
 	})
