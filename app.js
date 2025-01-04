@@ -6015,6 +6015,7 @@ function fpagemasteradmincabangedit(datacabang,datarelawan)
             if (skipuid.includes(item[1]))return
           }
           if(item[11] == datacabang[0] || datacabang[0] == "BSMI Jawa Timur")
+		  //if(item[11] == datacabang[0])
           {
             var opt = document.createElement('option');
             opt.value = item[1];
@@ -6171,7 +6172,8 @@ function  fpagemasteradmincabanggantiadmin(datacabang,datarelawan)
           if (!isLocal) {
             if (skipuid.includes(item[1]))return
           }
-          if(item[11] == datacabang[0] || datacabang[0] == "BSMI Jawa Timur")
+          //if(item[11] == datacabang[0] || datacabang[0] == "BSMI Jawa Timur")
+		  if(item[11] == datacabang[0])
           {
             var opt = document.createElement('option');
             opt.value = index;
@@ -6444,6 +6446,15 @@ function fpagemastereditanggota(data,index){
         onClick: function(dialog, e)
           {
               fpagemasterchangestatus(data,index);
+          }
+      },
+      {
+        text: 'Mutasi Anggota',
+        close:true,
+        color: 'red',
+        onClick: function(dialog, e)
+          {
+              fpagemastermutasianggota(data,index);
           }
       },
       {
@@ -6741,9 +6752,9 @@ function fpagemasterchangestatus(data,index){
   dialog.open();
 }
 
-function fpagemastereditanggotasave(index,instruksi,judul,isi)
+function fpagemastereditanggotasave(index,instruksi,judul,isi,keterangan)
 {
-      let inputdata = JSON.stringify({index,instruksi,judul,isi})
+      let inputdata = JSON.stringify({index,instruksi,judul,isi,keterangan})
       let mypreloader = app.dialog.preloader();
       app.request({
         url: apidataurl,
@@ -6780,6 +6791,75 @@ function fpagemastereditanggotasave(index,instruksi,judul,isi)
             app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
           },
       })
+}
+
+function fpagemastermutasianggota(data,index)
+{
+
+  var dialog = app.dialog.create({
+    title: 'Mutasi Anggota',
+    content:''////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      +'<div style="width:100%;height:50vh;overflow:auto;">'
+      +'  <div style="display:flex;flex-direction:column;align-items:center;justify-content: center;">'
+      +'      <img id="img" src="icon512.png" style="width:150px;height:150px;margin: 10px 10px;border-radius: 0%;object-fit: cover;">'
+      +'      <p style="font-weight:bold;">'+safe(data[4])+'</br>'+safe(data[18])+'</p>'
+      +'  <div class="list no-hairlines-md">'
+      +'    <ul>'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Cabang Tujuan</div><div class="item-input-wrap">'
+      +'                            <select id="cabangtujuan" name="cabangtujuan">'
+      +'                              <option value="" selected>-</option>'
+      +'                            </select>'
+      +'            </div></div>'
+      +'        </li>'
+      +'    </ul>'
+      +'  </div>'
+      +'  </div>'
+      +'</div>',//////////////////////////////////////////////////////////////////////////////////////////////////
+    closeByBackdropClick: false,
+    destroyOnClose: true,
+    verticalButtons: true,
+    on: {
+      opened: function () {
+        //console.log('Dialog opened')
+        var select = document.getElementById('cabangtujuan');
+        kodecabang.forEach(function(item,index){
+            var opt = document.createElement('option');
+            opt.value = item[0];
+            opt.innerHTML = item[0];           
+            select.appendChild(opt);
+        });
+      }
+    },
+    buttons: [
+      {
+        text: 'Simpan',
+        close:true,
+        color: 'red',
+        onClick: function(dialog, e)
+          {
+              var cabangtujuan =  $$('#cabangtujuan').val()
+			  if(cabangtujuan == '')
+			  {
+				  var toastBottom = app.toast.create({ text: 'Tidak boleh kosong', closeTimeout: 3000,position: 'center', });toastBottom.open();
+				  return
+			  }
+			  app.dialog.confirm('Mutasi?', 'Konfirmasi', function (){
+				fpagemastereditanggotasave(index,"mutasi","pindahcabang",cabangtujuan,data)
+			  })
+          }
+      },
+      {
+        text: 'Batal',
+        close:true,
+        color: 'gray',
+        onClick: function(dialog, e)
+          {
+
+          }
+      },
+    ]
+  });
+  dialog.open();
 }
 ///////fpagemaster////////////////////////////////////////////////////////
 
