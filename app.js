@@ -5065,13 +5065,12 @@ function fpageadmincabangdrawklinik(klinik,datacabang,datarelawan)
 		fpageadmincabangkliniktambah(datacabang,datarelawan)
 	})
 	
-	let klinikhtml = '<div class="data-table data-table-collapsible data-table-init klinik"><table><thead><tr><th>Update</th><th>Nama klinik</th><th>Alamat klinik</th><th>Layanan klinik</th><th>Tahun Pendirian</th><th>Jumlah karyawan</th><th>Manajer klinik</th><th>PIC klinik (dari BSMI Cabang)</th></tr></thead><tbody>'
+	let klinikhtml = '<div class="data-table data-table-collapsible data-table-init klinik"><table><thead><tr><th>Nama klinik</th><th>Alamat klinik</th><th>Layanan klinik</th><th>Tahun Pendirian</th><th>Jumlah karyawan</th><th>Manajer klinik</th><th>PIC klinik (dari BSMI Cabang)</th><th></th></tr></thead><tbody>'
 	let arr = JSON.parse(klinik)
 	for(let i=0;i<arr.length;i++){
 		let item = arr[i]
 		let data = datarelawan.find((arr)=>arr[1]==item.picklinikid)
 		klinikhtml += '<tr>'+
-						'<td data-collapsible-title="Update"><a class="button update" data-idx="'+i+'">Update</a></td>'+
 						'<td data-collapsible-title="Nama klinik">'+safe(item.namaklinik)+'</td>'+
 						'<td data-collapsible-title="Alamat klinik">'+safe(item.alamatklinik)+'</td>'+
 						'<td data-collapsible-title="Layanan klinik">'+safe(item.layananklinik)+'</td>'+
@@ -5079,6 +5078,7 @@ function fpageadmincabangdrawklinik(klinik,datacabang,datarelawan)
 						'<td data-collapsible-title="Jumlah karyawan">'+safe(item.jumlahkaryawanklinik)+'</td>'+
 						'<td data-collapsible-title="Manajer klinik">'+safe(item.manajerklinik)+'</td>'+
 						'<td data-collapsible-title="PIC klinik (dari BSMI Cabang)"><a class="mybsmi-adminaction" data-user="'+btoa(JSON.stringify(data))+'">'+safe(data[4])+'</a></td>'+
+						'<td data-collapsible-title=""><a class="button button-fill update" data-idx="'+i+'">Update</a></td>'+
 					'</tr>'
 	}
 	klinikhtml += '</tbody></table></div>'
@@ -5333,13 +5333,12 @@ function fpageadmincabangdrawbsmr(bsmr,datacabang,datarelawan)
 		fpageadmincabangbsmrtambah(datacabang,datarelawan)
 	})
 	
-	let bsmrhtml = '<div class="data-table data-table-collapsible data-table-init bsmr"><table><thead><tr><th>Update</th><th>Nama Sekolah</th><th>Alamat Sekolah</th><th>Nama BSMR</th><th>Tahun Pendirian</th><th>Jumlah Anggota</th><th>PIC BSMR (dari Sekolah)</th><th>PIC BSMR (dari BSMI Cabang)</th></tr></thead><tbody>'
+	let bsmrhtml = '<div class="data-table data-table-collapsible data-table-init bsmr"><table><thead><tr><th>Nama Sekolah</th><th>Alamat Sekolah</th><th>Nama BSMR</th><th>Tahun Pendirian</th><th>Jumlah Anggota</th><th>PIC BSMR (dari Sekolah)</th><th>PIC BSMR (dari BSMI Cabang)</th><th></th></tr></thead><tbody>'
 	let arr = JSON.parse(bsmr)
 	for(let i=0;i<arr.length;i++){
 		let item = arr[i]
 		let data = datarelawan.find((arr)=>arr[1]==item.piccabangid)
 		bsmrhtml += '<tr>'+
-						'<td data-collapsible-title="Update"><a class="button update" data-idx="'+i+'">Update</a></td>'+
 						'<td data-collapsible-title="Nama Sekolah">'+safe(item.namasekolah)+'</td>'+
 						'<td data-collapsible-title="Alamat Sekolah">'+safe(item.alamatsekolah)+'</td>'+
 						'<td data-collapsible-title="Nama BSMR">'+safe(item.namabsmr)+'</td>'+
@@ -5347,6 +5346,7 @@ function fpageadmincabangdrawbsmr(bsmr,datacabang,datarelawan)
 						'<td data-collapsible-title="Jumlah Anggota">'+safe(item.jumlahanggotabsmr)+'</td>'+
 						'<td data-collapsible-title="PIC BSMR (dari Sekolah)">'+safe(item.picbsmr)+'</td>'+
 						'<td data-collapsible-title="PIC BSMR (dari BSMI Cabang)"><a class="mybsmi-adminaction" data-user="'+btoa(JSON.stringify(data))+'">'+safe(data[4])+'</a></td>'+
+						'<td data-collapsible-title=""><a class="button button-fill update" data-idx="'+i+'">Update</a></td>'+
 					'</tr>'
 	}
 	bsmrhtml += '</tbody></table></div>'
