@@ -5191,7 +5191,7 @@ function fpageadminlaporan(content)
 			'<div class="item-content">'+
 			  '<div class="item-media"><img src="https://lh3.googleusercontent.com/d/'+safe(data[13])+'" style="width:1.5em;aspect-ratio:1/1;object-fit:cover;border-radius:50% 50%;overflow:hidden;"></div>'+
 			  '<div class="item-inner">'+
-				'<div class="item-title"><a href="/relawan/'+safe(data[1])+'" class="mybsmi-adminaction" data-user="'+btoa(JSON.stringify(data))+'">'+safe(data[4])+'</a> <span style="font-size:10px;">('+safe(data[18])+')</span></div>'+
+				'<div class="item-title"><a class="mybsmi-adminaction" data-user="'+btoa(JSON.stringify(data))+'">'+safe(data[4])+'</a> <span style="font-size:10px;">('+safe(data[18])+')</span></div>'+
 				'<div class="item-after"><a class="mybsmi-struktur-delete" data-idx="'+i+'">'+safe(item.jabatanpengurus)+'</a></div>'+
 			  '</div>'+
 			'</div>'+
@@ -5202,10 +5202,15 @@ function fpageadminlaporan(content)
 	
 	strukturhtml += '</ul></div>'	  
 	$$('.mybsmi-adminlaporanmenu .mybsmi-adminlaporan-struktur').html(strukturhtml)
+
+	$$('.mybsmi-adminlaporanmenu .mybsmi-adminlaporan-struktur .struktur a.mybsmi-adminaction').on('click', function (e) {
+			var base64 = this.attributes["data-user"].value;
+			fpageadminidentitas(base64)
+	});
 	
 	//-------status-----
 	
-	let statushtml = '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th>Cabang</th><th>Ketua</th><th>Pengurus</th><th>Total Anggota</th></tr></thead><tbody>'
+	let statushtml = '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th>Cabang</th><th>Ketua</th><th>Pengurus</th><th>Total Anggota</th><th>BSMR</th></tr></thead><tbody>'
 	
 	let totalanggota = new Map()
 
@@ -5221,22 +5226,30 @@ function fpageadminlaporan(content)
 		}
 	})
 	
-	kodecabang.forEach((data)=>{
-		//if(data[0] !== 'BSMI Jawa Timur'){
-			let jabatan = JSON.parse(data[8])
-			let total = totalanggota.has(data[0]) ? totalanggota.get(data[0]) : 0
+	kodecabang.forEach((cabang)=>{
+		if((cabang[0] !== 'BSMI Jawa Timur' && !isLocal)||isLocal){
+			let jabatan = JSON.parse(cabang[8])
+			let bsmr = JSON.parse(cabang[9])
+			let anggota = totalanggota.has(cabang[0]) ? totalanggota.get(cabang[0]) : 0
+			let ketua = datarelawan.find((arr)=>arr[1]==cabang[5])
 			statushtml += 	'<tr>'+
-								'<td data-collapsible-title="Cabang"><a href="/cabang/'+safe(data[1])+'">'+safe(data[0])+'</a></td>'+
-								'<td data-collapsible-title="Ketua"><a href="/relawan/'+safe(data[5])+'">'+safe(data[6])+'</a></td>'+
+								'<td data-collapsible-title="Cabang"><a href="/cabang/'+safe(cabang[1])+'">'+safe(cabang[0])+'</a></td>'+
+								'<td data-collapsible-title="Ketua"><a class="mybsmi-adminaction" data-user="'+btoa(JSON.stringify(ketua))+'">'+safe(cabang[6])+'</a></td>'+
 								'<td data-collapsible-title="Pengurus">'+jabatan.length+'</td>'+
-								'<td data-collapsible-title="Total Anggota">'+total+'</td>'+
+								'<td data-collapsible-title="Total Anggota">'+anggota+'</td>'+
+								'<td data-collapsible-title="BSMR">'+bsmr.length+'</td>'+
 							'</tr>'
-		//}
+		}
 	})
 	
 	statushtml += '</tbody></table></div>'
 	
 	$$('.mybsmi-adminlaporanmenu .mybsmi-adminlaporan-statuscabang').html(statushtml)
+
+	$$('.mybsmi-adminlaporanmenu .mybsmi-adminlaporan-statuscabang a.mybsmi-adminaction').on('click', function (e) {
+			var base64 = this.attributes["data-user"].value;
+			fpageadminidentitas(base64)
+	});
 	
 	//-------database-----
 
