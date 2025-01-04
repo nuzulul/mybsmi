@@ -4484,6 +4484,9 @@ function fpageadmincabang(content)
   let bsmr = datacabang[9]
   fpageadmincabangdrawbsmr(bsmr,datacabang,datarelawan)
 
+  let klinik = datacabang[10]
+  fpageadmincabangdrawklinik(klinik,datacabang,datarelawan)
+
 }
 
 function fpageadmincabangidentitas(base64)
@@ -4758,6 +4761,10 @@ function fpageadmincabangstrukturtambah(datacabang,datarelawan)
                 var namacabang = datacabang[0];
                 var jabatanpengurus = $$('#jabatanpengurus').val();
                 var namapengurusid = $$('#namapengurus').val();
+				if(namapengurusid == ''){
+					var toastBottom = app.toast.create({ text: 'Nama pengurus tidak boleh kosong', closeTimeout: 3000,position: 'center', });toastBottom.open();
+					return
+				}
 				var arr = JSON.parse(datacabang[8])
 				arr.push({jabatanpengurus,namapengurusid})
 				var struktur = JSON.stringify(arr)
@@ -4877,6 +4884,274 @@ function fpageadmincabangdrawstruktur(struktur,datacabang,datarelawan)
 	});
 }
 
+//---klinik---
+
+function fpageadmincabangkliniktambah(datacabang,datarelawan,klinik,idx,edit)
+{
+  let myklinik = klinik
+  let title = edit ? 'Edit Klinik' : 'Tambah Klinik'
+  var dialog = app.dialog.create({
+    title: title,
+    content:''////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      +'<div style="width:100%;height:50vh;overflow:auto;">'
+      +'  <div style="display:flex;flex-direction:column;align-items:center;justify-content: center;">'
+      +'      <img id="img" src="icon512.png" style="width:150px;height:150px;margin: 10px 10px;border-radius: 0%;object-fit: cover;">'
+      +'      <p style="font-weight:bold;">'+safe(datacabang[0])+'</p>'
+      +'  <div class="list no-hairlines-md">'
+      +'    <ul>'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Nama klinik</div><div class="item-input-wrap">'
+      +'            <input type="text" id="namaklinik" name="namaklinik" placeholder="Nama klinik" value="">'
+      +'            </div></div>'
+      +'        </li>'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Alamat klinik</div><div class="item-input-wrap">'
+      +'            <input type="text" id="alamatklinik" name="alamatklinik" placeholder="Alamat klinik" value="">'
+      +'            </div></div>'
+      +'        </li>'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Layanan klinik</div><div class="item-input-wrap">'
+      +'            <input type="text" id="layananklinik" name="layananklinik" placeholder="Layanan klinik" value="">'
+      +'            </div></div>'
+      +'        </li>'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Tahun pendirian klinik</div><div class="item-input-wrap">'
+      +'            <input type="text" id="tahunpendirianklinik" name="tahunpendirianklinik" placeholder="Tahun pendirian klinik" value="">'
+      +'            </div></div>'
+      +'        </li>'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Jumlah karyawan klinik</div><div class="item-input-wrap">'
+      +'            <input type="text" id="jumlahkaryawanklinik" name="jumlahkaryawanklinik" placeholder="Jumlah karyawan klinik" value="">'
+      +'            </div></div>'
+      +'        </li>'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Manajer klinik</div><div class="item-input-wrap">'
+      +'            <input type="text" id="manajerklinik" name="manajerklinik" placeholder="Nama/HP" value="">'
+      +'            </div></div>'
+      +'        </li>'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">PIC klinik (dari BSMI Cabang)</div><div class="item-input-wrap">'
+      +'                            <select id="picklinikid" name="picklinikid">'
+      +'                              <option value="" selected> </option>'
+      +'                            </select>'
+      +'            </div></div>'
+      +'        </li>'
+      +'    </ul>'
+      +'  </div>'
+      +'  </div>'
+      +'</div>',//////////////////////////////////////////////////////////////////////////////////////////////////
+    closeByBackdropClick: false,
+    destroyOnClose: true,
+    verticalButtons: true,
+    on: {
+      opened: function () {
+        //console.log('Dialog opened')
+        var select = document.getElementById('picklinikid');
+        datarelawan.forEach(function(item,index){
+            var opt = document.createElement('option');
+            opt.value = item[1];
+            opt.innerHTML = item[4]+' ('+item[18]+')';            
+            if(userstatusnormal.includes(item[3]))
+			{
+				select.appendChild(opt);
+			}
+        });
+		
+		if(edit){
+			let arr = JSON.parse(klinik)
+			let data = arr[parseInt(idx)]
+			$$('#namaklinik').val(safe(data.namaklinik))
+			$$('#alamatklinik').val(safe(data.alamatklinik))
+			$$('#layananklinik').val(safe(data.layananklinik))
+			$$('#tahunpendirianklinik').val(safe(data.tahunpendirianklinik))
+			$$('#jumlahkaryawanklinik').val(safe(data.jumlahkaryawanklinik))
+			$$('#manajerklinik').val(safe(data.manajerklinik))
+			$$('#picklinikid').val(safe(data.picklinikid))
+		}
+		
+      }
+    },
+    buttons: [
+      {
+        text: 'Simpan',
+        close:true,
+        color: 'red',
+        onClick: function(dialog, e)
+          {
+				
+				var namacabang = datacabang[0];
+				var namaklinik = $$('#namaklinik').val();
+				var alamatklinik = $$('#alamatklinik').val();
+				var layananklinik = $$('#layananklinik').val();
+				var tahunpendirianklinik = $$('#tahunpendirianklinik').val();
+				var jumlahkaryawanklinik = $$('#jumlahkaryawanklinik').val();
+				var manajerklinik = $$('#manajerklinik').val();
+				var picklinikid = $$('#picklinikid').val();
+				if(picklinikid == ''){
+					var toastBottom = app.toast.create({ text: 'PIC klinik tidak boleh kosong', closeTimeout: 3000,position: 'center', });toastBottom.open();
+					return
+				}
+				
+				if(edit){
+					var arr = JSON.parse(myklinik)
+					arr[parseInt(idx)] = {namacabang,namaklinik,alamatklinik,layananklinik,tahunpendirianklinik,jumlahkaryawanklinik,manajerklinik,picklinikid}
+					var klinik = JSON.stringify(arr)
+					var data = {namacabang,klinik}
+					fpageadmincabangkliniksave(data,datacabang,datarelawan)
+				}else{
+					var arr = JSON.parse(datacabang[10])
+					arr.push({namacabang,namaklinik,alamatklinik,layananklinik,tahunpendirianklinik,jumlahkaryawanklinik,manajerklinik,picklinikid})
+					var klinik = JSON.stringify(arr)
+					var data = {namacabang,klinik};
+					fpageadmincabangkliniksave(data,datacabang,datarelawan);
+				}
+          }
+      },
+      {
+        text: 'Batal',
+        close:true,
+        color: 'gray',
+        onClick: function(dialog, e)
+          {
+
+          }
+      },
+    ]
+  });
+  dialog.open();
+}
+
+function fpageadmincabangkliniksave(inputdata,datacabang,datarelawan)
+{
+      //console.log(inputdata);return;
+	  inputdata=JSON.stringify(inputdata);
+      let mypreloader = app.dialog.preloader();
+      app.request({
+        url: apidataurl,
+        method: 'POST',
+        cache: false,
+        data : { token:mybsmiusertoken, command: 'admincabangkliniksave', inputdata}, 
+        success: function (data, status, xhr)
+          {
+            mypreloader.close();
+            var status = JSON.parse(data).status;
+            var content = JSON.parse(data).data;
+            if (status == "success")
+            {
+              //console.log(content);
+			  fpageadmincabangdrawklinik(content,datacabang,datarelawan)
+              var toastBottom = app.toast.create({ text: 'Berhasil', closeTimeout: 3000,position: 'center', });toastBottom.open();
+            }
+            else if (status == "failed")
+            {
+              //console.log("failed");
+              app.dialog.alert(content,'Terjadi Kesalahan');
+            }
+            else
+            {
+              //console.log("failed");
+              //app.dialog.alert(content,'Terjadi Kesalahan');
+              fcekexpiredtoken(content);
+            }
+          },
+        error: function (xhr, status, message)
+          {
+            //console.log(message);
+            mypreloader.close();
+            app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
+          },
+      })
+}
+
+function fpageadmincabangdrawklinik(klinik,datacabang,datarelawan)
+{
+	datacabang[10] = klinik
+	//window.mybsmiadmindatacabang = datacabang
+	$$('.mybsmi-admincabang-kliniktambah').off('click')
+	$$('.mybsmi-admincabang-kliniktambah').on('click', function () {
+		fpageadmincabangkliniktambah(datacabang,datarelawan)
+	})
+	
+	let klinikhtml = '<div class="data-table data-table-collapsible data-table-init klinik"><table><thead><tr><th>Update</th><th>Nama klinik</th><th>Alamat klinik</th><th>Layanan klinik</th><th>Tahun Pendirian</th><th>Jumlah karyawan</th><th>Manajer klinik</th><th>PIC klinik (dari BSMI Cabang)</th></tr></thead><tbody>'
+	let arr = JSON.parse(klinik)
+	for(let i=0;i<arr.length;i++){
+		let item = arr[i]
+		let data = datarelawan.find((arr)=>arr[1]==item.picklinikid)
+		klinikhtml += '<tr>'+
+						'<td data-collapsible-title="Update"><a class="button update" data-idx="'+i+'">Update</a></td>'+
+						'<td data-collapsible-title="Nama klinik">'+safe(item.namaklinik)+'</td>'+
+						'<td data-collapsible-title="Alamat klinik">'+safe(item.alamatklinik)+'</td>'+
+						'<td data-collapsible-title="Layanan klinik">'+safe(item.layananklinik)+'</td>'+
+						'<td data-collapsible-title="Tahun Pendirian">'+safe(item.tahunpendirianklinik)+'</td>'+
+						'<td data-collapsible-title="Jumlah karyawan">'+safe(item.jumlahkaryawanklinik)+'</td>'+
+						'<td data-collapsible-title="Manajer klinik">'+safe(item.manajerklinik)+'</td>'+
+						'<td data-collapsible-title="PIC klinik (dari BSMI Cabang)"><a class="mybsmi-adminaction" data-user="'+btoa(JSON.stringify(data))+'">'+safe(data[4])+'</a></td>'+
+					'</tr>'
+	}
+	klinikhtml += '</tbody></table></div>'
+	
+	$$('.mybsmi-admincabang-klinikdata').html(klinikhtml)
+
+	$$('.mybsmi-admincabang-klinikdata .klinik a.mybsmi-adminaction').on('click', function (e) {
+			var base64 = this.attributes["data-user"].value;
+			fpageadminidentitas(base64)
+	});
+	
+	$$('.mybsmi-admincabang-klinikdata .klinik a.update').on('click', function (e) {
+		var idx = this.attributes["data-idx"].value;
+		fpageadmincabangklinikupdate(datacabang,datarelawan,klinik,idx)
+	});
+}
+
+function fpageadmincabangklinikupdate(datacabang,datarelawan,klinik,idx){
+	
+  var dialog = app.dialog.create({
+    title: 'Update klinik',
+    content:'',
+    closeByBackdropClick: false,
+    destroyOnClose: true,
+    verticalButtons: true,
+    on: {
+      opened: function () {
+        
+      }
+    },
+    buttons: [
+      {
+        text: 'Edit',
+        close:true,
+        color: 'red',
+        onClick: function(dialog, e)
+          {
+              let edit = true
+			  fpageadmincabangkliniktambah(datacabang,datarelawan,klinik,idx,edit)
+          }
+      },
+      {
+        text: 'Delete',
+        close:true,
+        color: 'red',
+        onClick: function(dialog, e)
+          {
+			let myklinik = klinik
+			app.dialog.confirm('Hapus?', 'Konfirmasi', function (){
+				console.log('myklinik',myklinik)
+				let namacabang = datacabang[0]
+				let oldklinik = JSON.parse(myklinik)
+				oldklinik.splice(parseInt(idx), 1)
+				let klinik = JSON.stringify(oldklinik)
+				var datainput = {namacabang,klinik};
+				fpageadmincabangkliniksave(datainput,datacabang,datarelawan);
+			})              
+          }
+      },
+      {
+        text: 'Tutup',
+        close:true,
+        color: 'gray',
+        onClick: function(dialog, e)
+          {
+
+          }
+      },
+    ]
+  });
+  dialog.open();
+}
+
 //---bsmr---
 
 function fpageadmincabangbsmrtambah(datacabang,datarelawan,bsmr,idx,edit)
@@ -4973,6 +5248,10 @@ function fpageadmincabangbsmrtambah(datacabang,datarelawan,bsmr,idx,edit)
 				var jumlahanggotabsmr = $$('#jumlahanggotabsmr').val();
 				var picbsmr = $$('#picbsmr').val();
 				var piccabangid = $$('#piccabangid').val();
+				if(piccabangid == ''){
+					var toastBottom = app.toast.create({ text: 'PIC tidak boleh kosong', closeTimeout: 3000,position: 'center', });toastBottom.open();
+					return
+				}
 				
 				if(edit){
 					var arr = JSON.parse(mybsmr)
