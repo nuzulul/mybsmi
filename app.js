@@ -4480,6 +4480,10 @@ function fpageadmincabang(content)
 			  fpageadmincabangstruktursave(datainput,datacabang,datarelawan);
 		  }
 	});	
+
+  let bsmr = datacabang[9]
+  fpageadmincabangdrawbsmr(bsmr,datacabang,datarelawan)
+
 }
 
 function fpageadmincabangidentitas(base64)
@@ -4695,6 +4699,8 @@ function fpageadmineditcabangupdate(inputdata)
   })
 }
 
+//---struktur----
+
 function fpageadmincabangstrukturtambah(datacabang,datarelawan)
 {
   var dialog = app.dialog.create({
@@ -4870,6 +4876,283 @@ function fpageadmincabangdrawstruktur(struktur,datacabang,datarelawan)
 		})
 	});
 }
+
+//---bsmr---
+
+function fpageadmincabangbsmrtambah(datacabang,datarelawan,bsmr,idx,edit)
+{
+  let mybsmr = bsmr
+  let title = edit ? 'Edit BSMR' : 'Tambah BSMR'
+  var dialog = app.dialog.create({
+    title: title,
+    content:''////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      +'<div style="width:100%;height:50vh;overflow:auto;">'
+      +'  <div style="display:flex;flex-direction:column;align-items:center;justify-content: center;">'
+      +'      <img id="img" src="icon512.png" style="width:150px;height:150px;margin: 10px 10px;border-radius: 0%;object-fit: cover;">'
+      +'      <p style="font-weight:bold;">'+safe(datacabang[0])+'</p>'
+      +'  <div class="list no-hairlines-md">'
+      +'    <ul>'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Nama Sekolah</div><div class="item-input-wrap">'
+      +'            <input type="text" id="namasekolah" name="namasekolah" placeholder="Nama Sekolah" value="">'
+      +'            </div></div>'
+      +'        </li>'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Alamat Sekolah</div><div class="item-input-wrap">'
+      +'            <input type="text" id="alamatsekolah" name="alamatsekolah" placeholder="Alamat Sekolah" value="">'
+      +'            </div></div>'
+      +'        </li>'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Nama BSMR</div><div class="item-input-wrap">'
+      +'            <input type="text" id="namabsmr" name="namabsmr" placeholder="Nama BSMR" value="">'
+      +'            </div></div>'
+      +'        </li>'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Tahun Pendirian BSMR</div><div class="item-input-wrap">'
+      +'            <input type="text" id="tahunpendirianbsmr" name="tahunpendirianbsmr" placeholder="Tahun Pendirian BSMR" value="">'
+      +'            </div></div>'
+      +'        </li>'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Jumlah Anggota BSMR</div><div class="item-input-wrap">'
+      +'            <input type="text" id="jumlahanggotabsmr" name="jumlahanggotabsmr" placeholder="Jumlah anggota BSMR" value="">'
+      +'            </div></div>'
+      +'        </li>'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">PIC BSMR (dari Sekolah)</div><div class="item-input-wrap">'
+      +'            <input type="text" id="picbsmr" name="picbsmr" placeholder="Nama/HP" value="">'
+      +'            </div></div>'
+      +'        </li>'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">PIC BSMR (dari BSMI Cabang)</div><div class="item-input-wrap">'
+      +'                            <select id="piccabangid" name="piccabangid">'
+      +'                              <option value="" selected> </option>'
+      +'                            </select>'
+      +'            </div></div>'
+      +'        </li>'
+      +'    </ul>'
+      +'  </div>'
+      +'  </div>'
+      +'</div>',//////////////////////////////////////////////////////////////////////////////////////////////////
+    closeByBackdropClick: false,
+    destroyOnClose: true,
+    verticalButtons: true,
+    on: {
+      opened: function () {
+        //console.log('Dialog opened')
+        var select = document.getElementById('piccabangid');
+        datarelawan.forEach(function(item,index){
+            var opt = document.createElement('option');
+            opt.value = item[1];
+            opt.innerHTML = item[4]+' ('+item[18]+')';            
+            if(userstatusnormal.includes(item[3]))
+			{
+				select.appendChild(opt);
+			}
+        });
+		
+		if(edit){
+			let arr = JSON.parse(bsmr)
+			let data = arr[parseInt(idx)]
+			$$('#namasekolah').val(safe(data.namasekolah))
+			$$('#alamatsekolah').val(safe(data.alamatsekolah))
+			$$('#namabsmr').val(safe(data.namabsmr))
+			$$('#tahunpendirianbsmr').val(safe(data.tahunpendirianbsmr))
+			$$('#jumlahanggotabsmr').val(safe(data.jumlahanggotabsmr))
+			$$('#picbsmr').val(safe(data.picbsmr))
+			$$('#piccabangid').val(safe(data.piccabangid))
+		}
+		
+      }
+    },
+    buttons: [
+      {
+        text: 'Simpan',
+        close:true,
+        color: 'red',
+        onClick: function(dialog, e)
+          {
+				
+				var namacabang = datacabang[0];
+				var namasekolah = $$('#namasekolah').val();
+				var alamatsekolah = $$('#alamatsekolah').val();
+				var namabsmr = $$('#namabsmr').val();
+				var tahunpendirianbsmr = $$('#tahunpendirianbsmr').val();
+				var jumlahanggotabsmr = $$('#jumlahanggotabsmr').val();
+				var picbsmr = $$('#picbsmr').val();
+				var piccabangid = $$('#piccabangid').val();
+				
+				if(edit){
+					var arr = JSON.parse(mybsmr)
+					arr[parseInt(idx)] = {namacabang,namasekolah,alamatsekolah,namabsmr,tahunpendirianbsmr,jumlahanggotabsmr,picbsmr,piccabangid}
+					var bsmr = JSON.stringify(arr)
+					var data = {namacabang,bsmr}
+					fpageadmincabangbsmrsave(data,datacabang,datarelawan)
+				}else{
+					var arr = JSON.parse(datacabang[9])
+					arr.push({namacabang,namasekolah,alamatsekolah,namabsmr,tahunpendirianbsmr,jumlahanggotabsmr,picbsmr,piccabangid})
+					var bsmr = JSON.stringify(arr)
+					var data = {namacabang,bsmr};
+					fpageadmincabangbsmrsave(data,datacabang,datarelawan);
+				}
+          }
+      },
+      {
+        text: 'Batal',
+        close:true,
+        color: 'gray',
+        onClick: function(dialog, e)
+          {
+
+          }
+      },
+    ]
+  });
+  dialog.open();
+}
+
+function fpageadmincabangbsmrsave(inputdata,datacabang,datarelawan)
+{
+      //console.log(inputdata);return;
+	  inputdata=JSON.stringify(inputdata);
+      let mypreloader = app.dialog.preloader();
+      app.request({
+        url: apidataurl,
+        method: 'POST',
+        cache: false,
+        data : { token:mybsmiusertoken, command: 'admincabangbsmrsave', inputdata}, 
+        success: function (data, status, xhr)
+          {
+            mypreloader.close();
+            var status = JSON.parse(data).status;
+            var content = JSON.parse(data).data;
+            if (status == "success")
+            {
+              //console.log(content);
+			  fpageadmincabangdrawbsmr(content,datacabang,datarelawan)
+              var toastBottom = app.toast.create({ text: 'Berhasil', closeTimeout: 3000,position: 'center', });toastBottom.open();
+            }
+            else if (status == "failed")
+            {
+              //console.log("failed");
+              app.dialog.alert(content,'Terjadi Kesalahan');
+            }
+            else
+            {
+              //console.log("failed");
+              //app.dialog.alert(content,'Terjadi Kesalahan');
+              fcekexpiredtoken(content);
+            }
+          },
+        error: function (xhr, status, message)
+          {
+            //console.log(message);
+            mypreloader.close();
+            app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
+          },
+      })
+}
+
+function fpageadmincabangdrawbsmr(bsmr,datacabang,datarelawan)
+{
+	datacabang[9] = bsmr
+	//window.mybsmiadmindatacabang = datacabang
+	$$('.mybsmi-admincabang-bsmrtambah').off('click')
+	$$('.mybsmi-admincabang-bsmrtambah').on('click', function () {
+		fpageadmincabangbsmrtambah(datacabang,datarelawan)
+	})
+	
+	let bsmrhtml = '<div class="data-table data-table-collapsible data-table-init bsmr"><table><thead><tr><th>Update</th><th>Nama Sekolah</th><th>Alamat Sekolah</th><th>Nama BSMR</th><th>Tahun Pendirian</th><th>Jumlah Anggota</th><th>PIC BSMR (dari Sekolah)</th><th>PIC BSMR (dari BSMI Cabang)</th></tr></thead><tbody>'
+	let arr = JSON.parse(bsmr)
+	for(let i=0;i<arr.length;i++){
+		let item = arr[i]
+		let data = datarelawan.find((arr)=>arr[1]==item.piccabangid)
+		bsmrhtml += '<tr>'+
+						'<td data-collapsible-title="Update"><a class="button update" data-idx="'+i+'">Update</a></td>'+
+						'<td data-collapsible-title="Nama Sekolah">'+safe(item.namasekolah)+'</td>'+
+						'<td data-collapsible-title="Alamat Sekolah">'+safe(item.alamatsekolah)+'</td>'+
+						'<td data-collapsible-title="Nama BSMR">'+safe(item.namabsmr)+'</td>'+
+						'<td data-collapsible-title="Tahun Pendirian">'+safe(item.tahunpendirianbsmr)+'</td>'+
+						'<td data-collapsible-title="Jumlah Anggota">'+safe(item.jumlahanggotabsmr)+'</td>'+
+						'<td data-collapsible-title="PIC BSMR (dari Sekolah)">'+safe(item.picbsmr)+'</td>'+
+						'<td data-collapsible-title="PIC BSMR (dari BSMI Cabang)"><a class="mybsmi-adminaction" data-user="'+btoa(JSON.stringify(data))+'">'+safe(data[4])+'</a></td>'+
+					'</tr>'
+	}
+	bsmrhtml += '</tbody></table></div>'
+	
+	$$('.mybsmi-admincabang-bsmrdata').html(bsmrhtml)
+
+	$$('.mybsmi-admincabang-bsmrdata .bsmr a.mybsmi-adminaction').on('click', function (e) {
+			var base64 = this.attributes["data-user"].value;
+			fpageadminidentitas(base64)
+	});
+	
+	$$('.mybsmi-admincabang-bsmrdata .bsmr a.update').on('click', function (e) {
+		var idx = this.attributes["data-idx"].value;
+		fpageadmincabangbsmrupdate(datacabang,datarelawan,bsmr,idx)
+	});
+
+	$$('.mybsmi-admincabang-bsmrdata .bsmr a.mybsmi-struktur-delete').on('click', function (e) {
+		var idx = this.attributes["data-idx"].value;
+		app.dialog.confirm('Hapus item ini?', 'Konfirmasi', function (){
+			let namacabang = datacabang[0]
+			let oldstruktur = JSON.parse(datacabang[8])
+			oldstruktur.splice(parseInt(idx), 1)
+			let struktur = JSON.stringify(oldstruktur)
+			var datainput = {namacabang,struktur};
+			fpageadmincabangstruktursave(datainput,datacabang,datarelawan);
+		})
+	});
+}
+
+function fpageadmincabangbsmrupdate(datacabang,datarelawan,bsmr,idx){
+	
+  var dialog = app.dialog.create({
+    title: 'Update BSMR',
+    content:'',
+    closeByBackdropClick: false,
+    destroyOnClose: true,
+    verticalButtons: true,
+    on: {
+      opened: function () {
+        
+      }
+    },
+    buttons: [
+      {
+        text: 'Edit',
+        close:true,
+        color: 'red',
+        onClick: function(dialog, e)
+          {
+              let edit = true
+			  fpageadmincabangbsmrtambah(datacabang,datarelawan,bsmr,idx,edit)
+          }
+      },
+      {
+        text: 'Delete',
+        close:true,
+        color: 'red',
+        onClick: function(dialog, e)
+          {
+			let mybsmr = bsmr
+			app.dialog.confirm('Hapus?', 'Konfirmasi', function (){
+				console.log('mybsmr',mybsmr)
+				let namacabang = datacabang[0]
+				let oldbsmr = JSON.parse(mybsmr)
+				oldbsmr.splice(parseInt(idx), 1)
+				let bsmr = JSON.stringify(oldbsmr)
+				var datainput = {namacabang,bsmr};
+				fpageadmincabangbsmrsave(datainput,datacabang,datarelawan);
+			})              
+          }
+      },
+      {
+        text: 'Tutup',
+        close:true,
+        color: 'gray',
+        onClick: function(dialog, e)
+          {
+
+          }
+      },
+    ]
+  });
+  dialog.open();
+}
+
 //----------------------------------------------------------------------
 function fpageadminlaporan(content)
 {
@@ -4939,7 +5222,7 @@ function fpageadminlaporan(content)
 	})
 	
 	kodecabang.forEach((data)=>{
-		if(data[0] !== 'BSMI Jawa Timur'){
+		//if(data[0] !== 'BSMI Jawa Timur'){
 			let jabatan = JSON.parse(data[8])
 			let total = totalanggota.has(data[0]) ? totalanggota.get(data[0]) : 0
 			statushtml += 	'<tr>'+
@@ -4948,7 +5231,7 @@ function fpageadminlaporan(content)
 								'<td data-collapsible-title="Pengurus">'+jabatan.length+'</td>'+
 								'<td data-collapsible-title="Total Anggota">'+total+'</td>'+
 							'</tr>'
-		}
+		//}
 	})
 	
 	statushtml += '</tbody></table></div>'
