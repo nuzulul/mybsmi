@@ -5630,10 +5630,17 @@ async function fpageadminstatuscabang(cabang,content)
     var ig;if (datacabang[4] != ''){ig = safe(datacabang[4]);}else{ig='';}
     profilhtml += '<tr><td>Instagram</td><td>'+ig+'</td></tr>';
 	let ketua = datarelawan.find((arr)=>arr[1]==datacabang[5])
-    profilhtml += '<tr><td>Ketua</td><td><a class="ketua" data-user="'+btoa(JSON.stringify(ketua))+'">'+safe(datacabang[6])+'</a></td></tr>';
+    profilhtml += '<tr><td>Ketua</td><td><a class="profil" data-user="'+btoa(JSON.stringify(ketua))+'">'+safe(datacabang[6])+'</a></td></tr>';
+	let operator = datarelawan.find((arr)=>{
+		let mydata = JSON.parse(arr[14])
+		let mycabang = arr[11]
+		return mydata.admincabang && (mycabang == cabang)
+	})
+	let namaoperator = operator ? safe(operator[4]) : ""
+	profilhtml += '<tr><td>Operator</td><td><a class="profil" data-user="'+btoa(JSON.stringify(operator))+'">'+namaoperator+'</a></td></tr>';
     profilhtml += '</tbody></table></div>';
     $$('.mybsmi-adminlaporanmenu .mybsmi-adminlaporan-profil').html(profilhtml);
-	$$('.mybsmi-adminlaporanmenu .mybsmi-adminlaporan-profil .ketua').on('click', function (e) {
+	$$('.mybsmi-adminlaporanmenu .mybsmi-adminlaporan-profil .profil').on('click', function (e) {
 			var base64 = this.attributes["data-user"].value;
 			fpageadminidentitas(base64)
 	});
