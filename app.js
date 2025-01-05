@@ -166,6 +166,11 @@ routes: [
     },
   },
   {
+    name: "dynamicLoad",
+    path: "/dynamicLoad/"
+
+  },
+  {
     path: '/profilku/',
     url: 'profilku.html',
     on: {
@@ -5440,6 +5445,8 @@ function fpageadminlaporan(content)
 	$$('.mybsmi-adminlaporanmenu').show();
 	let json = JSON.parse(dashboarddata.user.usermydata);
 	
+	let datarelawan = content
+	
 	//-------profil-----
 
     let datacabang = kodecabang[0]
@@ -5449,9 +5456,14 @@ function fpageadminlaporan(content)
     profilhtml += '<tr><td>Telepon</td><td>'+safe(datacabang[3])+'</td></tr>';
     var ig;if (datacabang[4] != ''){ig = safe(datacabang[4]);}else{ig='';}
     profilhtml += '<tr><td>Instagram</td><td>'+ig+'</td></tr>';
-    profilhtml += '<tr><td>Ketua</td><td><a href="/relawan/'+safe(datacabang[5])+'">'+safe(datacabang[6])+'</a></td></tr>';
+	let ketua = datarelawan.find((arr)=>arr[1]==datacabang[5])
+    profilhtml += '<tr><td>Ketua</td><td><a class="ketua" data-user="'+btoa(JSON.stringify(ketua))+'">'+safe(datacabang[6])+'</a></td></tr>';
     profilhtml += '</tbody></table></div>';
     $$('.mybsmi-adminlaporanmenu .mybsmi-adminlaporan-profil').html(profilhtml);
+	$$('.mybsmi-adminlaporanmenu .mybsmi-adminlaporan-profil .ketua').on('click', function (e) {
+			var base64 = this.attributes["data-user"].value;
+			fpageadminidentitas(base64)
+	});
 	
 	//-------struktur-----
 
@@ -5459,7 +5471,6 @@ function fpageadminlaporan(content)
 			'<ul>'
 	
 	let arr = JSON.parse(kodecabang[0][8])
-	let datarelawan = content
 	for(let i=0;i<arr.length;i++)
 	{
 		let item = arr[i]
@@ -5489,7 +5500,7 @@ function fpageadminlaporan(content)
 	
 	//-------status-----
 	
-	let statushtml = '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th>Cabang</th><th>Ketua</th><th>Pengurus</th><th>Total Anggota</th><th>BSMR</th><th>Klinik</th></tr></thead><tbody>'
+	let statushtml = '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th>Cabang</th><th>Ketua</th><th>Pengurus</th><th>Total Anggota</th><th>BSMR</th><th>Klinik</th><th></th></tr></thead><tbody>'
 	
 	let totalanggota = new Map()
 
@@ -5519,6 +5530,7 @@ function fpageadminlaporan(content)
 								'<td data-collapsible-title="Total Anggota">'+anggota+'</td>'+
 								'<td data-collapsible-title="BSMR">'+bsmr.length+'</td>'+
 								'<td data-collapsible-title="Klinik">'+klinik.length+'</td>'+
+								'<td data-collapsible-title=""><a class="button button-fill mybsmi-statuscabang" data-cabang="'+safe(cabang[0])+'">Detail</a></td>'+
 							'</tr>'
 		}
 	})
@@ -5530,6 +5542,11 @@ function fpageadminlaporan(content)
 	$$('.mybsmi-adminlaporanmenu .mybsmi-adminlaporan-statuscabang a.mybsmi-adminaction').on('click', function (e) {
 			var base64 = this.attributes["data-user"].value;
 			fpageadminidentitas(base64)
+	});
+
+	$$('.mybsmi-adminlaporanmenu .mybsmi-adminlaporan-statuscabang a.mybsmi-statuscabang').on('click', function (e) {
+			var cabang = this.attributes["data-cabang"].value;
+			fpageadminstatuscabang(cabang,content)
 	});
 	
 	//-------database-----
@@ -5590,6 +5607,186 @@ function fpageadminlaporan(content)
         //console.log(url);
         app.views.main.router.navigate(url);
   });
+}
+
+async function fpageadminstatuscabang(cabang,content)
+{
+	const res = await fetch("statuscabang.html")      
+	var statushtml = await res.text()
+	app.views.main.router.navigate({url:"/dynamicLoad/", route:{content:statushtml}});
+
+	$$('.mybsmi-adminlaporanmenu').show();
+	let datarelawan = content
+	
+	let indexcabang = kodecabang.findIndex((arr)=>arr[0]==cabang)
+
+	//-------profil-----
+
+    let datacabang = kodecabang[indexcabang]
+	let profilhtml = '<div class="data-table"><table><tbody>';
+    profilhtml += '<tr><td>Profil</td><td><a href="/cabang/'+safe(datacabang[1])+'">'+safe(datacabang[0])+'</a></td></tr>';
+    profilhtml += '<tr><td>Alamat</td><td>'+safe(datacabang[2])+'</td></tr>';
+    profilhtml += '<tr><td>Telepon</td><td>'+safe(datacabang[3])+'</td></tr>';
+    var ig;if (datacabang[4] != ''){ig = safe(datacabang[4]);}else{ig='';}
+    profilhtml += '<tr><td>Instagram</td><td>'+ig+'</td></tr>';
+	let ketua = datarelawan.find((arr)=>arr[1]==datacabang[5])
+    profilhtml += '<tr><td>Ketua</td><td><a class="ketua" data-user="'+btoa(JSON.stringify(ketua))+'">'+safe(datacabang[6])+'</a></td></tr>';
+    profilhtml += '</tbody></table></div>';
+    $$('.mybsmi-adminlaporanmenu .mybsmi-adminlaporan-profil').html(profilhtml);
+	$$('.mybsmi-adminlaporanmenu .mybsmi-adminlaporan-profil .ketua').on('click', function (e) {
+			var base64 = this.attributes["data-user"].value;
+			fpageadminidentitas(base64)
+	});
+	
+	//-------struktur-----
+
+	let strukturhtml = '<div class="list struktur">'+
+			'<ul>'
+	
+	let arr = JSON.parse(kodecabang[indexcabang][8])
+	
+	for(let i=0;i<arr.length;i++)
+	{
+		let item = arr[i]
+		let data = datarelawan.find((arr)=>arr[1]==item.namapengurusid)
+		//console.log('data',data)
+		let el = ''+
+		  '<li>'+
+			'<div class="item-content">'+
+			  '<div class="item-media"><img src="https://lh3.googleusercontent.com/d/'+safe(data[13])+'" style="width:1.5em;aspect-ratio:1/1;object-fit:cover;border-radius:50% 50%;overflow:hidden;"></div>'+
+			  '<div class="item-inner">'+
+				'<div class="item-title"><a class="mybsmi-adminaction" data-user="'+btoa(JSON.stringify(data))+'">'+safe(data[4])+'</a> <span style="font-size:10px;">('+safe(data[18])+')</span></div>'+
+				'<div class="item-after"><a class="mybsmi-struktur-delete" data-idx="'+i+'">'+safe(item.jabatanpengurus)+'</a></div>'+
+			  '</div>'+
+			'</div>'+
+		  '</li>'
+		  
+		 strukturhtml += el
+	}
+	
+	strukturhtml += '</ul></div>'	  
+	$$('.mybsmi-adminlaporanmenu .mybsmi-adminlaporan-struktur').html(strukturhtml)
+
+	$$('.mybsmi-adminlaporanmenu .mybsmi-adminlaporan-struktur .struktur a.mybsmi-adminaction').on('click', function (e) {
+			var base64 = this.attributes["data-user"].value;
+			fpageadminidentitas(base64)
+	});
+
+
+	//---klinik---
+	
+	let klinik = kodecabang[indexcabang][10]
+	let klinikhtml = '<div class="data-table data-table-collapsible data-table-init klinik"><table><thead><tr><th>Nama klinik</th><th>Alamat klinik</th><th>Layanan klinik</th><th>Tahun Pendirian</th><th>Jumlah karyawan</th><th>Manajer klinik</th><th>PIC klinik (dari BSMI Cabang)</th></tr></thead><tbody>'
+	let arrklinik = JSON.parse(klinik)
+	for(let i=0;i<arrklinik.length;i++){
+		let item = arrklinik[i]
+		let data = datarelawan.find((arr)=>arr[1]==item.picklinikid)
+		klinikhtml += '<tr>'+
+						'<td data-collapsible-title="Nama klinik">'+safe(item.namaklinik)+'</td>'+
+						'<td data-collapsible-title="Alamat klinik">'+safe(item.alamatklinik)+'</td>'+
+						'<td data-collapsible-title="Layanan klinik">'+safe(item.layananklinik)+'</td>'+
+						'<td data-collapsible-title="Tahun Pendirian">'+safe(item.tahunpendirianklinik)+'</td>'+
+						'<td data-collapsible-title="Jumlah karyawan">'+safe(item.jumlahkaryawanklinik)+'</td>'+
+						'<td data-collapsible-title="Manajer klinik">'+safe(item.manajerklinik)+'</td>'+
+						'<td data-collapsible-title="PIC klinik (dari BSMI Cabang)"><a class="mybsmi-adminaction" data-user="'+btoa(JSON.stringify(data))+'">'+safe(data[4])+'</a></td>'+
+					'</tr>'
+	}
+	klinikhtml += '</tbody></table></div>'
+	
+	$$('.mybsmi-adminlaporan-klinikdata').html(klinikhtml)
+
+	$$('.mybsmi-adminlaporan-klinikdata .klinik a.mybsmi-adminaction').on('click', function (e) {
+			var base64 = this.attributes["data-user"].value;
+			fpageadminidentitas(base64)
+	});	
+	
+	//---bsmr--
+
+	let bsmr = kodecabang[indexcabang][9]
+	let bsmrhtml = '<div class="data-table data-table-collapsible data-table-init bsmr"><table><thead><tr><th>Nama Sekolah</th><th>Alamat Sekolah</th><th>Nama BSMR</th><th>Tahun Pendirian</th><th>Jumlah Anggota</th><th>PIC BSMR (dari Sekolah)</th><th>PIC BSMR (dari BSMI Cabang)</th></tr></thead><tbody>'
+	let arrbsmr = JSON.parse(bsmr)
+	for(let i=0;i<arrbsmr.length;i++){
+		let item = arrbsmr[i]
+		let data = datarelawan.find((arr)=>arr[1]==item.piccabangid)
+		bsmrhtml += '<tr>'+
+						'<td data-collapsible-title="Nama Sekolah">'+safe(item.namasekolah)+'</td>'+
+						'<td data-collapsible-title="Alamat Sekolah">'+safe(item.alamatsekolah)+'</td>'+
+						'<td data-collapsible-title="Nama BSMR">'+safe(item.namabsmr)+'</td>'+
+						'<td data-collapsible-title="Tahun Pendirian">'+safe(item.tahunpendirianbsmr)+'</td>'+
+						'<td data-collapsible-title="Jumlah Anggota">'+safe(item.jumlahanggotabsmr)+'</td>'+
+						'<td data-collapsible-title="PIC BSMR (dari Sekolah)">'+safe(item.picbsmr)+'</td>'+
+						'<td data-collapsible-title="PIC BSMR (dari BSMI Cabang)"><a class="mybsmi-adminaction" data-user="'+btoa(JSON.stringify(data))+'">'+safe(data[4])+'</a></td>'+
+					'</tr>'
+	}
+	bsmrhtml += '</tbody></table></div>'
+	
+	$$('.mybsmi-adminlaporan-bsmrdata').html(bsmrhtml)
+
+	$$('.mybsmi-adminlaporan-bsmrdata .bsmr a.mybsmi-adminaction').on('click', function (e) {
+			var base64 = this.attributes["data-user"].value;
+			fpageadminidentitas(base64)
+	});
+	
+	//-------database-----
+
+	let data = '<div class="list"><ul><li class="item-content item-input item-input-outline"><div class="item-inner"><div class="item-title item-label">Pencarian</div><div class="item-input-wrap"><input id="pencarian" type="text" placeholder="katakunci"><span class="input-clear-button"></span></div></div></li></ul></div>'
+
+	data += '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th></th><th>Nama</th><th>No. KTA</th><th>Cabang</th><th>Profesi</th><th>Status Keanggotaan</th><th>Jenjang Keanggotaan</th><th></th></tr></thead><tbody>';
+	var jumlahrelawan = 0;
+	for (i=content.length-1;i>-1;i--)
+	{
+	  if ((skipuid.includes(content[i][1]))&&(dashboarddata.user.useruid !== '0ONjeb65X5OunuRI6Ap8')){continue;}else{if ((skipuid.includes(content[i][1]))&&(!isLocal)) continue;}
+	  
+	  if ((content[i][3] === 'Terbatas')||(content[i][3] === 'Terverifikasi')||(content[i][3] === 'Tertolak')){}else{continue;}
+	  
+	  //if ((json.adminlaporan)&&(json.admincabang)){}else if((json.admincabang) && (content[i][11] !== usercabang)){continue;}
+	  if(content[i][11] !== cabang)continue
+	  
+	  let badge = content[i][3] === 'Terverifikasi' ? '<i class="icon f7-icons" style="font-size:12px;color:blue;">checkmark_seal</i>' : '';
+	  let statuskeanggotaan = (JSON.parse(content[i][14])).statuskeanggotaan
+	  let status = statuskeanggotaan ? statuskeanggotaan.status : '-'
+	  let jenjang = statuskeanggotaan ? statuskeanggotaan.jenjang : '-'
+	  
+	  data += '<tr class="mybsmi-admin-item-'+safe(content[i][1])+'"><td data-collapsible-title=""><img src="avatar.png" style="width:1.5em;aspect-ratio:1/1;object-fit:cover;border-radius:50% 50%;overflow:hidden;"></td><td data-collapsible-title="Nama"><a class="mybsmi-cabang-relawan" data-user="'+safe(content[i][1])+'">'+safe(content[i][4])+'</a> '+badge+'</td><td data-collapsible-title="No. KTA">'+safe(content[i][18])+'</td><td data-collapsible-title="Cabang">'+safe(content[i][11])+'</td><td data-collapsible-title="Profesi">'+safe(content[i][8])+'</td><td data-collapsible-title="Status Keanggotaan">'+safe(status)+'</td><td data-collapsible-title="Jenjang Keanggotaan">'+safe(jenjang)+'</td><td><a class="button button-fill mybsmi-adminaction" data-user="'+btoa(JSON.stringify(content[i]))+'">Detail</a></td></tr>';
+	  
+	  jumlahrelawan++;
+	}
+	data += '</tbody></table></div>';
+	$$('.mybsmi-adminlaporanmenu .mybsmi-adminlaporandb').html(data);
+	$$('.mybsmi-adminlaporanmenu .totalrelawan').html('Total : '+jumlahrelawan);
+
+	for (i=content.length-1;i>-1;i--)
+	{
+	if(content[i][13]!==''){
+		let url = 'https://lh3.googleusercontent.com/d/'+safe(content[i][13]);
+		$$('.mybsmi-adminlaporanmenu .mybsmi-adminlaporandb .mybsmi-admin-item-'+safe(content[i][1])+' img').attr('src',url);
+	}
+	}
+
+	$$('.mybsmi-adminlaporanmenu .mybsmi-adminlaporandb a.mybsmi-adminaction').on('click', function (e) {
+		var base64 = this.attributes["data-user"].value;
+		fpageadminidentitas(base64)
+	});
+
+	$$(".mybsmi-adminlaporanmenu #pencarian").on("input", function() {
+	var value = $$(this).val().toLowerCase();
+	$$(".mybsmi-adminlaporanmenu .mybsmi-adminlaporandb tr").each(function() {
+	  if($$(this).text().toLowerCase().indexOf(value) > -1)
+	  {
+		  $$(this).show()
+	  }else{
+		  $$(this).hide()
+	  }
+	});
+	});
+
+  $$('.mybsmi-adminlaporanmenu .mybsmi-adminlaporandb .mybsmi-cabang-relawan').on('click', function (e) {
+        let data = this.attributes["data-user"].value;
+        let url = "/relawan/"+safe(data);
+        //console.log(url);
+        app.views.main.router.navigate(url);
+  });
+
 }
 ///////fpageadmin////////////////////////////////////////////////////////
 
