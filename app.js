@@ -5444,7 +5444,7 @@ function fpageadminlaporan(content)
 
     let datacabang = kodecabang[0]
 	let profilhtml = '<div class="data-table"><table><tbody>';
-    profilhtml += '<tr><td>Cabang</td><td><a href="/cabang/'+safe(datacabang[1])+'">'+safe(datacabang[0])+'</a></td></tr>';
+    profilhtml += '<tr><td>Profil</td><td><a href="/cabang/'+safe(datacabang[1])+'">'+safe(datacabang[0])+'</a></td></tr>';
     profilhtml += '<tr><td>Alamat</td><td>'+safe(datacabang[2])+'</td></tr>';
     profilhtml += '<tr><td>Telepon</td><td>'+safe(datacabang[3])+'</td></tr>';
     var ig;if (datacabang[4] != ''){ig = safe(datacabang[4]);}else{ig='';}
@@ -5583,6 +5583,13 @@ function fpageadminlaporan(content)
 	  }
 	});
 	});
+
+  $$('.mybsmi-adminlaporanmenu .mybsmi-adminlaporandb .mybsmi-cabang-relawan').on('click', function (e) {
+        let data = this.attributes["data-user"].value;
+        let url = "/relawan/"+safe(data);
+        //console.log(url);
+        app.views.main.router.navigate(url);
+  });
 }
 ///////fpageadmin////////////////////////////////////////////////////////
 
