@@ -4894,7 +4894,7 @@ function fpageadmincabangdrawstruktur(struktur,datacabang,datarelawan)
 function fpageadmincabangkliniktambah(datacabang,datarelawan,klinik,idx,edit)
 {
   let myklinik = klinik
-  let title = edit ? 'Edit Klinik' : 'Tambah Klinik'
+  let title = edit ? 'Edit Klinik' : 'Register Klinik'
   var dialog = app.dialog.create({
     title: title,
     content:''////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -4965,6 +4965,7 @@ function fpageadmincabangkliniktambah(datacabang,datarelawan,klinik,idx,edit)
 			$$('#jumlahkaryawanklinik').val(safe(data.jumlahkaryawanklinik))
 			$$('#manajerklinik').val(safe(data.manajerklinik))
 			$$('#picklinikid').val(safe(data.picklinikid))
+			$$('#namaklinik').attr('disabled','true')
 		}
 		
       }
@@ -5125,7 +5126,7 @@ function fpageadmincabangklinikupdate(datacabang,datarelawan,klinik,idx){
 			  fpageadmincabangkliniktambah(datacabang,datarelawan,klinik,idx,edit)
           }
       },
-      {
+      /*{
         text: 'Delete',
         close:true,
         color: 'red',
@@ -5142,7 +5143,7 @@ function fpageadmincabangklinikupdate(datacabang,datarelawan,klinik,idx){
 				fpageadmincabangkliniksave(datainput,datacabang,datarelawan);
 			})              
           }
-      },
+      },*/
       {
         text: 'Tutup',
         close:true,
@@ -5162,7 +5163,7 @@ function fpageadmincabangklinikupdate(datacabang,datarelawan,klinik,idx){
 function fpageadmincabangbsmrtambah(datacabang,datarelawan,bsmr,idx,edit)
 {
   let mybsmr = bsmr
-  let title = edit ? 'Edit BSMR' : 'Tambah BSMR'
+  let title = edit ? 'Edit BSMR' : 'Register BSMR'
   var dialog = app.dialog.create({
     title: title,
     content:''////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -5180,8 +5181,8 @@ function fpageadmincabangbsmrtambah(datacabang,datarelawan,bsmr,idx,edit)
       +'            <input type="text" id="alamatsekolah" name="alamatsekolah" placeholder="Alamat Sekolah" value="">'
       +'            </div></div>'
       +'        </li>'
-      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Nama BSMR</div><div class="item-input-wrap">'
-      +'            <input type="text" id="namabsmr" name="namabsmr" placeholder="Nama BSMR" value="">'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Nomor BSMR</div><div class="item-input-wrap">'
+      +'            <input type="text" id="nomorbsmr" name="nomorbsmr" placeholder="*Didapat Setelah Disetujui" value="" disabled>'
       +'            </div></div>'
       +'        </li>'
       +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Tahun Pendirian BSMR</div><div class="item-input-wrap">'
@@ -5228,11 +5229,12 @@ function fpageadmincabangbsmrtambah(datacabang,datarelawan,bsmr,idx,edit)
 			let data = arr[parseInt(idx)]
 			$$('#namasekolah').val(safe(data.namasekolah))
 			$$('#alamatsekolah').val(safe(data.alamatsekolah))
-			$$('#namabsmr').val(safe(data.namabsmr))
+			$$('#nomorbsmr').val(safe(data.nomorbsmr))
 			$$('#tahunpendirianbsmr').val(safe(data.tahunpendirianbsmr))
 			$$('#jumlahanggotabsmr').val(safe(data.jumlahanggotabsmr))
 			$$('#picbsmr').val(safe(data.picbsmr))
 			$$('#piccabangid').val(safe(data.piccabangid))
+			$$('#namasekolah').attr('disabled','true')
 		}
 		
       }
@@ -5248,7 +5250,7 @@ function fpageadmincabangbsmrtambah(datacabang,datarelawan,bsmr,idx,edit)
 				var namacabang = datacabang[0];
 				var namasekolah = $$('#namasekolah').val();
 				var alamatsekolah = $$('#alamatsekolah').val();
-				var namabsmr = $$('#namabsmr').val();
+				var nomorbsmr = $$('#nomorbsmr').val();
 				var tahunpendirianbsmr = $$('#tahunpendirianbsmr').val();
 				var jumlahanggotabsmr = $$('#jumlahanggotabsmr').val();
 				var picbsmr = $$('#picbsmr').val();
@@ -5260,13 +5262,13 @@ function fpageadmincabangbsmrtambah(datacabang,datarelawan,bsmr,idx,edit)
 				
 				if(edit){
 					var arr = JSON.parse(mybsmr)
-					arr[parseInt(idx)] = {namacabang,namasekolah,alamatsekolah,namabsmr,tahunpendirianbsmr,jumlahanggotabsmr,picbsmr,piccabangid}
+					arr[parseInt(idx)] = {namacabang,namasekolah,alamatsekolah,nomorbsmr,tahunpendirianbsmr,jumlahanggotabsmr,picbsmr,piccabangid}
 					var bsmr = JSON.stringify(arr)
 					var data = {namacabang,bsmr}
 					fpageadmincabangbsmrsave(data,datacabang,datarelawan)
 				}else{
 					var arr = JSON.parse(datacabang[9])
-					arr.push({namacabang,namasekolah,alamatsekolah,namabsmr,tahunpendirianbsmr,jumlahanggotabsmr,picbsmr,piccabangid})
+					arr.push({namacabang,namasekolah,alamatsekolah,nomorbsmr,tahunpendirianbsmr,jumlahanggotabsmr,picbsmr,piccabangid})
 					var bsmr = JSON.stringify(arr)
 					var data = {namacabang,bsmr};
 					fpageadmincabangbsmrsave(data,datacabang,datarelawan);
@@ -5338,7 +5340,7 @@ function fpageadmincabangdrawbsmr(bsmr,datacabang,datarelawan)
 		fpageadmincabangbsmrtambah(datacabang,datarelawan)
 	})
 	
-	let bsmrhtml = '<div class="data-table data-table-collapsible data-table-init bsmr"><table><thead><tr><th>Nama Sekolah</th><th>Alamat Sekolah</th><th>Nama BSMR</th><th>Tahun Pendirian</th><th>Jumlah Anggota</th><th>PIC BSMR (dari Sekolah)</th><th>PIC BSMR (dari BSMI Cabang)</th><th></th></tr></thead><tbody>'
+	let bsmrhtml = '<div class="data-table data-table-collapsible data-table-init bsmr"><table><thead><tr><th>Nama Sekolah</th><th>Alamat Sekolah</th><th>Nomor BSMR</th><th>Tahun Pendirian</th><th>Jumlah Anggota</th><th>PIC BSMR (dari Sekolah)</th><th>PIC BSMR (dari BSMI Cabang)</th><th></th></tr></thead><tbody>'
 	let arr = JSON.parse(bsmr)
 	for(let i=0;i<arr.length;i++){
 		let item = arr[i]
@@ -5346,7 +5348,7 @@ function fpageadmincabangdrawbsmr(bsmr,datacabang,datarelawan)
 		bsmrhtml += '<tr>'+
 						'<td data-collapsible-title="Nama Sekolah">'+safe(item.namasekolah)+'</td>'+
 						'<td data-collapsible-title="Alamat Sekolah">'+safe(item.alamatsekolah)+'</td>'+
-						'<td data-collapsible-title="Nama BSMR">'+safe(item.namabsmr)+'</td>'+
+						'<td data-collapsible-title="Nomor BSMR">'+safe(item.nomorbsmr)+'</td>'+
 						'<td data-collapsible-title="Tahun Pendirian">'+safe(item.tahunpendirianbsmr)+'</td>'+
 						'<td data-collapsible-title="Jumlah Anggota">'+safe(item.jumlahanggotabsmr)+'</td>'+
 						'<td data-collapsible-title="PIC BSMR (dari Sekolah)">'+safe(item.picbsmr)+'</td>'+
@@ -5405,7 +5407,7 @@ function fpageadmincabangbsmrupdate(datacabang,datarelawan,bsmr,idx){
 			  fpageadmincabangbsmrtambah(datacabang,datarelawan,bsmr,idx,edit)
           }
       },
-      {
+      /*{
         text: 'Delete',
         close:true,
         color: 'red',
@@ -5422,7 +5424,7 @@ function fpageadmincabangbsmrupdate(datacabang,datarelawan,bsmr,idx){
 				fpageadmincabangbsmrsave(datainput,datacabang,datarelawan);
 			})              
           }
-      },
+      },*/
       {
         text: 'Tutup',
         close:true,
@@ -5710,7 +5712,7 @@ async function fpageadminstatuscabang(cabang,content)
 	//---bsmr--
 
 	let bsmr = kodecabang[indexcabang][9]
-	let bsmrhtml = '<div class="data-table data-table-collapsible data-table-init bsmr"><table><thead><tr><th>Nama Sekolah</th><th>Alamat Sekolah</th><th>Nama BSMR</th><th>Tahun Pendirian</th><th>Jumlah Anggota</th><th>PIC BSMR (dari Sekolah)</th><th>PIC BSMR (dari BSMI Cabang)</th></tr></thead><tbody>'
+	let bsmrhtml = '<div class="data-table data-table-collapsible data-table-init bsmr"><table><thead><tr><th>Nama Sekolah</th><th>Alamat Sekolah</th><th>Nomor BSMR</th><th>Tahun Pendirian</th><th>Jumlah Anggota</th><th>PIC BSMR (dari Sekolah)</th><th>PIC BSMR (dari BSMI Cabang)</th></tr></thead><tbody>'
 	let arrbsmr = JSON.parse(bsmr)
 	for(let i=0;i<arrbsmr.length;i++){
 		let item = arrbsmr[i]
@@ -5718,7 +5720,7 @@ async function fpageadminstatuscabang(cabang,content)
 		bsmrhtml += '<tr>'+
 						'<td data-collapsible-title="Nama Sekolah">'+safe(item.namasekolah)+'</td>'+
 						'<td data-collapsible-title="Alamat Sekolah">'+safe(item.alamatsekolah)+'</td>'+
-						'<td data-collapsible-title="Nama BSMR">'+safe(item.namabsmr)+'</td>'+
+						'<td data-collapsible-title="Nomor BSMR">'+safe(item.nomorbsmr)+'</td>'+
 						'<td data-collapsible-title="Tahun Pendirian">'+safe(item.tahunpendirianbsmr)+'</td>'+
 						'<td data-collapsible-title="Jumlah Anggota">'+safe(item.jumlahanggotabsmr)+'</td>'+
 						'<td data-collapsible-title="PIC BSMR (dari Sekolah)">'+safe(item.picbsmr)+'</td>'+
