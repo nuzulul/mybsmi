@@ -5173,16 +5173,16 @@ function fpageadmincabangbsmrtambah(datacabang,datarelawan,bsmr,idx,edit)
       +'      <p style="font-weight:bold;">'+safe(datacabang[0])+'</p>'
       +'  <div class="list no-hairlines-md">'
       +'    <ul>'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Nomor BSMR</div><div class="item-input-wrap">'
+      +'            <input type="text" id="nomorbsmr" name="nomorbsmr" placeholder="*Didapat Setelah Disetujui" value="" disabled>'
+      +'            </div></div>'
+      +'        </li>'
       +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Nama Sekolah</div><div class="item-input-wrap">'
       +'            <input type="text" id="namasekolah" name="namasekolah" placeholder="Nama Sekolah" value="">'
       +'            </div></div>'
       +'        </li>'
       +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Alamat Sekolah</div><div class="item-input-wrap">'
       +'            <input type="text" id="alamatsekolah" name="alamatsekolah" placeholder="Alamat Sekolah" value="">'
-      +'            </div></div>'
-      +'        </li>'
-      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Nomor BSMR</div><div class="item-input-wrap">'
-      +'            <input type="text" id="nomorbsmr" name="nomorbsmr" placeholder="*Didapat Setelah Disetujui" value="" disabled>'
       +'            </div></div>'
       +'        </li>'
       +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Tahun Pendirian BSMR</div><div class="item-input-wrap">'
@@ -5340,16 +5340,16 @@ function fpageadmincabangdrawbsmr(bsmr,datacabang,datarelawan)
 		fpageadmincabangbsmrtambah(datacabang,datarelawan)
 	})
 	
-	let bsmrhtml = '<div class="data-table data-table-collapsible data-table-init bsmr"><table><thead><tr><th>Nama Sekolah</th><th>Alamat Sekolah</th><th>Nomor BSMR</th><th>Tahun Pendirian</th><th>Jumlah Anggota</th><th>PIC BSMR (dari Sekolah)</th><th>PIC BSMR (dari BSMI Cabang)</th><th></th></tr></thead><tbody>'
+	let bsmrhtml = '<div class="data-table data-table-collapsible data-table-init bsmr"><table><thead><tr><th>Nomor BSMR</th><th>Nama Sekolah</th><th>Alamat Sekolah</th><th>Tahun Pendirian BSMR</th><th>Jumlah Anggota</th><th>PIC BSMR (dari Sekolah)</th><th>PIC BSMR (dari BSMI Cabang)</th><th></th></tr></thead><tbody>'
 	let arr = JSON.parse(bsmr)
 	for(let i=0;i<arr.length;i++){
 		let item = arr[i]
 		let data = datarelawan.find((arr)=>arr[1]==item.piccabangid)
 		bsmrhtml += '<tr>'+
+						'<td data-collapsible-title="Nomor BSMR">'+safe(item.nomorbsmr)+'</td>'+
 						'<td data-collapsible-title="Nama Sekolah">'+safe(item.namasekolah)+'</td>'+
 						'<td data-collapsible-title="Alamat Sekolah">'+safe(item.alamatsekolah)+'</td>'+
-						'<td data-collapsible-title="Nomor BSMR">'+safe(item.nomorbsmr)+'</td>'+
-						'<td data-collapsible-title="Tahun Pendirian">'+safe(item.tahunpendirianbsmr)+'</td>'+
+						'<td data-collapsible-title="Tahun Pendirian BSMR">'+safe(item.tahunpendirianbsmr)+'</td>'+
 						'<td data-collapsible-title="Jumlah Anggota">'+safe(item.jumlahanggotabsmr)+'</td>'+
 						'<td data-collapsible-title="PIC BSMR (dari Sekolah)">'+safe(item.picbsmr)+'</td>'+
 						'<td data-collapsible-title="PIC BSMR (dari BSMI Cabang)"><a class="mybsmi-adminaction" data-user="'+btoa(JSON.stringify(data))+'">'+safe(data[4])+'</a></td>'+
@@ -5712,16 +5712,16 @@ async function fpageadminstatuscabang(cabang,content)
 	//---bsmr--
 
 	let bsmr = kodecabang[indexcabang][9]
-	let bsmrhtml = '<div class="data-table data-table-collapsible data-table-init bsmr"><table><thead><tr><th>Nama Sekolah</th><th>Alamat Sekolah</th><th>Nomor BSMR</th><th>Tahun Pendirian</th><th>Jumlah Anggota</th><th>PIC BSMR (dari Sekolah)</th><th>PIC BSMR (dari BSMI Cabang)</th></tr></thead><tbody>'
+	let bsmrhtml = '<div class="data-table data-table-collapsible data-table-init bsmr"><table><thead><tr><th>Nomor BSMR</th><th>Nama Sekolah</th><th>Alamat Sekolah</th><th>Tahun Pendirian BSMR</th><th>Jumlah Anggota</th><th>PIC BSMR (dari Sekolah)</th><th>PIC BSMR (dari BSMI Cabang)</th></tr></thead><tbody>'
 	let arrbsmr = JSON.parse(bsmr)
 	for(let i=0;i<arrbsmr.length;i++){
 		let item = arrbsmr[i]
 		let data = datarelawan.find((arr)=>arr[1]==item.piccabangid)
 		bsmrhtml += '<tr>'+
+						'<td data-collapsible-title="Nomor BSMR">'+safe(item.nomorbsmr)+'</td>'+
 						'<td data-collapsible-title="Nama Sekolah">'+safe(item.namasekolah)+'</td>'+
 						'<td data-collapsible-title="Alamat Sekolah">'+safe(item.alamatsekolah)+'</td>'+
-						'<td data-collapsible-title="Nomor BSMR">'+safe(item.nomorbsmr)+'</td>'+
-						'<td data-collapsible-title="Tahun Pendirian">'+safe(item.tahunpendirianbsmr)+'</td>'+
+						'<td data-collapsible-title="Tahun Pendirian BSMR">'+safe(item.tahunpendirianbsmr)+'</td>'+
 						'<td data-collapsible-title="Jumlah Anggota">'+safe(item.jumlahanggotabsmr)+'</td>'+
 						'<td data-collapsible-title="PIC BSMR (dari Sekolah)">'+safe(item.picbsmr)+'</td>'+
 						'<td data-collapsible-title="PIC BSMR (dari BSMI Cabang)"><a class="mybsmi-adminaction" data-user="'+btoa(JSON.stringify(data))+'">'+safe(data[4])+'</a></td>'+
