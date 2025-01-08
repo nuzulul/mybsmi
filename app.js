@@ -6744,6 +6744,10 @@ function fpagemasteradminlaporanupdate(inputdata)
     let str = mybsmimasterdata[inputdata.index][14];
     let json = JSON.parse(str);
     json.adminlaporan = false;
+	if(inputdata.administrasi)
+	{
+		json.adminlaporanadministrasi = inputdata.administrasi
+	}
     str = JSON.stringify(json);
     mybsmimasterdata[inputdata.index][14] = str;
   }
@@ -6752,6 +6756,10 @@ function fpagemasteradminlaporanupdate(inputdata)
     let str = mybsmimasterdata[inputdata.index][14];
     let json = JSON.parse(str);
     json.adminlaporan = true;
+	if(inputdata.administrasi)
+	{
+		json.adminlaporanadministrasi = inputdata.administrasi
+	}
     str = JSON.stringify(json);
     mybsmimasterdata[inputdata.index][14] = str;
   }
@@ -7089,6 +7097,7 @@ function fpagemastermutasianggota(data,index)
 
 function fpagemasteradministrasi(content)
 {
+	$$('.mybsmi-master-adminadministrasi').html("")
 	fpagemasteradministrasilist(content,"bsmr")
 }
 
