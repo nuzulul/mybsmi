@@ -5860,6 +5860,7 @@ function fpagemasterrun(content)
   fpagemasteradminlaporan(content);
   fpagemasterdatabase(content);
   fpagemasterpengaturan();
+  fpagemasteradministrasi(content)
 }
 
 function fpagemasterpengaturan(){
@@ -6493,6 +6494,8 @@ function fpagemasteradmincabanggantiadminupdate(inputdata)
   fpagemasterrun(mybsmimasterdata);
 }
 
+//----laporan---
+
 function fpagemasteradminlaporan(content)
 {
   var jumlahadminlaporan = 0
@@ -6507,7 +6510,7 @@ function fpagemasteradminlaporan(content)
       
       if (json.adminlaporan){}else{continue;}
       
-      data += '<tr class="mybsmi-master-item-'+safe(content[i][1])+'"><td data-collapsible-title="Nama">'+safe(content[i][4])+'</td><td data-collapsible-title="Cabang">'+safe(content[i][11])+'</td><td><a class="button button-fill mybsmi-masteraction" data-user="'+i+'">DELETE</a></td></tr>';
+      data += '<tr class="mybsmi-master-item-'+safe(content[i][1])+'"><td data-collapsible-title="Nama"><a class="mybsmi-masteraction" data-index="'+i+'" data-user="'+btoa(JSON.stringify(content[i]))+'">'+safe(content[i][4])+' ('+safe(content[i][18])+')</a></td><td data-collapsible-title="Cabang">'+safe(content[i][11])+'</td><td><a class="button button-fill mybsmi-masteraction-delete" data-user="'+i+'">DELETE</a></td></tr>';
       jumlahadminlaporan++
   }
   data += '</tbody></table></div>';
@@ -6515,6 +6518,12 @@ function fpagemasteradminlaporan(content)
   $$('.jumlahadminlaporan').html('Jumlah : '+jumlahadminlaporan);
 
   $$('.mybsmi-master-adminlaporan a.mybsmi-masteraction').on('click', function (e) {
+        var base64 = this.attributes["data-user"].value;
+        var index = this.attributes["data-index"].value;
+        fpagemasteridentitas(base64,index)
+  });
+
+  $$('.mybsmi-master-adminlaporan a.mybsmi-masteraction-delete').on('click', function (e) {
               var index = this.attributes["data-user"].value;
               index = parseInt(index);
               let inputdata = {"instruksi":"delete",index}
@@ -7060,6 +7069,140 @@ function fpagemastermutasianggota(data,index)
 			  app.dialog.confirm('Mutasi?', 'Konfirmasi', function (){
 				fpagemastereditanggotasave(index,"mutasi","pindahcabang",cabangtujuan,data)
 			  })
+          }
+      },
+      {
+        text: 'Batal',
+        close:true,
+        color: 'gray',
+        onClick: function(dialog, e)
+          {
+
+          }
+      },
+    ]
+  });
+  dialog.open();
+}
+
+//----administrasi---
+
+function fpagemasteradministrasi(content)
+{
+	fpagemasteradministrasilist(content,"bsmr")
+}
+
+
+function fpagemasteradministrasilist(content,administrasi)
+{
+	let html =  '<div class="col-100 medium-100" >'+
+				  '<div class="card">'+
+					'<div class="card-header">Admin '+administrasi+'<span style="font-size:10px;" class="mybsmi-master-admin'+administrasi+'-total">Jumlah : 0</span><a class="button button-fill mybsmi-master-admin'+administrasi+'-add" title="Add">Add</a></div>'+
+					'<div class="card-content card-content-padding">'+
+						'<div class="accordion-item"><div class="accordion-item-toggle"><button class="button">...</button></div><div class="accordion-item-content">'+
+							'<div class="mybsmi-master-admin'+administrasi+'-list"><div class="progressbar-infinite"></div></div>'+
+						'</div></div>'+
+					'</div>'+
+					'<div class="card-footer"></div>'+
+				  '</div>'+
+				'</div>'
+	$$('.mybsmi-master-adminadministrasi').append(html)
+
+
+  var jumlahadmin = 0
+  var data = '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th>Nama</th><th>Cabang</th><th></th></tr></thead><tbody>';
+  for (i=content.length-1;i>-1;i--)
+  {
+      if ((skipuid.includes(content[i][1]))&&(dashboarddata.user.useruid !== '0ONjeb65X5OunuRI6Ap8')){continue;}else{if ((skipuid.includes(content[i][1]))&&(!isLocal)) continue;}
+      
+      if ((content[i][3] === 'Terbatas')||(content[i][3] === 'Terverifikasi')||(content[i][3] === 'Tertolak')){}else{continue;}
+      
+      let json = JSON.parse(content[i][14]);
+      
+      if (json.adminlaporan && json.adminlaporanadministrasi == administrasi){}else{continue;}
+      
+      data += '<tr class="mybsmi-master-item-'+safe(content[i][1])+'"><td data-collapsible-title="Nama"><a class="mybsmi-masteraction" data-index="'+i+'" data-user="'+btoa(JSON.stringify(content[i]))+'">'+safe(content[i][4])+' ('+safe(content[i][18])+')</a></td><td data-collapsible-title="Cabang">'+safe(content[i][11])+'</td><td><a class="button button-fill mybsmi-masteraction-delete" data-user="'+i+'">DELETE</a></td></tr>';
+      jumlahadmin++
+  }
+  data += '</tbody></table></div>';
+  $$('.mybsmi-master-admin'+administrasi+'-list').html(data);
+  $$('.mybsmi-master-admin'+administrasi+'-total').html('Jumlah : '+jumlahadmin);
+
+  $$('.mybsmi-master-admin'+administrasi+'-list a.mybsmi-masteraction').on('click', function (e) {
+        var base64 = this.attributes["data-user"].value;
+        var index = this.attributes["data-index"].value;
+        fpagemasteridentitas(base64,index)
+  });
+
+  $$('.mybsmi-master-admin'+administrasi+'-list a.mybsmi-masteraction-delete').on('click', function (e) {
+              var index = this.attributes["data-user"].value;
+              index = parseInt(index);
+              let inputdata = {"instruksi":"delete",index,"administrasi":"nihil"}
+              fpagemasteradminlaporansave(inputdata);
+  });
+
+  $$('.mybsmi-master-admin'+administrasi+'-add').on('click', function (e) {
+        fpagemasteradminadministrasiadd(content,administrasi)     
+  });
+  
+}
+
+function  fpagemasteradminadministrasiadd(content,administrasi)
+{
+  var oldadminindex = -1;
+  var dialog = app.dialog.create({
+    title: 'Add Admin '+administrasi,
+    content:''////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      +'<div style="width:100%;height:50vh;overflow:auto;">'
+      +'  <div style="display:flex;flex-direction:column;align-items:center;justify-content: center;">'
+      +'      <img id="img" src="icon512.png" style="width:150px;height:150px;margin: 10px 10px;border-radius: 0%;object-fit: cover;">'
+      +'      <p style="font-weight:bold;">'+administrasi+'</p>'
+      +'  <div class="list no-hairlines-md">'
+      +'    <ul>'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Admin</div><div class="item-input-wrap">'
+      +'                            <select id="adminadministrasi" name="adminadministrasi">'
+      +'                              <option value="-1" selected>-</option>'
+      +'                            </select>'
+      +'            </div></div>'
+      +'        </li>'
+      +'    </ul>'
+      +'  </div>'
+      +'  </div>'
+      +'</div>',//////////////////////////////////////////////////////////////////////////////////////////////////
+    closeByBackdropClick: false,
+    destroyOnClose: true,
+    verticalButtons: true,
+    on: {
+      opened: function () {
+        //console.log('Dialog opened')
+        var select = document.getElementById('adminadministrasi');
+		var datarelawan = content
+        datarelawan.forEach(function(item,index){
+          let statusincludes = ["Terbatas","Terverifikasi","Tertolak"]
+          if (!statusincludes.includes(item[3]))return
+          if (!isLocal) {
+            if (skipuid.includes(item[1]))return
+          }
+          
+			var opt = document.createElement('option');
+			opt.value = index;
+			opt.innerHTML = item[4]+' ('+item[18]+')';           
+			select.appendChild(opt);
+
+          
+        });
+      }
+    },
+    buttons: [
+      {
+        text: 'Simpan',
+        close:true,
+        color: 'red',
+        onClick: function(dialog, e)
+          {
+              var index =  parseInt($$('#adminadministrasi').val());
+              let inputdata = {"instruksi":"add",index,"administrasi":administrasi}
+			  fpagemasteradminlaporansave(inputdata);
           }
       },
       {
