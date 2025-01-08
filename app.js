@@ -5246,7 +5246,7 @@ function fpageadmincabangbsmrtambah(datacabang,datarelawan,bsmr,idx,edit)
         color: 'red',
         onClick: function(dialog, e)
           {
-				
+				var tanggalbsmr = new Date()
 				var namacabang = datacabang[0];
 				var namasekolah = $$('#namasekolah').val();
 				var alamatsekolah = $$('#alamatsekolah').val();
@@ -5262,13 +5262,14 @@ function fpageadmincabangbsmrtambah(datacabang,datarelawan,bsmr,idx,edit)
 				
 				if(edit){
 					var arr = JSON.parse(mybsmr)
-					arr[parseInt(idx)] = {namacabang,namasekolah,alamatsekolah,nomorbsmr,tahunpendirianbsmr,jumlahanggotabsmr,picbsmr,piccabangid}
+					tanggalbsmr = arr[parseInt(idx)].tanggalbsmr
+					arr[parseInt(idx)] = {tanggalbsmr,namacabang,namasekolah,alamatsekolah,nomorbsmr,tahunpendirianbsmr,jumlahanggotabsmr,picbsmr,piccabangid}
 					var bsmr = JSON.stringify(arr)
 					var data = {namacabang,bsmr}
 					fpageadmincabangbsmrsave(data,datacabang,datarelawan)
 				}else{
 					var arr = JSON.parse(datacabang[9])
-					arr.push({namacabang,namasekolah,alamatsekolah,nomorbsmr,tahunpendirianbsmr,jumlahanggotabsmr,picbsmr,piccabangid})
+					arr.push({tanggalbsmr,namacabang,namasekolah,alamatsekolah,nomorbsmr,tahunpendirianbsmr,jumlahanggotabsmr,picbsmr,piccabangid})
 					var bsmr = JSON.stringify(arr)
 					var data = {namacabang,bsmr};
 					fpageadmincabangbsmrsave(data,datacabang,datarelawan);
