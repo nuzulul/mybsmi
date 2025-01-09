@@ -5507,7 +5507,7 @@ function fpageadminlaporan(content)
 	
 	//-------status-----
 	
-	let statushtml = '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th>Cabang</th><th>Ketua</th><th>Pengurus</th><th>Total Anggota</th><th>BSMR</th><th>Klinik</th><th></th></tr></thead><tbody>'
+	let statushtml = '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th>Cabang</th><th>Ketua</th><th>Pengurus</th><th>Anggota</th><th>BSMR</th><th>Klinik</th><th></th></tr></thead><tbody>'
 	
 	let totalanggota = new Map()
 
@@ -5523,24 +5523,33 @@ function fpageadminlaporan(content)
 		}
 	})
 	
+	let totalanggotabsmi = 0
+	let totalbsmr = 0
+	let totalklinik = 0
+	
 	kodecabang.forEach((cabang)=>{
 		if((cabang[0] !== 'BSMI Jawa Timur' && !isLocal)||isLocal){
 			let jabatan = JSON.parse(cabang[8])
 			let bsmr = JSON.parse(cabang[9]);bsmr = bsmr.filter((item)=>item.aktif == true)
 			let klinik = JSON.parse(cabang[10])
 			let anggota = totalanggota.has(cabang[0]) ? totalanggota.get(cabang[0]) : 0
+			totalanggotabsmi += anggota
+			totalbsmr += bsmr.length
+			totalklinik += klinik.length
 			let ketua = datarelawan.find((arr)=>arr[1]==cabang[5])
 			statushtml += 	'<tr>'+
 								'<td data-collapsible-title="Cabang"><a href="/cabang/'+safe(cabang[1])+'">'+safe(cabang[0])+'</a></td>'+
 								'<td data-collapsible-title="Ketua"><a class="mybsmi-adminaction" data-user="'+btoa(JSON.stringify(ketua))+'">'+safe(cabang[6])+'</a></td>'+
 								'<td data-collapsible-title="Pengurus">'+jabatan.length+'</td>'+
-								'<td data-collapsible-title="Total Anggota">'+anggota+'</td>'+
+								'<td data-collapsible-title="Anggota">'+anggota+'</td>'+
 								'<td data-collapsible-title="BSMR">'+bsmr.length+'</td>'+
 								'<td data-collapsible-title="Klinik">'+klinik.length+'</td>'+
 								'<td data-collapsible-title=""><a class="button button-fill mybsmi-statuscabang" data-cabang="'+safe(cabang[0])+'">Detail</a></td>'+
 							'</tr>'
 		}
 	})
+	
+	statushtml += 	'<tr><td data-collapsible-title="">Total</td><td data-collapsible-title=""></td><td data-collapsible-title=""></td><td data-collapsible-title="Total Anggota">'+totalanggotabsmi+'</td><td data-collapsible-title="Total BSMR">'+totalbsmr+'</td><td data-collapsible-title="Total Klinik">'+totalklinik+'</td><td data-collapsible-title=""></td></tr>'
 	
 	statushtml += '</tbody></table></div>'
 	
