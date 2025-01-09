@@ -5846,6 +5846,10 @@ function fpageadminlaporanadministrasilist(content,administrasi)
 		fpageadminlaporanadministrasibsmrregistrasi(content)
 		fpageadminlaporanadministrasibsmrterdaftar(content)
 	}
+	else if(administrasi == 'klinik')
+	{
+		fpageadminlaporanadministrasiklinik(content)
+	}
 }
 
 function fpageadminlaporanadministrasisave(inputdata)
@@ -6007,6 +6011,54 @@ function fpageadminlaporanadministrasibsmrterdaftar(content)
 	});
 	
 	$$('.mybsmi-adminlaporan-administrasi-terdaftar .card-header').append('<span style="font-size:10px;">Jumlah : '+jumlah+'</span>')
+}
+
+//---klinik----
+function fpageadminlaporanadministrasiklinik(content)
+{
+	$$('.mybsmi-adminlaporan-administrasi-header .card-header').text('ADMINISTRASI KLINIK JAWA TIMUR')
+	$$('.mybsmi-adminlaporan-administrasi-list .card-header').text('Klinik BSMI Aktif')
+
+
+	let klinikhtml = '<div class="data-table data-table-collapsible data-table-init klinik"><table><thead><tr><th>Nama klinik</th><th>Alamat klinik</th><th>Layanan klinik</th><th>Tahun Pendirian</th><th>Jumlah karyawan</th><th>Manajer klinik</th><th>BSMI Cabang</th><th>PIC klinik (dari BSMI Cabang)</th></tr></thead><tbody>'
+	let jumlah = 0;
+	
+	for(let j=0;j<kodecabang.length;j++)
+	{
+		let indexcabang = j;
+		
+		let namacabang = kodecabang[indexcabang][0]
+		let klinik = kodecabang[indexcabang][10]
+
+		let arrklinik = JSON.parse(klinik)
+		for(let i=0;i<arrklinik.length;i++){
+			let item = arrklinik[i]
+			jumlah++;
+			let data = datarelawan.find((arr)=>arr[1]==item.picklinikid)
+			klinikhtml += '<tr>'+
+							'<td data-collapsible-title="Nama klinik">'+safe(item.namaklinik)+'</td>'+
+							'<td data-collapsible-title="Alamat klinik">'+safe(item.alamatklinik)+'</td>'+
+							'<td data-collapsible-title="Layanan klinik">'+safe(item.layananklinik)+'</td>'+
+							'<td data-collapsible-title="Tahun Pendirian">'+safe(item.tahunpendirianklinik)+'</td>'+
+							'<td data-collapsible-title="Jumlah karyawan">'+safe(item.jumlahkaryawanklinik)+'</td>'+
+							'<td data-collapsible-title="Manajer klinik">'+safe(item.manajerklinik)+'</td>'+
+							'<td data-collapsible-title="BSMI Cabang">'+safe(namacabang)+'</td>'+
+							'<td data-collapsible-title="PIC klinik (dari BSMI Cabang)"><a class="mybsmi-adminaction" data-user="'+btoa(JSON.stringify(data))+'">'+safe(data[4])+'</a></td>'+
+						'</tr>'
+		}
+	}
+	
+	klinikhtml += '</tbody></table></div>'
+	
+	$$('.mybsmi-adminlaporan-administrasi-list-view').html(klinikhtml)
+
+	$$('.mybsmi-adminlaporan-administrasi-list-view .klinik a.mybsmi-adminaction').on('click', function (e) {
+			var base64 = this.attributes["data-user"].value;
+			fpageadminidentitas(base64)
+	});	
+	
+	$$('.mybsmi-adminlaporan-administrasi-list .card-header').append('<span style="font-size:10px;">Jumlah : '+jumlah+'</span>')
+
 }
 ///////fpageadmin////////////////////////////////////////////////////////
 
@@ -7309,6 +7361,7 @@ function fpagemasteradministrasi(content)
 {
 	$$('.mybsmi-master-adminadministrasi').html("")
 	fpagemasteradministrasilist(content,"bsmr")
+	fpagemasteradministrasilist(content,"klinik")
 }
 
 
