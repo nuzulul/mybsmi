@@ -2704,10 +2704,10 @@ function fpagecabangrun(content,cabangid)
 			let el = ''+
 			  '<li>'+
 				'<div class="item-content">'+
-				  '<div class="item-media"><img src="https://lh3.googleusercontent.com/d/'+safe(data[5])+'" style="width:1.5em;aspect-ratio:1/1;object-fit:cover;border-radius:50% 50%;overflow:hidden;"></div>'+
+				  '<div class="item-media"><a href="/relawan/'+safe(data[1])+'"><img src="https://lh3.googleusercontent.com/d/'+safe(data[5])+'" style="width:1.5em;aspect-ratio:1/1;object-fit:cover;border-radius:50% 50%;overflow:hidden;"></a></div>'+
 				  '<div class="item-inner">'+
 					'<div class="item-title"><a href="/relawan/'+safe(data[1])+'" class="mybsmi-adminaction" data-user="'+btoa(JSON.stringify(data))+'">'+safe(data[3])+'</a> <span style="font-size:10px;">('+safe(data[6])+')</span></div>'+
-					'<div class="item-after"><a class="mybsmi-struktur-delete" data-idx="'+i+'">'+safe(item.jabatanpengurus)+'</a></div>'+
+					'<div class="item-after"><a href="/relawan/'+safe(data[1])+'">'+safe(item.jabatanpengurus)+'</a></div>'+
 				  '</div>'+
 				'</div>'+
 			  '</li>'
@@ -5486,10 +5486,10 @@ function fpageadminlaporan(content)
 		let el = ''+
 		  '<li>'+
 			'<div class="item-content">'+
-			  '<div class="item-media"><img src="https://lh3.googleusercontent.com/d/'+safe(data[13])+'" style="width:1.5em;aspect-ratio:1/1;object-fit:cover;border-radius:50% 50%;overflow:hidden;"></div>'+
+			  '<div class="item-media"><a class="mybsmi-adminaction" data-user="'+btoa(JSON.stringify(data))+'"><img src="https://lh3.googleusercontent.com/d/'+safe(data[13])+'" style="width:1.5em;aspect-ratio:1/1;object-fit:cover;border-radius:50% 50%;overflow:hidden;"></a></div>'+
 			  '<div class="item-inner">'+
 				'<div class="item-title"><a class="mybsmi-adminaction" data-user="'+btoa(JSON.stringify(data))+'">'+safe(data[4])+'</a> <span style="font-size:10px;">('+safe(data[18])+')</span></div>'+
-				'<div class="item-after"><a class="mybsmi-struktur-delete" data-idx="'+i+'">'+safe(item.jabatanpengurus)+'</a></div>'+
+				'<div class="item-after"><a class="mybsmi-adminaction" data-user="'+btoa(JSON.stringify(data))+'">'+safe(item.jabatanpengurus)+'</a></div>'+
 			  '</div>'+
 			'</div>'+
 		  '</li>'
@@ -5669,10 +5669,10 @@ async function fpageadminstatuscabang(cabang,content)
 		let el = ''+
 		  '<li>'+
 			'<div class="item-content">'+
-			  '<div class="item-media"><img src="https://lh3.googleusercontent.com/d/'+safe(data[13])+'" style="width:1.5em;aspect-ratio:1/1;object-fit:cover;border-radius:50% 50%;overflow:hidden;"></div>'+
+			  '<div class="item-media"><a class="mybsmi-adminaction" data-user="'+btoa(JSON.stringify(data))+'"><img src="https://lh3.googleusercontent.com/d/'+safe(data[13])+'" style="width:1.5em;aspect-ratio:1/1;object-fit:cover;border-radius:50% 50%;overflow:hidden;"></a></div>'+
 			  '<div class="item-inner">'+
 				'<div class="item-title"><a class="mybsmi-adminaction" data-user="'+btoa(JSON.stringify(data))+'">'+safe(data[4])+'</a> <span style="font-size:10px;">('+safe(data[18])+')</span></div>'+
-				'<div class="item-after"><a class="mybsmi-struktur-delete" data-idx="'+i+'">'+safe(item.jabatanpengurus)+'</a></div>'+
+				'<div class="item-after"><a class="mybsmi-adminaction" data-user="'+btoa(JSON.stringify(data))+'">'+safe(item.jabatanpengurus)+'</a></div>'+
 			  '</div>'+
 			'</div>'+
 		  '</li>'
