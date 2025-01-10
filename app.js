@@ -5631,7 +5631,7 @@ function fpageadmincabangdrawbsmr(bsmr,datacabang,datarelawan)
 	for(let i=0;i<arr.length;i++){
 		let item = arr[i]
 		let data = datarelawan.find((arr)=>arr[1]==item.piccabangid)
-		let status = item.aktif == true ? 'Aktif' : 'Menunggu aktivasi'
+		let status = item.aktif == true ? 'Aktif' : 'Menunggu aktivasi untuk mendapat nomor'
 		bsmrhtml += '<tr>'+
 						'<td data-collapsible-title="Nomor BSMR">'+safe(item.nomorbsmr)+'</td>'+
 						'<td data-collapsible-title="Nama Sekolah">'+safe(item.namasekolah)+'</td>'+
@@ -6450,7 +6450,65 @@ function fpageadminlaporanadministrasisdm(content)
 function fpageadminlaporanadministrasikesekretariatan(content)
 {
 	$$('.mybsmi-adminlaporan-administrasi-header .card-header').text('ADMINISTRASI KESEKRETARIATAN BSMI JATIM')
-	$$('.mybsmi-adminlaporan-administrasi-list .card-header').text('PENDATAAN ASET BSMI')
+	$$('.mybsmi-adminlaporan-administrasi-list .card-header').text('REKAP PENDATAAN ASET BSMI')
+	
+	let datarelawan = content
+	
+	let kesekretarianhtml = '<div class="data-table data-table-collapsible data-table-init"><table style="table-layout: fixed"><thead><tr><th>Cabang</th><th>Kantor</th><th>Mobil</th><th>Ambulans</th><th>Lainnya</th><th></th></tr></thead><tbody></tbody></table></div>'
+	
+	for(let c=0;c<kodecabang.length;c++)
+	{
+		let namacabang = kodecabang[c][0]
+		let dataaset = JSON.parse(kodecabang[c][11])
+		let kantor = dataaset.filter((data)=>data.jenisaset == 'Kantor')
+		let mobil = dataaset.filter((data)=>data.jenisaset == 'Mobil')
+		let ambulans = dataaset.filter((data)=>data.jenisaset == 'Ambulans')
+		let lainnya = dataaset.filter((data)=>data.jenisaset == 'Lainnya')
+		
+		kesekretarianhtml += '<div class="accordion-item"><div class="data-table data-table-collapsible data-table-init"><table style="table-layout: fixed"><tbody><tr>'+
+									'<td data-collapsible-title="Cabang">'+safe(namacabang)+'</td>'+
+									'<td data-collapsible-title="Kantor">'+kantor.length+'</td>'+
+									'<td data-collapsible-title="Mobil">'+mobil.length+'</td>'+
+									'<td data-collapsible-title="Ambulans">'+ambulans.length+'</td>'+
+									'<td data-collapsible-title="Lainnya">'+lainnya.length+'</td>'+
+									'<td data-collapsible-title=""><div class="accordion-item-toggle"><a class="button button-fill detail">Detail</a></div></td>'+
+							'</tr><tbody></tbody></table></div>'
+		kesekretarianhtml += '<div class="accordion-item-content">'+
+									'<div class="mybsmi-aset bg-color-red block block-strong block-outline inset">'
+									
+									
+		let asethtml = '<div class="data-table data-table-collapsible data-table-init bg-color-white aset"><table><thead><tr><th>Jenis aset</th><th>Nama aset</th><th>Lokasi aset</th><th>Keterangan aset</th><th>Status aset</th><th class="display-none">Photo aset</th><th>PIC aset (dari BSMI Cabang)</th></tr></thead><tbody>'
+		let arr = dataaset
+		for(let i=0;i<arr.length;i++){
+			let item = arr[i]
+			let data = datarelawan.find((arr)=>arr[1]==item.picasetid)
+			asethtml += '<tr>'+
+							'<td data-collapsible-title="Jenis aset">'+safe(item.jenisaset)+'</td>'+
+							'<td data-collapsible-title="Nama aset">'+safe(item.namaaset)+'</td>'+
+							'<td data-collapsible-title="Lokasi aset">'+safe(item.lokasiaset)+'</td>'+
+							'<td data-collapsible-title="Keterangan aset">'+safe(item.keteranganaset)+'</td>'+
+							'<td data-collapsible-title="Status aset">'+safe(item.statusaset)+'</td>'+
+							'<td data-collapsible-title="Photo aset" class="display-none">'+safe(item.photoaset)+'</td>'+
+							'<td data-collapsible-title="PIC aset (dari BSMI Cabang)"><a class="mybsmi-adminaction" data-user="'+btoa(JSON.stringify(data))+'">'+safe(data[4])+'</a></td>'+
+						'</tr>'
+		}
+		asethtml += '</tbody></table></div>'
+
+		kesekretarianhtml += asethtml
+									
+									
+		kesekretarianhtml +=		'</div>'+
+							'</div>'+
+							'</div>'
+	}
+	
+	$$('.mybsmi-adminlaporan-administrasi-list-view').html(kesekretarianhtml)
+
+	$$('.mybsmi-adminlaporan-administrasi-list-view .aset a.mybsmi-adminaction').on('click', function (e) {
+			var base64 = this.attributes["data-user"].value;
+			fpageadminidentitas(base64)
+	});
+
 }
 ///////fpageadmin////////////////////////////////////////////////////////
 
