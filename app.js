@@ -4979,7 +4979,7 @@ function fpageadmincabangasettambah(datacabang,datarelawan,aset,idx,edit)
 			$$('#statusaset').val(safe(data.statusaset))
 			$$('#photoaset').val(safe(data.photoaset))
 			$$('#picasetid').val(safe(data.picasetid))
-			$$('#jenisaset').attr('disabled','true')
+			//$$('#jenisaset').attr('disabled','true')
 		}
 		
       }
@@ -5631,7 +5631,7 @@ function fpageadmincabangdrawbsmr(bsmr,datacabang,datarelawan)
 	for(let i=0;i<arr.length;i++){
 		let item = arr[i]
 		let data = datarelawan.find((arr)=>arr[1]==item.piccabangid)
-		let status = item.aktif == true ? 'Aktif' : 'Menunggu persetujuan'
+		let status = item.aktif == true ? 'Aktif' : 'Menunggu aktivasi'
 		bsmrhtml += '<tr>'+
 						'<td data-collapsible-title="Nomor BSMR">'+safe(item.nomorbsmr)+'</td>'+
 						'<td data-collapsible-title="Nama Sekolah">'+safe(item.namasekolah)+'</td>'+
@@ -6430,7 +6430,7 @@ function fpageadminlaporanadministrasisdm(content)
 
 	let html = `<div class="col-100 medium-100 mybsmi-adminlaporan-administrasi-action">
 				  <div class="card">
-					<div class="card-header"></div>
+					<div class="card-header">SDM BSMI JATIM</div>
 					<div class="card-content card-content-padding">
 						<a class="button button-fill buat-link">PENDATAAN ANGGOTA BSMI</a>
 					</div>
