@@ -6508,7 +6508,307 @@ function fpageadminlaporanadministrasikesekretariatan(content)
 			var base64 = this.attributes["data-user"].value;
 			fpageadminidentitas(base64)
 	});
+	
+	fpageadminlaporanadministrasikesekretariatanaset(content)
 
+}
+
+function fpageadminlaporanadministrasikesekretariatanaset(content)
+{
+	let html = `<div class="col-100 medium-100 mybsmi-adminlaporan-administrasi-action">
+				  <div class="card">
+					<div class="card-header">PENDATAAN ASET BSMI JATIM</div>
+					<div class="card-content card-content-padding">
+						<div class="mybsmi-adminlaporan-administrasi-list-aset"><div class="progressbar-infinite"></div></div>
+					</div>
+					<div class="card-footer"><a class="button button-fill mybsmi-adminlaporan-administrasi-tambah-aset">Tambah</a></div>
+				  </div>
+				</div>
+				`
+				
+	$$('.mybsmi-adminlaporan-administrasi').append(html)
+
+	let datacabang = kodecabang[0]
+	let aset = datacabang[11]
+	let datarelawan = content
+	fpageadminlaporanadministrasikesekretariatandrawaset(aset,datacabang,datarelawan)
+}
+
+function fpageadminlaporanadministrasikesekretariatanasettambah(datacabang,datarelawan,aset,idx,edit)
+{
+  let myaset = aset
+  let title = edit ? 'Edit aset' : 'Tambah aset'
+  var dialog = app.dialog.create({
+    title: title,
+    content:''////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      +'<div style="width:100%;height:50vh;overflow:auto;">'
+      +'  <div style="display:flex;flex-direction:column;align-items:center;justify-content: center;">'
+      +'      <img id="img" src="icon512.png" style="width:150px;height:150px;margin: 10px 10px;border-radius: 0%;object-fit: cover;">'
+      +'      <p style="font-weight:bold;">'+safe(datacabang[0])+'</p>'
+      +'  <div class="list no-hairlines-md">'
+      +'    <ul>'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Jenis aset</div><div class="item-input-wrap">'
+      +'                            <select id="jenisaset" name="jenisaset">'
+      +'                              <option value="" selected disabled> </option>'
+	  +'                              <option value="Kantor">Kantor</option>'
+	  +'                              <option value="Ambulans">Ambulans</option>'
+	  +'                              <option value="Mobil">Mobil</option>'
+	  +'                              <option value="Lainnya">Lainnya</option>'
+      +'                            </select>'
+      +'            </div></div>'
+      +'        </li>'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Nama aset</div><div class="item-input-wrap">'
+      +'            <input type="text" id="namaaset" name="namaaset" placeholder="Nama aset" value="">'
+      +'            </div></div>'
+      +'        </li>'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Lokasi aset</div><div class="item-input-wrap">'
+      +'            <input type="text" id="lokasiaset" name="lokasiaset" placeholder="Lokasi aset" value="">'
+      +'            </div></div>'
+      +'        </li>'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Keterangan aset</div><div class="item-input-wrap">'
+      +'            <input type="text" id="keteranganaset" name="keteranganaset" placeholder="Kondisi/Nomor/Sertifikat//dll" value="">'
+      +'            </div></div>'
+      +'        </li>'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Status aset</div><div class="item-input-wrap">'
+      +'                            <select id="statusaset" name="statusaset">'
+      +'                              <option value="" selected disabled> </option>'
+	  +'                              <option value="Milik Sendiri">Milik Sendiri</option>'
+	  +'                              <option value="Sewa">Sewa</option>'
+	  +'                              <option value="Menumpang">Menumpang</option>'
+      +'                            </select>'
+      +'            </div></div>'
+      +'        </li>'
+      +'        <li class="item-content item-input display-none"><div class="item-inner"><div class="item-title item-label">Photo aset</div><div class="item-input-wrap">'
+      +'            <input type="text" id="photoaset" name="photoaset" placeholder="Photo aset" value="">'
+      +'            </div></div>'
+      +'        </li>'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">PIC aset (dari BSMI Cabang)</div><div class="item-input-wrap">'
+      +'                            <select id="picasetid" name="picasetid">'
+      +'                              <option value="" selected> </option>'
+      +'                            </select>'
+      +'            </div></div>'
+      +'        </li>'
+      +'    </ul>'
+      +'  </div>'
+      +'  </div>'
+      +'</div>',//////////////////////////////////////////////////////////////////////////////////////////////////
+    closeByBackdropClick: false,
+    destroyOnClose: true,
+    verticalButtons: true,
+    on: {
+      opened: function () {
+        //console.log('Dialog opened')
+        var select = document.getElementById('picasetid');
+        datarelawan.forEach(function(item,index){
+            var opt = document.createElement('option');
+            opt.value = item[1];
+            opt.innerHTML = item[4]+' ('+item[18]+')';            
+            if(userstatusnormal.includes(item[3]))
+			{
+				select.appendChild(opt);
+			}
+        });
+		
+		if(edit){
+			let arr = JSON.parse(aset)
+			let data = arr[parseInt(idx)]
+			$$('#jenisaset').val(safe(data.jenisaset))
+			$$('#namaaset').val(safe(data.namaaset))
+			$$('#lokasiaset').val(safe(data.lokasiaset))
+			$$('#keteranganaset').val(safe(data.keteranganaset))
+			$$('#statusaset').val(safe(data.statusaset))
+			$$('#photoaset').val(safe(data.photoaset))
+			$$('#picasetid').val(safe(data.picasetid))
+			//$$('#jenisaset').attr('disabled','true')
+		}
+		
+      }
+    },
+    buttons: [
+      {
+        text: 'Simpan',
+        close:true,
+        color: 'red',
+        onClick: function(dialog, e)
+          {
+				
+				var namacabang = datacabang[0];
+				var jenisaset = $$('#jenisaset').val();
+				var namaaset = $$('#namaaset').val();
+				var lokasiaset = $$('#lokasiaset').val();
+				var keteranganaset = $$('#keteranganaset').val();
+				var statusaset = $$('#statusaset').val();
+				var photoaset = $$('#photoaset').val();
+				var picasetid = $$('#picasetid').val();
+				if(picasetid == ''){
+					var toastBottom = app.toast.create({ text: 'PIC aset tidak boleh kosong', closeTimeout: 3000,position: 'center', });toastBottom.open();
+					return
+				}
+				
+				if(edit){
+					var arr = JSON.parse(myaset)
+					arr[parseInt(idx)] = {namacabang,jenisaset,namaaset,lokasiaset,keteranganaset,statusaset,photoaset,picasetid}
+					var aset = JSON.stringify(arr)
+					var data = {namacabang,aset,indexcabang:0,administrasi:'kesekretariatan',instruksi:'update'}
+					fpageadminlaporanadministrasikesekretariatanasetsave(data,datacabang,datarelawan)
+				}else{
+					var arr = JSON.parse(datacabang[11])
+					arr.push({namacabang,jenisaset,namaaset,lokasiaset,keteranganaset,statusaset,photoaset,picasetid})
+					var aset = JSON.stringify(arr)
+					var data = {namacabang,aset,indexcabang:0,administrasi:'kesekretariatan',instruksi:'update'};
+				fpageadminlaporanadministrasikesekretariatanasetsave(data,datacabang,datarelawan);
+				}
+          }
+      },
+      {
+        text: 'Batal',
+        close:true,
+        color: 'gray',
+        onClick: function(dialog, e)
+          {
+
+          }
+      },
+    ]
+  });
+  dialog.open();
+}
+
+function fpageadminlaporanadministrasikesekretariatanasetsave(inputdata,datacabang,datarelawan)
+{
+      //console.log(inputdata);return;
+	  inputdata=JSON.stringify(inputdata);
+      let mypreloader = app.dialog.preloader();
+      app.request({
+        url: apidataurl,
+        method: 'POST',
+        cache: false,
+        data : { token:mybsmiusertoken, command: 'adminlaporanadministrasisave', inputdata}, 
+        success: function (data, status, xhr)
+          {
+            mypreloader.close();
+            var status = JSON.parse(data).status;
+            var content = JSON.parse(data).data;
+            if (status == "success")
+            {
+              //console.log(content);
+			  fpageadminlaporanadministrasikesekretariatandrawaset(content,datacabang,datarelawan)
+              var toastBottom = app.toast.create({ text: 'Berhasil', closeTimeout: 3000,position: 'center', });toastBottom.open();
+            }
+            else if (status == "failed")
+            {
+              //console.log("failed");
+              app.dialog.alert(content,'Terjadi Kesalahan');
+            }
+            else
+            {
+              //console.log("failed");
+              //app.dialog.alert(content,'Terjadi Kesalahan');
+              fcekexpiredtoken(content);
+            }
+          },
+        error: function (xhr, status, message)
+          {
+            //console.log(message);
+            mypreloader.close();
+            app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
+          },
+      })
+}
+
+function fpageadminlaporanadministrasikesekretariatandrawaset(aset,datacabang,datarelawan)
+{
+	datacabang[11] = aset
+	$$('.mybsmi-adminlaporan-administrasi-tambah-aset').off('click')
+	$$('.mybsmi-adminlaporan-administrasi-tambah-aset').on('click', function () {
+		fpageadminlaporanadministrasikesekretariatanasettambah(datacabang,datarelawan)
+	})
+	
+	let asethtml = '<div class="data-table data-table-collapsible data-table-init aset"><table><thead><tr><th>Jenis aset</th><th>Nama aset</th><th>Lokasi aset</th><th>Keterangan aset</th><th>Status aset</th><th class="display-none">Photo aset</th><th>PIC aset (dari BSMI Cabang)</th><th></th></tr></thead><tbody>'
+	let arr = JSON.parse(aset)
+	for(let i=0;i<arr.length;i++){
+		let item = arr[i]
+		let data = datarelawan.find((arr)=>arr[1]==item.picasetid)
+		asethtml += '<tr>'+
+						'<td data-collapsible-title="Jenis aset">'+safe(item.jenisaset)+'</td>'+
+						'<td data-collapsible-title="Nama aset">'+safe(item.namaaset)+'</td>'+
+						'<td data-collapsible-title="Lokasi aset">'+safe(item.lokasiaset)+'</td>'+
+						'<td data-collapsible-title="Keterangan aset">'+safe(item.keteranganaset)+'</td>'+
+						'<td data-collapsible-title="Status aset">'+safe(item.statusaset)+'</td>'+
+						'<td data-collapsible-title="Photo aset" class="display-none">'+safe(item.photoaset)+'</td>'+
+						'<td data-collapsible-title="PIC aset (dari BSMI Cabang)"><a class="mybsmi-adminaction" data-user="'+btoa(JSON.stringify(data))+'">'+safe(data[4])+'</a></td>'+
+						'<td data-collapsible-title=""><a class="button button-fill update" data-idx="'+i+'">Update</a></td>'+
+					'</tr>'
+	}
+	asethtml += '</tbody></table></div>'
+	
+	$$('.mybsmi-adminlaporan-administrasi-list-aset').html(asethtml)
+
+	$$('.mybsmi-adminlaporan-administrasi-list-aset .aset a.mybsmi-adminaction').on('click', function (e) {
+			var base64 = this.attributes["data-user"].value;
+			fpageadminidentitas(base64)
+	});
+	
+	$$('.mybsmi-adminlaporan-administrasi-list-aset .aset a.update').on('click', function (e) {
+		var idx = this.attributes["data-idx"].value;
+		fpageadminlaporanadministrasikesekretariatanasetupdate(datacabang,datarelawan,aset,idx)
+	});
+}
+
+function fpageadminlaporanadministrasikesekretariatanasetupdate(datacabang,datarelawan,aset,idx){
+	
+  var dialog = app.dialog.create({
+    title: 'Update aset',
+    content:'',
+    closeByBackdropClick: false,
+    destroyOnClose: true,
+    verticalButtons: true,
+    on: {
+      opened: function () {
+        
+      }
+    },
+    buttons: [
+      {
+        text: 'Edit',
+        close:true,
+        color: 'red',
+        onClick: function(dialog, e)
+          {
+              let edit = true
+			  fpageadminlaporanadministrasikesekretariatanasettambah(datacabang,datarelawan,aset,idx,edit)
+          }
+      },
+      {
+        text: 'Delete',
+        close:true,
+        color: 'red',
+        onClick: function(dialog, e)
+          {
+			let myaset = aset
+			app.dialog.confirm('Hapus?', 'Konfirmasi', function (){
+				console.log('myaset',myaset)
+				let namacabang = datacabang[0]
+				let oldaset = JSON.parse(myaset)
+				oldaset.splice(parseInt(idx), 1)
+				let aset = JSON.stringify(oldaset)
+				var datainput = {namacabang,aset,indexcabang:0,administrasi:'kesekretariatan',instruksi:'update'};
+				fpageadminlaporanadministrasikesekretariatanasetsave(datainput,datacabang,datarelawan);
+			})              
+          }
+      },
+      {
+        text: 'Tutup',
+        close:true,
+        color: 'gray',
+        onClick: function(dialog, e)
+          {
+
+          }
+      },
+    ]
+  });
+  dialog.open();
 }
 ///////fpageadmin////////////////////////////////////////////////////////
 
