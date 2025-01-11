@@ -4926,7 +4926,7 @@ function fpageadmincabangasettambah(datacabang,datarelawan,aset,idx,edit)
       +'            </div></div>'
       +'        </li>'
       +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Keterangan aset</div><div class="item-input-wrap">'
-      +'            <input type="text" id="keteranganaset" name="keteranganaset" placeholder="Nomor/surat/sertifikat/kondisi/dll" value="">'
+      +'            <input type="text" id="keteranganaset" name="keteranganaset" placeholder="Kondisi/Nomor/Surat/dll" value="">'
       +'            </div></div>'
       +'        </li>'
       +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Status aset</div><div class="item-input-wrap">'
@@ -6427,19 +6427,147 @@ function fpageadminlaporanadministrasisdm(content)
 		//console.log(url);
 		app.views.main.router.navigate(url);
   });
+  
+  $$('.mybsmi-adminlaporan-administrasi-list').hide()
+  
+  fpageadminlaporanadministrasisdmaktif(content)
+}
 
-	let html = `<div class="col-100 medium-100 mybsmi-adminlaporan-administrasi-action">
+function fpageadminlaporanadministrasisdmaktif(content)
+{	
+	let sdmaktifhtml = `<div class="col-100 medium-100 mybsmi-adminlaporan-administrasi-sdm-aktif">
 				  <div class="card">
-					<div class="card-header">SDM BSMI JATIM</div>
+					<div class="card-header">PENDATAAN SDM BSMI</div>
 					<div class="card-content card-content-padding">
-						<a class="button button-fill buat-link">PENDATAAN ANGGOTA BSMI</a>
+						<div class="mybsmi-adminlaporan-administrasi-sdm-aktif-list"><div class="progressbar-infinite"></div></div>
 					</div>
 					<div class="card-footer"></div>
 				  </div>
 				</div>
 				`
 				
-	$$('.mybsmi-adminlaporan-administrasi').append(html)
+	$$('.mybsmi-adminlaporan-administrasi').append(sdmaktifhtml)
+	
+	let datarelawan = content
+	
+	let sdmhtml = '<div class="data-table data-table-collapsible data-table-init"><table style="table-layout: fixed"><thead><tr><th>Cabang</th><th>Total Anggota</th><th>Anggota Aktif</th><th>Anggota Muda</th><th>Anggota Madya</th><th>Anggota Siaga</th><th></th></tr></thead><tbody></tbody></table></div>'
+	
+	for(let c=0;c<kodecabang.length;c++)
+	{
+		let namacabang = kodecabang[c][0]
+		let anggotacabang = datarelawan.filter((data)=>!skipuid.includes(data[1])&&userstatusnormal.includes(data[3])&&data[11]==namacabang)
+		let anggotaaktif = anggotacabang.filter((data)=>{
+			let statuskeanggotaan = (JSON.parse(data[14])).statuskeanggotaan
+			let status = statuskeanggotaan ? statuskeanggotaan.status : '-'
+			return (status=='AKTIF')
+		})
+		let anggotalain = anggotacabang.filter((data)=>{
+			let statuskeanggotaan = (JSON.parse(data[14])).statuskeanggotaan
+			let status = statuskeanggotaan ? statuskeanggotaan.status : '-'
+			return (status!='AKTIF')
+		})
+		let anggotamuda = anggotaaktif.filter((data)=>{
+			let statuskeanggotaan = (JSON.parse(data[14])).statuskeanggotaan
+			let jenjang = statuskeanggotaan ? statuskeanggotaan.jenjang : '-'
+			return (jenjang=='ANGGOTA MUDA')
+		})
+		let anggotamadya = anggotaaktif.filter((data)=>{
+			let statuskeanggotaan = (JSON.parse(data[14])).statuskeanggotaan
+			let jenjang = statuskeanggotaan ? statuskeanggotaan.jenjang : '-'
+			return (jenjang=='ANGGOTA MADYA')
+		})
+		let anggotasiaga = anggotaaktif.filter((data)=>{
+			let statuskeanggotaan = (JSON.parse(data[14])).statuskeanggotaan
+			let jenjang = statuskeanggotaan ? statuskeanggotaan.jenjang : '-'
+			return (jenjang=='ANGGOTA SIAGA')
+		})
+
+		sdmhtml += '<div class="accordion-item"><div class="data-table data-table-collapsible data-table-init"><table style="table-layout: fixed"><tbody><tr>'+
+									'<td data-collapsible-title="Cabang">'+safe(namacabang)+'</td>'+
+									'<td data-collapsible-title="Total Anggota">'+anggotacabang.length+'</td>'+
+									'<td data-collapsible-title="Anggota Aktif">'+anggotaaktif.length+'</td>'+
+									'<td data-collapsible-title="Anggota Muda">'+anggotamuda.length+'</td>'+
+									'<td data-collapsible-title="Anggota Madya">'+anggotamadya.length+'</td>'+
+									'<td data-collapsible-title="Anggota Siaga">'+anggotasiaga.length+'</td>'+
+									'<td data-collapsible-title=""><div class="accordion-item-toggle"><a class="button button-fill detail">Detail</a></div></td>'+
+							'</tr><tbody></tbody></table></div>'
+		sdmhtml += '<div class="accordion-item-content">'+
+									'<div class="mybsmi-sdmaktif bg-color-red block block-strong block-outline inset">'
+
+
+		sdmhtml += '<div class="block bg-color-white margin-bottom">ANGGOTA AKTIF</div>'
+		
+		let aktifhtml= '<div class="data-table data-table-collapsible data-table-init bg-color-white aktif"><table><thead><tr><th></th><th>Nama</th><th>No. KTA</th><th>Cabang</th><th>Profesi</th><th>Status Keanggotaan</th><th>Jenjang Keanggotaan</th><th></th></tr></thead><tbody>';
+
+		for (i=anggotaaktif.length-1;i>-1;i--)
+		{ 
+		  let badge = anggotaaktif[i][3] === 'Terverifikasi' ? '<i class="icon f7-icons" style="font-size:12px;color:blue;">checkmark_seal</i>' : '';
+		  let statuskeanggotaan = (JSON.parse(anggotaaktif[i][14])).statuskeanggotaan
+		  let status = statuskeanggotaan ? statuskeanggotaan.status : '-'
+		  let jenjang = statuskeanggotaan ? statuskeanggotaan.jenjang : '-'
+		  
+		  if(status != 'AKTIF')continue
+		  
+		  aktifhtml += '<tr class="mybsmi-admin-item-'+safe(anggotaaktif[i][1])+'"><td data-collapsible-title=""><img src="https://lh3.googleusercontent.com/d/'+safe(anggotaaktif[i][13])+'" style="width:1.5em;aspect-ratio:1/1;object-fit:cover;border-radius:50% 50%;overflow:hidden;"></td><td data-collapsible-title="Nama"><a class="mybsmi-cabang-relawan" data-user="'+btoa(JSON.stringify(anggotalain[i]))+'">'+safe(anggotaaktif[i][4])+'</a> '+badge+'</td><td data-collapsible-title="No. KTA">'+safe(anggotaaktif[i][18])+'</td><td data-collapsible-title="Cabang">'+safe(anggotaaktif[i][11])+'</td><td data-collapsible-title="Profesi">'+safe(anggotaaktif[i][8])+'</td><td data-collapsible-title="Status Keanggotaan">'+safe(status)+'</td><td data-collapsible-title="Jenjang Keanggotaan">'+safe(jenjang)+'</td><td><a class="button button-fill mybsmi-adminaction" data-user="'+btoa(JSON.stringify(anggotaaktif[i]))+'">Profil</a></td></tr>';
+		  
+		}
+		aktifhtml += '</tbody></table></div>';
+
+		sdmhtml += aktifhtml
+		
+		sdmhtml += '<div class="block bg-color-white margin-bottom margin-top">ANGGOTA LAINNYA</div>'
+
+
+		let lainhtml= '<div class="data-table data-table-collapsible data-table-init bg-color-white lain"><table><thead><tr><th></th><th>Nama</th><th>No. KTA</th><th>Cabang</th><th>Profesi</th><th>Status Keanggotaan</th><th>Jenjang Keanggotaan</th><th></th></tr></thead><tbody>';
+
+		for (i=anggotalain.length-1;i>-1;i--)
+		{ 
+		  let badge = anggotalain[i][3] === 'Terverifikasi' ? '<i class="icon f7-icons" style="font-size:12px;color:blue;">checkmark_seal</i>' : '';
+		  let statuskeanggotaan = (JSON.parse(anggotalain[i][14])).statuskeanggotaan
+		  let status = statuskeanggotaan ? statuskeanggotaan.status : '-'
+		  let jenjang = statuskeanggotaan ? statuskeanggotaan.jenjang : '-'
+		  
+		  lainhtml += '<tr class="mybsmi-admin-item-'+safe(anggotalain[i][1])+'"><td data-collapsible-title=""><img src="https://lh3.googleusercontent.com/d/'+safe(anggotalain[i][13])+'" style="width:1.5em;aspect-ratio:1/1;object-fit:cover;border-radius:50% 50%;overflow:hidden;"></td><td data-collapsible-title="Nama"><a class="mybsmi-cabang-relawan" data-user="'+btoa(JSON.stringify(anggotalain[i]))+'">'+safe(anggotalain[i][4])+'</a> '+badge+'</td><td data-collapsible-title="No. KTA">'+safe(anggotalain[i][18])+'</td><td data-collapsible-title="Cabang">'+safe(anggotalain[i][11])+'</td><td data-collapsible-title="Profesi">'+safe(anggotalain[i][8])+'</td><td data-collapsible-title="Status Keanggotaan">'+safe(status)+'</td><td data-collapsible-title="Jenjang Keanggotaan">'+safe(jenjang)+'</td><td><a class="button button-fill mybsmi-adminaction" data-user="'+btoa(JSON.stringify(anggotalain[i]))+'">Profil</a></td></tr>';
+		  
+		}
+		lainhtml += '</tbody></table></div>';
+
+		sdmhtml += lainhtml
+									
+									
+		sdmhtml +=		'</div>'+
+							'</div>'+
+							'</div>'
+
+	}
+	
+	$$('.mybsmi-adminlaporan-administrasi-sdm-aktif-list').html(sdmhtml)
+
+
+	$$('.mybsmi-adminlaporan-administrasi-sdm-aktif-list .mybsmi-sdmaktif a.mybsmi-adminaction').on('click', function (e) {
+		var base64 = this.attributes["data-user"].value;
+		fpageadminidentitas(base64)
+	});
+
+	$$('.mybsmi-adminlaporan-administrasi-sdm-aktif-list .mybsmi-sdmaktif a.mybsmi-cabang-relawan').on('click', function (e) {
+		var base64 = this.attributes["data-user"].value;
+		fpageadminidentitas(base64)
+	});
+
+	//--action--
+
+	let actionhtml = `<div class="col-100 medium-100 mybsmi-adminlaporan-administrasi-action">
+				  <div class="card">
+					<div class="card-header"></div>
+					<div class="card-content card-content-padding">
+						<a class="button button-fill buat-link">LINK PENDATAAN ANGGOTA BSMI</a>
+					</div>
+					<div class="card-footer"></div>
+				  </div>
+				</div>
+				`
+				
+	$$('.mybsmi-adminlaporan-administrasi').append(actionhtml)
 
   $$('.mybsmi-adminlaporan-administrasi-action .buat-link').on('click', function () {
 		fbuatlinkaktivasi()
@@ -6566,7 +6694,7 @@ function fpageadminlaporanadministrasikesekretariatanasettambah(datacabang,datar
       +'            </div></div>'
       +'        </li>'
       +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Keterangan aset</div><div class="item-input-wrap">'
-      +'            <input type="text" id="keteranganaset" name="keteranganaset" placeholder="Kondisi/Nomor/Sertifikat//dll" value="">'
+      +'            <input type="text" id="keteranganaset" name="keteranganaset" placeholder="Kondisi/Nomor/Surat/dll" value="">'
       +'            </div></div>'
       +'        </li>'
       +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Status aset</div><div class="item-input-wrap">'
@@ -6582,7 +6710,7 @@ function fpageadminlaporanadministrasikesekretariatanasettambah(datacabang,datar
       +'            <input type="text" id="photoaset" name="photoaset" placeholder="Photo aset" value="">'
       +'            </div></div>'
       +'        </li>'
-      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">PIC aset (dari BSMI Cabang)</div><div class="item-input-wrap">'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">PIC aset</div><div class="item-input-wrap">'
       +'                            <select id="picasetid" name="picasetid">'
       +'                              <option value="" selected> </option>'
       +'                            </select>'
@@ -6724,7 +6852,7 @@ function fpageadminlaporanadministrasikesekretariatandrawaset(aset,datacabang,da
 		fpageadminlaporanadministrasikesekretariatanasettambah(datacabang,datarelawan)
 	})
 	
-	let asethtml = '<div class="data-table data-table-collapsible data-table-init aset"><table><thead><tr><th>Jenis aset</th><th>Nama aset</th><th>Lokasi aset</th><th>Keterangan aset</th><th>Status aset</th><th class="display-none">Photo aset</th><th>PIC aset (dari BSMI Cabang)</th><th></th></tr></thead><tbody>'
+	let asethtml = '<div class="data-table data-table-collapsible data-table-init aset"><table><thead><tr><th>Jenis aset</th><th>Nama aset</th><th>Lokasi aset</th><th>Keterangan aset</th><th>Status aset</th><th class="display-none">Photo aset</th><th>PIC aset</th><th></th></tr></thead><tbody>'
 	let arr = JSON.parse(aset)
 	for(let i=0;i<arr.length;i++){
 		let item = arr[i]
@@ -6736,7 +6864,7 @@ function fpageadminlaporanadministrasikesekretariatandrawaset(aset,datacabang,da
 						'<td data-collapsible-title="Keterangan aset">'+safe(item.keteranganaset)+'</td>'+
 						'<td data-collapsible-title="Status aset">'+safe(item.statusaset)+'</td>'+
 						'<td data-collapsible-title="Photo aset" class="display-none">'+safe(item.photoaset)+'</td>'+
-						'<td data-collapsible-title="PIC aset (dari BSMI Cabang)"><a class="mybsmi-adminaction" data-user="'+btoa(JSON.stringify(data))+'">'+safe(data[4])+'</a></td>'+
+						'<td data-collapsible-title="PIC aset"><a class="mybsmi-adminaction" data-user="'+btoa(JSON.stringify(data))+'">'+safe(data[4])+'</a></td>'+
 						'<td data-collapsible-title=""><a class="button button-fill update" data-idx="'+i+'">Update</a></td>'+
 					'</tr>'
 	}
