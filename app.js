@@ -6265,7 +6265,7 @@ function fpageadminlaporanadministrasibsmrterdaftar(content)
 {
 	let html = `<div class="col-100 medium-100 mybsmi-adminlaporan-administrasi-terdaftar">
 				  <div class="card">
-					<div class="card-header">PENDATAAN GUGUS BSMR AKTIF</div>
+					<div class="card-header">REKAP PENDATAAN GUGUS BSMR AKTIF</div>
 					<div class="card-content card-content-padding">
 						<div class="mybsmi-adminlaporan-administrasi-terdaftar-view"><div class="progressbar-infinite"></div></div>
 					</div>
@@ -6317,7 +6317,7 @@ function fpageadminlaporanadministrasibsmrterdaftar(content)
 function fpageadminlaporanadministrasiklinik(content)
 {
 	$$('.mybsmi-adminlaporan-administrasi-header .card-header').text('ADMINISTRASI KLINIK JAWA TIMUR')
-	$$('.mybsmi-adminlaporan-administrasi-list .card-header').text('PENDATAAN KLINIK AKTIF BSMI')
+	$$('.mybsmi-adminlaporan-administrasi-list .card-header').text('REKAP PENDATAAN KLINIK AKTIF BSMI')
 
 
 	let klinikhtml = '<div class="data-table data-table-collapsible data-table-init klinik"><table><thead><tr><th>Nama klinik</th><th>Alamat klinik</th><th>Layanan klinik</th><th>Tahun Pendirian</th><th>Jumlah karyawan</th><th>Manajer klinik</th><th>BSMI Cabang</th><th>PIC klinik (dari BSMI Cabang)</th></tr></thead><tbody>'
@@ -6366,7 +6366,7 @@ function fpageadminlaporanadministrasiklinik(content)
 function fpageadminlaporanadministrasisdm(content)
 {
 	$$('.mybsmi-adminlaporan-administrasi-header .card-header').text('ADMINISTRASI SDM BSMI JATIM')
-	$$('.mybsmi-adminlaporan-administrasi-list .card-header').text('PENDATAAN ANGGOTA AKTIF BSMI')
+	$$('.mybsmi-adminlaporan-administrasi-list .card-header').text('REKAP PENDATAAN ANGGOTA AKTIF BSMI')
 	let el = '.mybsmi-adminlaporan-administrasi-list-view'
 
 	let data = '<div class="list"><ul><li class="item-content item-input item-input-outline"><div class="item-inner"><div class="item-title item-label">Pencarian</div><div class="item-input-wrap"><input id="pencarian" type="text" placeholder="katakunci"><span class="input-clear-button"></span></div></div></li></ul></div>'
@@ -6437,7 +6437,7 @@ function fpageadminlaporanadministrasisdmaktif(content)
 {	
 	let sdmaktifhtml = `<div class="col-100 medium-100 mybsmi-adminlaporan-administrasi-sdm-aktif">
 				  <div class="card">
-					<div class="card-header">PENDATAAN SDM BSMI</div>
+					<div class="card-header">REKAP PENDATAAN SDM BSMI</div>
 					<div class="card-content card-content-padding">
 						<div class="mybsmi-adminlaporan-administrasi-sdm-aktif-list"><div class="progressbar-infinite"></div></div>
 					</div>
@@ -6541,7 +6541,9 @@ function fpageadminlaporanadministrasisdmaktif(content)
 
 	}
 	
-	$$('.mybsmi-adminlaporan-administrasi-sdm-aktif-list').html(sdmhtml)
+	let sdmhtmlaccordion = '<div class="accordion-item"><div class="accordion-item-toggle"><button class="button"><i class="icon f7-icons">ellipsis_circle</i></button></div><div class="accordion-item-content">'+sdmhtml+'</div></div>'
+	
+	$$('.mybsmi-adminlaporan-administrasi-sdm-aktif-list').html(sdmhtmlaccordion)
 
 
 	$$('.mybsmi-adminlaporan-administrasi-sdm-aktif-list .mybsmi-sdmaktif a.mybsmi-adminaction').on('click', function (e) {
@@ -6630,7 +6632,9 @@ function fpageadminlaporanadministrasikesekretariatan(content)
 							'</div>'
 	}
 	
-	$$('.mybsmi-adminlaporan-administrasi-list-view').html(kesekretarianhtml)
+	let kesekretariatanhtmlaccordion = '<div class="accordion-item"><div class="accordion-item-toggle"><button class="button"><i class="icon f7-icons">ellipsis_circle</i></button></div><div class="accordion-item-content">'+kesekretarianhtml+'</div></div>'
+	
+	$$('.mybsmi-adminlaporan-administrasi-list-view').html(kesekretariatanhtmlaccordion)
 
 	$$('.mybsmi-adminlaporan-administrasi-list-view .aset a.mybsmi-adminaction').on('click', function (e) {
 			var base64 = this.attributes["data-user"].value;
