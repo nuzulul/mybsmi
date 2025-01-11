@@ -6455,6 +6455,7 @@ function fpageadminlaporanadministrasisdmaktif(content)
 	for(let c=0;c<kodecabang.length;c++)
 	{
 		let namacabang = kodecabang[c][0]
+		let nomorcabang = kodecabang[c][1]
 		let anggotacabang = datarelawan.filter((data)=>!skipuid.includes(data[1])&&userstatusnormal.includes(data[3])&&data[11]==namacabang)
 		let anggotaaktif = anggotacabang.filter((data)=>{
 			let statuskeanggotaan = (JSON.parse(data[14])).statuskeanggotaan
@@ -6483,7 +6484,7 @@ function fpageadminlaporanadministrasisdmaktif(content)
 		})
 
 		sdmhtml += '<div class="accordion-item"><div class="data-table data-table-collapsible data-table-init"><table style="table-layout: fixed"><tbody><tr>'+
-									'<td data-collapsible-title="Cabang">'+safe(namacabang)+'</td>'+
+									'<td data-collapsible-title="Cabang"><a href="/cabang/'+safe(nomorcabang)+'">'+safe(namacabang)+'</a></td>'+
 									'<td data-collapsible-title="Total Anggota">'+anggotacabang.length+'</td>'+
 									'<td data-collapsible-title="Anggota Aktif">'+anggotaaktif.length+'</td>'+
 									'<td data-collapsible-title="Anggota Muda">'+anggotamuda.length+'</td>'+
@@ -6589,6 +6590,7 @@ function fpageadminlaporanadministrasikesekretariatan(content)
 	for(let c=0;c<kodecabang.length;c++)
 	{
 		let namacabang = kodecabang[c][0]
+		let nomorcabang = kodecabang[c][1]
 		let dataaset = JSON.parse(kodecabang[c][11])
 		let kantor = dataaset.filter((data)=>data.jenisaset == 'Kantor')
 		let mobil = dataaset.filter((data)=>data.jenisaset == 'Mobil')
@@ -6596,7 +6598,7 @@ function fpageadminlaporanadministrasikesekretariatan(content)
 		let lainnya = dataaset.filter((data)=>data.jenisaset == 'Lainnya')
 		
 		kesekretarianhtml += '<div class="accordion-item"><div class="data-table data-table-collapsible data-table-init"><table style="table-layout: fixed"><tbody><tr>'+
-									'<td data-collapsible-title="Cabang">'+safe(namacabang)+'</td>'+
+									'<td data-collapsible-title="Cabang"><a href="/cabang/'+safe(nomorcabang)+'">'+safe(namacabang)+'</a></td>'+
 									'<td data-collapsible-title="Kantor">'+kantor.length+'</td>'+
 									'<td data-collapsible-title="Mobil">'+mobil.length+'</td>'+
 									'<td data-collapsible-title="Ambulans">'+ambulans.length+'</td>'+
