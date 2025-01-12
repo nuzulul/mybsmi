@@ -6563,7 +6563,7 @@ function fpageadminlaporanadministrasisdmaktif(content)
 				  <div class="card">
 					<div class="card-header"></div>
 					<div class="card-content card-content-padding">
-						<a class="button button-fill buat-link">LINK PENDATAAN ANGGOTA BSMI</a>
+						<a class="button button-fill buat-link">PENDATAAN ANGGOTA TETAP BSMI (ANGGOTA AKTIF/SUDAH DIKLAT)</a>
 					</div>
 					<div class="card-footer"></div>
 				  </div>
