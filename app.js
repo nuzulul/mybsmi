@@ -4938,8 +4938,8 @@ function fpageadmincabangasettambah(datacabang,datarelawan,aset,idx,edit)
       +'                            </select>'
       +'            </div></div>'
       +'        </li>'
-      +'        <li class="item-content item-input display-none"><div class="item-inner"><div class="item-title item-label">Photo aset</div><div class="item-input-wrap">'
-      +'            <input type="text" id="photoaset" name="photoaset" placeholder="Photo aset" value="">'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Tahun aset</div><div class="item-input-wrap">'
+      +'            <input type="text" id="tahunaset" name="tahunaset" placeholder="Tahun aset" value="">'
       +'            </div></div>'
       +'        </li>'
       +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">PIC aset (dari BSMI Cabang)</div><div class="item-input-wrap">'
@@ -4977,7 +4977,7 @@ function fpageadmincabangasettambah(datacabang,datarelawan,aset,idx,edit)
 			$$('#lokasiaset').val(safe(data.lokasiaset))
 			$$('#keteranganaset').val(safe(data.keteranganaset))
 			$$('#statusaset').val(safe(data.statusaset))
-			$$('#photoaset').val(safe(data.photoaset))
+			$$('#tahunaset').val(safe(data.tahunaset))
 			$$('#picasetid').val(safe(data.picasetid))
 			//$$('#jenisaset').attr('disabled','true')
 		}
@@ -4998,7 +4998,7 @@ function fpageadmincabangasettambah(datacabang,datarelawan,aset,idx,edit)
 				var lokasiaset = $$('#lokasiaset').val();
 				var keteranganaset = $$('#keteranganaset').val();
 				var statusaset = $$('#statusaset').val();
-				var photoaset = $$('#photoaset').val();
+				var tahunaset = $$('#tahunaset').val();
 				var picasetid = $$('#picasetid').val();
 				if(picasetid == ''){
 					var toastBottom = app.toast.create({ text: 'PIC aset tidak boleh kosong', closeTimeout: 3000,position: 'center', });toastBottom.open();
@@ -5007,13 +5007,13 @@ function fpageadmincabangasettambah(datacabang,datarelawan,aset,idx,edit)
 				
 				if(edit){
 					var arr = JSON.parse(myaset)
-					arr[parseInt(idx)] = {namacabang,jenisaset,namaaset,lokasiaset,keteranganaset,statusaset,photoaset,picasetid}
+					arr[parseInt(idx)] = {namacabang,jenisaset,namaaset,lokasiaset,keteranganaset,statusaset,tahunaset,picasetid}
 					var aset = JSON.stringify(arr)
 					var data = {namacabang,aset}
 					fpageadmincabangasetsave(data,datacabang,datarelawan)
 				}else{
 					var arr = JSON.parse(datacabang[11])
-					arr.push({namacabang,jenisaset,namaaset,lokasiaset,keteranganaset,statusaset,photoaset,picasetid})
+					arr.push({namacabang,jenisaset,namaaset,lokasiaset,keteranganaset,statusaset,tahunaset,picasetid})
 					var aset = JSON.stringify(arr)
 					var data = {namacabang,aset};
 					fpageadmincabangasetsave(data,datacabang,datarelawan);
@@ -5085,7 +5085,7 @@ function fpageadmincabangdrawaset(aset,datacabang,datarelawan)
 		fpageadmincabangasettambah(datacabang,datarelawan)
 	})
 	
-	let asethtml = '<div class="data-table data-table-collapsible data-table-init aset"><table><thead><tr><th>Jenis aset</th><th>Nama aset</th><th>Lokasi aset</th><th>Keterangan aset</th><th>Status aset</th><th class="display-none">Photo aset</th><th>PIC aset (dari BSMI Cabang)</th><th></th></tr></thead><tbody>'
+	let asethtml = '<div class="data-table data-table-collapsible data-table-init aset"><table><thead><tr><th>Jenis aset</th><th>Nama aset</th><th>Lokasi aset</th><th>Keterangan aset</th><th>Status aset</th><th>Tahun aset</th><th>PIC aset (dari BSMI Cabang)</th><th></th></tr></thead><tbody>'
 	let arr = JSON.parse(aset)
 	for(let i=0;i<arr.length;i++){
 		let item = arr[i]
@@ -5096,7 +5096,7 @@ function fpageadmincabangdrawaset(aset,datacabang,datarelawan)
 						'<td data-collapsible-title="Lokasi aset">'+safe(item.lokasiaset)+'</td>'+
 						'<td data-collapsible-title="Keterangan aset">'+safe(item.keteranganaset)+'</td>'+
 						'<td data-collapsible-title="Status aset">'+safe(item.statusaset)+'</td>'+
-						'<td data-collapsible-title="Photo aset" class="display-none">'+safe(item.photoaset)+'</td>'+
+						'<td data-collapsible-title="Tahun aset">'+safe(item.tahunaset)+'</td>'+
 						'<td data-collapsible-title="PIC aset (dari BSMI Cabang)"><a class="mybsmi-adminaction" data-user="'+btoa(JSON.stringify(data))+'">'+safe(data[4])+'</a></td>'+
 						'<td data-collapsible-title=""><a class="button button-fill update" data-idx="'+i+'">Update</a></td>'+
 					'</tr>'
@@ -6609,7 +6609,7 @@ function fpageadminlaporanadministrasikesekretariatan(content)
 									'<div class="mybsmi-aset bg-color-red block block-strong block-outline inset">'
 									
 									
-		let asethtml = '<div class="data-table data-table-collapsible data-table-init bg-color-white aset"><table><thead><tr><th>Jenis aset</th><th>Nama aset</th><th>Lokasi aset</th><th>Keterangan aset</th><th>Status aset</th><th class="display-none">Photo aset</th><th>PIC aset (dari BSMI Cabang)</th></tr></thead><tbody>'
+		let asethtml = '<div class="data-table data-table-collapsible data-table-init bg-color-white aset"><table><thead><tr><th>Jenis aset</th><th>Nama aset</th><th>Lokasi aset</th><th>Keterangan aset</th><th>Status aset</th><th>Tahun aset</th><th>PIC aset (dari BSMI Cabang)</th></tr></thead><tbody>'
 		let arr = dataaset
 		for(let i=0;i<arr.length;i++){
 			let item = arr[i]
@@ -6620,7 +6620,7 @@ function fpageadminlaporanadministrasikesekretariatan(content)
 							'<td data-collapsible-title="Lokasi aset">'+safe(item.lokasiaset)+'</td>'+
 							'<td data-collapsible-title="Keterangan aset">'+safe(item.keteranganaset)+'</td>'+
 							'<td data-collapsible-title="Status aset">'+safe(item.statusaset)+'</td>'+
-							'<td data-collapsible-title="Photo aset" class="display-none">'+safe(item.photoaset)+'</td>'+
+							'<td data-collapsible-title="Tahun aset">'+safe(item.tahunaset)+'</td>'+
 							'<td data-collapsible-title="PIC aset (dari BSMI Cabang)"><a class="mybsmi-adminaction" data-user="'+btoa(JSON.stringify(data))+'">'+safe(data[4])+'</a></td>'+
 						'</tr>'
 		}
@@ -6712,8 +6712,8 @@ function fpageadminlaporanadministrasikesekretariatanasettambah(datacabang,datar
       +'                            </select>'
       +'            </div></div>'
       +'        </li>'
-      +'        <li class="item-content item-input display-none"><div class="item-inner"><div class="item-title item-label">Photo aset</div><div class="item-input-wrap">'
-      +'            <input type="text" id="photoaset" name="photoaset" placeholder="Photo aset" value="">'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Tahun aset</div><div class="item-input-wrap">'
+      +'            <input type="text" id="tahunaset" name="tahunaset" placeholder="Tahun aset" value="">'
       +'            </div></div>'
       +'        </li>'
       +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">PIC aset</div><div class="item-input-wrap">'
@@ -6751,7 +6751,7 @@ function fpageadminlaporanadministrasikesekretariatanasettambah(datacabang,datar
 			$$('#lokasiaset').val(safe(data.lokasiaset))
 			$$('#keteranganaset').val(safe(data.keteranganaset))
 			$$('#statusaset').val(safe(data.statusaset))
-			$$('#photoaset').val(safe(data.photoaset))
+			$$('#tahunaset').val(safe(data.tahunaset))
 			$$('#picasetid').val(safe(data.picasetid))
 			//$$('#jenisaset').attr('disabled','true')
 		}
@@ -6772,7 +6772,7 @@ function fpageadminlaporanadministrasikesekretariatanasettambah(datacabang,datar
 				var lokasiaset = $$('#lokasiaset').val();
 				var keteranganaset = $$('#keteranganaset').val();
 				var statusaset = $$('#statusaset').val();
-				var photoaset = $$('#photoaset').val();
+				var tahunaset = $$('#tahunaset').val();
 				var picasetid = $$('#picasetid').val();
 				if(picasetid == ''){
 					var toastBottom = app.toast.create({ text: 'PIC aset tidak boleh kosong', closeTimeout: 3000,position: 'center', });toastBottom.open();
@@ -6781,13 +6781,13 @@ function fpageadminlaporanadministrasikesekretariatanasettambah(datacabang,datar
 				
 				if(edit){
 					var arr = JSON.parse(myaset)
-					arr[parseInt(idx)] = {namacabang,jenisaset,namaaset,lokasiaset,keteranganaset,statusaset,photoaset,picasetid}
+					arr[parseInt(idx)] = {namacabang,jenisaset,namaaset,lokasiaset,keteranganaset,statusaset,tahunaset,picasetid}
 					var aset = JSON.stringify(arr)
 					var data = {namacabang,aset,indexcabang:0,administrasi:'kesekretariatan',instruksi:'update'}
 					fpageadminlaporanadministrasikesekretariatanasetsave(data,datacabang,datarelawan)
 				}else{
 					var arr = JSON.parse(datacabang[11])
-					arr.push({namacabang,jenisaset,namaaset,lokasiaset,keteranganaset,statusaset,photoaset,picasetid})
+					arr.push({namacabang,jenisaset,namaaset,lokasiaset,keteranganaset,statusaset,tahunaset,picasetid})
 					var aset = JSON.stringify(arr)
 					var data = {namacabang,aset,indexcabang:0,administrasi:'kesekretariatan',instruksi:'update'};
 				fpageadminlaporanadministrasikesekretariatanasetsave(data,datacabang,datarelawan);
@@ -6858,7 +6858,7 @@ function fpageadminlaporanadministrasikesekretariatandrawaset(aset,datacabang,da
 		fpageadminlaporanadministrasikesekretariatanasettambah(datacabang,datarelawan)
 	})
 	
-	let asethtml = '<div class="data-table data-table-collapsible data-table-init aset"><table><thead><tr><th>Jenis aset</th><th>Nama aset</th><th>Lokasi aset</th><th>Keterangan aset</th><th>Status aset</th><th class="display-none">Photo aset</th><th>PIC aset</th><th></th></tr></thead><tbody>'
+	let asethtml = '<div class="data-table data-table-collapsible data-table-init aset"><table><thead><tr><th>Jenis aset</th><th>Nama aset</th><th>Lokasi aset</th><th>Keterangan aset</th><th>Status aset</th><th>Tahun aset</th><th>PIC aset</th><th></th></tr></thead><tbody>'
 	let arr = JSON.parse(aset)
 	for(let i=0;i<arr.length;i++){
 		let item = arr[i]
@@ -6869,7 +6869,7 @@ function fpageadminlaporanadministrasikesekretariatandrawaset(aset,datacabang,da
 						'<td data-collapsible-title="Lokasi aset">'+safe(item.lokasiaset)+'</td>'+
 						'<td data-collapsible-title="Keterangan aset">'+safe(item.keteranganaset)+'</td>'+
 						'<td data-collapsible-title="Status aset">'+safe(item.statusaset)+'</td>'+
-						'<td data-collapsible-title="Photo aset" class="display-none">'+safe(item.photoaset)+'</td>'+
+						'<td data-collapsible-title="Tahun aset">'+safe(item.tahunaset)+'</td>'+
 						'<td data-collapsible-title="PIC aset"><a class="mybsmi-adminaction" data-user="'+btoa(JSON.stringify(data))+'">'+safe(data[4])+'</a></td>'+
 						'<td data-collapsible-title=""><a class="button button-fill update" data-idx="'+i+'">Update</a></td>'+
 					'</tr>'
