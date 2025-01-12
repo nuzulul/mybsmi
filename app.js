@@ -6561,11 +6561,11 @@ function fpageadminlaporanadministrasisdmaktif(content)
 
 	let actionhtml = `<div class="col-100 medium-100 mybsmi-adminlaporan-administrasi-action">
 				  <div class="card">
-					<div class="card-header"></div>
+					<div class="card-header">PENDATAAN ANGGOTA TETAP</div>
 					<div class="card-content card-content-padding">
-						<a class="button button-fill buat-link">PENDATAAN ANGGOTA TETAP BSMI (ANGGOTA AKTIF/SUDAH DIKLAT)</a>
+						PENDATAAN ANGGOTA TETAP BSMI (ANGGOTA AKTIF/LULUS DIKLAT)
 					</div>
-					<div class="card-footer"></div>
+					<div class="card-footer"><a class="button button-fill buat-link">BUAT LINK AKTIVASI MYBSMI</a></div>
 				  </div>
 				</div>
 				`
