@@ -2513,6 +2513,7 @@ function getdefaultdatarun(data)
   if (usermydata.master)
   {
     $$('.mybsmi-mastermenu').show();
+	if(!isLocal)$$('#experiment').remove();
   }else{
 	$$('#experiment').remove();
   }
@@ -4439,6 +4440,7 @@ function fpageadmincabang(content)
         app.views.main.router.navigate(url);
   });
   
+  $$('.mybsmi-admincabangmenu .buat-link').off('click')
   $$('.mybsmi-admincabangmenu .buat-link').on('click', function () {
 		fbuatlinkaktivasi()
   })
