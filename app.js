@@ -2513,7 +2513,7 @@ function getdefaultdatarun(data)
   if (usermydata.master)
   {
     $$('.mybsmi-mastermenu').show();
-	if(!isLocal)$$('#experiment').remove();
+	if(!isLocal)$$('#experiment').remove()
   }else{
 	$$('#experiment').remove();
   }
@@ -5819,7 +5819,7 @@ function fpageadminlaporan(content)
 	let totalklinik = 0
 	
 	kodecabang.forEach((cabang)=>{
-		if((cabang[0] !== 'BSMI Jawa Timur' && !isLocal)||isLocal){
+		
 			let jabatan = JSON.parse(cabang[8])
 			let bsmr = JSON.parse(cabang[9]);bsmr = bsmr.filter((item)=>item.aktif == true)
 			let klinik = JSON.parse(cabang[10])
@@ -5833,16 +5833,17 @@ function fpageadminlaporan(content)
 			}else{
 				var ketuatd = '<td data-collapsible-title="Ketua"><a class="mybsmi-adminaction" data-user="'+btoa(JSON.stringify(ketua))+'">'+safe(cabang[6])+'</a></td>'
 			}
-			statushtml += 	'<tr>'+
-								'<td data-collapsible-title="Cabang"><a href="/cabang/'+safe(cabang[1])+'">'+safe(cabang[0])+'</a></td>'+
-								ketuatd+
-								'<td data-collapsible-title="Pengurus">'+jabatan.length+'</td>'+
-								'<td data-collapsible-title="Anggota">'+anggota+'</td>'+
-								'<td data-collapsible-title="BSMR">'+bsmr.length+'</td>'+
-								'<td data-collapsible-title="Klinik">'+klinik.length+'</td>'+
-								'<td data-collapsible-title=""><a class="button button-fill mybsmi-statuscabang" data-cabang="'+safe(cabang[0])+'">Detail</a></td>'+
-							'</tr>'
-		}
+			if((cabang[0] !== 'BSMI Jawa Timur' && !isLocal)||isLocal){
+				statushtml += 	'<tr>'+
+									'<td data-collapsible-title="Cabang"><a href="/cabang/'+safe(cabang[1])+'">'+safe(cabang[0])+'</a></td>'+
+									ketuatd+
+									'<td data-collapsible-title="Pengurus">'+jabatan.length+'</td>'+
+									'<td data-collapsible-title="Anggota">'+anggota+'</td>'+
+									'<td data-collapsible-title="BSMR">'+bsmr.length+'</td>'+
+									'<td data-collapsible-title="Klinik">'+klinik.length+'</td>'+
+									'<td data-collapsible-title=""><a class="button button-fill mybsmi-statuscabang" data-cabang="'+safe(cabang[0])+'">Detail</a></td>'+
+								'</tr>'
+			}
 	})
 	
 	statushtml += 	'<tr><td data-collapsible-title="">Total</td><td data-collapsible-title=""></td><td data-collapsible-title=""></td><td data-collapsible-title="Total Anggota">'+totalanggotabsmi+'</td><td data-collapsible-title="Total BSMR">'+totalbsmr+'</td><td data-collapsible-title="Total Klinik">'+totalklinik+'</td><td data-collapsible-title=""></td></tr>'
