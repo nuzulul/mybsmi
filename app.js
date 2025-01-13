@@ -2677,7 +2677,7 @@ function fpagecabangrun(content,cabangid)
   //$$('.mybsmi-cabangnama').text(cabangnama);
   $$('.mybsmi-cabangnama').html(profil);
   $$('.mybsmi-cabang').html('');
-  if (datacabang[5] != '')
+  if (datacabang[5] != '' && !skipuid.includes(datacabang[5]))
   {
     $$('.mybsmi-cabang').append('<p style="font-size:10px;">Ketua : <a class="ketuacabang" data-user="'+datacabang[5]+'">'+datacabang[6]+'</a></p>');
     $$('.mybsmi-cabang .ketuacabang').on('click', function (e) {
@@ -5747,7 +5747,13 @@ function fpageadminlaporan(content)
     var ig;if (datacabang[4] != ''){ig = safe(datacabang[4]);}else{ig='';}
     profilhtml += '<tr><td>Instagram</td><td>'+ig+'</td></tr>';
 	let ketua = datarelawan.find((arr)=>arr[1]==datacabang[5])
-    profilhtml += '<tr><td>Ketua</td><td><a class="ketua" data-user="'+btoa(JSON.stringify(ketua))+'">'+safe(datacabang[6])+'</a></td></tr>';
+	if(skipuid.includes(datacabang[5]))
+	{
+		profilhtml += '<tr><td>Ketua</td><td></td></tr>';
+	}
+	else{
+		profilhtml += '<tr><td>Ketua</td><td><a class="ketua" data-user="'+btoa(JSON.stringify(ketua))+'">'+safe(datacabang[6])+'</a></td></tr>';
+	}
     profilhtml += '</tbody></table></div>';
     $$('.mybsmi-adminlaporanmenu .mybsmi-adminlaporan-profil').html(profilhtml);
 	$$('.mybsmi-adminlaporanmenu .mybsmi-adminlaporan-profil .ketua').on('click', function (e) {
@@ -5820,9 +5826,14 @@ function fpageadminlaporan(content)
 			totalbsmr += bsmr.length
 			totalklinik += klinik.length
 			let ketua = datarelawan.find((arr)=>arr[1]==cabang[5])
+			if(skipuid.includes(cabang[5])){
+				var ketuatd = '<td data-collapsible-title="Ketua"></td>'
+			}else{
+				var ketuatd = '<td data-collapsible-title="Ketua"><a class="mybsmi-adminaction" data-user="'+btoa(JSON.stringify(ketua))+'">'+safe(cabang[6])+'</a></td>'
+			}
 			statushtml += 	'<tr>'+
 								'<td data-collapsible-title="Cabang"><a href="/cabang/'+safe(cabang[1])+'">'+safe(cabang[0])+'</a></td>'+
-								'<td data-collapsible-title="Ketua"><a class="mybsmi-adminaction" data-user="'+btoa(JSON.stringify(ketua))+'">'+safe(cabang[6])+'</a></td>'+
+								ketuatd+
 								'<td data-collapsible-title="Pengurus">'+jabatan.length+'</td>'+
 								'<td data-collapsible-title="Anggota">'+anggota+'</td>'+
 								'<td data-collapsible-title="BSMR">'+bsmr.length+'</td>'+
@@ -5931,7 +5942,12 @@ async function fpageadminstatuscabang(cabang,content)
     var ig;if (datacabang[4] != ''){ig = safe(datacabang[4]);}else{ig='';}
     profilhtml += '<tr><td>Instagram</td><td>'+ig+'</td></tr>';
 	let ketua = datarelawan.find((arr)=>arr[1]==datacabang[5])
-    profilhtml += '<tr><td>Ketua</td><td><a class="profil" data-user="'+btoa(JSON.stringify(ketua))+'">'+safe(datacabang[6])+'</a></td></tr>';
+	if(skipuid.includes(datacabang[5]))
+	{
+		profilhtml += '<tr><td>Ketua</td><td></td></tr>';
+	}else{
+		profilhtml += '<tr><td>Ketua</td><td><a class="profil" data-user="'+btoa(JSON.stringify(ketua))+'">'+safe(datacabang[6])+'</a></td></tr>';
+	}
 	let operator = datarelawan.find((arr)=>{
 		let mydata = JSON.parse(arr[14])
 		let mycabang = arr[11]
