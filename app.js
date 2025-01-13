@@ -4393,7 +4393,7 @@ function fpageadmincabang(content)
   $$('.mybsmi-admincabangmenu .mybsmi-admincabangdb').html(data);
   $$('.mybsmi-admincabangmenu .totalrelawan').html('Total : '+jumlahrelawan);
   
-  $$('.jumlahrelawan').html(jumlahrelawan);
+  $$('.mybsmi-admincabangmenu .jumlahrelawan').html(jumlahrelawan);
   
   if(datacabang[0] == "BSMI Jawa Timur")
   {
@@ -4427,27 +4427,27 @@ function fpageadmincabang(content)
     });
   });
 
-  $$('.mybsmi-editcabang').off('click');
-  $$('.mybsmi-editcabang').on('click', function (e) {
+  $$('.mybsmi-admincabangmenu .mybsmi-editcabang').off('click');
+  $$('.mybsmi-admincabangmenu .mybsmi-editcabang').on('click', function (e) {
         fpageadmincabangprofileedit(datacabang,datarelawan)
   });
 
-  $$('.mybsmi-cabang-relawan').on('click', function (e) {
+  $$('.mybsmi-admincabangmenu .mybsmi-cabang-relawan').on('click', function (e) {
         let data = this.attributes["data-user"].value;
         let url = "/relawan/"+safe(data);
         //console.log(url);
         app.views.main.router.navigate(url);
   });
   
-  $$('.buat-link').on('click', function () {
+  $$('.mybsmi-admincabangmenu .buat-link').on('click', function () {
 		fbuatlinkaktivasi()
   })
 
-  $$('.undang-relawan').on('click', function () {
+  $$('.mybsmi-admincabangmenu .undang-relawan').on('click', function () {
 		fundangrelawan()
   })
 
-  $$('.verifikasi-anggota').on('click', function (e) {
+  $$('.mybsmi-admincabangmenu .verifikasi-anggota').on('click', function (e) {
         let url = "/verifikator/";
         app.views.main.router.navigate(url);
   });
@@ -4579,7 +4579,7 @@ function fpageadmincabangprofileedit(datacabang,datarelawan)
       +'            <input type="text" id="instagramcabang" name="instagram" placeholder="Instagram" value="'+safe(datacabang[4])+'">'
       +'            </div></div>'
       +'        </li>'
-      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Ketua</div><div class="item-input-wrap">'
+      +'        <li class="item-content item-input display-none"><div class="item-inner"><div class="item-title item-label">Ketua</div><div class="item-input-wrap">'
       +'                            <select id="ketuacabang" name="ketua">'
       +'                              <option value="" selected> </option>'
       +'                            </select>'
