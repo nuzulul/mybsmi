@@ -5918,6 +5918,13 @@ function fpageadminlaporan(content)
         app.views.main.router.navigate(url);
   });
   
+  //console.log(dashboarddata.user,kodecabang)
+  
+  let ketuacabang = kodecabang.filter((data)=>data[5]==dashboarddata.user.useruid)
+  if(ketuacabang.length > 0){
+	  if(ketuacabang[0][0] != 'BSMI Jawa Timur')fpageadminlaporanketuacabang(ketuacabang,content)
+  }
+  
   fpageadminlaporanadministrasi(content)
 }
 
@@ -6113,6 +6120,163 @@ async function fpageadminstatuscabang(cabang,content)
 
 }
 
+//---laporan ketuacabang---
+function fpageadminlaporanketuacabang(ketuacabang,content)
+{
+	$$('.mybsmi-adminlaporanmenu-updateoperatorcabang').show()
+	
+	let datarelawan = content
+
+    let datacabang = ketuacabang[0]
+	let cabang = datacabang[0]
+	
+	let profilhtml = '<div class="data-table"><table><tbody>';
+    profilhtml += '<tr><td>Cabang</td><td><a href="/cabang/'+safe(datacabang[1])+'">'+safe(datacabang[0])+'</a></td></tr>';
+	let ketua = datarelawan.find((arr)=>arr[1]==datacabang[5])
+	if(skipuid.includes(datacabang[5]))
+	{
+		profilhtml += '<tr><td>Ketua</td><td></td></tr>';
+	}else{
+		profilhtml += '<tr><td>Ketua</td><td><a class="profil" data-user="'+btoa(JSON.stringify(ketua))+'">'+safe(datacabang[6])+'</a></td></tr>';
+	}
+	let operator = datarelawan.find((arr)=>{
+		let mydata = JSON.parse(arr[14])
+		let mycabang = arr[11]
+		return mydata.admincabang && (mycabang == cabang)
+	})
+	let namaoperator = operator ? safe(operator[4]) : ""
+	profilhtml += '<tr><td>Operator</td><td><a class="profil" data-user="'+btoa(JSON.stringify(operator))+'">'+namaoperator+'</a></td></tr>';
+    profilhtml += '</tbody></table></div>';
+    $$('.mybsmi-adminlaporanmenu-updateoperatorcabang .mybsmi-adminlaporan-updateoperatorcabang').html(profilhtml);
+	$$('.mybsmi-adminlaporanmenu-updateoperatorcabang .mybsmi-adminlaporan-updateoperatorcabang .profil').on('click', function (e) {
+			var base64 = this.attributes["data-user"].value;
+			fpageadminidentitas(base64)
+	});
+
+	$$('.mybsmi-adminlaporanmenu-updateoperatorcabang .edit-operator-cabang').on('click', function (e) {
+			fpageadminlaporanketuacabanggantiadmin(datacabang,datarelawan)
+	});
+}
+
+function  fpageadminlaporanketuacabanggantiadmin(datacabang,datarelawan)
+{
+  var oldadminindex = -1;
+  var dialog = app.dialog.create({
+    title: 'Ganti Operator',
+    content:''////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      +'<div style="width:100%;height:50vh;overflow:auto;">'
+      +'  <div style="display:flex;flex-direction:column;align-items:center;justify-content: center;">'
+      +'      <img id="img" src="icon512.png" style="width:150px;height:150px;margin: 10px 10px;border-radius: 0%;object-fit: cover;">'
+      +'      <p style="font-weight:bold;">'+safe(datacabang[0])+'</p>'
+      +'  <div class="list no-hairlines-md">'
+      +'    <ul>'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Admin Cabang</div><div class="item-input-wrap">'
+      +'                            <select id="admincabang" name="admin">'
+      +'                              <option value="-1" selected>-</option>'
+      +'                            </select>'
+      +'            </div></div>'
+      +'        </li>'
+      +'    </ul>'
+      +'  </div>'
+      +'  </div>'
+      +'</div>',//////////////////////////////////////////////////////////////////////////////////////////////////
+    closeByBackdropClick: false,
+    destroyOnClose: true,
+    verticalButtons: true,
+    on: {
+      opened: function () {
+        //console.log('Dialog opened')
+        var select = document.getElementById('admincabang');
+        datarelawan.forEach(function(item,index){
+          let statusincludes = ["Terbatas","Terverifikasi","Tertolak"]
+          if (!statusincludes.includes(item[3]))return
+          if (!isLocal) {
+            if (skipuid.includes(item[1]))return
+          }
+          //if(item[11] == datacabang[0] || datacabang[0] == "BSMI Jawa Timur")
+		  if(item[11] == datacabang[0])
+          {
+            var opt = document.createElement('option');
+            opt.value = index;
+            opt.innerHTML = item[4]+' ('+item[18]+')';           
+            select.appendChild(opt);
+            let json = JSON.parse(item[14]);
+            if (json.admincabang)
+            {
+              select.value = index;
+              oldadminindex = index;
+            }
+          }
+        });
+      }
+    },
+    buttons: [
+      {
+        text: 'Simpan',
+        close:true,
+        color: 'red',
+        onClick: function(dialog, e)
+          {
+              var newadminindex =  parseInt($$('#admincabang').val());
+              var inputdata = {oldadminindex,newadminindex};
+              if (oldadminindex != newadminindex)fpageadminlaporanketuacabanggantiadminsave(inputdata);
+          }
+      },
+      {
+        text: 'Batal',
+        close:true,
+        color: 'gray',
+        onClick: function(dialog, e)
+          {
+
+          }
+      },
+    ]
+  });
+  dialog.open();
+}
+
+function fpageadminlaporanketuacabanggantiadminsave(inputdata)
+{
+      inputdata=JSON.stringify(inputdata);console.log(inputdata);
+      let mypreloader = app.dialog.preloader();
+      app.request({
+        url: apidataurl,
+        method: 'POST',
+        cache: false,
+        data : { token:mybsmiusertoken, command: 'mastergantiadmincabang', inputdata}, 
+        success: function (data, status, xhr)
+          {
+            mypreloader.close();
+            var status = JSON.parse(data).status;
+            var content = JSON.parse(data).data;
+            if (status == "success")
+            {
+              console.log(content);
+              fpagereload()
+              var toastBottom = app.toast.create({ text: 'Berhasil', closeTimeout: 3000,position: 'center', });toastBottom.open();
+            }
+            else if (status == "failed")
+            {
+              //console.log("failed");
+              app.dialog.alert(content,'Terjadi Kesalahan');
+            }
+            else
+            {
+              //console.log("failed");
+              //app.dialog.alert(content,'Terjadi Kesalahan');
+              fcekexpiredtoken(content);
+            }
+          },
+        error: function (xhr, status, message)
+          {
+            //console.log(message);
+            mypreloader.close();
+            app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
+          },
+      })
+}
+
 //---administrasi---
 
 function fpageadminlaporanadministrasi(content)
@@ -6132,7 +6296,7 @@ function fpageadminlaporanadministrasilist(content,administrasi)
 {
 	let html = `<div class="col-100 medium-100 mybsmi-adminlaporan-administrasi-header">
 				  <div class="card">
-					<div class="card-header">ADMINISTRASI</div>
+					<div class="card-header bg-color-red">ADMINISTRASI</div>
 
 				  </div>
 				</div>
