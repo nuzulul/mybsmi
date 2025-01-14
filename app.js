@@ -7864,7 +7864,8 @@ function fpagemasteradminlaporan(content)
 
 function fpagemasterdatabase(content)
 {console.log(content)
-  var data = '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th></th><th>Nama</th><th>No. KTA</th><th>Status</th><th>Cabang</th><th>Profesi</th><th></th></tr></thead><tbody>';
+  var htmlpencarian = '<div class="list"><ul><li class="item-content item-input item-input-outline"><div class="item-inner"><div class="item-title item-label">Pencarian</div><div class="item-input-wrap"><input id="pencarian" type="text" placeholder="katakunci"><span class="input-clear-button"></span></div></div></li></ul></div>'
+  var data = htmlpencarian+'<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th></th><th>Nama</th><th>No. KTA</th><th>Status</th><th>Cabang</th><th>Profesi</th><th></th></tr></thead><tbody>';
   var jumlahrelawan = 0;
   for (i=content.length-1;i>-1;i--)
   {
@@ -7872,7 +7873,7 @@ function fpagemasterdatabase(content)
       
       //if ((content[i][3] === 'Terbatas')||(content[i][3] === 'Terverifikasi')||(content[i][3] === 'Tertolak')){}else{continue;}
       
-      data += '<tr class="mybsmi-master-item-'+safe(content[i][1])+'"><td data-collapsible-title=""><img src="avatar.png" style="width:1.5em;aspect-ratio:1/1;object-fit:cover;border-radius:50% 50%;overflow:hidden;"></td><td data-collapsible-title="Nama"><a class="mybsmi-cabang-relawan" data-user="'+safe(content[i][1])+'">'+safe(content[i][4])+'</a></td><td data-collapsible-title="No. KTA">'+safe(content[i][18])+'</td><td data-collapsible-title="Status">'+safe(content[i][3])+'</td><td data-collapsible-title="Cabang">'+safe(content[i][11])+'</td><td data-collapsible-title="Profesi">'+safe(content[i][8])+'</td><td><a class="button button-fill mybsmi-masteraction" data-index="'+i+'" data-user="'+btoa(JSON.stringify(content[i]))+'">Detail</a></td></tr>';
+	  data += '<tr class="mybsmi-master-item-'+safe(content[i][1])+'"><td data-collapsible-title=""><img src="avatar.png" style="width:1.5em;aspect-ratio:1/1;object-fit:cover;border-radius:50% 50%;overflow:hidden;"></td><td data-collapsible-title="Nama"><a class="mybsmi-cabang-relawan" data-user="'+safe(content[i][1])+'">'+safe(content[i][4])+'</a></td><td data-collapsible-title="No. KTA">'+safe(content[i][18])+'</td><td data-collapsible-title="Status">'+safe(content[i][3])+'</td><td data-collapsible-title="Cabang">'+safe(content[i][11])+'</td><td data-collapsible-title="Profesi">'+safe(content[i][8])+'</td><td><a class="button button-fill mybsmi-masteraction" data-index="'+i+'" data-user="'+btoa(JSON.stringify(content[i]))+'">Detail</a></td></tr>';
       jumlahrelawan++;
   }
   data += '</tbody></table></div>';
@@ -7907,6 +7908,19 @@ function fpagemasterdatabase(content)
     window.location.replace('https://mybsmi.bsmijatim.org/#page/pesan/');
     fpagereload();
   });
+
+  $$(".mybsmi-master #pencarian").on("input", function() {
+    var value = $$(this).val().toLowerCase();
+    $$(".mybsmi-master tr").each(function() {
+	  if($$(this).text().toLowerCase().indexOf(value) > -1)
+	  {
+		  $$(this).show()
+	  }else{
+		  $$(this).hide()
+	  }
+    });
+  });
+
 }
 
 function fpagemasteridentitas(base64,index)
