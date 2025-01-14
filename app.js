@@ -7200,7 +7200,8 @@ function fpagemasterpengaturan(){
 			'<button class="button button-fill undang-relawan">UNDANG RELAWAN</button></br>'+
 			'<button class="button button-fill donasi-bsmijatimorg">DONASI BSMIJATIM.ORG</button></br>'+
 			'<button class="button button-fill musprov4voting20bacalon">musprov4voting20bacalon</button></br>'+
-			'<button class="button button-fill musprov4voting20bacalonhasil">musprov4voting20bacalonhasil</button></br>'
+			'<button class="button button-fill musprov4voting20bacalonhasil">musprov4voting20bacalonhasil</button></br>'+
+			'<a href="/verifikator/"><button class="button button-fill verifikator">VERIFIKATOR</button></a></br>'
   $$(".mybsmi-master-pengaturan").html(html)
   $$('.ganti-pin').on('click', function () {
         app.dialog.prompt('', 'GANTI PIN AKTIVASI', async function (pin){
