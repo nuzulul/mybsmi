@@ -4364,7 +4364,8 @@ function fpageadmincabang(content)
     data += '<tr><td>Telepon</td><td>'+safe(datacabang[3])+'</td></tr>';
     var ig;if (datacabang[4] != ''){ig = safe(datacabang[4]);}else{ig='';}
     data += '<tr><td>Instagram</td><td>'+ig+'</td></tr>';
-    data += '<tr><td>Ketua</td><td>'+safe(datacabang[6])+'</td></tr>';
+	let ketua = content.find((arr)=>arr[1]==datacabang[5])
+    data += '<tr><td>Ketua</td><td><a class="ketua" data-user="'+btoa(JSON.stringify(ketua))+'">'+safe(datacabang[6])+'</a></td></tr>';
     data += '</tbody></table></div>';
     $$('.mybsmi-admincabangisi').html(data);
   }
@@ -4412,6 +4413,11 @@ function fpageadmincabang(content)
   $$('.mybsmi-admincabangmenu .mybsmi-admincabangdb a.mybsmi-adminaction').on('click', function (e) {
         
         //app.dialog.confirm('Pembuatan e-KTA memerlukan waktu 2-4 menit.', 'Pemberitahuan', function (){fbuatekta();})
+        var base64 = this.attributes["data-user"].value;
+        fpageadmincabangidentitas(base64)
+  });
+
+  $$('.mybsmi-admincabangmenu .mybsmi-admincabangisi .ketua').on('click', function (e) {
         var base64 = this.attributes["data-user"].value;
         fpageadmincabangidentitas(base64)
   });
