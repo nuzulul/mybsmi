@@ -5970,7 +5970,7 @@ async function fpageadminstatuscabang(cabang,content)
 		return mydata.admincabang && (mycabang == cabang)
 	})
 	let namaoperator = operator ? safe(operator[4]) : ""
-	profilhtml += '<tr><td>Operator</td><td><a class="profil" data-user="'+btoa(JSON.stringify(operator))+'">'+namaoperator+'</a></td></tr>';
+	//profilhtml += '<tr><td>Operator</td><td><a class="profil" data-user="'+btoa(JSON.stringify(operator))+'">'+namaoperator+'</a></td></tr>';
     profilhtml += '</tbody></table></div>';
     $$('.mybsmi-adminlaporanmenu .mybsmi-adminlaporan-profil').html(profilhtml);
 	$$('.mybsmi-adminlaporanmenu .mybsmi-adminlaporan-profil .profil').on('click', function (e) {
