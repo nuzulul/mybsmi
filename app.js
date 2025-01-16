@@ -6162,6 +6162,7 @@ function fpageadminlaporanketuacabang(ketuacabang,content)
 			fpageadminidentitas(base64)
 	});
 
+	$$('.mybsmi-adminlaporanmenu-updateoperatorcabang .edit-operator-cabang').off('click')
 	$$('.mybsmi-adminlaporanmenu-updateoperatorcabang .edit-operator-cabang').on('click', function (e) {
 			fpageadminlaporanketuacabanggantiadmin(datacabang,datarelawan)
 	});
