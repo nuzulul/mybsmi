@@ -5931,7 +5931,7 @@ function fpageadminlaporan(content)
   
   let ketuacabang = kodecabang.filter((data)=>data[5]==dashboarddata.user.useruid)
   if(ketuacabang.length > 0){
-	  if(ketuacabang[0][0] != 'BSMI Jawa Timur')fpageadminlaporanketuacabang(ketuacabang,content)
+	  if(ketuacabang[0][0] != 'BSMI Jawa Timur' || isLocal)fpageadminlaporanketuacabang(ketuacabang,content)
   }
   
   fpageadminlaporanadministrasi(content)
