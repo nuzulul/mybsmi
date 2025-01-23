@@ -452,6 +452,36 @@ routes: [
     },
   },
   {
+    path: '/kegiatan/',
+    url: 'kegiatan.html',
+    on: {
+      pageAfterIn: function test (e, page) {
+        fpagekegiatan();
+      },
+    },
+    beforeEnter: function ({ resolve, reject }) {
+      function fperiksakesiapan({ resolve, reject })
+      {
+          if (typeof dashboarddata === 'undefined' || dashboarddata === null) {
+            // variable is undefined or null
+            setTimeout(function(){ fperiksakesiapan({ resolve, reject }); }, 1000);
+            return;
+          }
+            let data = JSON.parse(dashboarddata.user.usermydata)
+            if (data.admincabang)
+            {
+                resolve();
+            }
+            else
+            {
+                app.dialog.alert('Tidak punya izin', 'Status')
+                reject();
+            }
+      }
+      fperiksakesiapan({ resolve, reject })
+    },
+  },
+  {
     path: '/master/',
     url: 'master.html',
     on: {
@@ -4459,6 +4489,11 @@ function fpageadmincabang(content)
         let url = "/verifikator/";
         app.views.main.router.navigate(url);
   });
+
+  $$('.mybsmi-admincabangmenu .laporan-berita-acara').on('click', function (e) {
+        let url = "/kegiatan/";
+        app.views.main.router.navigate(url);
+  });
   
   let struktur = datacabang[8]
   fpageadmincabangdrawstruktur(struktur,datacabang,datarelawan)
@@ -7135,6 +7170,61 @@ function fpageadminlaporanadministrasikesekretariatanasetupdate(datacabang,datar
   dialog.open();
 }
 ///////fpageadmin////////////////////////////////////////////////////////
+
+
+
+////////fpagekegiatan/////////////////////////////////////////////////
+function fpagekegiatan(run = true)
+{
+  if (typeof mybsmikegiatandata === 'undefined' || mybsmikegiatandata === null)
+  {
+      let mypreloader = app.dialog.preloader();
+      app.request({
+        url: apidataurl,
+        method: 'POST',
+        cache: false,
+        data : { token:mybsmiusertoken, command: 'getkegiatandata'}, 
+        success: function (data, status, xhr)
+          {
+            mypreloader.close();
+            var status = JSON.parse(data).status;
+            var content = JSON.parse(data).data;
+            if (status == "success")
+            {
+              //console.log(content);
+              window.mybsmikegiatandata = content;
+              if(run)fpagekegiatanrun(content);
+            }
+            else if (status == "failed")
+            {
+              //console.log("failed");
+              app.dialog.alert(content,'Terjadi Kesalahan');
+            }
+            else
+            {
+              //console.log("failed");
+              //app.dialog.alert(content,'Terjadi Kesalahan');
+              fcekexpiredtoken(content);
+            }
+          },
+        error: function (xhr, status, message)
+          {
+            //console.log(message);
+            mypreloader.close();
+            app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
+          },
+      })
+  }
+  else
+  {
+    if(run)fpagekegiatanrun(mybsmikegiatandata);
+  }
+}
+
+function fpagekegiatanrun(content)
+{
+}
+////////fpagekegiatan/////////////////////////////////////////////////
 
 
 ///////fpagemaster();///////////////////////////////////////////
