@@ -2466,7 +2466,7 @@ function getdefaultdatarun(data)
                     '<table>'+
                       '<thead>'+
                         '<tr>'+
-                          '<th class="label-cell">BSMI Kota/Kabupaten</th>'+
+                          '<th class="label-cell">BSMI Cabang Kota/Kabupaten</th>'+
                           '<th class="numeric-cell">Relawan</th>'+
                         '</tr>'+
                       '</thead>'+
@@ -6181,7 +6181,7 @@ function fpageadminlaporanketuacabang(ketuacabang,content)
 	{
 		profilhtml += '<tr><td>Ketua</td><td></td></tr>';
 	}else{
-		profilhtml += '<tr><td>Ketua</td><td><a class="profil" data-user="'+btoa(JSON.stringify(ketua))+'">'+safe(datacabang[6])+'</a></td></tr>';
+		profilhtml += '<tr><td>Ketua</td><td><a class="profil" data-user="'+btoa(JSON.stringify(ketua))+'">'+safe(datacabang[6])+'</a> (Penanggung Jawab)</td></tr>';
 	}
 	let operator = datarelawan.find((arr)=>{
 		let mydata = JSON.parse(arr[14])
@@ -6189,7 +6189,7 @@ function fpageadminlaporanketuacabang(ketuacabang,content)
 		return mydata.admincabang && (mycabang == cabang)
 	})
 	let namaoperator = operator ? safe(operator[4]) : ""
-	profilhtml += '<tr><td>Operator</td><td><a class="profil" data-user="'+btoa(JSON.stringify(operator))+'">'+namaoperator+'</a></td></tr>';
+	profilhtml += '<tr><td>Operator</td><td><a class="profil" data-user="'+btoa(JSON.stringify(operator))+'">'+namaoperator+'</a> (Pelaksana Teknis)</td></tr>';
     profilhtml += '</tbody></table></div>';
     $$('.mybsmi-adminlaporanmenu-updateoperatorcabang .mybsmi-adminlaporan-updateoperatorcabang').html(profilhtml);
 	$$('.mybsmi-adminlaporanmenu-updateoperatorcabang .mybsmi-adminlaporan-updateoperatorcabang .profil').on('click', function (e) {
