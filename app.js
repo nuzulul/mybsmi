@@ -482,6 +482,36 @@ routes: [
     },
   },
   {
+    path: '/admindonasi/',
+    url: 'admindonasi.html',
+    on: {
+      pageAfterIn: function test (e, page) {
+        fpageadmindonasi();
+      },
+    },
+    beforeEnter: function ({ resolve, reject }) {
+      function fperiksakesiapan({ resolve, reject })
+      {
+          if (typeof dashboarddata === 'undefined' || dashboarddata === null) {
+            // variable is undefined or null
+            setTimeout(function(){ fperiksakesiapan({ resolve, reject }); }, 1000);
+            return;
+          }
+            let data = JSON.parse(dashboarddata.user.usermydata)
+            if (data.adminlaporan || data.adminlaporanadministrasi == 'bendahara')
+            {
+                resolve();
+            }
+            else
+            {
+                app.dialog.alert('Tidak punya izin', 'Status')
+                reject();
+            }
+      }
+      fperiksakesiapan({ resolve, reject })
+    },
+  },  
+  {
     path: '/master/',
     url: 'master.html',
     on: {
@@ -6375,6 +6405,10 @@ function fpageadminlaporanadministrasilist(content,administrasi)
 	{
 		fpageadminlaporanadministrasikesekretariatan(content)
 	}
+	else if(administrasi == 'bendahara')
+	{
+		fpageadminlaporanadministrasibendahara(content)
+	}	
 }
 
 function fpageadminlaporanadministrasisave(inputdata)
@@ -7169,7 +7203,27 @@ function fpageadminlaporanadministrasikesekretariatanasetupdate(datacabang,datar
   });
   dialog.open();
 }
+
+//bendahara
+function fpageadminlaporanadministrasibendahara(content){
+	$$('.mybsmi-adminlaporan-administrasi-header .card-header').text('KEUANGAN')
+	$$('.mybsmi-adminlaporan-administrasi-list .card-header').text('DONASI ONLINE')
+	
+	let datarelawan = content
+	
+	let info = 'Administrasi Donasi Online BSMI JATIM'
+	
+	$$('.mybsmi-adminlaporan-administrasi-list-view').html(info)
+	
+	let btn = '<a href="/admindonasi/" class="button button-fill mybsmi-adminlaporan-administrasi-donasionline">Donasi Online</a>'
+	
+	$$('.mybsmi-adminlaporan-administrasi-list .card-footer').html(btn)
+}
 ///////fpageadmin////////////////////////////////////////////////////////
+
+
+
+
 
 
 
@@ -7225,6 +7279,219 @@ function fpagekegiatanrun(content)
 {
 }
 ////////fpagekegiatan/////////////////////////////////////////////////
+
+
+
+
+
+
+////////fpageadmindonasi/////////////////////////////////////////////////
+function fpageadmindonasi(run = true)
+{
+  if (typeof mybsmiadmindonasidata === 'undefined' || mybsmiadmindonasidata === null)
+  {
+      let inputdata = JSON.stringify({instruksi:'getdatadonasi'})
+	  let mypreloader = app.dialog.preloader();
+      app.request({
+        url: apidataurl,
+        method: 'POST',
+        cache: false,
+        data : { token:mybsmiusertoken, command: 'admindonasi',inputdata}, 
+        success: function (data, status, xhr)
+          {
+            //console.log(data);
+			mypreloader.close();
+            var status = JSON.parse(data).status;
+            var content = JSON.parse(data).data;
+            if (status == "success")
+            {
+              //console.log(content);
+              window.mybsmiadmindonasidata = content;
+              if(run)fpageadmindonasirun(content);
+            }
+            else if (status == "failed")
+            {
+              //console.log("failed");
+              app.dialog.alert(content,'Terjadi Kesalahan');
+            }
+            else
+            {
+              //console.log("failed");
+              //app.dialog.alert(content,'Terjadi Kesalahan');
+              fcekexpiredtoken(content);
+            }
+          },
+        error: function (xhr, status, message)
+          {
+            //console.log(message);
+            mypreloader.close();
+            app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
+          },
+      })
+  }
+  else
+  {
+    if(run)fpageadmindonasirun(mybsmiadmindonasidata);
+  }
+}
+
+function fpageadmindonasirun(content)
+{
+	console.log(content)
+	
+	let totaldonasi = content.pengaturan[2][1]
+	$$('.mybsmi-admindonasi-list-total').html(safe(totaldonasi))
+
+	let penyalurandonasi = content.pengaturan[3][1]
+	$$('.mybsmi-admindonasi-list-penyaluran').html(safe(penyalurandonasi))	
+	
+	let sisadonasi = content.pengaturan[4][1]
+	$$('.mybsmi-admindonasi-list-sisa').html(safe(sisadonasi))		
+	
+	let datainvoice = content.invoice
+	
+	let html = '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th>No</th><th>Donatur</th><th>Donasi</th><th>Program</th><th>Konfirmasi</th><th>Tanggal</th><th>Action</th></tr></thead><tbody>'
+	
+	let nomor = 0
+	for(const invoice of datainvoice)
+	{
+		if(invoice[1]=='ID')continue
+		let now = new Date().getTime()
+		let tenggat = new Date(invoice[14]).getTime()
+		if(tenggat>now && invoice[15] == '')continue
+		nomor++
+		let date = new Intl.DateTimeFormat("id-ID", { hour12:false,dateStyle: "short" , timeStyle: "short",  timeZone: "Asia/Jakarta"}).format(new Date(invoice[0]));
+		let konfirmasi = ''
+		if(invoice[15]=='')
+		{
+			konfirmasi = '<span style="color:red">Kedaluwarsa</span>'
+		}else{
+			konfirmasi = '<span style="color:green">Diterima</span>'
+		}
+		
+		console.log('invoice',invoice)
+		html += `
+			<tr>
+				<td data-collapsible-title="No">${nomor}</td>
+				<td data-collapsible-title="Donatur">${safe(invoice[5])}</br><span style="font-size:0.9em;color:grey;"><i class="icons f7-icons" style="font-size:0.9em;">doc_plaintext</i> ${safe(invoice[1])}</span></td>
+				<td data-collapsible-title="Donasi">Rp ${formatRupiah(safe(invoice[13]))}</td>
+				<td data-collapsible-title="Program">(${safe(invoice[2])}) ${safe(invoice[3])}</td>
+				<td data-collapsible-title="Konfirmasi">${konfirmasi}</td>
+				<td data-collapsible-title="Tanggal">${date}</td>
+				<td data-collapsible-title="Action"><a data-invoiceid="${safe(invoice[1])}" class="button button-fill mybsmi-admindonasi-verifikasi">Verifikasi</a></td>
+			</tr>
+		`
+	}
+	
+	html += '</tbody></table></div>'
+	$$('.mybsmi-admindonasi-list-data').html(html)
+
+	$$('.mybsmi-admindonasi-verifikasi').on('click', function (e) {
+			let invoiceid = this.attributes["data-invoiceid"].value
+			fpageadmindonasiverifikasi(invoiceid)
+	});
+	
+}
+
+function formatRupiah(angka, prefix){
+	var number_string = angka.replace(/[^,\d]/g, '').toString(),
+	split   		= number_string.split(','),
+	sisa     		= split[0].length % 3,
+	rupiah     		= split[0].substr(0, sisa),
+	ribuan     		= split[0].substr(sisa).match(/\d{3}/gi);
+ 
+	// tambahkan titik jika yang di input sudah menjadi angka ribuan
+	if(ribuan){
+		separator = sisa ? '.' : '';
+		rupiah += separator + ribuan.join('.');
+	}
+ 
+	rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+	return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
+}
+
+function fpageadmindonasiverifikasi(invoiceid)
+{ 
+  let datainvoice = mybsmiadmindonasidata.invoice
+  let indexinvoice = datainvoice.findIndex((data)=>data[1]==invoiceid)
+  let data = datainvoice[indexinvoice]
+
+	let konfirmasi = ''
+	if(data[15]=='')
+	{
+		konfirmasi = '<span style="color:red">Kedaluwarsa</span>'
+	}else{
+		konfirmasi = '<span style="color:green">Diterima</span>'
+	}
+	
+	let date = new Intl.DateTimeFormat("id-ID", { hour12:false,dateStyle: "short" , timeStyle: "short",  timeZone: "Asia/Jakarta"}).format(new Date(data[0]));
+  
+  var dialog = app.dialog.create({
+    title: 'Verifikasi',
+    content:''////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      +'<div style="width:100%;height:50vh;overflow:auto;">'
+      +'  <div style="display:flex;flex-direction:column;align-items:center;justify-content: center;">'
+      +'      <img id="img" src="" style="width:150px;height:150px;margin: 10px 10px;object-fit: cover;">'
+      +'      <p style="font-weight:bold;"></p>'
+      +'      <div class="data-table" style="width:100%"><table><tbody>'
+      +'          <tr><td>Donasi</td><td>'+safe(data[13])+'</td></tr>'
+	  +'          <tr><td>Konfirmasi</td><td>'+konfirmasi+'</td></tr>'
+	  +'          <tr><td>Nama</td><td>'+safe(data[5])+'</td></tr>'
+      +'          <tr><td>Invoice</td><td>'+safe(data[1])+'</td></tr>'
+      +'          <tr><td>Program</td><td>('+safe(data[2])+') '+safe(data[3])+'</td></tr>'
+      +'          <tr><td>Tanggal</td><td>'+date+'</td></tr>'
+      +'      </tbody></table></div>'
+      +'  </div>'
+      +'</div>',//////////////////////////////////////////////////////////////////////////////////////////////////
+    closeByBackdropClick: false,
+    destroyOnClose: true,
+    verticalButtons: true,
+    on: {
+      opened: function () {
+        //console.log('Dialog opened')
+        let src = "https://lh3.googleusercontent.com/d/"+safe(data[15]);
+        $$('#img').attr('src',src);
+      }
+    },
+    buttons: [
+       {
+        text: 'VALID',
+        close:true,
+        color: 'red',
+        onClick: function(dialog, e)
+          {
+            //let url = "/relawan/"+safe(data[1]);
+            //app.views.main.router.navigate(url);
+          }
+      },
+       {
+        text: 'TIDAK VALID',
+        close:true,
+        color: 'red',
+        onClick: function(dialog, e)
+          {
+            //let url = "/relawan/"+safe(data[1]);
+            //app.views.main.router.navigate(url);
+          }
+      },	  
+      {
+        text: 'Tutup',
+        close:true,
+        color: 'gray',
+        onClick: function(dialog, e)
+          {
+
+          }
+      },
+    ]
+  });
+  dialog.open();
+}
+////////fpageadmindonasi/////////////////////////////////////////////////
+
+
+
+
 
 
 ///////fpagemaster();///////////////////////////////////////////
@@ -8543,6 +8810,7 @@ function fpagemasteradministrasi(content)
 	fpagemasteradministrasilist(content,"sdm")
 	fpagemasteradministrasilist(content,"bsmr")
 	fpagemasteradministrasilist(content,"klinik")
+	fpagemasteradministrasilist(content,"bendahara")
 }
 
 
