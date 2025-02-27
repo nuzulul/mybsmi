@@ -7211,7 +7211,7 @@ function fpageadminlaporanadministrasibendahara(content){
 	
 	let datarelawan = content
 	
-	let info = 'Administrasi Donasi Online BSMI JATIM'
+	let info = 'Panel Donasi Online BSMI JATIM'
 	
 	$$('.mybsmi-adminlaporan-administrasi-list-view').html(info)
 	
@@ -7337,7 +7337,7 @@ function fpageadmindonasi(run = true)
 
 function fpageadmindonasirun(content)
 {
-	console.log(content)
+	//console.log(content)
 	
 	let totaldonasi = content.pengaturan[2][1]
 	$$('.mybsmi-admindonasi-list-total').html(safe(totaldonasi))
@@ -7369,7 +7369,7 @@ function fpageadmindonasirun(content)
 			konfirmasi = '<span style="color:green">Diterima</span>'
 		}
 		
-		console.log('invoice',invoice)
+		//console.log('invoice',invoice)
 		html += `
 			<tr>
 				<td data-collapsible-title="No">${nomor}</td>
@@ -7430,11 +7430,11 @@ function fpageadmindonasiverifikasi(invoiceid)
     title: 'Verifikasi',
     content:''////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       +'<div style="width:100%;height:50vh;overflow:auto;">'
-      +'  <div style="display:flex;flex-direction:column;align-items:center;justify-content: center;">'
+      +'  <div style="display:flex;flex-direction:column;align-items:center;justify-content: center;cursor:hand;">'
       +'      <img id="img" src="" style="width:150px;height:150px;margin: 10px 10px;object-fit: cover;">'
       +'      <p style="font-weight:bold;"></p>'
       +'      <div class="data-table" style="width:100%"><table><tbody>'
-      +'          <tr><td>Donasi</td><td>'+safe(data[13])+'</td></tr>'
+      +'          <tr><td>Donasi</td><td>Rp '+formatRupiah(safe(data[13]))+'</td></tr>'
 	  +'          <tr><td>Konfirmasi</td><td>'+konfirmasi+'</td></tr>'
 	  +'          <tr><td>Nama</td><td>'+safe(data[5])+'</td></tr>'
       +'          <tr><td>Invoice</td><td>'+safe(data[1])+'</td></tr>'
@@ -7451,6 +7451,12 @@ function fpageadmindonasiverifikasi(invoiceid)
         //console.log('Dialog opened')
         let src = "https://lh3.googleusercontent.com/d/"+safe(data[15]);
         $$('#img').attr('src',src);
+		if(data[15]!='')
+		{
+			$$('#img').on('click', function () {
+			  myimage(this);
+			})	
+		}
       }
     },
     buttons: [
@@ -7460,8 +7466,10 @@ function fpageadmindonasiverifikasi(invoiceid)
         color: 'red',
         onClick: function(dialog, e)
           {
-            //let url = "/relawan/"+safe(data[1]);
-            //app.views.main.router.navigate(url);
+			  app.dialog.confirm('Valid?', 'Konfirmasi', function (){
+					let inputdata = JSON.stringify({instruksi:'verifikasivalid',invoiceid,indexinvoice,data})
+					fpageadmindonasiverifikasirun(inputdata)
+			  })
           }
       },
        {
@@ -7470,8 +7478,10 @@ function fpageadmindonasiverifikasi(invoiceid)
         color: 'red',
         onClick: function(dialog, e)
           {
-            //let url = "/relawan/"+safe(data[1]);
-            //app.views.main.router.navigate(url);
+			  app.dialog.confirm('Tidak valid?', 'Konfirmasi', function (){
+					let inputdata = JSON.stringify({instruksi:'verifikasiinvalid',invoiceid,indexinvoice,data})
+					fpageadmindonasiverifikasirun(inputdata)
+			  })
           }
       },	  
       {
@@ -7486,6 +7496,118 @@ function fpageadmindonasiverifikasi(invoiceid)
     ]
   });
   dialog.open();
+}
+
+function fpageadmindonasiverifikasirun(inputdata)
+{
+	  let mypreloader = app.dialog.preloader();
+      app.request({
+        url: apidataurl,
+        method: 'POST',
+        cache: false,
+        data : { token:mybsmiusertoken, command: 'admindonasi',inputdata}, 
+        success: function (data, status, xhr)
+          {
+            //console.log(data);
+			mypreloader.close();
+            var status = JSON.parse(data).status;
+            var content = JSON.parse(data).data;
+            if (status == "success")
+            {
+              //console.log(content);
+              fpageadmindonasiverifikasiupdate(content)
+            }
+            else if (status == "failed")
+            {
+              //console.log("failed");
+              app.dialog.alert(content,'Terjadi Kesalahan');
+            }
+            else
+            {
+              //console.log("failed");
+              //app.dialog.alert(content,'Terjadi Kesalahan');
+              fcekexpiredtoken(content);
+            }
+          },
+        error: function (xhr, status, message)
+          {
+            //console.log(message);
+            mypreloader.close();
+            app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
+          },
+      })
+}
+
+function fpageadmindonasiverifikasiupdate(content)
+{
+	//console.log('update',content)
+	if(content.instruksi == 'verifikasivalid')
+	{
+		mybsmiadmindonasidata.pengaturan[2][1] = mybsmiadmindonasidata.pengaturan[2][1]+content.data[13]
+		mybsmiadmindonasidata.pengaturan[4][1] = mybsmiadmindonasidata.pengaturan[4][1]+content.data[13]
+		mybsmiadmindonasidata.invoice.splice(content.indexinvoice, 1)
+		//console.log(mybsmiadmindonasidata)
+		fpageadmindonasi()
+		fpageadmindonasisendemailtodonatur(content)
+	}
+	if(content.instruksi == 'verifikasiinvalid')
+	{
+		mybsmiadmindonasidata.invoice.splice(content.indexinvoice, 1)
+		fpageadmindonasi()
+	}
+}
+
+function fpageadmindonasisendemailtodonatur(content)
+{
+	let xapikey = mybsmiadmindonasidata.emailxapikey
+	let emailapiurl = 'https://script.google.com/macros/s/AKfycbzL1-gxqhhaE9LVqINqAdeiXJMQfKyBkdMtLCvHNfW4RAcgEqhI8vFxiRdJJniYLM1r/exec'
+	let invoice = content.data
+	let html = `
+
+      <div style="font-family:'proxima-nova' 'Helvetica Neue','Helvetica',Helvetica,Arial,sans-serif;max-width:600px;display:block;margin:0 auto;padding:15px">
+      <table style="font-family:'proxima-nova' 'Helvetica Neue','Helvetica',Helvetica,Arial,sans-serif;width:100%;margin:0;padding:0">
+        <tbody><tr>
+          <td >
+             Terima kasih <b>${invoice[5]}</b>, donasi Sahabat sudah diterima dan tercatat di campaign <b >"${invoice[3]}" dari <b>BSMI JATIM</b>.</b> Semoga setiap kebaikan Sahabat membuka pintu keberkahan dan mendatangkan pertolongan Allah di dunia maupun akhirat.
+			<br>
+			Yuk teruskan rantai kebaikan ini dengan mengajak teman-teman Sahabat ikut berdonasi: <a href="https://donasi.bsmijatim.org">donasi.bsmijatim.org</a>
+			<br>
+			</td>
+		</tr></tbody>
+	  </table>
+	  </div>
+
+	`
+	let input = JSON.stringify({
+		to:invoice[4],
+		subject:'Terima kasih! Donasi Anda sudah diterima',
+		body:html,
+		xapikey
+	})
+	
+	let formData = new FormData();
+	formData.append('command', 'sendemail');
+	formData.append('input', input);
+
+	let mypreloader = app.dialog.preloader()
+	fetch(emailapiurl,
+		{
+			body: formData,
+			method: "post"
+		})
+	.then(function (response) {
+		if (response.ok) {
+			return response.json();
+		} else {
+			return Promise.reject(response);
+		}
+	}).then(function (data) {
+		console.log(data);
+		mypreloader.close()
+	}).catch(function (err) {
+		console.warn('Something went wrong.', err);
+		mypreloader.close()
+	});		
 }
 ////////fpageadmindonasi/////////////////////////////////////////////////
 
