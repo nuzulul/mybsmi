@@ -7391,6 +7391,30 @@ function fpageadmindonasirun(content)
 			fpageadmindonasiverifikasi(invoiceid)
 	});
 	
+	let telegram = JSON.parse(content.pengaturan[5][1])
+	let indextele = telegram.findIndex((item)=>item.uid==dashboarddata.user.useruid)
+	if(indextele > -1)
+	{
+		let tele = telegram[indextele]
+		let msg = 'Akun telegram terhubung : '+tele.first_name+(tele.username?' (@'+tele.username+')':'')
+		$$('.mybsmi-admindonasi-list-notifikasi').html(msg)
+		$$('.mybsmi-admindonasi-action-notifikasi').html('<a class="button button-fill mybsmi-admindonasi-action-notifikasi-disconnect">Putuskan Telegram</a>')
+		$$('.mybsmi-admindonasi-action-notifikasi-disconnect').on('click', function (e) {
+			app.dialog.confirm('Putuskan telegram?', 'Konfirmasi', function (){
+					let inputdata = JSON.stringify({instruksi:'disconnecttelegram'})
+					fpageadmindonasiverifikasirun(inputdata)
+			})
+		})
+	}
+	else{
+		$$('.mybsmi-admindonasi-list-notifikasi').html('Aktifkan kirim notifikasi ke Telegram ketika donatur melakukan konfirmasi pembayaran donasi')
+		$$('.mybsmi-admindonasi-action-notifikasi').html('<a class="button button-fill mybsmi-admindonasi-action-notifikasi-connect">Connect Telegram</a>')
+		$$('.mybsmi-admindonasi-action-notifikasi-connect').on('click', function (e) {
+				let telegramxapikey = mybsmiadmindonasidata.telegramxapikey
+				let urlinfobsmibot = 'https://t.me/infobsmibot?start='+telegramxapikey+'-mybsmi-'+dashboarddata.user.useruid
+				window.open(urlinfobsmibot)
+		});
+	}
 }
 
 function formatRupiah(angka, prefix){
@@ -7555,6 +7579,10 @@ function fpageadmindonasiverifikasiupdate(content)
 		mybsmiadmindonasidata.invoice.splice(content.indexinvoice, 1)
 		fpageadmindonasi()
 	}
+	if(content.instruksi == 'disconnecttelegram')
+	{	
+		fpagereload()
+	}
 }
 
 function fpageadmindonasisendemailtodonatur(content)
@@ -7568,7 +7596,7 @@ function fpageadmindonasisendemailtodonatur(content)
       <table style="font-family:'proxima-nova' 'Helvetica Neue','Helvetica',Helvetica,Arial,sans-serif;width:100%;margin:0;padding:0">
         <tbody><tr>
           <td >
-             Terima kasih <b>${invoice[5]}</b>, donasi Sahabat sudah diterima dan tercatat di campaign <b >"${invoice[3]}" dari <b>BSMI JATIM</b>.</b> Semoga setiap kebaikan Sahabat membuka pintu keberkahan dan mendatangkan pertolongan Allah di dunia maupun akhirat.
+             Terima kasih <b>${invoice[5]}</b>, donasi Sahabat sudah diterima dan tercatat di program <b >"${invoice[3]}" dari <b>BSMI JATIM</b>.</b> Semoga setiap kebaikan Sahabat membuka pintu keberkahan dan mendatangkan pertolongan Allah di dunia maupun akhirat.
 			<br>
 			Yuk teruskan rantai kebaikan ini dengan mengajak teman-teman Sahabat ikut berdonasi: <a href="https://donasi.bsmijatim.org">donasi.bsmijatim.org</a>
 			<br>
