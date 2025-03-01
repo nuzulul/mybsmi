@@ -7340,13 +7340,13 @@ function fpageadmindonasirun(content)
 	//console.log(content)
 	
 	let totaldonasi = content.pengaturan[2][1]
-	$$('.mybsmi-admindonasi-list-total').html(safe(totaldonasi))
+	$$('.mybsmi-admindonasi-list-total').html('Rp '+formatRupiah(safe(totaldonasi)))
 
 	let penyalurandonasi = content.pengaturan[3][1]
-	$$('.mybsmi-admindonasi-list-penyaluran').html(safe(penyalurandonasi))	
+	$$('.mybsmi-admindonasi-list-penyaluran').html('Rp '+formatRupiah(safe(penyalurandonasi)))	
 	
 	let sisadonasi = content.pengaturan[4][1]
-	$$('.mybsmi-admindonasi-list-sisa').html(safe(sisadonasi))		
+	$$('.mybsmi-admindonasi-list-sisa').html('Rp '+formatRupiah(safe(sisadonasi)))		
 	
 	let datainvoice = content.invoice
 	
@@ -7390,6 +7390,16 @@ function fpageadmindonasirun(content)
 			let invoiceid = this.attributes["data-invoiceid"].value
 			fpageadmindonasiverifikasi(invoiceid)
 	});
+	
+	$$('.mybsmi-admindonasi-action-data').html('<a class="button button-fill mybsmi-admindonasi-action-data-program">DATA PROGRAM</a>')
+	$$('.mybsmi-admindonasi-action-data-program').on('click', function (e) {
+			fetch("dynamic.html")
+			.then((res)=>res.text())
+			.then((data)=>{
+				app.views.main.router.navigate({url:"/dynamicLoad/", route:{content:data}})
+				fadmindonasiprogram()
+			})
+	})
 	
 	let telegram = JSON.parse(content.pengaturan[5][1])
 	let indextele = telegram.findIndex((item)=>item.uid==dashboarddata.user.useruid)
@@ -7583,6 +7593,14 @@ function fpageadmindonasiverifikasiupdate(content)
 	{	
 		fpagereload()
 	}
+	if(content.instruksi == 'getprogram')
+	{
+		fadmindonasiprogramrun(content.campaign)
+	}
+	if(content.instruksi == 'penyaluranprogram')
+	{
+		fadmindonasiprogram()
+	}
 }
 
 function fpageadmindonasisendemailtodonatur(content)
@@ -7636,6 +7654,158 @@ function fpageadmindonasisendemailtodonatur(content)
 		console.warn('Something went wrong.', err);
 		mypreloader.close()
 	});		
+}
+
+function fadmindonasiprogram()
+{
+		$$('.dynamic .navbar .title').html('Program')
+		let inputdata = JSON.stringify({instruksi:'getprogram'})
+		fpageadmindonasiverifikasirun(inputdata)
+}
+
+function fadmindonasiprogramrun(campaign)
+{
+		let html = `
+			<div class="row margin-bottom">
+				<div class="col-100">
+				  <div class="card">
+					<div class="card-header">PROGRAM DONASI</div>
+					<div class="card-content card-content-padding mybsmi-admindonasi-list-program">
+						<div class="progressbar-infinite"></div>
+					</div>
+					<div class="card-footer mybsmi-admindonasi-action-program"></div>
+				  </div>
+				</div>
+			</div>		
+		`
+		$$('.dynamic .page-content').html(html)
+		
+		let programhtml = '<div class="data-table data-table-collapsible data-table-init"><table style="table-layout: fixed"><thead><tr><th>No</th><th class="display-none">Pembuatan</th><th>Kode</th><th>Program</th><th>Donatur</th><th>Total</th><th>Penyaluran</th><th>Saldo</th><th>Action</th></tr></thead><tbody></tbody></table></div>'
+		
+		for(let i=0;i<campaign.length;i++)
+		{
+				if(i==0)continue
+				let program = campaign[i]
+				let date = new Intl.DateTimeFormat("id-ID", { hour12:false,dateStyle: "short" , timeStyle: "short",  timeZone: "Asia/Jakarta"}).format(new Date(program[0]));
+				date = date.split(",")[0]
+				programhtml += '<div class="accordion-item"><div class="data-table data-table-collapsible data-table-init"><table style="table-layout: fixed"><tbody><tr>'+
+											'<td data-collapsible-title="No">'+i+'</a></td>'+
+											'<td class="display-none" data-collapsible-title="Pembuatan">'+safe(date)+'</td>'+
+											'<td data-collapsible-title="Kode">'+safe(program[1])+'</td>'+
+											'<td data-collapsible-title="Program">'+safe(program[2])+'</td>'+
+											'<td data-collapsible-title="Donatur">'+safe(program[5])+'</td>'+
+											'<td data-collapsible-title="Total">Rp '+formatRupiah(safe(program[4]))+'</td>'+
+											'<td data-collapsible-title="Penyaluran">Rp '+formatRupiah(safe(program[6]))+'</td>'+
+											'<td data-collapsible-title="Saldo">Rp '+formatRupiah(safe(program[8]))+'</td>'+
+											'<td data-collapsible-title="Action" style="display: flex;align-content: center;align-items: center;justify-content: flex-start;text-align: left;"><a data-index="'+i+'" data-program="'+btoa(JSON.stringify(program))+'" class="button button-fill mybsmi-admindonasi-program-salurkan">Salurkan</a><i class="icon f7-icons accordion-item-toggle">ellipsis_circle</i></td>'+
+									'</tr><tbody></tbody></table></div>'
+				programhtml += '	<div class="accordion-item-content">'+
+										'<div class="mybsmi-admindonasi-program-riwayat bg-color-red block block-strong block-outline inset">'	
+										
+				let riwayathtml = '<div class="padding bg-color-white">Riwayat Penyaluran</div><div class="data-table data-table-collapsible data-table-init bg-color-white"><table><thead><tr><th>Tanggal</th><th>Nominal</th></tr></thead><tbody>'
+				let arr = JSON.parse(program[7])
+				for(let i=0;i<arr.length;i++){
+					let item = arr[i]
+					let date = new Intl.DateTimeFormat("id-ID", { hour12:false,dateStyle: "short" , timeStyle: "short",  timeZone: "Asia/Jakarta"}).format(new Date(item.date));
+				date = date.split(",")[0]
+					riwayathtml += '<tr>'+
+									'<td data-collapsible-title="Tanggal">'+safe(date)+'</td>'+
+									'<td data-collapsible-title="Nominal">Rp '+formatRupiah(safe(item.nominal))+'</td>'+
+								'</tr>'
+				}
+				riwayathtml += '</tbody></table></div>'
+
+				programhtml += riwayathtml										
+										
+										
+				programhtml +=			'</div>'+
+									'</div>'+
+								'</div>'									
+		}
+		
+		let programhtmlaccordion = '<div class="accordion-item"><div class="accordion-item-toggle"><button class="button"><i class="icon f7-icons">ellipsis_circle</i></button></div><div class="accordion-item-content">'+programhtml+'</div></div>'
+		
+		$$('.mybsmi-admindonasi-list-program').html(programhtml)
+		
+		$$('.mybsmi-admindonasi-program-salurkan').on('click', function (e) {
+				let index = parseInt(this.attributes["data-index"].value)
+				let program = JSON.parse(atob(this.attributes["data-program"].value))
+				console.log('program',program)
+				fadmindonasiprogrampenyaluran(index,program)
+		});		
+}
+
+function fadmindonasiprogrampenyaluran(index,program)
+{
+  var dialog = app.dialog.create({
+    title: 'Salurkan Donasi',
+    content:''////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      +'<div style="width:100%;height:50vh;overflow:auto;">'
+      +'  <div style="display:flex;flex-direction:column;align-items:center;justify-content: center;">'
+      +'      <img id="img" src="icon512.png" style="width:150px;height:150px;margin: 10px 10px;border-radius: 0%;object-fit: cover;">'
+      +'      <p style="font-weight:bold;">('+safe(program[1])+') '+safe(program[2])+'</p>'
+      +'  <div class="list no-hairlines-md">'
+      +'    <ul>'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Saldo Donasi</div><div class="item-input-wrap">'
+      +'            <input type="text" id="saldodonasi" name="saldodonasi" placeholder="Saldo Donasi" value="'+safe(program[8])+'" disabled>'
+      +'            </div></div>'
+      +'        </li>'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Nominal Penyaluran</div><div class="item-input-wrap">'
+      +'            <input type="number" id="nominalpenyaluran" name="nominalpenyaluran" placeholder="Nominal Penyaluran" value="">'
+      +'            </div></div>'
+      +'        </li>'
+      +'    </ul>'
+      +'  </div>'
+      +'  </div>'
+      +'</div>',//////////////////////////////////////////////////////////////////////////////////////////////////
+    closeByBackdropClick: false,
+    destroyOnClose: true,
+    verticalButtons: true,
+    on: {
+      opened: function () {
+        //console.log('Dialog opened')
+		
+      }
+    },
+    buttons: [
+      {
+        text: 'Submit',
+        close:false,
+        color: 'red',
+        onClick: function(dialog, e)
+          {
+				
+				var nominalpenyaluran = parseInt($$('#nominalpenyaluran').val());
+				if(nominalpenyaluran == ''){
+					var toastBottom = app.toast.create({ text: 'Nominal penyaluran tidak boleh kosong', closeTimeout: 3000,position: 'center', });toastBottom.open();
+					return
+				}
+				if(nominalpenyaluran > program[8]){
+					var toastBottom = app.toast.create({ text: 'Nominal penyaluran tidak boleh melebihi saldo', closeTimeout: 3000,position: 'center', });toastBottom.open();
+					return
+				}
+				
+				dialog.close()
+				
+				app.dialog.confirm('Lanjutkan penyaluran?', 'Konfirmasi', function (){
+					let inputdata = JSON.stringify({instruksi:'penyaluranprogram',nominalpenyaluran,index,program})
+					fpageadmindonasiverifikasirun(inputdata)
+				})
+				
+          }
+      },
+      {
+        text: 'Batal',
+        close:true,
+        color: 'gray',
+        onClick: function(dialog, e)
+          {
+
+          }
+      },
+    ]
+  });
+  dialog.open();
 }
 ////////fpageadmindonasi/////////////////////////////////////////////////
 
