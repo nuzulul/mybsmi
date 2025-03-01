@@ -7618,8 +7618,11 @@ function fpageadmindonasisendemailtodonatur(content)
           <td >
              Terima kasih <b>${invoice[5]}</b>, donasi Sahabat sudah diterima dan tercatat di program <b >"${invoice[3]}" dari <b>BSMI JATIM</b>.</b> Semoga setiap kebaikan Sahabat membuka pintu keberkahan dan mendatangkan pertolongan Allah di dunia maupun akhirat.
 			<br>
-			Yuk teruskan rantai kebaikan ini dengan mengajak teman-teman Sahabat ikut berdonasi: <a href="https://donasi.bsmijatim.org">donasi.bsmijatim.org</a>
 			<br>
+			Yuk teruskan rantai kebaikan ini dengan mengajak teman-teman Sahabat ikut berdonasi: <a href="https://donasi.bsmijatim.org">donasi.bsmijatim.org</a>
+			 <br>
+			 <br>
+			 ID : ${invoice[1]}
 			</td>
 		</tr></tbody>
 	  </table>
