@@ -7880,6 +7880,7 @@ function fpagemasterrun(content)
 
 function fpagemasterpengaturan(){
   let html = '<button class="button button-fill master-dokumen">MASTER DOKUMEN</button></br>'+
+			'<button class="button button-fill master-program">MASTER PROGRAM</button></br>'+
 			'<button class="button button-fill ganti-pin">GANTI PIN AKTIVASI</button></br>'+
 			'<button class="button button-fill buat-link">BUAT LINK AKTIVASI</button></br>'+
 			'<button class="button button-fill buat-link-full">BUAT LINK AKTIVASI FULL</button></br>'+
@@ -7906,6 +7907,15 @@ function fpagemasterpengaturan(){
         let url = "/masterdokumen/";
         app.views.main.router.navigate(url);
   })
+  $$('.master-program').on('click', function () {
+			fetch("dynamic.html")
+			.then((res)=>res.text())
+			.then((data)=>{
+				app.views.main.router.navigate({url:"/dynamicLoad/", route:{content:data}})
+				fpagemasterprogram()
+			})	  
+		
+  })  
   $$('.undang-relawan').on('click', function () {
 		fundangrelawan()
   })
@@ -9261,6 +9271,64 @@ function  fpagemasteradminadministrasiadd(content,administrasi)
   });
   dialog.open();
 }
+
+function fpagemastercommandrun(inputdata)
+{
+	  let mypreloader = app.dialog.preloader();
+      app.request({
+        url: apidataurl,
+        method: 'POST',
+        cache: false,
+        data : { token:mybsmiusertoken, command: 'mastercommand',inputdata}, 
+        success: function (data, status, xhr)
+          {
+            //console.log(data);
+			mypreloader.close();
+            var status = JSON.parse(data).status;
+            var content = JSON.parse(data).data;
+            if (status == "success")
+            {
+              //console.log(content);
+              fpagemastercommandupdate(content)
+            }
+            else if (status == "failed")
+            {
+              //console.log("failed");
+              app.dialog.alert(content,'Terjadi Kesalahan');
+            }
+            else
+            {
+              //console.log("failed");
+              //app.dialog.alert(content,'Terjadi Kesalahan');
+              fcekexpiredtoken(content);
+            }
+          },
+        error: function (xhr, status, message)
+          {
+            //console.log(message);
+            mypreloader.close();
+            app.dialog.alert("Server sedang sibuk",'Terjadi Kesalahan');
+          },
+      })
+}
+
+function fpagemastercommandupdate(content)
+{
+		let instruksi = content.instruksi
+		if(instruksi == 'getprogram')
+		{
+			fpagemasterprogramrun(content)
+		}
+		if(instruksi == 'aktifkanprogram')
+		{
+			fpagemasterprogram()
+		}
+		if(instruksi == 'buatprogram')
+		{
+			fpagemasterprogram()
+		}
+}
+
 ///////fpagemaster////////////////////////////////////////////////////////
 
 
@@ -9978,6 +10046,264 @@ function fpagemasterdokumenaddrelawanmultirun(dialog,inputdata)
       })
 }
 ///////////////////////////////////////////////////////////////////////////
+
+
+
+///////fpagemasterprogram////////////////////////////////////////////////////////
+function fpagemasterprogram()
+{
+		$$('.dynamic .navbar .title').html('Master Program')
+		let inputdata = JSON.stringify({instruksi:'getprogram'})
+		fpagemastercommandrun(inputdata)
+}
+
+function fpagemasterprogramrun(content)
+{
+		let campaign = content.campaign
+		let bsmijatimorgkode = content.bsmijatimdata[0][2]
+		
+		let html = `
+			<div class="row margin-bottom">
+				<div class="col-100">
+				  <div class="card">
+					<div class="card-header">PROGRAM DONASI</div>
+					<div class="card-content card-content-padding mybsmi-masterprogram-list-program">
+						<div class="progressbar-infinite"></div>
+					</div>
+					<div class="card-footer mybsmi-masterprogram-action-program"><a class="button button-fill">Buat</a></div>
+				  </div>
+				</div>
+			</div>		
+		`
+		$$('.dynamic .page-content').html(html)
+		
+		let programhtml = '<div class="data-table data-table-collapsible data-table-init"><table style="table-layout: fixed"><thead><tr><th>No</th><th>Tenggat</th><th>Kode</th><th>Program</th><th>Donatur</th><th>Total</th><th class="display-none">Penyaluran</th><th>Saldo</th><th>Action</th></tr></thead><tbody></tbody></table></div>'
+		
+		let showdonasiawal = false
+		
+		for(let i=0;i<campaign.length;i++)
+		{
+				if(i==0)continue
+				let program = campaign[i]
+				let date = new Intl.DateTimeFormat("id-ID", { hour12:false,dateStyle: "short" , timeStyle: "short",  timeZone: "Asia/Jakarta"}).format(new Date(program[3]));
+				date = date.split(",")[0]
+				let bgclass = ''
+				if(program[1]==bsmijatimorgkode)
+				{
+					let tenggat = new Date(program[3]).getTime()
+					let now = new Date().getTime()
+					if(tenggat > now){
+						bgclass = 'bg-color-green'
+					}else{
+						bgclass = 'bg-color-yellow'
+						showdonasiawal = true
+					}
+				}
+				programhtml += '<div class="accordion-item"><div class="data-table data-table-collapsible data-table-init '+bgclass+'"><table style="table-layout: fixed"><tbody><tr>'+
+											'<td data-collapsible-title="No">'+i+'</a></td>'+
+											'<td data-collapsible-title="Pembuatan">'+safe(date)+'</td>'+
+											'<td data-collapsible-title="Kode">'+safe(program[1])+'</td>'+
+											'<td data-collapsible-title="Program">'+safe(program[2])+'</td>'+
+											'<td data-collapsible-title="Donatur">'+safe(program[5])+'</td>'+
+											'<td data-collapsible-title="Total">Rp '+formatRupiah(safe(program[4]))+'</td>'+
+											'<td class="display-none" data-collapsible-title="Penyaluran">Rp '+formatRupiah(safe(program[6]))+'</td>'+
+											'<td data-collapsible-title="Saldo">Rp '+formatRupiah(safe(program[8]))+'</td>'+
+											'<td data-collapsible-title="Action" style="display: flex;align-content: center;align-items: center;justify-content: flex-start;text-align: left;"><a data-index="'+i+'" data-program="'+btoa(JSON.stringify(program))+'" class="button button-fill mybsmi-masterprogram-program-edit">Edit</a><i class="icon f7-icons accordion-item-toggle display-none">ellipsis_circle</i></td>'+
+									'</tr><tbody></tbody></table></div>'
+				programhtml += '	<div class="accordion-item-content">'+
+										'<div class="mybsmi-masterprogram-program-riwayat bg-color-red block block-strong block-outline inset">'	
+										
+				let riwayathtml = '<div class="padding bg-color-white">Riwayat Penyaluran</div><div class="data-table data-table-collapsible data-table-init bg-color-white"><table><thead><tr><th>Tanggal</th><th>Nominal</th></tr></thead><tbody>'
+				let arr = JSON.parse(program[7])
+				for(let i=0;i<arr.length;i++){
+					let item = arr[i]
+					let date = new Intl.DateTimeFormat("id-ID", { hour12:false,dateStyle: "short" , timeStyle: "short",  timeZone: "Asia/Jakarta"}).format(new Date(item.date));
+				date = date.split(",")[0]
+					riwayathtml += '<tr>'+
+									'<td data-collapsible-title="Tanggal">'+safe(date)+'</td>'+
+									'<td data-collapsible-title="Nominal">Rp '+formatRupiah(safe(item.nominal))+'</td>'+
+								'</tr>'
+				}
+				riwayathtml += '</tbody></table></div>'
+
+				programhtml += riwayathtml										
+										
+										
+				programhtml +=			'</div>'+
+									'</div>'+
+								'</div>'									
+		}
+		
+		if (showdonasiawal)
+		{
+				let bsmijatimorgkode = content.bsmijatimdata[1][2]
+				let bsmijatimorgprogram = content.bsmijatimdata[1][1]
+				let bsmijatimorgimage = content.bsmijatimdata[1][3]
+				
+				let html = '<div class="margin-top bg-color-green showdonasiawal"><div class="data-table data-table-collapsible data-table-init"><table style="table-layout: fixed"><tbody><tr class="bg-color-green"><th>'+bsmijatimorgkode+'</th><th>'+bsmijatimorgprogram+'</th><th><th><a data-src="'+bsmijatimorgimage+'" class="button button-fill">Show</a></th></tr></tbody></table></div></div>'
+				
+				programhtml += html
+		}
+		
+		let programhtmlaccordion = '<div class="accordion-item"><div class="accordion-item-toggle"><button class="button"><i class="icon f7-icons">ellipsis_circle</i></button></div><div class="accordion-item-content">'+programhtml+'</div></div>'
+		
+		$$('.mybsmi-masterprogram-list-program').html(programhtml)
+		
+		$$('.mybsmi-masterprogram-program-edit').on('click', function (e) {
+				let index = parseInt(this.attributes["data-index"].value)
+				let program = JSON.parse(atob(this.attributes["data-program"].value))
+				//console.log('program',program)
+				fpagemasterprogramedit(program,index)
+				
+		});	
+		
+		$$('.mybsmi-masterprogram-action-program a').on('click', function (e) {
+				fpagemasterprogrambuat()
+		})
+		
+		$$('.showdonasiawal a').on('click', function (e) {
+			let src = this.attributes["data-src"].value
+			let data = {src}
+			myimage(data)
+		})
+		
+}
+
+function fpagemasterprogramedit(program,index){
+	let data = program
+  var dialog = app.dialog.create({
+    title: 'Edit Program',
+    content:''////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      +'<div style="width:100%;height:50vh;overflow:auto;">'
+      +'  <div style="display:flex;flex-direction:column;align-items:center;justify-content: center;">'
+      //+'      <img id="img" src="icon512.png" style="width:150px;height:150px;margin: 10px 10px;border-radius: 0%;object-fit: cover;">'
+      +'      <p style="font-weight:bold;">('+safe(data[1])+') '+safe(data[2])+'</p>'
+      +'  <div class="list no-hairlines-md">'
+      +'    <ul>'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Tenggat</div><div class="item-input-wrap">'
+      +'            <input type="text" id="expired" name="expired" placeholder="Expired" value="'+safe(data[3])+'" readonly="readonly" class="calendar-input-kodedonasi" required validate>'
+      +'            </div></div>'
+      +'        </li>'
+      +'    </ul>'
+      +'  </div>'
+      +'  </div>'
+      +'</div>',//////////////////////////////////////////////////////////////////////////////////////////////////
+    closeByBackdropClick: false,
+    destroyOnClose: true,
+    verticalButtons: true,
+    on: {
+      opened: function () {
+        //console.log('Dialog opened')
+        var calendar = app.calendar.create({
+            inputEl: '.calendar-input-kodedonasi',
+            dateFormat: 'm/d/yyyy',
+            openIn: 'popover'
+        }); 
+
+		let date = new Date(data[3])
+		let val = date.toLocaleDateString("en-US")
+		//console.log('val',val)
+		$$('#expired').val(val)
+      }
+    },
+    buttons: [
+      {
+        text: 'Aktifkan',
+        close:false,
+        color: 'red',
+        onClick: function(dialog, e)
+          {
+                var expired = $$('#expired').val();
+				if(expired != ''){
+					let inputdata = JSON.stringify({instruksi:'aktifkanprogram',program,index,expired})
+					fpagemastercommandrun(inputdata)
+					dialog.close()
+				}
+          }
+      },
+      {
+        text: 'Batal',
+        close:true,
+        color: 'gray',
+        onClick: function(dialog, e)
+          {
+
+          }
+      },
+    ]
+  });
+  dialog.open();
+}
+
+function fpagemasterprogrambuat()
+{
+  var dialog = app.dialog.create({
+    title: 'Buat Program',
+    content:''////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      +'<div style="width:100%;height:50vh;overflow:auto;">'
+      +'  <div style="display:flex;flex-direction:column;align-items:center;justify-content: center;">'
+      //+'      <img id="img" src="icon512.png" style="width:150px;height:150px;margin: 10px 10px;border-radius: 0%;object-fit: cover;">'
+      //+'      <p style="font-weight:bold;"></p>'
+      +'  <div class="list no-hairlines-md">'
+      +'    <ul>'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Nama</div><div class="item-input-wrap">'
+      +'            <input type="text" id="namaprogram" name="namaprogram" placeholder="Nama Program" value="" required validate>'
+      +'            </div></div>'
+      +'        </li>'	  		  
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Tenggat</div><div class="item-input-wrap">'
+      +'            <input type="text" id="expired" name="expired" placeholder="Expired" value="" readonly="readonly" class="calendar-input-kodedonasi" required validate>'
+      +'            </div></div>'
+      +'        </li>'
+      +'    </ul>'
+      +'  </div>'
+      +'  </div>'
+      +'</div>',//////////////////////////////////////////////////////////////////////////////////////////////////
+    closeByBackdropClick: false,
+    destroyOnClose: true,
+    verticalButtons: true,
+    on: {
+      opened: function () {
+        //console.log('Dialog opened')
+        var calendar = app.calendar.create({
+            inputEl: '.calendar-input-kodedonasi',
+            dateFormat: 'm/d/yyyy',
+            openIn: 'popover'
+        }); 
+
+      }
+    },
+    buttons: [
+      {
+        text: 'Buat',
+        close:false,
+        color: 'red',
+        onClick: function(dialog, e)
+          {
+                var expired = $$('#expired').val();
+				var nama = $$('#namaprogram').val();
+				if(expired != '' && nama != ''){
+					let inputdata = JSON.stringify({instruksi:'buatprogram',nama,expired})
+					fpagemastercommandrun(inputdata)
+					dialog.close()
+				}
+          }
+      },
+      {
+        text: 'Batal',
+        close:true,
+        color: 'gray',
+        onClick: function(dialog, e)
+          {
+
+          }
+      },
+    ]
+  });
+  dialog.open();	
+}
+///////fpagemasterprogram////////////////////////////////////////////////////////
+
+
 
 
 /////fpagepesan//////////////////////////////////////////////////////////////
