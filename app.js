@@ -7600,6 +7600,8 @@ function fpageadmindonasiverifikasiupdate(content)
 	if(content.instruksi == 'penyaluranprogram')
 	{
 		fadmindonasiprogram()
+		mybsmiadmindonasidata.pengaturan[3][1] = mybsmiadmindonasidata.pengaturan[3][1]+content.nominalpenyaluran
+		mybsmiadmindonasidata.pengaturan[4][1] = mybsmiadmindonasidata.pengaturan[4][1]-content.nominalpenyaluran		
 	}
 }
 
@@ -7730,7 +7732,7 @@ function fadmindonasiprogramrun(campaign)
 		$$('.mybsmi-admindonasi-program-salurkan').on('click', function (e) {
 				let index = parseInt(this.attributes["data-index"].value)
 				let program = JSON.parse(atob(this.attributes["data-program"].value))
-				console.log('program',program)
+				//console.log('program',program)
 				fadmindonasiprogrampenyaluran(index,program)
 		});		
 }
