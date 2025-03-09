@@ -7469,6 +7469,7 @@ function fpageadmindonasiverifikasi(invoiceid)
       +'      <p style="font-weight:bold;"></p>'
       +'      <div class="data-table" style="width:100%"><table><tbody>'
       +'          <tr><td>Donasi</td><td>Rp '+formatRupiah(safe(data[13]))+'</td></tr>'
+	  +'          <tr><td>Metode</td><td>'+safe(data[10])+'</td></tr>'
 	  +'          <tr><td>Konfirmasi</td><td>'+konfirmasi+'</td></tr>'
 	  +'          <tr><td>Nama</td><td>'+safe(data[5])+'</td></tr>'
       +'          <tr><td>Invoice</td><td>'+safe(data[1])+'</td></tr>'
