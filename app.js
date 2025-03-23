@@ -7611,28 +7611,64 @@ function fpageadmindonasisendemailtodonatur(content)
 	let xapikey = mybsmiadmindonasidata.emailxapikey
 	let emailapiurl = 'https://script.google.com/macros/s/AKfycbzL1-gxqhhaE9LVqINqAdeiXJMQfKyBkdMtLCvHNfW4RAcgEqhI8vFxiRdJJniYLM1r/exec'
 	let invoice = content.data
+	let judul = `E-Kuitansi ${invoice[1]} - Terima kasih! Donasi Sahabat sudah diterima`
+	let date = new Intl.DateTimeFormat("id-ID", { hour12:false,dateStyle: "short" , timeStyle: "short",  timeZone: "Asia/Jakarta"}).format(new Date(invoice[0]));
+	let nominal = 'Rp '+formatRupiah(safe(invoice[13]))
 	let html = `
 
-      <div style="font-family:'proxima-nova' 'Helvetica Neue','Helvetica',Helvetica,Arial,sans-serif;max-width:600px;display:block;margin:0 auto;padding:15px">
-      <table style="font-family:'proxima-nova' 'Helvetica Neue','Helvetica',Helvetica,Arial,sans-serif;width:100%;margin:0;padding:0">
-        <tbody><tr>
-          <td >
-             Terima kasih <b>${invoice[5]}</b>, donasi Sahabat sudah diterima dan tercatat di program <b >"${invoice[3]}" dari <b>BSMI JATIM</b>.</b> Semoga setiap kebaikan Sahabat membuka pintu keberkahan dan mendatangkan pertolongan Allah di dunia maupun akhirat.
-			<br>
-			<br>
-			Yuk teruskan rantai kebaikan ini dengan mengajak teman-teman Sahabat ikut berdonasi: <a href="https://donasi.bsmijatim.org">donasi.bsmijatim.org</a>
-			 <br>
-			 <br>
-			 ID : ${invoice[1]}
-			</td>
-		</tr></tbody>
-	  </table>
+      <div style="font-family:'proxima-nova' 'Helvetica Neue','Helvetica',Helvetica,Arial,sans-serif;max-width:400px;display:block;margin:0 auto;padding:15px">
+			  
+			<div style="text-align:center"><img style="margin-right:20px" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjFYntKvwXtgQwUMW9ZsqG63x68e5_5xqLLpQPtBHhnFTjkJjMaj2bmiI91JigRuVBgJHDyNJWUlaurfyfJyrWbEW2vTW5lqqKQUZj3bgb-RZxhpUmtLEke-8oUWMjVCJnujQb2XPbr1pA/s1600/Logo+BSMI+%2528vector%2529.png" height="50px" width="auto"></div>
+			<h2 style="padding:0px;text-align:center;margin:0px">E-KUITANSI</h2>
+			<h2 style="padding:0px;text-align:center;margin:0px">NO : ${invoice[1]}</h2>
+			<h2 style="padding:0px;text-align:center;color:#34a853;margin:0px">TERVERIFIKASI</h2>
+			<p>Terima kasih <b>${invoice[5]}</b>, donasi Sahabat sudah diterima dan tercatat di program <b >"${invoice[3]}" dari <b>BSMI JATIM</b>.</p>
+			<p style="margin-left:3%;margin-right:3%"></p>	  
+
+			<div style="background-color:#eee"><b>DONATUR</b></div>
+			<table style="margin-left:5%" border="0">
+			  <tbody>
+				<tr>
+				  <td>Tanggal</td>
+				  <td>${date}</td>
+				</tr>
+				<tr>
+				  <td>Nama</td>
+				  <td>${invoice[5]}</td>
+				</tr>
+				<tr>
+				  <td>Email</td>
+				  <td>${invoice[4]}</td>
+				</tr>
+				<tr>
+				  <td>Donasi</td>
+				  <td>${invoice[3]}</td>
+				</tr>
+				<tr>
+				  <td>Bank / Channel</td>
+				  <td>${invoice[10]}</td>
+				</tr>
+				<tr>
+				  <td>Nominal</td>
+				  <td>${nominal}</td>
+				</tr>
+			  </tbody>
+			</table>
+			
+			<p>Semoga Allah SWT melimpahkan pahala dan keberkahan kepada Sahabat dermawan sekeluarga, serta dimudahkan segala urusannya di dunia maupun di akhirat. Amin</p>
+			<p>Yuk teruskan rantai kebaikan ini dengan mengajak teman-teman Sahabat ikut berdonasi di <a href="https://donasi.bsmijatim.org">donasi.bsmijatim.org</a></p>
+
+			<div style="text-align:right;margin-right:10%">
+			  <p>Diterima oleh,&nbsp;&nbsp;&nbsp;</p>
+			  <p>Keuangan BSMI JATIM</p>
+			</div>
+
 	  </div>
 
 	`
 	let input = JSON.stringify({
 		to:invoice[4],
-		subject:'Terima kasih! Donasi Anda sudah diterima',
+		subject:judul,
 		body:html,
 		xapikey
 	})
@@ -7656,6 +7692,11 @@ function fpageadmindonasisendemailtodonatur(content)
 	}).then(function (data) {
 		console.log(data);
 		mypreloader.close()
+		if(data.status == 'success'){
+			var toastBottom = app.toast.create({ text: 'E-Kuitansi berhasil dikirim', closeTimeout: 3000,position: 'center', });toastBottom.open();
+		}else{
+			app.dialog.alert("Melampaui limit harian 100 email/hari",'Gagal Mengirim E-Kuitansi');
+		}
 	}).catch(function (err) {
 		console.warn('Something went wrong.', err);
 		mypreloader.close()
