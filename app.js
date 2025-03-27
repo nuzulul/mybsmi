@@ -7637,15 +7637,15 @@ function fpageadmindonasisendemailtodonatur(content)
 				  <td>${invoice[5]}</td>
 				</tr>
 				<tr>
-				  <td>Email</td>
-				  <td>${invoice[4]}</td>
+				  <td>ID</td>
+				  <td>${invoice[1]}</td>
 				</tr>
 				<tr>
-				  <td>Donasi</td>
+				  <td>Program</td>
 				  <td>${invoice[3]}</td>
 				</tr>
 				<tr>
-				  <td>Bank / Channel</td>
+				  <td>Channel</td>
 				  <td>${invoice[10]}</td>
 				</tr>
 				<tr>
