@@ -7622,7 +7622,7 @@ function fpageadmindonasisendemailtodonatur(content)
 			<h2 style="padding:0px;text-align:center;margin:0px">E-KUITANSI</h2>
 			<h2 style="padding:0px;text-align:center;margin:0px">NO : ${invoice[1]}</h2>
 			<h2 style="padding:0px;text-align:center;color:#34a853;margin:0px">TERVERIFIKASI</h2>
-			<p>Terima kasih <b>${invoice[5]}</b>, donasi Sahabat sudah diterima dan tercatat di program <b >"${invoice[3]}" dari <b>BSMI JATIM</b>.</p>
+			<p>Terima kasih <b>${invoice[5]}</b>, donasi Sahabat sudah diterima dan tercatat di program <b >"${invoice[3]}"</b> dari <b>BSMI JATIM</b>.</p>
 			<p style="margin-left:3%;margin-right:3%"></p>	  
 
 			<div style="background-color:#eee"><b>DONATUR</b></div>
