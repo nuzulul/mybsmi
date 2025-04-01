@@ -7618,7 +7618,7 @@ function fpageadmindonasisendemailtodonatur(content)
 
       <div style="font-family:'proxima-nova' 'Helvetica Neue','Helvetica',Helvetica,Arial,sans-serif;max-width:400px;display:block;margin:0 auto;padding:15px">
 			  
-			<div style="text-align:center"><img style="margin-right:20px" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjFYntKvwXtgQwUMW9ZsqG63x68e5_5xqLLpQPtBHhnFTjkJjMaj2bmiI91JigRuVBgJHDyNJWUlaurfyfJyrWbEW2vTW5lqqKQUZj3bgb-RZxhpUmtLEke-8oUWMjVCJnujQb2XPbr1pA/s1600/Logo+BSMI+%2528vector%2529.png" height="50px" width="auto"></div>
+			<div style="text-align:center"><img style="margin-right:20px" src="https://blogger.googleusercontent.com/img/a/AVvXsEieo1QmyGGL34qa9mTfvkM4wfDStsRsyA5M4nxWeqpb4gLMc7KlGlqs-8-yIeIxcacPAPVNOhtelgufbRHd_3jdqAOMJldPVn4iyxh-6IG0X2wWw0B1KoWzs84uxg1R61cLj-GM2cnsF36uH1ZgFYJj5457io0FcNvcJKr2mK-o7alZ0wnOUklkHT4y=s16000" height="50px" width="auto"></div>
 			<h2 style="padding:0px;text-align:center;margin:0px">E-KUITANSI</h2>
 			<h2 style="padding:0px;text-align:center;margin:0px">NO : ${invoice[1]}</h2>
 			<h2 style="padding:0px;text-align:center;color:#34a853;margin:0px">TERVERIFIKASI</h2>
