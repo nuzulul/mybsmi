@@ -1901,6 +1901,218 @@ $$("#my-login-screen").on("keydown",function(e){
 //end form-login/////////////////////////////
 
 
+
+
+
+
+//login dengan cara lain//////////////////////////////
+var pkce_config = {
+	client_id: "5Gt0ni2q2ypr1zg0osRScr2xZZnjvpfB",
+	redirect_uri: window.location.origin,
+	authorization_endpoint: "https://dev-c7irc54zcpa7ng8x.us.auth0.com/authorize",
+	token_endpoint: "https://dev-c7irc54zcpa7ng8x.us.auth0.com/oauth/token",
+	requested_scopes: "openid profile email",
+	audience: "api",
+	prompt: "login"
+};
+	
+$$('#my-login-screen .login-dengan-cara-lain').on('click', async function () {
+	
+	let mypreloader = app.dialog.preloader();
+	
+	// PKCE HELPER FUNCTIONS
+
+	// Generate a secure random string using the browser crypto functions
+	function generateRandomString() {
+		var array = new Uint32Array(28);
+		window.crypto.getRandomValues(array);
+		return Array.from(array, dec => ('0' + dec.toString(16)).substr(-2)).join('');
+	}
+
+	// Calculate the SHA256 hash of the input text. 
+	// Returns a promise that resolves to an ArrayBuffer
+	function sha256(plain) {
+		const encoder = new TextEncoder();
+		const data = encoder.encode(plain);
+		return window.crypto.subtle.digest('SHA-256', data);
+	}
+
+	// Base64-urlencodes the input string
+	function base64urlencode(str) {
+		// Convert the ArrayBuffer to string using Uint8 array to conver to what btoa accepts.
+		// btoa accepts chars only within ascii 0-255 and base64 encodes them.
+		// Then convert the base64 encoded to base64url encoded
+		//   (replace + with -, replace / with _, trim trailing =)
+		return btoa(String.fromCharCode.apply(null, new Uint8Array(str)))
+			.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+	}
+
+	// Return the base64-urlencoded sha256 hash for the PKCE challenge
+	async function pkceChallengeFromVerifier(v) {
+		hashed = await sha256(v);
+		return base64urlencode(hashed);
+	}
+	
+	var code_verifier = generateRandomString();
+	var code_challenge = await pkceChallengeFromVerifier(code_verifier);
+	
+	console.log('code_verifier',code_verifier)
+	console.log('code_challenge',code_challenge)
+	
+	localStorage.setItem("pkce_code_verifier", code_verifier);
+	
+	var state = generateRandomString();
+	localStorage.setItem("pkce_state", state);
+	
+    var url = pkce_config.authorization_endpoint 
+        + "?response_type=code"
+        + "&client_id="+encodeURIComponent(pkce_config.client_id)
+        + "&state="+encodeURIComponent(state)
+        + "&scope="+encodeURIComponent(pkce_config.requested_scopes)
+        + "&redirect_uri="+encodeURIComponent(pkce_config.redirect_uri)
+        + "&code_challenge="+encodeURIComponent(code_challenge)
+        + "&code_challenge_method=S256"
+		+ "&audience="+encodeURIComponent(pkce_config.audience)
+		+ "&prompt="+encodeURIComponent(pkce_config.prompt)
+        ;
+
+	if(access_token){
+		localStorage.setItem("pkce_access_token", access_token);
+	}
+		
+	 window.location = url;
+	 
+})
+	
+if(params.code && params.state){
+	if(localStorage.getItem("pkce_state") == params.state) {
+		
+		let mypreloader = app.dialog.preloader();
+		
+		const data = new URLSearchParams({
+            grant_type: "authorization_code",
+            code: params.code,
+            client_id: pkce_config.client_id,
+            redirect_uri: pkce_config.redirect_uri,
+            code_verifier: localStorage.getItem("pkce_code_verifier")
+        })
+		
+		localStorage.removeItem("pkce_state");
+		localStorage.removeItem("pkce_code_verifier");
+		
+		
+		fetch(pkce_config.token_endpoint, {
+			body: data,
+			headers: {
+				"Content-Type": "application/x-www-form-urlencoded",
+			},
+			method: "post",
+		})
+		.then(function (response) {
+			// The API call was successful!
+			if (response.ok) {
+				return response.text();
+			} else {
+				return Promise.reject(response);
+			}
+		}).then(function (data) {
+			// This is the data from our response
+			console.log(data);
+			let json = JSON.parse(data)
+			if(json.access_token){
+				let auth0_access_token = json.access_token
+				localStorage.setItem("auth0_access_token", auth0_access_token);
+				if(localStorage.hasOwnProperty('pkce_access_token')){
+					let dev_access_token = localStorage.getItem("pkce_access_token")
+					localStorage.removeItem("pkce_access_token");
+					window.location = window.location.origin+'/?access_token='+dev_access_token+'&auth0_access_token=true'
+				}else{
+					window.location = window.location.origin+'/?auth0_access_token=true'
+				}
+			}			
+		}).catch(function (err) {
+			// There was an error
+			console.warn('Something went wrong.', err);
+		});
+	 }
+ 
+}
+
+if(params.auth0_access_token){
+	if(localStorage.hasOwnProperty('auth0_access_token')){
+		let auth0_access_token = localStorage.getItem("auth0_access_token")
+		localStorage.removeItem("auth0_access_token");
+		console.log('auth0_access_token',auth0_access_token);
+		let state = "/"
+		if(params.access_token){
+			state = '/?access_token='+params.access_token
+		}
+		window.history.replaceState({}, document.title, state);
+		floginwithauth0(auth0_access_token)
+	}
+}
+
+function floginwithauth0(token)
+{
+
+      if (typeof mybsmideviceid === 'undefined' || mybsmideviceid === null) {
+        // variable is undefined or null
+        setTimeout(function(){ floginwithauth0(token); }, 500);
+        return;
+      }
+      console.log('floginwithauth0');
+      //$$('#overlay-welcome').hide();    
+
+        let mypreloader = app.dialog.preloader();
+        app.request({
+          url: apiuserurl,
+          method: 'POST',
+          cache: false,
+          data : { command: 'loginwithserviceauth0', email: 'noemail', password: token, deviceid:mybsmideviceid}, 
+          success: function (data, status, xhr)
+            {
+              console.log(data);
+              mypreloader.close();
+                      
+              var status = JSON.parse(data).status;
+              var data = JSON.parse(data).data;
+              if (status == "success")
+              {
+                console.log(data);
+                $$('#overlay-welcome').hide();
+                let token = JSON.parse(atob(data.token));
+                let access = token.access;
+                let refresh = token.refresh;
+                window.mybsmiusertoken = access;
+                window.localStorage["mybsmiuser"] = btoa(refresh);
+                getdefaultdata(true)
+                fpollsession();
+                flogger('auth0')
+              }
+              else if (status == "failed")
+              {
+                $$('#overlay-welcome').css('display','flex');
+				app.dialog.alert(data,'Terjadi Kesalahan');
+              }
+              else
+              {
+                $$('#overlay-welcome').css('display','flex');
+				fcekexpiredtoken(data);
+              }
+            },
+          error: function (xhr, status, message)
+            {
+              //console.log(message);
+              mypreloader.close();
+              $$('#overlay-welcome').css('display','flex');
+            },
+        })
+       
+}
+//login dengan cara lain//////////////////////////////
+
+
+
 ///logout button/////////////////////////
 function flogout()
 {
@@ -13674,7 +13886,7 @@ function fwebworker()
                   deviceid = body.deviceid;myunik = body.deviceid;
                   penting = true;
                 }
-                if (body.command === 'login')
+                if (body.command === 'login' || body.command.indexOf('loginwithservice') > -1)
                 {
                   deviceid = body.deviceid;myunik = body.deviceid;
                   penting = true;
