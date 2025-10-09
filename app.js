@@ -7030,7 +7030,7 @@ function fpageadminlaporanadministrasisdmaktif(content)
 
 	//--action--
 
-	let actionhtml = `<div class="col-100 medium-100 mybsmi-adminlaporan-administrasi-action">
+	let actionhtml = `<div class="col-100 medium-100 mybsmi-adminlaporan-administrasi-action experiment">
 				  <div class="card">
 					<div class="card-header">PENDATAAN ANGGOTA TETAP</div>
 					<div class="card-content card-content-padding">
@@ -7043,9 +7043,9 @@ function fpageadminlaporanadministrasisdmaktif(content)
 				
 	$$('.mybsmi-adminlaporan-administrasi').append(actionhtml)
 
-  $$('.mybsmi-adminlaporan-administrasi-action .buat-link').on('click', function () {
+	$$('.mybsmi-adminlaporan-administrasi-action .buat-link').on('click', function () {
 		fbuatlinkaktivasi()
-  })
+	})
 }
 
 //--kesekretariatan--
