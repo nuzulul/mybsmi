@@ -7122,7 +7122,7 @@ function fpageadminlaporanadministrasikesekretariatanaset(content)
 {
 	let html = `<div class="col-100 medium-100 mybsmi-adminlaporan-administrasi-action">
 				  <div class="card">
-					<div class="card-header">PENDATAAN ASET BSMI JATIM</div>
+					<div class="card-header">PENDATAAN ASET KHUSUS BSMI JATIM</div>
 					<div class="card-content card-content-padding">
 						<div class="mybsmi-adminlaporan-administrasi-list-aset"><div class="progressbar-infinite"></div></div>
 					</div>
