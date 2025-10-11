@@ -228,7 +228,7 @@ routes: [
     },
   },
   {
-    path: '/materi/',
+    path: '/arsip/',
     url: 'materi.html',
     on: {
       pageAfterIn: function test (e, page) {
