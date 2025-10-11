@@ -6431,7 +6431,7 @@ function fpageadminlaporanketuacabang(ketuacabang,content)
 		return mydata.admincabang && (mycabang == cabang)
 	})
 	let namaoperator = operator ? safe(operator[4]) : ""
-	profilhtml += '<tr><td>Operator</td><td><a class="profil" data-user="'+btoa(JSON.stringify(operator))+'">'+namaoperator+'</a> (Pelaksana Teknis)</td></tr>';
+	profilhtml += '<tr><td>Operator</td><td><a class="profil" data-user="'+btoa(JSON.stringify(operator))+'">'+namaoperator+'</a> (Operator MyBSMI BSMI Cabang)</td></tr>';
     profilhtml += '</tbody></table></div>';
     $$('.mybsmi-adminlaporanmenu-updateoperatorcabang .mybsmi-adminlaporan-updateoperatorcabang').html(profilhtml);
 	$$('.mybsmi-adminlaporanmenu-updateoperatorcabang .mybsmi-adminlaporan-updateoperatorcabang .profil').on('click', function (e) {
@@ -6703,7 +6703,7 @@ function fpageadminlaporanadministrasibsmrregistrasi(content)
 							'<td data-collapsible-title="PIC BSMR (dari Sekolah)">'+safe(item.picbsmr)+'</td>'+
 							'<td data-collapsible-title="BSMI Cabang">'+safe(namacabang)+'</td>'+
 							'<td data-collapsible-title="PIC BSMR (dari BSMI Cabang)"><a class="mybsmi-adminaction" data-user="'+btoa(JSON.stringify(data))+'">'+safe(data[4])+'</a></td>'+
-							'<td data-collapsible-title=""><a class="button button-fill mybsmi-adminaction-aktif" data-indexcabang="'+j+'" data-indexbsmr="'+i+'">Aktifkan</a></td>'+
+							'<td data-collapsible-title=""><a class="button button-fill mybsmi-adminaction-aktif display-none" data-indexcabang="'+j+'" data-indexbsmr="'+i+'">Aktifkan</a></td>'+
 						'</tr>'
 		}
 	}
@@ -6736,7 +6736,7 @@ function fpageadminlaporanadministrasibsmrterdaftar(content)
 {
 	let html = `<div class="col-100 medium-100 mybsmi-adminlaporan-administrasi-terdaftar">
 				  <div class="card">
-					<div class="card-header">REKAP PENDATAAN GUGUS BSMR AKTIF</div>
+					<div class="card-header">REKAP PENDATAAN GUGUS BSMR</div>
 					<div class="card-content card-content-padding">
 						<div class="mybsmi-adminlaporan-administrasi-terdaftar-view"><div class="progressbar-infinite"></div></div>
 					</div>
