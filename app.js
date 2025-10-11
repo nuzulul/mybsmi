@@ -6678,7 +6678,7 @@ function fpageadminlaporanadministrasiupdate(content)
 
 function fpageadminlaporanadministrasibsmrregistrasi(content)
 {
-	$$('.mybsmi-adminlaporan-administrasi-header .card-header').text('ADMINISTRASI BSMR JAWA TIMUR')
+	$$('.mybsmi-adminlaporan-administrasi-header .card-header').text('BSMR JAWA TIMUR')
 	$$('.mybsmi-adminlaporan-administrasi-list .card-header').text('PERMINTAAN REGISTRASI GUGUS BSMR')
 
 	let datarelawan = content
