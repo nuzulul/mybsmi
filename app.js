@@ -179,7 +179,17 @@ routes: [
       },
     },
     beforeEnter: function ({ resolve, reject }) {          
-          fperiksauserdata({ resolve, reject })
+          //fperiksauserdata({ resolve, reject })
+		  function fperiksakesiapan({ resolve, reject })
+		  {
+			  if (typeof dashboarddata === 'undefined' || dashboarddata === null) {
+				// variable is undefined or null
+				setTimeout(function(){ fperiksakesiapan({ resolve, reject }); }, 1000);
+				return;
+			  }
+			resolve();
+		  }
+		  fperiksakesiapan({ resolve, reject })		  
     },
   },
   {
@@ -261,7 +271,7 @@ routes: [
       },
     },
     beforeEnter: function ({ resolve, reject }) {          
-        fperiksauserdata({ resolve, reject })
+        fperiksadashboarddata({ resolve, reject })
     },
   },
   {
@@ -273,7 +283,7 @@ routes: [
       },
     },
     beforeEnter: function ({ resolve, reject }) {          
-        fperiksauserdata({ resolve, reject })
+        fperiksadashboarddata({ resolve, reject })
     },
   },
   {
@@ -285,7 +295,7 @@ routes: [
       },
     },
     beforeEnter: function ({ resolve, reject }) {          
-        fperiksauserdata({ resolve, reject })
+        fperiksadashboarddata({ resolve, reject })
     },
   },
   {
@@ -297,7 +307,7 @@ routes: [
       },
     },
     beforeEnter: function ({ resolve, reject }) {          
-        fperiksauserdata({ resolve, reject })
+        fperiksadashboarddata({ resolve, reject })
     },
   },
   {
@@ -309,7 +319,7 @@ routes: [
       },
     },
     beforeEnter: function ({ resolve, reject }) {
-      fperiksauserdata({ resolve, reject })
+      fperiksadashboarddata({ resolve, reject })
     },
   },
   {
@@ -321,7 +331,7 @@ routes: [
       },
     },
     beforeEnter: function ({ resolve, reject }) {
-      fperiksauserdata({ resolve, reject })
+      fperiksadashboarddata({ resolve, reject })
     },
   },
   {
@@ -333,7 +343,7 @@ routes: [
       },
     },
     beforeEnter: function ({ resolve, reject }) {
-      fperiksauserdata({ resolve, reject })
+      fperiksadashboarddata({ resolve, reject })
     },
   },
   {
@@ -345,7 +355,7 @@ routes: [
       },
     },
     beforeEnter: function ({ resolve, reject }) {
-        fperiksauserdata({ resolve, reject })
+        fperiksadashboarddata({ resolve, reject })
     },
   },
   {
@@ -583,6 +593,17 @@ routes: [
   },
 ],
 });
+
+function fperiksadashboarddata({ resolve, reject })
+{
+    if (typeof dashboarddata === 'undefined' || dashboarddata === null) {
+            // variable is undefined or null
+            setTimeout(function(){ fperiksadashboarddata({ resolve, reject }); }, 1000);
+            return;
+    }
+    resolve();
+
+}
 
 function fperiksauserdata({ resolve, reject })
 {
@@ -2773,6 +2794,7 @@ function getdefaultdatarun(data)
   if (usermydata.verifikasiidentitas)
   {
     $$('.mybsmi-ektamenu').show();
+	$$('#ektamenustyle').remove();
   } 
   if (usermydata.verifikator)
   {
@@ -12481,7 +12503,11 @@ async function getsocialdatarun(socialdata)
   $$('.social-avatar').attr('src',url);
 
   $$('.mybsmi-social-checkin').on('click', function () {
-    fsocialcheckin(window.mybsmisocialplace)
+	if (dashboarddata.user.userphoto !== ''){
+		fsocialcheckin(window.mybsmisocialplace)
+	}else{
+		flengkapidata();
+	}
   })
 
   $$('.mybsmi-social-refresh').on('click', function () {
