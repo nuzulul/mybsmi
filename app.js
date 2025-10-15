@@ -11104,7 +11104,12 @@ function getaktivitasdatarun(content)
           let id = data[1];
           let url = "/"+jenis+"/"+id;
           //console.log(url);
-          app.views.main.router.navigate(url);
+			if (dashboarddata.user.userphoto !== ''){
+				app.views.main.router.navigate(url);
+			}else{
+				flengkapidata();
+			}		  
+          
     });
   }
   let datadumy = '<div class="col-100 xsmall-75 small-50 medium-33 large-33 xlarge-33" ></div><div class="col-100 xsmall-75 small-50 medium-40 large-40 xlarge-33" ></div>';
