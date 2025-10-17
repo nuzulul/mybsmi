@@ -2776,7 +2776,7 @@ function getdefaultdatarun(data)
 				  '<span class="ios-only">Back</span>'+
 				'</a>'+
 			  '</div>'+
-			  '<div class="title">Statistik</div>'+
+			  '<div class="title">Dashboard</div>'+
 			'</div>'+
 		  '</div>'+
 		  '<div class="page-content">'+
