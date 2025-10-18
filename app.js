@@ -2540,7 +2540,7 @@ if (cari !== undefined)
             //console.log(data);
             var dialog = app.dialog.create({
               title: 'Data ditemukan',
-              content: '<p>Nama : '+safe(data.nama)+'</p><p>Cabang : '+safe(data.cabang)+'</p>',
+              content: '<p>Nama : '+safe(data.nama)+'</p><p>Cabang : '+safe(data.cabang)+'</p><p>No.KTA : '+safe(data.nokta)+'</p>',
               on: {
                 opened: function () {
                   //console.log('Dialog opened')
