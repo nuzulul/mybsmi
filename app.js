@@ -2985,7 +2985,7 @@ function fpagecabangrun(content,cabangid)
   let struktur = JSON.parse(datacabang[8])
   if(struktur.length > 0)
   {
-		let html = '<p>Struktur Pengurus</p>'+
+		let html = '<p>Dewan Pengurus</p>'+
 			'<div class="list struktur">'+
 				'<ul>'
 		
