@@ -743,7 +743,8 @@ function fmybsmivisits()
 {
   $$('.mybsmi-visits').off('click')
   $$('.mybsmi-visits').on('click', function () {
-      
+	let data = JSON.parse(dashboarddata.user.usermydata)
+	if (data.master) {     
       let api = "https://cors.bsmijatim.workers.dev/?";
       let url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTpD1D5K4E0TCklRc96H37RDJBRjxljBZkU9CO8wlqrEJy0_p8PdLYCOUm2hJMwI0cK_3RzqWThae3T/pub?gid=1358478407&single=true&output=csv'
       fetch(api+url)
@@ -752,6 +753,7 @@ function fmybsmivisits()
           let arr = CSVToArray(response)
           app.dialog.alert(arr.length-1,'Kunjungan');
       })
+	}
   });
 }
 
