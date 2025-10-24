@@ -202,6 +202,15 @@ routes: [
     },
   },
   {
+    path: '/feeds/',
+    url: 'feeds.html',
+    on: {
+      pageAfterIn: function test (e, page) {
+        fpagefeeds();
+      },
+    },
+  },
+  {
     path: '/majalah/',
     url: 'majalah.html',
     on: {
@@ -13202,6 +13211,83 @@ function fpageeventrun(data){
 	})
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+const feedsScraper = 3
+var feedsstartIndex = 1
+var feedsmaxResults = feedsScraper
+function fpagefeeds(first = true){
+	if(first){
+		feedsstartIndex = 1
+		feedsmaxResults = feedsScraper
+	}
+	const api = "https://cors.bsmijatim.workers.dev/?";
+	const url = "https://www.bsmijatim.org/feeds/posts/default?alt=json&orderby=published&start-index=" + feedsstartIndex + "&max-results=" + feedsmaxResults;
+	fetch(api+url)
+	.then(response => response.json())
+	.then(async(response) => {
+		//console.log('response',response)
+		if(first){$$('.mybsmi-feeds').html("")}
+		fpagefeedsrun(response)
+	})
+	feedsstartIndex += feedsScraper;
+	
+	$$('.mybsmi-feeds-more').css('cursor','pointer')
+	$$('.mybsmi-feeds-more').off('click')
+	$$('.mybsmi-feeds-more').on('click', function (e) {
+		fpagefeeds(false)
+	})	
+}
+function fpagefeedsrun(data){
+	data.feed.entry.forEach(function(arr,index){
+		const title = arr.title.$t
+		const thumb = arr.media$thumbnail.url
+		const content = arr.content.$t
+		const link = arr.link.find((item) => item.rel == "alternate").href
+		//console.log("link",link)
+		let html = '<div class="card" data-url="'+link+'">'+
+						'<div class="card-header">'+safe(title)+'</div>'+
+						'<div class="card-content card-content-padding">'+content+'</div>'+
+						'<div class="card-footer">'+
+					'</div>'
+		$$('.mybsmi-feeds').append(html)
+	})
+	//$$('.mybsmi-feeds a').each(a => a.outerHTML = a.innerHTML)
+	$$('.mybsmi-feeds a').each(a => $$(a).addClass('external'))
+	$$('.mybsmi-feeds a').each(a => $$(a).addClass('openinbrowser'))
+	//$$('.mybsmi-feeds .card').css('cursor','pointer')
+	$$('.mybsmi-feeds .card img').css('max-width','100%')
+	$$('.mybsmi-feeds .card img').css('display','flex')
+	$$('.mybsmi-feeds .card').on('click', function (e) {
+		const url = $$(this).attr('data-url')
+		console.log('url',url)
+		//window.open(url,'_system', 'location=yes')
+	})
+	$$('.mybsmi-feeds .card .openinbrowser').off('click')
+	$$('.mybsmi-feeds .card .openinbrowser').on('click', function (e) {
+		e.preventDefault()
+		const url = $$(this).attr('href')
+		console.log('url',url)
+		if(url.includes('/img/')){
+			var photoBrowser = app.photoBrowser.create({
+			  photos: [
+				url
+			  ],
+			  routableModals:true
+			});
+			photoBrowser.open()
+		}else{
+			app.dialog.confirm('Buka link di browser','Link', ()=>{
+				window.open(url,'_system', 'location=yes')
+			})
+		}
+	})
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
