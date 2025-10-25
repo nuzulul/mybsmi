@@ -1544,6 +1544,27 @@ app.on('pageAfterIn', function (page) {
 	+'      </div>'
 
   //$$('.navbar-inner .title').append(myprofile);
+	
+	$$('a.external').off('click')
+ 	$$('a.external').on('click', function (e) {
+		e.preventDefault()
+		const url = $$(this).attr('href')
+		console.log('url',url)
+		if(url.includes('/img/')){
+			var photoBrowser = app.photoBrowser.create({
+			  photos: [
+				url
+			  ],
+			  routableModals:true
+			});
+			photoBrowser.open()
+		}else{
+			app.dialog.confirm('Buka link di browser','Link', ()=>{
+				window.open(url,'_system', 'location=yes')
+			})
+		}
+	}) 
+  
  
 });
 
