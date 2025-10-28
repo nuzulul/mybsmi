@@ -258,6 +258,11 @@ routes: [
   {
     path: '/lainnya/',
     url: 'lainnya.html',
+    on: {
+      pageAfterIn: function test (e, page) {
+        fpagelainnya();
+      },
+    },	
   },
   {
     path: '/ekta/',
@@ -4540,6 +4545,456 @@ return data;
 
 
 /////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+//////////////////////////////////////////////////////////////////
+function fpagelainnya(){
+  $$('.startradio').on('click', function () {
+	 
+  
+	  const para = document.createElement("div");
+	  para.innerHTML = `<div style="background: rgba(0, 0, 0, 0.8);position: fixed;z-index: 1000000000000000;align-items: center;justify-content: center;display: flex;bottom: 0;left: 0;right: 0;top: 0;"><div class="paraxmark" style="width:50px;height:50px;background:#000;position:fixed;top:0px;right:0px;border-radius:50% 50% 50% 50%;margin:3px 3px;"><i class="icon f7-icons" style="font-size:50px;color:#fff;" id="paraclose">xmark_circle</i></div>
+			<style>
+					.radiomain {
+					  width:200px;
+					  height:300px;
+					  background:black;
+					  border-radius:2em;
+					}
+					
+					.antena {
+						width:30px;
+						height:70px;
+						background:black;
+						position:relative;
+						border-radius:25px;
+						top:-150px;
+						left:30px;
+					}
+					
+					.screen {
+						width:150px;
+						border-radius:1em;
+						height:100px;
+						background:#9FFE02;
+						position:relative;
+						left:25px;
+						top:-150px;
+						color:black;
+					}
+					
+					.screen img {
+						width:50px;
+						height:50px;
+						margin-top:5px;
+						margin-left:5px;
+					}
+					
+					.radioinfo {
+						
+						background:none;
+						padding:0px 20px;
+					}
+					
+					.play-button {
+						height: 100px;
+						width: 100px;
+						display: block;
+						margin: 0px auto;
+						overflow: hidden;
+						position: relative;
+						top:170px;
+					}
+
+					.radioleft {
+						height: 100%;
+						float: left;
+						background-color: #fff;
+						width: 36%;
+						transition: all 0.25s ease;
+						overflow: hidden;
+					}
+
+					.radiotriangle-1 {
+						-webkit-transform: translate(0, -100%);
+						transform: translate(0, -100%);
+					}
+
+					.radiotriangle-2 {
+						-webkit-transform: translate(0, 100%);
+						transform: translate(0, 100%);
+					}
+
+					.radiotriangle-1,
+					.radiotriangle-2 {
+						position: absolute;
+						top: 0;
+						right: 0;
+						background-color: transparent;
+						width: 0;
+						height: 0;
+						border-right: 100px solid #000;
+						border-top: 50px solid transparent;
+						border-bottom: 50px solid transparent;
+						transition: -webkit-transform 0.25s ease;
+						transition: transform 0.25s ease;
+						transition: transform 0.25s ease, -webkit-transform 0.25s ease;
+					}
+
+					.radioright {
+						height: 100%;
+						float: right;
+						width: 36%;
+						background-color: #fff;
+						transition: all 0.25s ease;
+					}
+
+					.paused .radioleft {
+						width: 50%;
+					}
+
+					.paused .radioright {
+						width: 50%;
+					}
+
+					.paused .radiotriangle-1 {
+						-webkit-transform: translate(0, -50%);
+						transform: translate(0, -50%);
+					}
+
+					.paused .radiotriangle-2 {
+						-webkit-transform: translate(0, 50%);
+						transform: translate(0, 50%);
+					} 			
+			</style>
+			<div class="radiomain">
+			  <a class="play-button paused" href="#">
+				  <div class="radioleft"></div>
+				  <div class="radioright"></div>
+				  <div class="radiotriangle-1"></div>
+				  <div class="radiotriangle-2"></div>
+			  </a>
+			  <div class="antena"></div>
+			  <div class="screen">
+				  <img src="logobsmijatim.png"></img>
+				  <p class="radioinfo">OFFLINE</p>
+			  </div>
+			</div>	  
+	  </div>`;
+	  
+	  document.body.appendChild(para);
+	  
+	  paraclose.addEventListener("click",()=>{
+		para.remove();
+		ws.close();
+	  })	  
+	  
+	  $$('.paraxmark').css('cursor','pointer')
+
+	  
+        let ws;
+        const username = 'guest'+Math.floor(Math.random()*10000);   
+        const channel = 'public10000redcrescent';
+        const hubname = 'achexchatdemo';
+        let achexauth = false;
+        let availableradio = false;
+        let sourceBuffer;
+        let audioElement;
+        const timeslice = 3000;   
+        const timedelay = 3500;    
+        let timeout;
+        const istimeslice = true;
+        let mediasourceinit = false
+        
+        function achex(data){
+          //console.log(data)
+          if(data.includes('{"auth":"OK",')) {
+            ws.send(`{"joinHub":"${hubname}"}`);
+          }
+          if(data.includes('{"joinHub":"OK"}')) {
+            achexauth = true;
+            let info = document.getElementsByClassName("radioinfo")[0]
+            info.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-reception-4" viewBox="0 0 16 16">
+  <path d="M0 11.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5zm4-3a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5zm4-3a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5zm4-3a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v11a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5z"/>
+</svg> ONLINE`
+          }
+          
+          let json = JSON.parse(data);
+          
+          if(json.msg){
+            if(json.msg.radioinuse){
+              isavailableradio(false);
+            }else if (json.msg.blob){
+              isavailableradio(false);
+              startsource(json.msg);
+            }
+          }
+        }      
+
+        let handleDataAvailable = (event) => {
+            if (event.size > 0) {
+                
+                blobToBase64(event).then(b64 => {
+                    
+                    let data = {
+                      toH:hubname,
+                      channel,
+                      msg:{blob:b64,mediasourceinit},
+                    }
+                    ws.send(JSON.stringify(data))
+                    mediasourceinit = false;
+                })
+            }
+        };
+
+        function blobToBase64(blob) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(blob);
+                reader.onload = () => {
+                    
+                    const base64String = reader.result
+                    resolve(base64String);
+                };
+                reader.onerror = (error) => reject(error);
+            });
+        }
+     
+        
+        
+        function startsource(msg){
+        
+        
+            function addbuffer(data,play){
+                if(!data.includes('base64'))return;
+                
+                isavailableradio(false)
+                
+                clearTimeout(timeout)
+                timeout = setTimeout(()=>{
+                      isavailableradio(true)
+                },timedelay)  
+
+                const b64 = data.split(',')[1];   
+
+                const contentType = "audio/webm;codecs=opus";
+                
+                function base64ToBlob(base64, contentType = '', sliceSize = 512) {
+                  const byteCharacters = atob(base64);
+                  const byteArrays = [];
+
+                  for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+                    const slice = byteCharacters.slice(offset, offset + sliceSize);
+                    const byteNumbers = new Array(slice.length);
+                    for (let i = 0; i < slice.length; i++) {
+                      byteNumbers[i] = slice.charCodeAt(i);
+                    }
+                    const byteArray = new Uint8Array(byteNumbers);
+                    byteArrays.push(byteArray);
+                  }
+
+                  return new Blob(byteArrays, { type: contentType });
+                } 
+                
+                const blob = base64ToBlob(b64, contentType);   
+                
+                let reader = new FileReader();
+                let rawData = new ArrayBuffer();            
+                reader.loadend = function() {}
+                reader.onload = function(e) {
+                    rawData = e.target.result;
+                    
+                    sourceBuffer.appendBuffer(rawData);
+                    
+                    if (play){
+                    
+                    audioElement.play()
+                        .then(() => {
+                            //console.log('Audio playback started successfully.');
+                        })
+                        .catch(error => {
+                            //console.error('Error playing audio:', error);
+                        });    
+                    }                               
+                    
+                }
+                reader.readAsArrayBuffer(blob);             
+            }
+        
+            if (msg.mediasourceinit){
+            
+                  let mediaSource = new MediaSource();
+                  
+                  mediaSource.addEventListener('sourceopen', handleSourceOpen);
+                  
+                  const audioUrl = URL.createObjectURL(mediaSource);
+
+                  
+                  audioElement = new Audio();
+
+                  
+                  audioElement.src = audioUrl;
+
+                  audioElement.addEventListener('ended', () => {
+                      URL.revokeObjectURL(audioUrl);
+                  }); 
+                  
+                  function handleSourceOpen(event) {
+                        
+                        var mediaSource = this;                            
+                        
+                        sourceBuffer = mediaSource.addSourceBuffer('audio/webm; codecs="opus"');
+                        addbuffer(msg.blob,true);
+                  }
+            }else{
+                  addbuffer(msg.blob,false);
+            }
+        
+        }                      
+        
+
+        navigator.mediaDevices.getUserMedia({ audio: true })
+            .then(stream => {
+
+                const options = {
+                  audioBitsPerSecond: 16000,
+                  mimeType: 'audio/webm'
+                }
+            
+                var madiaRecorder = new MediaRecorder(stream,options);                 
+
+                madiaRecorder.addEventListener("dataavailable", function (event) {
+                
+                  if (event.data.size > 0) {
+                        handleDataAvailable(event.data)        
+                  }                 
+                }); 
+                
+                let playbtn = document.getElementsByClassName("play-button")[0]   
+                
+                playbtn.addEventListener("mousedown", startrecord);
+                playbtn.addEventListener("touchstart", startrecord); 
+                
+                function startrecord(e) {
+                    if(achexauth && availableradio && madiaRecorder.state === 'inactive'){
+                    
+                        if(playbtn.classList.contains('paused')){
+                            playbtn.classList.remove('paused');
+                        };
+                        
+                        let data = {
+                          toH:hubname,
+                          channel,
+                          msg:{radioinuse:true},
+                        }
+                        ws.send(JSON.stringify(data))                        
+                        
+                        mediasourceinit = true;
+                        
+                        if(istimeslice){
+                          madiaRecorder.start(timeslice);
+                        }else{
+                          madiaRecorder.start();
+                        }
+                        
+                        isavailableradio(false)
+                        
+                    }
+
+                }  
+                
+                playbtn.addEventListener("mouseup", stoprecord); 
+                playbtn.addEventListener("mouseleave", stoprecord); 
+                playbtn.addEventListener("touchend", stoprecord); 
+                
+                function stoprecord(e) {
+                      if(madiaRecorder.state !== 'inactive'){
+                      
+                        if(!playbtn.classList.contains('paused')){
+                          playbtn.classList.add('paused');
+                        }
+                        
+                        let delay = 1000;
+                        
+                        setTimeout(()=>{
+                          madiaRecorder.stop();
+                        },delay)                        
+                        
+                        setTimeout(()=>{
+                          isavailableradio(true)
+                        },delay+timedelay)
+                                   
+                      }
+                }                               
+                                      
+            
+                
+                
+            });
+            
+            
+        timeout = setTimeout(()=>{
+            isavailableradio(true)
+        },timedelay) 
+        
+        function isavailableradio(bol){
+          if(bol){
+              availableradio = true;
+              document.getElementsByClassName("radioleft")[0].style.backgroundColor = "green";
+              document.getElementsByClassName("radioright")[0].style.backgroundColor = "green";               
+          }else{
+              availableradio = false;
+              document.getElementsByClassName("radioleft")[0].style.backgroundColor = "red";
+              document.getElementsByClassName("radioright")[0].style.backgroundColor = "red";                
+          }
+        }
+        
+        isavailableradio(false) 
+        
+        
+        
+        
+        function connect(){            
+            
+            ws = new WebSocket('wss://cloud.achex.ca/');
+                
+            ws.onmessage = event => {
+                
+                achex(event.data)            
+                      
+            };            
+
+            ws.onopen = () => {
+                console.log('WebSocket connection opened');
+                const data = {
+                  auth:username,
+                  passwd:'none'
+                }
+                ws.send(JSON.stringify(data))
+            };
+
+            ws.onclose = () => {
+                console.log('WebSocket connection closed');
+                achexauth = false;
+                let info = document.getElementsByClassName("radioinfo")[0]
+                if(info){
+						info.innerHTML = 'OFFLINE'
+						setTimeout(()=>{connect()},1000)
+				}
+            };
+       
+        }
+  
+        connect()
+    	
+		
+  })
+}
+////////////////////////////////////////////////////////////////////
 
 
 
