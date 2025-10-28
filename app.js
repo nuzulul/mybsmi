@@ -4592,12 +4592,13 @@ function fpagelainnya(){
 						height:50px;
 						margin-top:5px;
 						margin-left:5px;
+						display:none;
 					}
 					
 					.radioinfo {
 						
 						background:none;
-						padding:0px 20px;
+						padding:5px 20px;
 					}
 					
 					.play-button {
