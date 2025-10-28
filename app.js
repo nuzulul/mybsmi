@@ -4553,151 +4553,152 @@ return data;
 
 //////////////////////////////////////////////////////////////////
 function fpagelainnya(){
-  $$('.startradio').on('click', function () {
+  $$('.startradio').on('click', async function () {
 	 
-  
-	  const para = document.createElement("div");
-	  para.innerHTML = `<div style="background: rgba(0, 0, 0, 0.8);position: fixed;z-index: 1000000000000000;align-items: center;justify-content: center;display: flex;bottom: 0;left: 0;right: 0;top: 0;"><div class="paraxmark" style="width:50px;height:50px;background:#000;position:fixed;top:0px;right:0px;border-radius:50% 50% 50% 50%;margin:3px 3px;"><i class="icon f7-icons" style="font-size:50px;color:#fff;" id="paraclose">xmark_circle</i></div>
-			<style>
-					.radiomain {
-					  width:200px;
-					  height:300px;
-					  background:black;
-					  border-radius:2em;
-					}
-					
-					.antena {
-						width:30px;
-						height:70px;
-						background:black;
-						position:relative;
-						border-radius:25px;
-						top:-150px;
-						left:30px;
-					}
-					
-					.screen {
-						width:150px;
-						border-radius:1em;
-						height:100px;
-						background:#9FFE02;
-						position:relative;
-						left:25px;
-						top:-150px;
-						color:black;
-					}
-					
-					.screen img {
-						width:50px;
-						height:50px;
-						margin-top:5px;
-						margin-left:5px;
-						display:none;
-					}
-					
-					.radioinfo {
+		const para = document.createElement("div");
+		
+		para.innerHTML = `<div style="background: rgba(0, 0, 0, 0.8);position: fixed;z-index: 1000000000000000;align-items: center;justify-content: center;display: flex;bottom: 0;left: 0;right: 0;top: 0;"><div class="paraxmark" style="width:50px;height:50px;background:#000;position:fixed;top:0px;right:0px;border-radius:50% 50% 50% 50%;margin:3px 3px;"><i class="icon f7-icons" style="font-size:50px;color:#fff;" id="paraclose">xmark_circle</i></div>
+				<style>
+						.radiomain {
+						  width:200px;
+						  height:300px;
+						  background:black;
+						  border-radius:2em;
+						}
 						
-						background:none;
-						padding:5px 20px;
-					}
-					
-					.play-button {
-						height: 100px;
-						width: 100px;
-						display: block;
-						margin: 0px auto;
-						overflow: hidden;
-						position: relative;
-						top:170px;
-					}
+						.antena {
+							width:30px;
+							height:70px;
+							background:black;
+							position:relative;
+							border-radius:25px;
+							top:-150px;
+							left:30px;
+						}
+						
+						.screen {
+							width:150px;
+							border-radius:1em;
+							height:100px;
+							background:#9FFE02;
+							position:relative;
+							left:25px;
+							top:-150px;
+							color:black;
+						}
+						
+						.screen img {
+							width:50px;
+							height:50px;
+							margin-top:5px;
+							margin-left:5px;
+							display:none;
+						}
+						
+						.radioinfo {
+							
+							background:none;
+							padding:5px 20px;
+						}
+						
+						.play-button {
+							height: 100px;
+							width: 100px;
+							display: block;
+							margin: 0px auto;
+							overflow: hidden;
+							position: relative;
+							top:170px;
+						}
 
-					.radioleft {
-						height: 100%;
-						float: left;
-						background-color: #fff;
-						width: 36%;
-						transition: all 0.25s ease;
-						overflow: hidden;
-					}
+						.radioleft {
+							height: 100%;
+							float: left;
+							background-color: #fff;
+							width: 36%;
+							transition: all 0.25s ease;
+							overflow: hidden;
+						}
 
-					.radiotriangle-1 {
-						-webkit-transform: translate(0, -100%);
-						transform: translate(0, -100%);
-					}
+						.radiotriangle-1 {
+							-webkit-transform: translate(0, -100%);
+							transform: translate(0, -100%);
+						}
 
-					.radiotriangle-2 {
-						-webkit-transform: translate(0, 100%);
-						transform: translate(0, 100%);
-					}
+						.radiotriangle-2 {
+							-webkit-transform: translate(0, 100%);
+							transform: translate(0, 100%);
+						}
 
-					.radiotriangle-1,
-					.radiotriangle-2 {
-						position: absolute;
-						top: 0;
-						right: 0;
-						background-color: transparent;
-						width: 0;
-						height: 0;
-						border-right: 100px solid #000;
-						border-top: 50px solid transparent;
-						border-bottom: 50px solid transparent;
-						transition: -webkit-transform 0.25s ease;
-						transition: transform 0.25s ease;
-						transition: transform 0.25s ease, -webkit-transform 0.25s ease;
-					}
+						.radiotriangle-1,
+						.radiotriangle-2 {
+							position: absolute;
+							top: 0;
+							right: 0;
+							background-color: transparent;
+							width: 0;
+							height: 0;
+							border-right: 100px solid #000;
+							border-top: 50px solid transparent;
+							border-bottom: 50px solid transparent;
+							transition: -webkit-transform 0.25s ease;
+							transition: transform 0.25s ease;
+							transition: transform 0.25s ease, -webkit-transform 0.25s ease;
+						}
 
-					.radioright {
-						height: 100%;
-						float: right;
-						width: 36%;
-						background-color: #fff;
-						transition: all 0.25s ease;
-					}
+						.radioright {
+							height: 100%;
+							float: right;
+							width: 36%;
+							background-color: #fff;
+							transition: all 0.25s ease;
+						}
 
-					.paused .radioleft {
-						width: 50%;
-					}
+						.paused .radioleft {
+							width: 50%;
+						}
 
-					.paused .radioright {
-						width: 50%;
-					}
+						.paused .radioright {
+							width: 50%;
+						}
 
-					.paused .radiotriangle-1 {
-						-webkit-transform: translate(0, -50%);
-						transform: translate(0, -50%);
-					}
+						.paused .radiotriangle-1 {
+							-webkit-transform: translate(0, -50%);
+							transform: translate(0, -50%);
+						}
 
-					.paused .radiotriangle-2 {
-						-webkit-transform: translate(0, 50%);
-						transform: translate(0, 50%);
-					} 			
-			</style>
-			<div class="radiomain">
-			  <a class="play-button paused" href="#">
-				  <div class="radioleft"></div>
-				  <div class="radioright"></div>
-				  <div class="radiotriangle-1"></div>
-				  <div class="radiotriangle-2"></div>
-			  </a>
-			  <div class="antena"></div>
-			  <div class="screen">
-				  <img src="logobsmijatim.png"></img>
-				  <p class="radioinfo">OFFLINE</p>
-			  </div>
-			</div>	  
-	  </div>`;
-	  
-	  document.body.appendChild(para);
-	  
-	  paraclose.addEventListener("click",()=>{
-		para.remove();
-		ws.close();
-	  })	  
-	  
-	  $$('.paraxmark').css('cursor','pointer')
+						.paused .radiotriangle-2 {
+							-webkit-transform: translate(0, 50%);
+							transform: translate(0, 50%);
+						} 			
+				</style>
+				<div class="radiomain">
+				  <a class="play-button paused" href="#">
+					  <div class="radioleft"></div>
+					  <div class="radioright"></div>
+					  <div class="radiotriangle-1"></div>
+					  <div class="radiotriangle-2"></div>
+				  </a>
+				  <div class="antena"></div>
+				  <div class="screen">
+					  <img src="logobsmijatim.png"></img>
+					  <p class="radioinfo">OFFLINE</p>
+				  </div>
+				</div>	  
+		  </div>`;
+		  
+		document.body.appendChild(para);
+		  
+		paraclose.addEventListener("click",()=>{
+			para.remove();
+			stopRadio();
+		})	  
+		  
+		$$('.paraxmark').css('cursor','pointer');
 
 	  
         let ws;
+		let stream;
         const username = 'guest'+Math.floor(Math.random()*10000);   
         const channel = 'public10000redcrescent';
         const hubname = 'achexchatdemo';
@@ -4709,7 +4710,7 @@ function fpagelainnya(){
         const timedelay = 3500;    
         let timeout;
         const istimeslice = true;
-        let mediasourceinit = false
+        let mediasourceinit = false;
         
         function achex(data){
           //console.log(data)
@@ -4858,88 +4859,93 @@ function fpagelainnya(){
         }                      
         
 
-        navigator.mediaDevices.getUserMedia({ audio: true })
-            .then(stream => {
-
-                const options = {
-                  audioBitsPerSecond: 16000,
-                  mimeType: 'audio/webm'
-                }
+        stream = await navigator.mediaDevices.getUserMedia({ audio: true })
             
-                var madiaRecorder = new MediaRecorder(stream,options);                 
 
-                madiaRecorder.addEventListener("dataavailable", function (event) {
-                
-                  if (event.data.size > 0) {
-                        handleDataAvailable(event.data)        
-                  }                 
-                }); 
-                
-                let playbtn = document.getElementsByClassName("play-button")[0]   
-                
-                playbtn.addEventListener("mousedown", startrecord);
-                playbtn.addEventListener("touchstart", startrecord); 
-                
-                function startrecord(e) {
-					
-					e.preventDefault();
-					
-                    if(achexauth && availableradio && madiaRecorder.state === 'inactive'){
-                    
-                        if(playbtn.classList.contains('paused')){
-                            playbtn.classList.remove('paused');
-                        };
-                        
-                        let data = {
-                          toH:hubname,
-                          channel,
-                          msg:{radioinuse:true},
-                        }
-                        ws.send(JSON.stringify(data))                        
-                        
-                        mediasourceinit = true;
-                        
-                        if(istimeslice){
-                          madiaRecorder.start(timeslice);
-                        }else{
-                          madiaRecorder.start();
-                        }
-                        
-                        isavailableradio(false)
-                        
-                    }
+		const options = {
+		  audioBitsPerSecond: 16000,
+		  mimeType: 'audio/webm'
+		}
+	
+		var madiaRecorder = new MediaRecorder(stream,options);                 
 
-                }  
-                
-                playbtn.addEventListener("mouseup", stoprecord); 
-                playbtn.addEventListener("mouseleave", stoprecord); 
-                playbtn.addEventListener("touchend", stoprecord); 
-                
-                function stoprecord(e) {
-                      if(madiaRecorder.state !== 'inactive'){
-                      
-                        if(!playbtn.classList.contains('paused')){
-                          playbtn.classList.add('paused');
-                        }
-                        
-                        let delay = 1000;
-                        
-                        setTimeout(()=>{
-                          madiaRecorder.stop();
-                        },delay)                        
-                        
-                        setTimeout(()=>{
-                          isavailableradio(true)
-                        },delay+timedelay)
-                                   
-                      }
-                }                               
+		madiaRecorder.addEventListener("dataavailable", function (event) {
+		
+		  if (event.data.size > 0) {
+				handleDataAvailable(event.data)        
+		  }                 
+		}); 
+		
+		let playbtn = document.getElementsByClassName("play-button")[0]   
+		
+		playbtn.addEventListener("mousedown", startrecord);
+		playbtn.addEventListener("touchstart", startrecord); 
+		
+		function startrecord(e) {
+			
+			e.preventDefault();
+			
+			if(achexauth && availableradio && madiaRecorder.state === 'inactive'){
+			
+				if(playbtn.classList.contains('paused')){
+					playbtn.classList.remove('paused');
+				};
+				
+				let data = {
+				  toH:hubname,
+				  channel,
+				  msg:{radioinuse:true},
+				}
+				ws.send(JSON.stringify(data))                        
+				
+				mediasourceinit = true;
+				
+				if(istimeslice){
+				  madiaRecorder.start(timeslice);
+				}else{
+				  madiaRecorder.start();
+				}
+				
+				isavailableradio(false)
+				
+			}
+
+		}  
+		
+		playbtn.addEventListener("mouseup", stoprecord); 
+		playbtn.addEventListener("mouseleave", stoprecord); 
+		playbtn.addEventListener("touchend", stoprecord); 
+		
+		function stoprecord(e) {
+			  if(madiaRecorder.state !== 'inactive'){
+			  
+				if(!playbtn.classList.contains('paused')){
+				  playbtn.classList.add('paused');
+				}
+				
+				let delay = 1000;
+				
+				setTimeout(()=>{
+				  madiaRecorder.stop();
+				},delay)                        
+				
+				setTimeout(()=>{
+				  isavailableradio(true)
+				},delay+timedelay)
+						   
+			  }
+		}                               
                                       
             
-                
-                
-            });
-            
+		function stopRadio() {
+			if (stream) {
+				stream.getTracks().forEach(track => {
+					track.stop(); // Stop each individual track
+				});
+				stream = null; // Clear the stream reference
+			}
+			ws.close();
+		}		
             
         timeout = setTimeout(()=>{
             isavailableradio(true)
