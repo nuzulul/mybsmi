@@ -4688,13 +4688,21 @@ function fpagelainnya(){
 		  </div>`;
 		  
 		document.body.appendChild(para);
-		  
-		paraclose.addEventListener("click",()=>{
-			para.remove();
-			stopRadio();
-		})	  
-		  
-		$$('.paraxmark').css('cursor','pointer');
+		
+		
+		setTimeout(()=>{
+		
+			  
+					paraclose.addEventListener("click",()=>{
+						para.remove();
+						stopRadio();
+					})
+					
+					$$('.paraxmark').css('cursor','pointer');
+
+							
+				
+		},1000)
 
 	  
         let ws;
