@@ -4880,6 +4880,9 @@ function fpagelainnya(){
                 playbtn.addEventListener("touchstart", startrecord); 
                 
                 function startrecord(e) {
+					
+					e.preventDefault();
+					
                     if(achexauth && availableradio && madiaRecorder.state === 'inactive'){
                     
                         if(playbtn.classList.contains('paused')){
