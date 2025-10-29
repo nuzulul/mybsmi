@@ -4708,14 +4708,14 @@ function fpagelainnya(){
         let ws;
 		let stream;
         const username = 'guest'+Math.floor(Math.random()*10000);   
-        const channel = 'public10000redcrescent';
+        const channel = 'public10000ircjatim';
         const hubname = 'achexchatdemo';
         let achexauth = false;
         let availableradio = false;
         let sourceBuffer;
         let audioElement;
-        const timeslice = 3000;   
-        const timedelay = 3500;    
+        const timeslice = 1000;  //3000 
+        const timedelay = 1500;  //3500  
         let timeout;
         const istimeslice = true;
         let mediasourceinit = false;
