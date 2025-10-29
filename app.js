@@ -4751,6 +4751,7 @@ function fpagelainnya(){
         let achexauth = false;
         let availableradio = false;
         let sourceBuffer;
+		let appendBufferQueue = [];
         let audioElement;
         const timeslice = 400;  //3000 
         const timedelay = 1000;  //3500  
@@ -4758,6 +4759,7 @@ function fpagelainnya(){
         const istimeslice = true;
         let mediasourceinit = false;
 		let casterid = 'Connecting';
+		let headerBlob;
         
         function achex(data){
           //console.log(data)
@@ -4793,9 +4795,10 @@ function fpagelainnya(){
                     let data = {
                       toH:hubname,
                       channel,
-                      msg:{blob:b64,mediasourceinit,casterid},
+                      msg:{blob:b64,headerBlob,mediasourceinit,casterid},
                     }
-                    ws.send(JSON.stringify(data))
+                    //achex(JSON.stringify(data));
+					ws.send(JSON.stringify(data));
                     mediasourceinit = false;
                 })
             }
@@ -4813,11 +4816,9 @@ function fpagelainnya(){
                 reader.onerror = (error) => reject(error);
             });
         }
-     
-        
-        
+			
+       
         function startsource(msg){
-        
         
             function addbuffer(data,play){
                 if(!data.includes('base64'))return;
@@ -4874,6 +4875,14 @@ function fpagelainnya(){
                 }
                 reader.readAsArrayBuffer(blob);             
             }
+			
+			function appendbuffer(data,play){
+				  if (sourceBuffer.updating) {
+					appendBufferQueue.push(data);
+				  } else {
+					addbuffer(data,play);
+				  }				
+			}
         
             if (msg.mediasourceinit){
             
@@ -4898,10 +4907,20 @@ function fpagelainnya(){
                         var mediaSource = this;                            
                         
                         sourceBuffer = mediaSource.addSourceBuffer('audio/webm; codecs="opus"');
-                        addbuffer(msg.blob,true);
+						
+						sourceBuffer.addEventListener('updateend', () => {
+						  if (appendBufferQueue.length > 0 && !sourceBuffer.updating) {
+							let nextData = appendBufferQueue.shift(); // Dequeue the next segment
+							addbuffer(nextData,false);
+						  }
+						});							
+						
+                        //addbuffer(msg.blob,true);
+						appendbuffer(msg.blob,true);
                   }
             }else{
-                  addbuffer(msg.blob,false);
+                  //addbuffer(msg.blob,false);
+				  appendbuffer(msg.blob,false);
             }
         
         }   
@@ -4918,11 +4937,24 @@ function fpagelainnya(){
 				  mimeType: 'audio/webm'
 				}
 			
-				var madiaRecorder = new MediaRecorder(stream,options);                 
+				var madiaRecorder = new MediaRecorder(stream,options); 
+				
+				let mediaHeaderRequested = false;
+				
+				madiaRecorder.addEventListener("start", async function (event) {
+					if(!madiaRecorder)return;
+					madiaRecorder.requestData();
+				})				
 
 				madiaRecorder.addEventListener("dataavailable", function (event) {
 				
 				  if (event.data.size > 0) {
+						if(!mediaHeaderRequested){
+							blobToBase64(event.data).then(b64 => {
+								headerBlob = b64;
+							});
+							mediaHeaderRequested = true;
+						}					  
 						handleDataAvailable(event.data)        
 				  }                 
 				}); 
@@ -4952,6 +4984,8 @@ function fpagelainnya(){
 						ws.send(JSON.stringify(data))                        
 						
 						mediasourceinit = true;
+						
+						mediaHeaderRequested = false;
 						
 						if(istimeslice){
 						  madiaRecorder.start(timeslice);
@@ -5013,7 +5047,7 @@ function fpagelainnya(){
               availableradio = true;
               document.getElementsByClassName("radioleft")[0].style.backgroundColor = "green";
               document.getElementsByClassName("radioright")[0].style.backgroundColor = "green";
-			  casterid = '';
+			  casterid = 'STANDBY';
 			  document.getElementsByClassName("radiostatus")[0].innerHTML = casterid;
           }else{
               availableradio = false;
