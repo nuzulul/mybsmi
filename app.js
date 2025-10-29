@@ -4740,8 +4740,8 @@ function fpagelainnya(){
         let availableradio = false;
         let sourceBuffer;
         let audioElement;
-        const timeslice = 1000;  //3000 
-        const timedelay = 1500;  //3500  
+        const timeslice = 200;  //3000 
+        const timedelay = 300;  //3500  
         let timeout;
         const istimeslice = true;
         let mediasourceinit = false;
