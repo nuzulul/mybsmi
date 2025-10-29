@@ -4576,6 +4576,28 @@ function fpagelainnya(){
 							left:30px;
 						}
 						
+						.radiologo {
+							position:relative;
+							top:-160px;
+							height:0px;
+							left:50px;
+							display:flex;
+							flex-wrap:wrap;
+							align-items:center;
+						}
+						
+						.radiologo img {
+							width:25px;
+							height:25px;
+							border-radius:50%;
+						}
+						
+						.radiologo span {
+							color:white;
+							font-size:20px;
+							margin-left:5px;
+						}
+						
 						.screen {
 							width:150px;
 							border-radius:1em;
@@ -4583,7 +4605,7 @@ function fpagelainnya(){
 							background:#9FFE02;
 							position:relative;
 							left:25px;
-							top:-150px;
+							top:-130px;
 							color:black;
 						}
 						
@@ -4595,8 +4617,7 @@ function fpagelainnya(){
 							display:none;
 						}
 						
-						.radioinfo {
-							
+						.radioinfo,.radiostatus {
 							background:none;
 							padding:5px 20px;
 						}
@@ -4680,9 +4701,14 @@ function fpagelainnya(){
 					  <div class="radiotriangle-2"></div>
 				  </a>
 				  <div class="antena"></div>
+				  <div class="radiologo">
+						<img src="logobsmijatim.png"></img>
+						<span>iWalkie<span>
+				  </div>
 				  <div class="screen">
 					  <img src="logobsmijatim.png"></img>
 					  <p class="radioinfo">OFFLINE</p>
+					  <p class="radiostatus"></p>
 				  </div>
 				</div>	  
 		  </div>`;
@@ -4719,6 +4745,7 @@ function fpagelainnya(){
         let timeout;
         const istimeslice = true;
         let mediasourceinit = false;
+		let casterid = 'Connecting';
         
         function achex(data){
           //console.log(data)
@@ -4739,6 +4766,7 @@ function fpagelainnya(){
             if(json.msg.radioinuse){
               isavailableradio(false);
             }else if (json.msg.blob){
+			  casterid = json.msg.casterid
               isavailableradio(false);
               startsource(json.msg);
             }
@@ -4753,7 +4781,7 @@ function fpagelainnya(){
                     let data = {
                       toH:hubname,
                       channel,
-                      msg:{blob:b64,mediasourceinit},
+                      msg:{blob:b64,mediasourceinit,casterid},
                     }
                     ws.send(JSON.stringify(data))
                     mediasourceinit = false;
@@ -4902,6 +4930,8 @@ function fpagelainnya(){
 							playbtn.classList.remove('paused');
 						};
 						
+						casterid = dashboarddata.user.userbid;
+						
 						let data = {
 						  toH:hubname,
 						  channel,
@@ -4970,11 +5000,33 @@ function fpagelainnya(){
           if(bol){
               availableradio = true;
               document.getElementsByClassName("radioleft")[0].style.backgroundColor = "green";
-              document.getElementsByClassName("radioright")[0].style.backgroundColor = "green";               
+              document.getElementsByClassName("radioright")[0].style.backgroundColor = "green";
+			  casterid = '';
+			  document.getElementsByClassName("radiostatus")[0].innerHTML = casterid;
           }else{
               availableradio = false;
               document.getElementsByClassName("radioleft")[0].style.backgroundColor = "red";
-              document.getElementsByClassName("radioright")[0].style.backgroundColor = "red";                
+              document.getElementsByClassName("radioright")[0].style.backgroundColor = "red"; 
+			  document.getElementsByClassName("radiostatus")[0].innerHTML = `
+					<span class="radiostatusmic"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-mic-fill" viewBox="0 0 16 16">
+					  <path d="M5 3a3 3 0 0 1 6 0v5a3 3 0 0 1-6 0z"/>
+					  <path d="M3.5 6.5A.5.5 0 0 1 4 7v1a4 4 0 0 0 8 0V7a.5.5 0 0 1 1 0v1a5 5 0 0 1-4.5 4.975V15h3a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1h3v-2.025A5 5 0 0 1 3 8V7a.5.5 0 0 1 .5-.5"/>
+					</svg></span>
+					${casterid}
+			  `;
+			  let radiostatusmic = setInterval(()=>{
+				  let el = document.getElementsByClassName("radiostatusmic")[0];
+				  if(el){
+					  let rand = Math.floor(Math.random()*2)
+					  if(rand === 0){
+						  el.style.color = "red";
+					  }else{
+						  el.style.color = "white";
+					  }
+				  }else{
+					  clearInterval(radiostatusmic);
+				  }
+			  },200)
           }
         }
         
