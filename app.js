@@ -4741,7 +4741,7 @@ function fpagelainnya(){
         let sourceBuffer;
         let audioElement;
         const timeslice = 200;  //3000 
-        const timedelay = 300;  //3500  
+        const timedelay = 400;  //3500  
         let timeout;
         const istimeslice = true;
         let mediasourceinit = false;
@@ -4964,7 +4964,7 @@ function fpagelainnya(){
 						  playbtn.classList.add('paused');
 						}
 						
-						let delay = 1000;
+						let delay = 200;
 						
 						setTimeout(()=>{
 						  madiaRecorder.stop();
