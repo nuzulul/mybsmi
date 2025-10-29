@@ -4864,85 +4864,92 @@ function fpagelainnya(){
                   addbuffer(msg.blob,false);
             }
         
-        }                      
+        }   
+
+
+		async function startstream(){
         
 
-        stream = await navigator.mediaDevices.getUserMedia({ audio: true })
-            
+				stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+					
 
-		const options = {
-		  audioBitsPerSecond: 16000,
-		  mimeType: 'audio/webm'
+				const options = {
+				  audioBitsPerSecond: 16000,
+				  mimeType: 'audio/webm'
+				}
+			
+				var madiaRecorder = new MediaRecorder(stream,options);                 
+
+				madiaRecorder.addEventListener("dataavailable", function (event) {
+				
+				  if (event.data.size > 0) {
+						handleDataAvailable(event.data)        
+				  }                 
+				}); 
+				
+				let playbtn = document.getElementsByClassName("play-button")[0]   
+				
+				playbtn.addEventListener("mousedown", startrecord);
+				playbtn.addEventListener("touchstart", startrecord); 
+				
+				function startrecord(e) {
+					
+					e.preventDefault();
+					
+					if(achexauth && availableradio && madiaRecorder.state === 'inactive'){
+					
+						if(playbtn.classList.contains('paused')){
+							playbtn.classList.remove('paused');
+						};
+						
+						let data = {
+						  toH:hubname,
+						  channel,
+						  msg:{radioinuse:true},
+						}
+						ws.send(JSON.stringify(data))                        
+						
+						mediasourceinit = true;
+						
+						if(istimeslice){
+						  madiaRecorder.start(timeslice);
+						}else{
+						  madiaRecorder.start();
+						}
+						
+						isavailableradio(false)
+						
+					}
+
+				}  
+				
+				playbtn.addEventListener("mouseup", stoprecord); 
+				playbtn.addEventListener("mouseleave", stoprecord); 
+				playbtn.addEventListener("touchend", stoprecord); 
+				
+				function stoprecord(e) {
+					  if(madiaRecorder.state !== 'inactive'){
+					  
+						if(!playbtn.classList.contains('paused')){
+						  playbtn.classList.add('paused');
+						}
+						
+						let delay = 1000;
+						
+						setTimeout(()=>{
+						  madiaRecorder.stop();
+						},delay)                        
+						
+						setTimeout(()=>{
+						  isavailableradio(true)
+						},delay+timedelay)
+								   
+					  }
+				}
+
 		}
-	
-		var madiaRecorder = new MediaRecorder(stream,options);                 
-
-		madiaRecorder.addEventListener("dataavailable", function (event) {
 		
-		  if (event.data.size > 0) {
-				handleDataAvailable(event.data)        
-		  }                 
-		}); 
-		
-		let playbtn = document.getElementsByClassName("play-button")[0]   
-		
-		playbtn.addEventListener("mousedown", startrecord);
-		playbtn.addEventListener("touchstart", startrecord); 
-		
-		function startrecord(e) {
-			
-			e.preventDefault();
-			
-			if(achexauth && availableradio && madiaRecorder.state === 'inactive'){
-			
-				if(playbtn.classList.contains('paused')){
-					playbtn.classList.remove('paused');
-				};
-				
-				let data = {
-				  toH:hubname,
-				  channel,
-				  msg:{radioinuse:true},
-				}
-				ws.send(JSON.stringify(data))                        
-				
-				mediasourceinit = true;
-				
-				if(istimeslice){
-				  madiaRecorder.start(timeslice);
-				}else{
-				  madiaRecorder.start();
-				}
-				
-				isavailableradio(false)
-				
-			}
-
-		}  
-		
-		playbtn.addEventListener("mouseup", stoprecord); 
-		playbtn.addEventListener("mouseleave", stoprecord); 
-		playbtn.addEventListener("touchend", stoprecord); 
-		
-		function stoprecord(e) {
-			  if(madiaRecorder.state !== 'inactive'){
-			  
-				if(!playbtn.classList.contains('paused')){
-				  playbtn.classList.add('paused');
-				}
-				
-				let delay = 1000;
-				
-				setTimeout(()=>{
-				  madiaRecorder.stop();
-				},delay)                        
-				
-				setTimeout(()=>{
-				  isavailableradio(true)
-				},delay+timedelay)
-						   
-			  }
-		}                               
+		startstream()
                                       
             
 		function stopRadio() {
