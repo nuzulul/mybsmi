@@ -4741,7 +4741,7 @@ function fpagelainnya(){
         let sourceBuffer;
         let audioElement;
         const timeslice = 200;  //3000 
-        const timedelay = 400;  //3500  
+        const timedelay = 1000;  //3500  
         let timeout;
         const istimeslice = true;
         let mediasourceinit = false;
