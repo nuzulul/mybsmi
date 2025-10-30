@@ -4761,6 +4761,10 @@ function fpagelainnya(){
 		let mediasourcefirsttime = true;
 		let casterid = 'Connecting';
 		let headerBlob;
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const audioBuffers = []; // Array to store decoded AudioBuffer objects     
+        let startTime = audioContext.currentTime;
+        let playing = false;		
 		
 		let response = await fetch('ptt.mp3');
 		let pttsound = await response.blob();
@@ -4770,7 +4774,7 @@ function fpagelainnya(){
 			const pttsoundel = new Audio();     
 			pttsoundel.src = pttsoundaudioUrl;
 			pttsoundel.addEventListener('ended', () => {
-						  URL.revokeObjectURL(pttsoundaudioUrl);
+				URL.revokeObjectURL(pttsoundaudioUrl);
 			});
 			pttsoundel.play();			
 		}
@@ -4794,9 +4798,13 @@ function fpagelainnya(){
             if(json.msg.radioinuse){
               isavailableradio(false);
             }else if (json.msg.blob){
-			  casterid = json.msg.casterid
-              isavailableradio(false);
-              startsource(json.msg);
+				casterid = json.msg.casterid
+				isavailableradio(false)
+				clearTimeout(timeout)
+				timeout = setTimeout(()=>{
+					isavailableradio(true)
+				},timedelay)
+				startsource(json.msg);
             }
           }
         }      
@@ -4842,14 +4850,7 @@ function fpagelainnya(){
 				
 				//console.log('data',data);
 				
-                if(!data.includes('base64'))return;
-                
-                isavailableradio(false)
-                
-                clearTimeout(timeout)
-                timeout = setTimeout(()=>{
-                      isavailableradio(true)
-                },timedelay)  
+                if(!data.includes('base64'))return;  
 
                 const b64 = data.split(',')[1];   
 
@@ -4928,7 +4929,7 @@ function fpagelainnya(){
                       console.error(e);
                   }); 				  
                   
-                  function handleSourceOpen(event) {
+                  async function handleSourceOpen(event) {
                         
                         var mediaSource = this;                            
                         
@@ -4945,17 +4946,63 @@ function fpagelainnya(){
 							setTimeout(()=>{
 								addbuffer(msg.blob,true);
 							},50)
-							
+							mediasourcefirsttime = false;
 						}else{
-							setTimeout(()=>{
-								addbuffer(msg.headerBlob,true);
-								sourceBuffer.timestampOffset = msg.timecode;
-								addbuffer(msg.blob,true);
-							},50)							
+							
+							function b64toblob(data){
+								const b64 = data.split(',')[1];   
+
+								const contentType = "audio/webm;codecs=opus";
+								
+								function base64ToBlob(base64, contentType = '', sliceSize = 512) {
+								  const byteCharacters = atob(base64);
+								  const byteArrays = [];
+
+								  for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+									const slice = byteCharacters.slice(offset, offset + sliceSize);
+									const byteNumbers = new Array(slice.length);
+									for (let i = 0; i < slice.length; i++) {
+									  byteNumbers[i] = slice.charCodeAt(i);
+									}
+									const byteArray = new Uint8Array(byteNumbers);
+									byteArrays.push(byteArray);
+								  }
+
+								  return new Blob(byteArrays, { type: contentType });
+								} 
+								
+								const blob = base64ToBlob(b64, contentType);
+								return blob;
+							}
+							
+							
+							function playQueueWebAudio() {
+								if (audioBuffers.length > 0) {
+									playing = true
+									const currentBuffer = audioBuffers.shift();
+									const source = audioContext.createBufferSource();
+									source.buffer = currentBuffer;
+									source.connect(audioContext.destination);
+
+									source.start(startTime);
+									startTime += currentBuffer.duration; // Schedule the next sound to start after this one ends
+
+									source.onended = () => {
+										playQueueWebAudio(); // Play next when current ends
+									};
+								} else {
+									playing = false
+									//console.log("Web Audio queue finished.");
+								}
+							}   							
+							
+							let blob = new Blob([b64toblob(msg.headerBlob),b64toblob(msg.blob)], { type: "audio/webm;codecs=opus" });
+							const buffer = await blob.arrayBuffer();
+							const audioBuffer = await audioContext.decodeAudioData(buffer);
+							audioBuffers.push(audioBuffer);
+							if (!playing) playQueueWebAudio();
+			 							  
 						}
-						
-						mediasourcefirsttime = false;
-						
                   }
             }else{
                   addbuffer(msg.blob,false);
@@ -4981,7 +5028,7 @@ function fpagelainnya(){
 				
 				madiaRecorder.addEventListener("start", async function (event) {
 					if(!madiaRecorder)return;
-					madiaRecorder.requestData();
+					setTimeout(()=>{madiaRecorder.requestData();},50)
 				})				
 
 				madiaRecorder.addEventListener("dataavailable", function (event) {
