@@ -4923,7 +4923,7 @@ function fpagelainnya(){
 			
 			function appendbuffer(data,play){
 				
-					console.log('buffer',data)
+					//console.log('buffer',data)
 				
 					radiobusy();
 				
@@ -5158,7 +5158,7 @@ function fpagelainnya(){
 				playbtn.addEventListener("click", stoprecord);
 				playbtn.addEventListener("touchstart", startrecord); 
 				
-				setTimeout(()=>{startrecord();},5000); // for debugging
+				//setTimeout(()=>{startrecord();},5000); // for debugging
 				
 				function startrecord(e) {
 					
