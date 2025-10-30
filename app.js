@@ -4797,18 +4797,22 @@ function fpagelainnya(){
           
           if(json.msg){
             if(json.msg.radioinuse){
-              isavailableradio(false);
+				radiobusy();
             }else if (json.msg.blob){
 				casterid = json.msg.casterid
+				radiobusy();
+				startsource(json.msg);
+            }
+          }
+        }     
+
+		function radiobusy(){
 				isavailableradio(false)
 				clearTimeout(timeout)
 				timeout = setTimeout(()=>{
 					isavailableradio(true)
-				},timedelay)
-				startsource(json.msg);
-            }
-          }
-        }      
+				},timedelay)			
+		}
 
         let handleDataAvailable = (event) => {
 			
@@ -4919,6 +4923,10 @@ function fpagelainnya(){
 			
 			function appendbuffer(data,play){
 				
+					console.log('buffer',data)
+				
+					radiobusy();
+				
                     sourceBuffer.appendBuffer(data);
                     
                     if (play){
@@ -4979,6 +4987,41 @@ function fpagelainnya(){
 							
 							let blob = new Blob([b64toblob(msg.headerBlob),b64toblob(msg.blob)], { type: "audio/webm;codecs=opus" });
 							
+							//try not work
+							
+							/*setTimeout(()=>{
+									const reader = new FileReader();
+									reader.onload = function(event) {
+
+										const rawData =	event.target.result;//const rawData =	new Uint8Array(event.target.result);
+
+										if (sourceBuffer.updating) {
+											appendBufferQueue.push(rawData);
+										} else {
+											appendbuffer(rawData,true);
+										}											
+										
+									};
+									//blob = b64toblob(msg.headerBlob);
+									reader.readAsArrayBuffer(blob);
+									const reader1 = new FileReader();
+									reader1.onload = function(event) {
+
+										const rawData =	event.target.result;//const rawData =	new Uint8Array(event.target.result);
+
+										if (sourceBuffer.updating) {
+											appendBufferQueue.push(rawData);
+										} else {
+											appendbuffer(rawData,true);
+										}											
+										
+									};									
+									blob = b64toblob(msg.blob);
+									//reader1.readAsArrayBuffer(blob);
+							},50)
+							mediasourcefirsttime = false;
+							playing = true;*/
+							
 							//work on pc , not work on android							
 														
 							/*function playQueueWebAudio() {
@@ -5008,7 +5051,7 @@ function fpagelainnya(){
 							
 							//this is very buggy
 							
-							audioBuffers.push(blob);
+							/*audioBuffers.push(blob);
 
 							function playNextAudio() {
 								if (audioBuffers.length > 0) {
@@ -5032,11 +5075,42 @@ function fpagelainnya(){
 									playing = false;
 								}
 							}
-							if (!playing) playNextAudio();
+							if (!playing) playNextAudio();*/
+							
+							// experiment
+							
+							const audioBlob = blob;
+							const audioUrl = URL.createObjectURL(audioBlob);
+							const playing = new Audio(audioUrl);
+							playing.play();
+							playing.onended = () => {
+								URL.revokeObjectURL(audioUrl);
+								radiobusy();
+							};
 			 							  
 						}
                   }
             }else{
+				
+				/*if(playing){
+					let blob = new Blob([b64toblob(msg.headerBlob),b64toblob(msg.blob)], { type: "audio/webm;codecs=opus" });
+					const reader = new FileReader();
+					reader.onload = function(event) {
+
+						const rawData =	event.target.result;//const rawData =	new Uint8Array(event.target.result);
+
+						if (sourceBuffer.updating) {
+							appendBufferQueue.push(rawData);
+						} else {
+							appendbuffer(rawData,false);
+						}											
+						
+					};
+					blob = b64toblob(msg.blob);
+					reader.readAsArrayBuffer(blob); 					
+					return;
+				}*/
+				
                   addbuffer(msg.blob,false);
             }
         
@@ -5084,7 +5158,7 @@ function fpagelainnya(){
 				playbtn.addEventListener("click", stoprecord);
 				playbtn.addEventListener("touchstart", startrecord); 
 				
-				//setTimeout(()=>{startrecord();},10000); // for debugging
+				setTimeout(()=>{startrecord();},5000); // for debugging
 				
 				function startrecord(e) {
 					
