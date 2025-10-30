@@ -4764,7 +4764,8 @@ function fpagelainnya(){
         const audioContext = new (window.AudioContext || window.webkitAudioContext)();
         const audioBuffers = []; // Array to store decoded AudioBuffer objects     
         let startTime = audioContext.currentTime;
-        let playing = false;		
+        let playing = false;
+		let radiostatusmic;		
 		
 		let response = await fetch('ptt.mp3');
 		let pttsound = await response.blob();
@@ -4949,6 +4950,9 @@ function fpagelainnya(){
 							mediasourcefirsttime = false;
 						}else{
 							
+							//user join in the middle talk go to here
+							//work on pc , not work on android
+							
 							function b64toblob(data){
 								const b64 = data.split(',')[1];   
 
@@ -5028,7 +5032,9 @@ function fpagelainnya(){
 				
 				madiaRecorder.addEventListener("start", async function (event) {
 					if(!madiaRecorder)return;
-					setTimeout(()=>{madiaRecorder.requestData();},50)
+					//setTimeout(()=>{
+						madiaRecorder.requestData();
+					//},100)
 				})				
 
 				madiaRecorder.addEventListener("dataavailable", function (event) {
@@ -5047,11 +5053,14 @@ function fpagelainnya(){
 				let playbtn = document.getElementsByClassName("play-button")[0]   
 				
 				playbtn.addEventListener("mousedown", startrecord);
+				playbtn.addEventListener("click", stoprecord);
 				playbtn.addEventListener("touchstart", startrecord); 
+				
+				//setTimeout(()=>{startrecord();},10000); // for debugging
 				
 				function startrecord(e) {
 					
-					e.preventDefault();
+					if(e)e.preventDefault();
 					
 					if(achexauth && availableradio && madiaRecorder.state === 'inactive'){
 					
@@ -5146,7 +5155,8 @@ function fpagelainnya(){
 					</svg></span>
 					${casterid}
 			  `;
-			  let radiostatusmic = setInterval(()=>{
+			  clearInterval(radiostatusmic);
+			  radiostatusmic = setInterval(()=>{
 				  let el = document.getElementsByClassName("radiostatusmic")[0];
 				  if(el){
 					  let rand = Math.floor(Math.random()*2)
