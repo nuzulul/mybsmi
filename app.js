@@ -4843,7 +4843,32 @@ function fpagelainnya(){
                 reader.onerror = (error) => reject(error);
             });
         }
+
+		function b64toblob(data){
+			const b64 = data.split(',')[1];   
+
+			const contentType = "audio/webm;codecs=opus";
 			
+			function base64ToBlob(base64, contentType = '', sliceSize = 512) {
+			  const byteCharacters = atob(base64);
+			  const byteArrays = [];
+
+			  for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+				const slice = byteCharacters.slice(offset, offset + sliceSize);
+				const byteNumbers = new Array(slice.length);
+				for (let i = 0; i < slice.length; i++) {
+				  byteNumbers[i] = slice.charCodeAt(i);
+				}
+				const byteArray = new Uint8Array(byteNumbers);
+				byteArrays.push(byteArray);
+			  }
+
+			  return new Blob(byteArrays, { type: contentType });
+			} 
+			
+			const blob = base64ToBlob(b64, contentType);
+			return blob;
+		}			
        
         function startsource(msg){
         
@@ -4951,36 +4976,12 @@ function fpagelainnya(){
 						}else{
 							
 							//user join in the middle talk go to here
-							//work on pc , not work on android
 							
-							function b64toblob(data){
-								const b64 = data.split(',')[1];   
-
-								const contentType = "audio/webm;codecs=opus";
-								
-								function base64ToBlob(base64, contentType = '', sliceSize = 512) {
-								  const byteCharacters = atob(base64);
-								  const byteArrays = [];
-
-								  for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-									const slice = byteCharacters.slice(offset, offset + sliceSize);
-									const byteNumbers = new Array(slice.length);
-									for (let i = 0; i < slice.length; i++) {
-									  byteNumbers[i] = slice.charCodeAt(i);
-									}
-									const byteArray = new Uint8Array(byteNumbers);
-									byteArrays.push(byteArray);
-								  }
-
-								  return new Blob(byteArrays, { type: contentType });
-								} 
-								
-								const blob = base64ToBlob(b64, contentType);
-								return blob;
-							}
+							let blob = new Blob([b64toblob(msg.headerBlob),b64toblob(msg.blob)], { type: "audio/webm;codecs=opus" });
 							
-							
-							function playQueueWebAudio() {
+							//work on pc , not work on android							
+														
+							/*function playQueueWebAudio() {
 								if (audioBuffers.length > 0) {
 									playing = true
 									const currentBuffer = audioBuffers.shift();
@@ -4999,12 +5000,39 @@ function fpagelainnya(){
 									//console.log("Web Audio queue finished.");
 								}
 							}   							
-							
-							let blob = new Blob([b64toblob(msg.headerBlob),b64toblob(msg.blob)], { type: "audio/webm;codecs=opus" });
 							const buffer = await blob.arrayBuffer();
 							const audioBuffer = await audioContext.decodeAudioData(buffer);
 							audioBuffers.push(audioBuffer);
-							if (!playing) playQueueWebAudio();
+							if (!playing) playQueueWebAudio();*/
+							
+							
+							//this is very buggy
+							
+							audioBuffers.push(blob);
+
+							function playNextAudio() {
+								if (audioBuffers.length > 0) {
+									const audioBlob = audioBuffers.shift(); // Get the first blob and remove it
+									const audioUrl = URL.createObjectURL(audioBlob);
+
+									if (playing) {
+										playing.pause();
+										playing.src = '';
+										URL.revokeObjectURL(playing.src); // Clean up previous object URL
+									}
+
+									playing = new Audio(audioUrl);
+									playing.play();
+
+									playing.onended = () => {
+										URL.revokeObjectURL(audioUrl); // Revoke URL after playback
+										playNextAudio(); // Play the next one
+									};
+								}else{
+									playing = false;
+								}
+							}
+							if (!playing) playNextAudio();
 			 							  
 						}
                   }
