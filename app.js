@@ -4760,6 +4760,19 @@ function fpagelainnya(){
         let mediasourceinit = false;
 		let casterid = 'Connecting';
 		let headerBlob;
+		
+		let response = await fetch('ptt.mp3');
+		let pttsound = await response.blob();
+		
+		function playpttsound(){
+			const pttsoundaudioUrl = URL.createObjectURL(pttsound);
+			const pttsoundel = new Audio();     
+			pttsoundel.src = pttsoundaudioUrl;
+			pttsoundel.addEventListener('ended', () => {
+						  URL.revokeObjectURL(pttsoundaudioUrl);
+			});
+			pttsoundel.play();			
+		}
         
         function achex(data){
           //console.log(data)
@@ -4916,7 +4929,10 @@ function fpagelainnya(){
 						});							
 						
                         //addbuffer(msg.blob,true);
-						appendbuffer(msg.blob,true);
+						//appendbuffer(msg.blob,true);
+						setTimeout(()=>{
+							appendbuffer(msg.blob,true);
+						},50)
                   }
             }else{
                   //addbuffer(msg.blob,false);
@@ -5049,6 +5065,7 @@ function fpagelainnya(){
               document.getElementsByClassName("radioright")[0].style.backgroundColor = "green";
 			  casterid = 'STANDBY';
 			  document.getElementsByClassName("radiostatus")[0].innerHTML = casterid;
+			  playpttsound();
           }else{
               availableradio = false;
               document.getElementsByClassName("radioleft")[0].style.backgroundColor = "red";
