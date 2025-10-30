@@ -4758,6 +4758,7 @@ function fpagelainnya(){
         let timeout;
         const istimeslice = true;
         let mediasourceinit = false;
+		let mediasourcefirsttime = true;
 		let casterid = 'Connecting';
 		let headerBlob;
 		
@@ -4801,14 +4802,18 @@ function fpagelainnya(){
         }      
 
         let handleDataAvailable = (event) => {
-            if (event.size > 0) {
+			
+			let blob = event.data;
+			let timecode = event.timecode;
+			
+            if (blob.size > 0) {
                 
-                blobToBase64(event).then(b64 => {
+                blobToBase64(blob).then(b64 => {
                     
                     let data = {
                       toH:hubname,
                       channel,
-                      msg:{blob:b64,headerBlob,mediasourceinit,casterid},
+                      msg:{blob:b64,headerBlob,timecode,mediasourceinit,casterid},
                     }
                     //achex(JSON.stringify(data));
 					ws.send(JSON.stringify(data));
@@ -4834,6 +4839,9 @@ function fpagelainnya(){
         function startsource(msg){
         
             function addbuffer(data,play){
+				
+				//console.log('data',data);
+				
                 if(!data.includes('base64'))return;
                 
                 isavailableradio(false)
@@ -4871,8 +4879,20 @@ function fpagelainnya(){
                 reader.loadend = function() {}
                 reader.onload = function(e) {
                     rawData = e.target.result;
+					
+					if (sourceBuffer.updating) {
+						appendBufferQueue.push(rawData);
+					} else {
+						appendbuffer(rawData,play);
+					}						                              
                     
-                    sourceBuffer.appendBuffer(rawData);
+                }
+                reader.readAsArrayBuffer(blob);             
+            }
+			
+			function appendbuffer(data,play){
+				
+                    sourceBuffer.appendBuffer(data);
                     
                     if (play){
                     
@@ -4883,21 +4903,10 @@ function fpagelainnya(){
                         .catch(error => {
                             //console.error('Error playing audio:', error);
                         });    
-                    }                               
-                    
-                }
-                reader.readAsArrayBuffer(blob);             
-            }
-			
-			function appendbuffer(data,play){
-				  if (sourceBuffer.updating) {
-					appendBufferQueue.push(data);
-				  } else {
-					addbuffer(data,play);
-				  }				
+                    } 			
 			}
         
-            if (msg.mediasourceinit){
+            if (msg.mediasourceinit || mediasourcefirsttime){
             
                   let mediaSource = new MediaSource();
                   
@@ -4913,7 +4922,11 @@ function fpagelainnya(){
 
                   audioElement.addEventListener('ended', () => {
                       URL.revokeObjectURL(audioUrl);
-                  }); 
+                  });
+
+                  audioElement.addEventListener('error', (e) => {
+                      console.error(e);
+                  }); 				  
                   
                   function handleSourceOpen(event) {
                         
@@ -4924,19 +4937,28 @@ function fpagelainnya(){
 						sourceBuffer.addEventListener('updateend', () => {
 						  if (appendBufferQueue.length > 0 && !sourceBuffer.updating) {
 							let nextData = appendBufferQueue.shift(); // Dequeue the next segment
-							addbuffer(nextData,false);
+							appendbuffer(nextData,false);
 						  }
-						});							
+						});	
+
+						if (msg.mediasourceinit){
+							setTimeout(()=>{
+								addbuffer(msg.blob,true);
+							},50)
+							
+						}else{
+							setTimeout(()=>{
+								addbuffer(msg.headerBlob,true);
+								sourceBuffer.timestampOffset = msg.timecode;
+								addbuffer(msg.blob,true);
+							},50)							
+						}
 						
-                        //addbuffer(msg.blob,true);
-						//appendbuffer(msg.blob,true);
-						setTimeout(()=>{
-							appendbuffer(msg.blob,true);
-						},50)
+						mediasourcefirsttime = false;
+						
                   }
             }else{
-                  //addbuffer(msg.blob,false);
-				  appendbuffer(msg.blob,false);
+                  addbuffer(msg.blob,false);
             }
         
         }   
@@ -4971,7 +4993,7 @@ function fpagelainnya(){
 							});
 							mediaHeaderRequested = true;
 						}					  
-						handleDataAvailable(event.data)        
+						handleDataAvailable(event)        
 				  }                 
 				}); 
 				
