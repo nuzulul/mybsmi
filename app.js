@@ -4803,6 +4803,7 @@ function fpagelainnya(){
         let audioElement;
         const timeslice = 400;  //3000 
         const timedelay = 1000;  //3500  
+		let timehold;
         let timeout;
         const istimeslice = true;
         let mediasourceinit = false;
@@ -4839,14 +4840,16 @@ function fpagelainnya(){
 				const code = document.querySelector('#radioterminal').value
 				document.querySelector('#radioterminal').value = '';
 				switch(code){
-					case "shake on":
-						console.log('shake on');
-						shake = true;
-						checkMotionPermission();
+					case "shake":
+						if(shake){
+							shake = false;
+						}else{
+							shake = true;
+							checkMotionPermission();
+						}
 						break;
-					case "shake off":
-					console.log('shake off');
-						shake = false;
+					case "hold":
+						radioptt();
 						break;
 					default:
 				}
@@ -4916,23 +4919,37 @@ function fpagelainnya(){
 				// Lower = more sensitive, higher = less sensitive. 256 works nice, imho.
 				if ((event.rotationRate.alpha > 256 || event.rotationRate.beta > 256 || event.rotationRate.gamma > 256)) {
 					if(shake){
-						function triggerMouseEvent (node, eventType) {
-							var clickEvent = document.createEvent ('MouseEvents');
-							clickEvent.initEvent (eventType, true, true);
-							node.dispatchEvent (clickEvent);
-						}						
-						if (document.querySelector (".play-button .paused")){
-							var targetNode = document.querySelector (".play-button");
-							if (targetNode) triggerMouseEvent (targetNode, "mousedown");							
-						}else{
-							var targetNode = document.querySelector (".play-button");
-							if (targetNode) triggerMouseEvent (targetNode, "mouseup");							
-						}
+						radioptt();
 					}
 				}
 			})
 		}
 		setMotionListeners();
+		
+		function radioptt(){
+			console.log('radioptt');
+			function triggerMouseEvent (node, eventType) {
+				var clickEvent = document.createEvent ('MouseEvents');
+				clickEvent.initEvent (eventType, true, true);
+				node.dispatchEvent (clickEvent);
+			}						
+			if (document.querySelector(".play-button.paused")){
+				console.log('mousedown');
+				var targetNode = document.querySelector(".play-button");
+				if (targetNode) triggerMouseEvent (targetNode, "mousedown");
+				clearTimeout(timehold);
+				timehold = setTimeout(()=>{
+					if (!document.querySelector(".play-button.paused")){
+						var targetNode = document.querySelector(".play-button");
+						if (targetNode) triggerMouseEvent (targetNode, "mouseup");							
+					}
+				},5*60*1000);
+			}else{
+				console.log('mouseup');
+				var targetNode = document.querySelector(".play-button");
+				if (targetNode) triggerMouseEvent (targetNode, "mouseup");							
+			}			
+		}
 		
 		function playpttsound(){
 			const pttsoundaudioUrl = URL.createObjectURL(pttsound);
