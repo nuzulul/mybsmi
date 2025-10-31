@@ -4566,6 +4566,10 @@ function fpagelainnya(){
 						  border-radius:2em;
 						}
 						
+						.radiomain p {
+							margin : 0.5em 0;
+						}
+						
 						.antena {
 							width:30px;
 							height:70px;
@@ -5164,7 +5168,7 @@ function fpagelainnya(){
 					
 					if(e)e.preventDefault();
 					
-					if(achexauth && availableradio && madiaRecorder.state === 'inactive'){
+					if(achexauth && availableradio && stream.active && madiaRecorder.state === 'inactive'){
 					
 						if(playbtn.classList.contains('paused')){
 							playbtn.classList.remove('paused');
