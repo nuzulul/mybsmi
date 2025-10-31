@@ -4602,7 +4602,7 @@ function fpagelainnya(){
 							margin-left:5px;
 						}
 						
-						.screen {
+						.radioscreen {
 							width:150px;
 							border-radius:1em;
 							height:100px;
@@ -4613,7 +4613,7 @@ function fpagelainnya(){
 							color:black;
 						}
 						
-						.screen img {
+						.radioscreen img {
 							width:50px;
 							height:50px;
 							margin-top:5px;
@@ -4701,9 +4701,27 @@ function fpagelainnya(){
 						.paused .radiotriangle-2 {
 							-webkit-transform: translate(0, 50%);
 							transform: translate(0, 50%);
-						} 			
+						}
+						
+						:popover-open {
+							position: absolute;
+							inset: unset;
+							bottom: 5px;
+							right: 5px;
+						}
+
+						#radiopop {
+							display:block;
+							position:relative;
+							height:0px;
+							overflow:hidden;
+						}
 				</style>
 				<div class="radiomain">
+				  <div id="radiopop"><div id="radiopopover">
+						Terminal
+						<input type="text" id="radioterminal" placeholder="Enter code here"/>
+				  </div></div>				
 				  <a class="play-button paused" href="#">
 					  <div class="radioleft"></div>
 					  <div class="radioright"></div>
@@ -4713,9 +4731,9 @@ function fpagelainnya(){
 				  <div class="antena"></div>
 				  <div class="radiologo">
 						<img src="logobsmijatim.png"></img>
-						<span>iWalkie<span>
+						<span>BSMI<span>
 				  </div>
-				  <div class="screen">
+				  <div class="radioscreen">
 					  <img src="logobsmijatim.png"></img>
 					  <p class="radiopanel">
 							<span class="radioinfo">
@@ -4731,6 +4749,27 @@ function fpagelainnya(){
 		  
 		document.body.appendChild(para);
 		
+		await new Promise((resolve,reject)=>{
+			function timer(){
+				let interval = setInterval(()=>{
+					console.log('timer');
+					if(document.getElementById('paraclose')){
+						clearInterval(interval);
+						resolve();
+					}else{
+						timer();
+					}
+				},100)
+			}
+			timer();
+		});
+		
+		const popover = document.getElementById("radiopopover");
+		
+		if (HTMLElement.prototype.hasOwnProperty("popover")) {
+			popover.popover = "auto";
+		}			
+		
 		
 		setTimeout(()=>{
 		
@@ -4741,7 +4780,12 @@ function fpagelainnya(){
 					})
 					
 					$$('.paraxmark').css('cursor','pointer');
-
+					
+					para.addEventListener("dblclick",()=>{
+						if (HTMLElement.prototype.hasOwnProperty("popover")) {
+							popover.togglePopover();
+						}
+					})
 							
 				
 		},1000)
@@ -4751,7 +4795,7 @@ function fpagelainnya(){
 		let stream;
         const username = 'guest'+Math.floor(Math.random()*10000);   
         const channel = 'public10000ircjatim';
-        const hubname = 'achexchatdemo';
+        const hubname = 'iwalkie';
         let achexauth = false;
         let availableradio = false;
         let sourceBuffer;
@@ -4769,10 +4813,126 @@ function fpagelainnya(){
         const audioBuffers = []; // Array to store decoded AudioBuffer objects     
         let startTime = audioContext.currentTime;
         let playing = false;
-		let radiostatusmic;		
+		let radiostatusmic;	
+		let shake = false;		
 		
 		let response = await fetch('ptt.mp3');
 		let pttsound = await response.blob();
+		
+		
+		let radioterminal = document.getElementById("radioterminal");
+		radioterminal.addEventListener("keypress", async function(event) {
+		  if (event.key === "Enter") {
+				event.preventDefault();
+				const el = `
+					<span class="check">
+						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check" viewBox="0 0 16 16">
+						  <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z"/>
+						</svg>		
+					</span>
+				`        
+				document.querySelector('#radioterminal').blur()
+				document.querySelector('#radioterminal').insertAdjacentHTML("afterend",el)
+				setTimeout(()=>{
+					if(document.querySelector('#radiopopover .check'))document.querySelector('#radiopopover .check').remove()
+				},3000)
+				const code = document.querySelector('#radioterminal').value
+				document.querySelector('#radioterminal').value = '';
+				switch(code){
+					case "shake on":
+						console.log('shake on');
+						shake = true;
+						checkMotionPermission();
+						break;
+					case "shake off":
+					console.log('shake off');
+						shake = false;
+						break;
+					default:
+				}
+		  }
+		});	
+		
+		function radioterminalinfo(info){
+				const el = `
+					<span class="check">
+						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check" viewBox="0 0 16 16">
+						  <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z"/>
+						</svg> ${info}		
+					</span>
+				`        
+				document.querySelector('#radioterminal').blur()
+				document.querySelector('#radioterminal').insertAdjacentHTML("afterend",el)
+				setTimeout(()=>{
+					if(document.querySelector('#radiopopover .check'))document.querySelector('#radiopopover .check').remove()
+				},5000);			
+		}
+		
+		//https://stackoverflow.com/a/75717316
+		async function checkMotionPermission() {
+
+			// Any browser using requestPermission API
+			if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+
+				// If previously granted, user will see no prompts and listeners get setup right away.
+				// If error, we show special UI to the user.
+				// FYI, "requestPermission" acts more like "check permission" on the device.
+				await DeviceOrientationEvent.requestPermission()
+				.then(permissionState => {
+					if (permissionState == 'granted') {
+						// Hide special UI; no longer needed
+						//setMotionListeners()
+						console.log('checkMotionPermission granted');
+						radioterminalinfo('Detect shake granted');
+					}
+				})
+				.catch( (error) => {
+					// Show special UI to user, suggesting they should allow motion sensors. The tap-or-click on the button will invoke the permission dialog.
+					console.log('checkMotionPermission error',error)
+				})
+
+			// All other browsers
+			} else {
+				//setMotionListeners()
+			}
+
+		}
+		
+		//https://stackoverflow.com/a/75717316
+		async function setMotionListeners() {
+
+			// ORIENTATION LISTENER
+			await window.addEventListener('orientation', event => {
+				//console.log('Device orientation event: %O', event)
+			})
+
+			// MOTION LISTENER
+			await window.addEventListener('devicemotion', event => {
+				//console.log('Device motion event: %O', event)
+
+				// SHAKE EVENT
+				// Using rotationRate, which essentially is velocity,
+				// we check each axis (alpha, beta, gamma) whether they cross a threshold (e.g. 256).
+				// Lower = more sensitive, higher = less sensitive. 256 works nice, imho.
+				if ((event.rotationRate.alpha > 256 || event.rotationRate.beta > 256 || event.rotationRate.gamma > 256)) {
+					if(shake){
+						function triggerMouseEvent (node, eventType) {
+							var clickEvent = document.createEvent ('MouseEvents');
+							clickEvent.initEvent (eventType, true, true);
+							node.dispatchEvent (clickEvent);
+						}						
+						if (document.querySelector (".play-button .paused")){
+							var targetNode = document.querySelector (".play-button");
+							if (targetNode) triggerMouseEvent (targetNode, "mousedown");							
+						}else{
+							var targetNode = document.querySelector (".play-button");
+							if (targetNode) triggerMouseEvent (targetNode, "mouseup");							
+						}
+					}
+				}
+			})
+		}
+		setMotionListeners();
 		
 		function playpttsound(){
 			const pttsoundaudioUrl = URL.createObjectURL(pttsound);
@@ -5259,7 +5419,7 @@ function fpagelainnya(){
 					  <path d="M5 3a3 3 0 0 1 6 0v5a3 3 0 0 1-6 0z"/>
 					  <path d="M3.5 6.5A.5.5 0 0 1 4 7v1a4 4 0 0 0 8 0V7a.5.5 0 0 1 1 0v1a5 5 0 0 1-4.5 4.975V15h3a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1h3v-2.025A5 5 0 0 1 3 8V7a.5.5 0 0 1 .5-.5"/>
 					</svg></span>
-					${casterid}
+					${safe(casterid)}
 			  `;
 			  clearInterval(radiostatusmic);
 			  radiostatusmic = setInterval(()=>{
