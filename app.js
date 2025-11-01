@@ -4815,7 +4815,8 @@ function fpagelainnya(){
         let startTime = audioContext.currentTime;
         let playing = false;
 		let radiostatusmic;	
-		let shake = false;		
+		let shake = false;
+		let echo = false;
 		
 		let response = await fetch('ptt.mp3');
 		let pttsound = await response.blob();
@@ -4850,6 +4851,13 @@ function fpagelainnya(){
 						break;
 					case "hold":
 						radioptt();
+						break;
+					case "echo":
+						if(echo){
+							echo = false;
+						}else{
+							echo = true;
+						}
 						break;
 					default:
 				}
@@ -4985,7 +4993,7 @@ function fpagelainnya(){
 				radiobusy();
             }else if (json.msg.blob){
 				casterid = json.msg.casterid;
-				if(casterid === dashboarddata.user.userbid){
+				if(casterid === dashboarddata.user.userbid && !echo){
 					thisws.close(true);
 					return;
 				}
@@ -5017,8 +5025,11 @@ function fpagelainnya(){
                       channel,
                       msg:{blob:b64,headerBlob,timecode,mediasourceinit,casterid},
                     }
-                    //achex(JSON.stringify(data));
-					ws.send(JSON.stringify(data));
+					if(echo){
+						achex(JSON.stringify(data));
+					}else{
+						ws.send(JSON.stringify(data));
+					}
                     mediasourceinit = false;
                 })
             }
@@ -5366,7 +5377,7 @@ function fpagelainnya(){
 						  channel,
 						  msg:{radioinuse:true},
 						}
-						ws.send(JSON.stringify(data))                        
+						if(!echo)ws.send(JSON.stringify(data))                        
 						
 						mediasourceinit = true;
 						
@@ -5474,7 +5485,9 @@ function fpagelainnya(){
                 
             ws.onmessage = event => {
                 
-                achex(event.data,this)            
+				if(!echo){
+					achex(event.data,this)  
+				}
                       
             };            
 
