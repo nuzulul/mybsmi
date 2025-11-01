@@ -4627,6 +4627,12 @@ function fpagelainnya(){
 							text-align:right;
 						}
 						
+						.radioinfo {
+							  display: flex;
+							  align-items: center;
+							  justify-content:right;							  
+						}
+						
 						.radiostatus {
 							background:none;
 							padding:5px 20px;
@@ -4794,8 +4800,8 @@ function fpagelainnya(){
         let ws;
 		let stream;
         const username = 'guest'+Math.floor(Math.random()*10000);   
-        const channel = 'public10000ircjatim';
-        const hubname = 'iwalkie';
+        const channel = 'iWalkie';
+        const hubname = 'iWalkieIRC2025';
         let achexauth = false;
         let availableradio = false;
         let sourceBuffer;
@@ -4983,7 +4989,7 @@ function fpagelainnya(){
 				let info = document.getElementsByClassName("radioinfo")[0]
 				info.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-reception-4" viewBox="0 0 16 16">
 	  <path d="M0 11.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5zm4-3a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5zm4-3a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5zm4-3a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v11a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5z"/>
-	</svg>`
+	</svg>&nbsp;${safe(channel)}`
           }
           
           let json = JSON.parse(data);
