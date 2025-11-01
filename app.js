@@ -4804,6 +4804,7 @@ function fpagelainnya(){
         const hubname = 'iWalkieIRC2025';
         let achexauth = false;
         let availableradio = false;
+		let mediaSource;
         let sourceBuffer;
 		let appendBufferQueue = [];
         let audioElement;
@@ -4811,6 +4812,7 @@ function fpagelainnya(){
         const timedelay = 1000;  //3500  
 		let timehold;
         let timeout;
+		let timeendofstream;
         const istimeslice = true;
         let mediasourceinit = false;
 		let mediasourcefirsttime = true;
@@ -5144,12 +5146,17 @@ function fpagelainnya(){
                         .catch(error => {
                             //console.error('Error playing audio:', error);
                         });    
-                    } 			
+                    } 
+
+					clearTimeout(timeendofstream);
+					timeendofstream = setTimeout(()=>{
+						mediaSource.endOfStream();
+					},timeslice+timedelay)
 			}
         
             if (msg.mediasourceinit || mediasourcefirsttime){
             
-                  let mediaSource = new MediaSource();
+                  mediaSource = new MediaSource();
                   
                   mediaSource.addEventListener('sourceopen', handleSourceOpen);
                   
