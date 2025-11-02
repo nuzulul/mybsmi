@@ -4554,6 +4554,8 @@ return data;
 //////////////////////////////////////////////////////////////////
 function fpagelainnya(){
   $$('.startradio').on('click', async function () {
+	  
+		if(document.getElementById('paraclose')){return;};
 	 
 		const para = document.createElement("div");
 		
