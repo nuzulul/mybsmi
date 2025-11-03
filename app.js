@@ -4789,7 +4789,8 @@ function fpagelainnya(){
 					
 					$$('.paraxmark').css('cursor','pointer');
 					
-					para.addEventListener("dblclick",()=>{
+					para.addEventListener("contextmenu",(e)=>{
+						e.preventDefault();
 						if (HTMLElement.prototype.hasOwnProperty("popover")) {
 							popover.togglePopover();
 						}
@@ -4861,6 +4862,12 @@ function fpagelainnya(){
 						break;
 					case "hold":
 						radioptt();
+						break;
+					case "double":
+						para.addEventListener("dblclick",(e)=>{
+							e.preventDefault();
+							radioptt();
+						})
 						break;
 					case "echo":
 						if(echo){
