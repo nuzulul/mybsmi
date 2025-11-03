@@ -12155,13 +12155,14 @@ function getaktivitasdatarun(contents)
 	  }
   }
   
-  let content = contents.splice(-3);
+  let data = [...contents];
+  let content = data.splice(-3);
   if(content.length > 0)aktivitasrender(content);
   
   $$('.mybsmi-aktivitas-more').css('cursor','pointer');
   
   $$('.mybsmi-aktivitas-more').on('click', function (e) {
-	  let content = contents.splice(-3);
+	  let content = data.splice(-3);
 	  if(content.length > 0)aktivitasrender(content);
   })
   
