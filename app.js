@@ -12115,42 +12115,58 @@ function fpageaktivitas(run = true)
   }
 }
 
-function getaktivitasdatarun(content)
+function getaktivitasdatarun(contents)
 {
   //console.log(content);
   $$('.mybsmi-aktivitas').html('');
   $$('.mybsmi-aktivitas-buataktivitas').html('<i class="icons f7-icons ">plus_app_fill</i>');
   $$('.mybsmi-aktivitas-buataktivitas i').on('click', function (e) {
-        fbuataktivitas();
-        //$$('.mybsmi-aktivitas-buataktivitas i').hide();
+		let data = JSON.parse(dashboarddata.user.usermydata)
+		if (data.master) { 	  
+			fbuataktivitas();
+		}
   });
-  for(i=content.length-1;i>-1;i--)
-  {
-    //let date = new Date(content[i][0]).toLocaleString('en-US', { timeZone: 'Asia/Jakarta' });
-    let date = new Intl.DateTimeFormat("id-ID", { hour12:false,dateStyle: "short" , timeStyle: "short",  timeZone: "Asia/Jakarta"}).format(new Date(content[i][0]));date = date.split(' ');date = date[0];
-    //data += '<div class="timeline-item"><div class="timeline-item-date"><small>'+date+'</small></div><div class="timeline-item-divider"></div><div class="timeline-item-content"><div class="timeline-item-inner"><div class="timeline-item-time"></div><div class="timeline-item-text">'+safe(content[i][5])+'</div></div></div></div>';
-    let data = '<div class="col-100 xsmall-75 small-50 medium-33 large-33 xlarge-33 mybsmi-aktivitas-item-'+safe(content[i][1])+'" data-user="'+btoa(JSON.stringify(content[i]))+'" style="cursor:pointer;"> <div class="card"> <div class="card-header no-padding" style="overflow:hidden;"><img class="poster" src="photo.svg" style="width:100%;aspect-ratio: 1 / 1;object-fit:cover;background-image:none;"></div> <div class="card-content card-content-padding"> <div style="font-weight:bold;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">'+safe(content[i][6])+'</div> <div></div> </div> <div class="card-footer"> <div class="row" style="width:100%"> <div class="col-100 margin-bottom margin-top" style="width:100%;"> <div class="float-left" style="width:3em;"><img class="avatar" src="avatar.png" style="width:2em;aspect-ratio:1 / 1;height:2em;object-fit:cover;border-radius:50% 50%;overflow:hidden;"></div> <div class="float-left" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;width:70%;">'+safe(content[i][3])+'</div> </div> <div class="col-100 margin-bottom"> <div class="float-left" style="width:3em;"><i class="icons f7-icons">person_2</i></div> <div class="float-left" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">'+safe(JSON.parse(content[i][12]).length)+' Pendukung</div> </div> <div class="col-100 margin-bottom"> <div class="float-left" style="width:3em;"><i class="icons f7-icons">paperclip</i></div> <div class="float-left" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">'+safe(content[i][5])+'</div> </div><div class="col-100 margin-bottom"> <div class="float-left" style="width:3em;"><i class="icons f7-icons">calendar</i></div> <div class="float-left" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">'+safe(content[i][9])+'</div> </div> </div>   </div> </div> </div>';
-    $$('.mybsmi-aktivitas').append(data);
-    $$('.mybsmi-aktivitas-item-'+content[i][1]+' img.poster').attr('src','https://lh3.googleusercontent.com/d/'+safe(content[i][8]));
-    $$('.mybsmi-aktivitas-item-'+content[i][1]+' img.avatar').attr('src','https://lh3.googleusercontent.com/d/'+safe(content[i][4]));
-    $$('.mybsmi-aktivitas-item-'+content[i][1]).on('click', function (e) {
-          let base64 = this.attributes["data-user"].value;
-          let json = atob(base64);
-          let data = JSON.parse(json)
-          let jenis = data[5].toLowerCase();
-          let id = data[1];
-          let url = "/"+jenis+"/"+id;
-          //console.log(url);
-			if (dashboarddata.user.userphoto !== ''){
-				app.views.main.router.navigate(url);
-			}else{
-				flengkapidata();
-			}		  
-          
-    });
+  
+  function aktivitasrender(content){
+	  for(i=content.length-1;i>-1;i--)
+	  {
+		//let date = new Date(content[i][0]).toLocaleString('en-US', { timeZone: 'Asia/Jakarta' });
+		let date = new Intl.DateTimeFormat("id-ID", { hour12:false,dateStyle: "short" , timeStyle: "short",  timeZone: "Asia/Jakarta"}).format(new Date(content[i][0]));date = date.split(' ');date = date[0];
+		//data += '<div class="timeline-item"><div class="timeline-item-date"><small>'+date+'</small></div><div class="timeline-item-divider"></div><div class="timeline-item-content"><div class="timeline-item-inner"><div class="timeline-item-time"></div><div class="timeline-item-text">'+safe(content[i][5])+'</div></div></div></div>';
+		let data = '<div class="col-100 xsmall-75 small-50 medium-33 large-33 xlarge-33 mybsmi-aktivitas-item-'+safe(content[i][1])+'" data-user="'+btoa(JSON.stringify(content[i]))+'" style="cursor:pointer;"> <div class="card"> <div class="card-header no-padding" style="overflow:hidden;"><img class="poster" src="photo.svg" style="width:100%;aspect-ratio: 1 / 1;object-fit:cover;background-image:none;"></div> <div class="card-content card-content-padding"> <div style="font-weight:bold;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">'+safe(content[i][6])+'</div> <div></div> </div> <div class="card-footer"> <div class="row" style="width:100%"> <div class="col-100 margin-bottom margin-top" style="width:100%;"> <div class="float-left" style="width:3em;"><img class="avatar" src="avatar.png" style="width:2em;aspect-ratio:1 / 1;height:2em;object-fit:cover;border-radius:50% 50%;overflow:hidden;"></div> <div class="float-left" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;width:70%;">'+safe(content[i][3])+'</div> </div> <div class="col-100 margin-bottom"> <div class="float-left" style="width:3em;"><i class="icons f7-icons">person_2</i></div> <div class="float-left" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">'+safe(JSON.parse(content[i][12]).length)+' Pendukung</div> </div> <div class="col-100 margin-bottom"> <div class="float-left" style="width:3em;"><i class="icons f7-icons">paperclip</i></div> <div class="float-left" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">'+safe(content[i][5])+'</div> </div><div class="col-100 margin-bottom"> <div class="float-left" style="width:3em;"><i class="icons f7-icons">calendar</i></div> <div class="float-left" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">'+safe(content[i][9])+'</div> </div> </div>   </div> </div> </div>';
+		$$('.mybsmi-aktivitas').append(data);
+		$$('.mybsmi-aktivitas-item-'+content[i][1]+' img.poster').attr('src','https://lh3.googleusercontent.com/d/'+safe(content[i][8]));
+		$$('.mybsmi-aktivitas-item-'+content[i][1]+' img.avatar').attr('src','https://lh3.googleusercontent.com/d/'+safe(content[i][4]));
+		$$('.mybsmi-aktivitas-item-'+content[i][1]).on('click', function (e) {
+			  let base64 = this.attributes["data-user"].value;
+			  let json = atob(base64);
+			  let data = JSON.parse(json)
+			  let jenis = data[5].toLowerCase();
+			  let id = data[1];
+			  let url = "/"+jenis+"/"+id;
+			  //console.log(url);
+				if (dashboarddata.user.userphoto !== ''){
+					app.views.main.router.navigate(url);
+				}else{
+					flengkapidata();
+				}		  
+			  
+		});
+	  }
   }
-  let datadumy = '<div class="col-100 xsmall-75 small-50 medium-33 large-33 xlarge-33" ></div><div class="col-100 xsmall-75 small-50 medium-40 large-40 xlarge-33" ></div>';
-  $$('.mybsmi-aktivitas').append(datadumy);
+  
+  let content = contents.splice(-3);
+  if(content.length > 0)aktivitasrender(content);
+  
+  $$('.mybsmi-aktivitas-more').css('cursor','pointer');
+  
+  $$('.mybsmi-aktivitas-more').on('click', function (e) {
+	  let content = contents.splice(-3);
+	  if(content.length > 0)aktivitasrender(content);
+  })
+  
+  //let datadumy = '<div class="col-100 xsmall-75 small-50 medium-33 large-33 xlarge-33" ></div><div class="col-100 xsmall-75 small-50 medium-40 large-40 xlarge-33" ></div>';
+  //$$('.mybsmi-aktivitas').append(datadumy);
   
 }
 
