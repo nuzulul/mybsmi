@@ -1735,7 +1735,7 @@ $$('.persetujuanaktivasi').on('click', function () {
    myviewer1('https://mybsmi.netlify.app/'+url);
 });
 
-$$('#my-aktivasi-screen .register-button').on('click', function () {
+$$('#my-aktivasi-screen .register-button').on('click', async function () {
 
   if (!$$('#my-aktivasi-screen')[0].checkValidity()) {
         //console.log('Check Validity!');
@@ -1756,6 +1756,22 @@ $$('#my-aktivasi-screen .register-button').on('click', function () {
   var nohp = "'"+$$('#my-aktivasi-screen [name="nohp"]').val();
   var cabang = "'"+$$('#my-aktivasi-screen [name="cabang"]').val();
   var tahun = "'"+$$('#my-aktivasi-screen [name="tahun"]').val();
+  
+  if(params.pine){
+  
+		let payload = {
+			email,
+			cabang
+		}
+		const buf = await crypto.subtle.digest("SHA-256", new TextEncoder("utf-8").encode(JSON.stringify(payload)));
+		let pine = Array.prototype.map.call(new Uint8Array(buf), x=>(('00'+x.toString(16)).slice(-2))).join(''); 
+		
+		if(params.pine !== pine) 
+		{
+			app.dialog.alert('Alamat Email atau Cabang Salah','Terjadi Kesalahan');
+		return;
+		}		
+  }
   
   if(password != konfirmpassword) 
   {
@@ -5786,7 +5802,7 @@ function fpageadmincabang(content)
   
   $$('.mybsmi-admincabangmenu .buat-link').off('click')
   $$('.mybsmi-admincabangmenu .buat-link').on('click', function () {
-		fbuatlinkaktivasi()
+		fbuatlinkaktivasi('restrict')
   })
 
   $$('.mybsmi-admincabangmenu .undang-relawan').on('click', function () {
@@ -9293,7 +9309,27 @@ function fgantipin(pin){
       })
 }
 
-function fbuatlinkaktivasi(mode = 'normal'){
+async function fbuatlinkaktivasi(mode = 'normal'){
+			let email = await new Promise((resolve,reject)=>{
+				if(mode === 'restrict'){
+					app.dialog.prompt('', 'ALAMAT EMAIL', async function (email){
+						const validateEmail = (email) => {
+						  return email.match(
+							/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+						  );
+						}
+						if(validateEmail(email)){
+							resolve(email)
+							
+						}else{
+							app.dialog.alert("Format email salah",'Terjadi Kesalahan');
+							reject('error')
+						}
+					})					
+				}else{
+					resolve('noemail');
+				}
+			});
 			let mypreloader = app.dialog.preloader();
 			app.request({
 			  url: apidataurl,
@@ -9319,6 +9355,15 @@ function fbuatlinkaktivasi(mode = 'normal'){
 					let tempdata = Array.prototype.map.call(new Uint8Array(buf), x=>(('00'+x.toString(16)).slice(-2))).join('');
 
 					let link = ''
+					if(mode === 'restrict'){
+						let payload = {
+							email,
+							cabang: window.dashboarddata.user.usercabang
+						}
+						const buf = await crypto.subtle.digest("SHA-256", new TextEncoder("utf-8").encode(JSON.stringify(payload)));
+						let pine = Array.prototype.map.call(new Uint8Array(buf), x=>(('00'+x.toString(16)).slice(-2))).join('');
+						link='https://mybsmi.bsmijatim.org/?pin='+tempdata+'&pine='+pine;
+					}
 					if(mode == 'normal')link='https://mybsmi.bsmijatim.org/?pin='+tempdata
 					if(mode == 'full')link='https://mybsmi.bsmijatim.org/?pin='+tempdata+'&mode=full'
 					
