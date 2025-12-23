@@ -1761,11 +1761,12 @@ $$('#my-aktivasi-screen .register-button').on('click', async function () {
   
 		let payload = {
 			email,
-			cabang
+			cabang: $$('#my-aktivasi-screen [name="cabang"]').val()
 		}
+		console.log(payload)
 		const buf = await crypto.subtle.digest("SHA-256", new TextEncoder("utf-8").encode(JSON.stringify(payload)));
 		let pine = Array.prototype.map.call(new Uint8Array(buf), x=>(('00'+x.toString(16)).slice(-2))).join(''); 
-		
+		console.log('pine',pine)
 		if(params.pine !== pine) 
 		{
 			app.dialog.alert('Alamat Email atau Cabang Salah','Terjadi Kesalahan');
