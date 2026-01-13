@@ -9224,6 +9224,7 @@ function fpagemasterpengaturan(){
 			'<button class="button button-fill ganti-pin">GANTI PIN AKTIVASI</button></br>'+
 			'<button class="button button-fill buat-link">BUAT LINK AKTIVASI</button></br>'+
 			'<button class="button button-fill buat-link-full">BUAT LINK AKTIVASI FULL</button></br>'+
+			'<button class="button button-fill buat-link-verystrict">BUAT LINK AKTIVASI VERYSTRICT</button></br>'+
 			'<button class="button button-fill undang-relawan">UNDANG RELAWAN</button></br>'+
 			'<button class="button button-fill donasi-bsmijatimorg">DONASI BSMIJATIM.ORG</button></br>'+
 			'<button class="button button-fill musprov4voting20bacalon">musprov4voting20bacalon</button></br>'+
@@ -9242,6 +9243,9 @@ function fpagemasterpengaturan(){
   })
   $$('.buat-link-full').on('click', function () {
 		fbuatlinkaktivasi('full')
+  })
+  $$('.buat-link-verystrict').on('click', function () {
+		fbuatlinkaktivasi('verystrict')
   })
   $$('.master-dokumen').on('click', function () {
         let url = "/masterdokumen/";
@@ -9331,6 +9335,86 @@ async function fbuatlinkaktivasi(mode = 'normal'){
 					resolve('noemail');
 				}
 			});
+			let meta = await new Promise((resolve,reject)=>{
+					if(mode === 'verystrict'){
+							  var dialog = app.dialog.create({
+								title: 'Persyaratan KTA Baru',
+								content:''
+								  +'<div style="width:100%;height:50vh;overflow:auto;">'
+								  +'  <div style="display:flex;flex-direction:column;align-items:center;justify-content: center;">'
+								  //+'      <img id="img" src="icon512.png" style="width:150px;height:150px;margin: 10px 10px;border-radius: 0%;object-fit: cover;">'
+								  //+'      <p style="font-weight:bold;">'+safe(data[4])+'</br>'+safe(data[18])+'</p>'
+								  +'  <div class="list no-hairlines-md">'
+								  +'    <ul>'
+								  +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Email</div><div class="item-input-wrap">'
+								  +'                            <input type="email" id="emailtujuan" name="emailtujuan">'
+								  +'                            </input>'
+								  +'            </div></div>'
+								  +'        </li>'
+								  +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Cabang</div><div class="item-input-wrap">'
+								  +'                            <select id="cabangtujuan" name="cabangtujuan">'
+								  +'                              <option value="" selected>-</option>'
+								  +'                            </select>'
+								  +'            </div></div>'
+								  +'        </li>'
+								  +'    </ul>'
+								  +'  </div>'
+								  +'  </div>'
+								  +'</div>',
+								closeByBackdropClick: false,
+								destroyOnClose: true,
+								verticalButtons: true,
+								on: {
+								  opened: function () {
+									//console.log('Dialog opened')
+									var select = document.getElementById('cabangtujuan');
+									kodecabang.forEach(function(item,index){
+										var opt = document.createElement('option');
+										opt.value = item[0];
+										opt.innerHTML = item[0];           
+										select.appendChild(opt);
+									});
+								  }
+								},
+								buttons: [
+								  {
+									text: 'Lanjut',
+									close:true,
+									color: 'red',
+									onClick: function(dialog, e)
+									  {
+										  var cabangtujuan =  $$('#cabangtujuan').val()
+										  var emailtujuan =  $$('#emailtujuan').val()
+										  if(cabangtujuan == '' || emailtujuan === '')
+										  {
+											  var toastBottom = app.toast.create({ text: 'Tidak boleh kosong', closeTimeout: 3000,position: 'center', });toastBottom.open();
+											  return
+										  }
+										  app.dialog.confirm('Data benar?', 'Konfirmasi', function (){
+												let payload = {
+													emailtujuan,
+													cabangtujuan
+												}	
+												resolve(JSON.stringify(payload));
+										  })
+									  }
+								  },
+								  {
+									text: 'Batal',
+									close:true,
+									color: 'gray',
+									onClick: function(dialog, e)
+									  {
+											reject('nometa');
+									  }
+								  },
+								]
+							  });
+							  dialog.open();												
+					}else{
+						resolve('nometa');
+					}
+				});
 			let mypreloader = app.dialog.preloader();
 			app.request({
 			  url: apidataurl,
@@ -9365,6 +9449,11 @@ async function fbuatlinkaktivasi(mode = 'normal'){
 						let pine = Array.prototype.map.call(new Uint8Array(buf), x=>(('00'+x.toString(16)).slice(-2))).join('');
 						link='https://mybsmi.bsmijatim.org/?pin='+tempdata+'&pine='+pine;
 					}
+					if(mode === 'verystrict'){
+						const buf = await crypto.subtle.digest("SHA-256", new TextEncoder("utf-8").encode(meta));
+						let pine = Array.prototype.map.call(new Uint8Array(buf), x=>(('00'+x.toString(16)).slice(-2))).join('');
+						link='https://mybsmi.bsmijatim.org/?pin='+tempdata+'&pine='+pine;
+					}					
 					if(mode == 'normal')link='https://mybsmi.bsmijatim.org/?pin='+tempdata
 					if(mode == 'full')link='https://mybsmi.bsmijatim.org/?pin='+tempdata+'&mode=full'
 					
