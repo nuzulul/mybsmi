@@ -9392,8 +9392,8 @@ async function fbuatlinkaktivasi(mode = 'normal'){
 										  }
 										  app.dialog.confirm('Data benar?', 'Konfirmasi', function (){
 												let payload = {
-													emailtujuan,
-													cabangtujuan
+													email:emailtujuan,
+													cabang:cabangtujuan
 												}	
 												resolve(JSON.stringify(payload));
 										  })
