@@ -325,6 +325,18 @@ routes: [
     },
   },
   {
+    path: '/pengumuman/',
+    url: 'pengumuman.html',
+    on: {
+      pageAfterIn: function test (e, page) {
+        fpagepengumuman();
+      },
+    },
+    beforeEnter: function ({ resolve, reject }) {          
+        fperiksadashboarddata({ resolve, reject })
+    },
+  },  
+  {
     path: '/twibbon/:aktivitasid',
     url: 'twibbon.html',
     on: {
@@ -14315,6 +14327,86 @@ function getdokumendatarun(dokumen){
     })                
     tabel += '</tbody></table></div>'
     $$('.mybsmi-dokumen').html(tabel)
+    $$('.download-item a').on('click', function (e) {
+        let id = $$(this).data('id')
+        let url = 'https://drive.google.com/file/d/'+id+'/preview'
+        myviewer(url);
+    });    
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+function fpagepengumuman(run = true){
+    if (typeof mybsmipengumumandata === 'undefined' || mybsmipengumumandata === null)
+    {
+        var api = "https://cors.bsmijatim.workers.dev/?";
+        var sourcepengumuman = [
+            {jenis:"pengumuman",sheeturl:"https://docs.google.com/spreadsheets/d/e/2PACX-1vRjygXmanUCrVCAyoEeaPi6Iatk1KwsYKyrkuEzy0asnYGGsJ45BzUvba428ukwKCcP_TJVCZiJsTSo/pub?gid=281422466&single=true&output=csv",tanggal:0,judul:1,file:2}
+          ]
+        var allrequest = []
+        sourcepengumuman.forEach(function(arr,index){
+            let request =       fetch(api+arr.sheeturl)
+                                .then(response => response.text())
+                                .then(async(response) => {
+                                    sourcepengumuman[index].data = response
+                                })
+            allrequest.push(request)
+        })
+        try{
+          Promise.all(allrequest)
+          .then(results => {
+              console.log('ok')
+              console.log(sourcepengumuman)
+              window.mybsmipengumumandata = sourcepengumuman;
+              if (run) getpengumumandatarun(sourcepengumuman);
+           });
+        }catch {
+              console.log('error')
+        }
+    }
+    else
+    {
+        if (run) getpengumumandatarun(mybsmipengumumandata);
+    }
+}
+
+function getpengumumandatarun(pengumuman){
+    
+    let hasil = []
+    pengumuman.forEach(function(arr,index){
+        let data = CSVToArray(arr.data)
+        //data = data.filter((sertifikat) => sertifikat[arr.uid]==dashboarddata.user.useruid);
+        console.log(data)
+        data.forEach(function(ser,idx){
+            let tanggal = ser[arr.tanggal]
+            let judul = ser[arr.judul]
+            let file = ser[arr.file]
+            hasil.push({tanggal,judul,file})
+        })
+    })
+    hasil.sort(function(a, b){return new Date(a.tanggal) - new Date(b.tanggal)});
+    
+    
+    let tabel = '<div class="card data-table">'+
+                    '<table><thead><tr><th>Tanggal</th><th>Pengumuman</th><th>Edaran</th></tr></thead><tbody>'
+    
+    hasil.forEach(function(arr,index){
+          if(index == 0)return
+		  let date = new Intl.DateTimeFormat("id-ID", { hour12:false,dateStyle: "long" , timeStyle: "short",  timeZone: "Asia/Jakarta"}).format(new Date(arr.tanggal));
+		  date = date.split(' ');
+		  let tanggal = date[0]+' '+date[1]+' '+date[2]
+		  if (arr.file !== ''){
+			let fileid = arr.file.split('=')[1]
+			tabel += '<tr class="download-item"><td>'+safe(tanggal)+'</td><td>'+safe(arr.judul)+'</td><td><a class="link" href="#" data-id="'+safe(fileid)+'" data-url="'+safe(arr.file)+'" target="_blank">View</a></td></tr>'
+		  }else{
+			  tabel += '<tr class="download-item"><td>'+safe(tanggal)+'</td><td>'+safe(arr.judul)+'</td><td>'
+		  }
+    })                
+    tabel += '</tbody></table></div>'
+    $$('.mybsmi-pengumuman').html(tabel)
     $$('.download-item a').on('click', function (e) {
         let id = $$(this).data('id')
         let url = 'https://drive.google.com/file/d/'+id+'/preview'
