@@ -14314,7 +14314,7 @@ function getdokumendatarun(dokumen){
             hasil.push({tanggal,judul,download,fileid})
         })
     })
-    hasil.sort(function(a, b){return new Date(a.tanggal) - new Date(b.tanggal)});
+    hasil.sort(function(a, b){return new Date(b.tanggal) - new Date(a.tanggal)});
     
     
     let tabel = '<div class="card data-table">'+
@@ -14387,7 +14387,7 @@ function getpengumumandatarun(pengumuman){
             hasil.push({tanggal,judul,file})
         })
     })
-    hasil.sort(function(a, b){return new Date(a.tanggal) - new Date(b.tanggal)});
+    hasil.sort(function(a, b){return new Date(b.tanggal) - new Date(a.tanggal)});
     
     
     let tabel = '<div class="card data-table">'+
