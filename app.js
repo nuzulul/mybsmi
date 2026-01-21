@@ -8915,6 +8915,7 @@ function fpageadmindonasiverifikasiupdate(content)
 
 function fpageadmindonasisendemailtodonatur(content)
 {
+	return;
 	let xapikey = mybsmiadmindonasidata.emailxapikey
 	let emailapiurl = 'https://script.google.com/macros/s/AKfycbzL1-gxqhhaE9LVqINqAdeiXJMQfKyBkdMtLCvHNfW4RAcgEqhI8vFxiRdJJniYLM1r/exec'
 	let invoice = content.data
