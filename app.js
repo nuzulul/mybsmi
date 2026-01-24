@@ -9035,7 +9035,7 @@ function fadmindonasiprogramrun(campaign)
 		`
 		$$('.dynamic .page-content').html(html)
 		
-		let programhtml = '<div class="data-table data-table-collapsible data-table-init"><table style="table-layout: fixed"><thead><tr><th>No</th><th class="display-none">Pembuatan</th><th>Kode</th><th>Program</th><th>Donatur</th><th>Total</th><th>Penyaluran</th><th>Saldo</th><th>Action</th></tr></thead><tbody></tbody></table></div>'
+		let programhtml = '<div class="data-table data-table-collapsible data-table-init"><table style="table-layout: fixed"><thead><tr><th>No</th><th class="display-none">Pembuatan</th><th>Kode</th><th>Program</th><th>Donatur</th><th>Total</th><th>Penarikan</th><th>Saldo</th><th>Action</th></tr></thead><tbody></tbody></table></div>'
 		
 		for(let i=0;i<campaign.length;i++)
 		{
@@ -9050,14 +9050,14 @@ function fadmindonasiprogramrun(campaign)
 											'<td data-collapsible-title="Program">'+safe(program[2])+'</td>'+
 											'<td data-collapsible-title="Donatur">'+safe(program[5])+'</td>'+
 											'<td data-collapsible-title="Total">Rp '+formatRupiah(safe(program[4]))+'</td>'+
-											'<td data-collapsible-title="Penyaluran">Rp '+formatRupiah(safe(program[6]))+'</td>'+
+											'<td data-collapsible-title="Penarikan">Rp '+formatRupiah(safe(program[6]))+'</td>'+
 											'<td data-collapsible-title="Saldo">Rp '+formatRupiah(safe(program[8]))+'</td>'+
-											'<td data-collapsible-title="Action" style="display: flex;align-content: center;align-items: center;justify-content: flex-start;text-align: left;"><a data-index="'+i+'" data-program="'+btoa(JSON.stringify(program))+'" class="button button-fill mybsmi-admindonasi-program-salurkan">Salurkan</a><i class="icon f7-icons accordion-item-toggle">ellipsis_circle</i></td>'+
+											'<td data-collapsible-title="Action" style="display: flex;align-content: center;align-items: center;justify-content: flex-start;text-align: left;"><a data-index="'+i+'" data-program="'+btoa(JSON.stringify(program))+'" class="button button-fill mybsmi-admindonasi-program-salurkan">Penarikan</a><i class="icon f7-icons accordion-item-toggle">ellipsis_circle</i></td>'+
 									'</tr><tbody></tbody></table></div>'
 				programhtml += '	<div class="accordion-item-content">'+
 										'<div class="mybsmi-admindonasi-program-riwayat bg-color-red block block-strong block-outline inset">'	
 										
-				let riwayathtml = '<div class="padding bg-color-white">Riwayat Penyaluran</div><div class="data-table data-table-collapsible data-table-init bg-color-white"><table><thead><tr><th>Tanggal</th><th>Nominal</th></tr></thead><tbody>'
+				let riwayathtml = '<div class="padding bg-color-white">Riwayat Penarikan</div><div class="data-table data-table-collapsible data-table-init bg-color-white"><table><thead><tr><th>Tanggal</th><th>Nominal</th></tr></thead><tbody>'
 				let arr = JSON.parse(program[7])
 				for(let i=0;i<arr.length;i++){
 					let item = arr[i]
@@ -9093,7 +9093,7 @@ function fadmindonasiprogramrun(campaign)
 function fadmindonasiprogrampenyaluran(index,program)
 {
   var dialog = app.dialog.create({
-    title: 'Salurkan Donasi',
+    title: 'Penarikan Donasi',
     content:''////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       +'<div style="width:100%;height:50vh;overflow:auto;">'
       +'  <div style="display:flex;flex-direction:column;align-items:center;justify-content: center;">'
@@ -9105,8 +9105,8 @@ function fadmindonasiprogrampenyaluran(index,program)
       +'            <input type="text" id="saldodonasi" name="saldodonasi" placeholder="Saldo Donasi" value="'+safe(program[8])+'" disabled>'
       +'            </div></div>'
       +'        </li>'
-      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Nominal Penyaluran</div><div class="item-input-wrap">'
-      +'            <input type="number" id="nominalpenyaluran" name="nominalpenyaluran" placeholder="Nominal Penyaluran" value="">'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Nominal Penarikan</div><div class="item-input-wrap">'
+      +'            <input type="number" id="nominalpenyaluran" name="nominalpenyaluran" placeholder="Nominal Penarikan" value="">'
       +'            </div></div>'
       +'        </li>'
       +'    </ul>'
