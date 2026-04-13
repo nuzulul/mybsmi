@@ -5959,7 +5959,7 @@ function fpageadmincabangprofileedit(datacabang,datarelawan)
       +'            <input type="text" id="instagramcabang" name="instagram" placeholder="Instagram" value="'+safe(datacabang[4])+'">'
       +'            </div></div>'
       +'        </li>'
-      +'        <li class="item-content item-input display-none"><div class="item-inner"><div class="item-title item-label">Ketua</div><div class="item-input-wrap">'
+      +'        <li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Ketua</div><div class="item-input-wrap">'
       +'                            <select id="ketuacabang" name="ketua">'
       +'                              <option value="" selected> </option>'
       +'                            </select>'
