@@ -8646,7 +8646,7 @@ function fpageadmindonasirun(content)
 {
 	//console.log(content)
 	
-	let totaldonasi = content.pengaturan[2][1]
+	let totaldonasi = content.pengaturan[7][1]
 	$$('.mybsmi-admindonasi-list-total').html('Rp '+formatRupiah(safe(totaldonasi)))
 
 	let penyalurandonasi = content.pengaturan[3][1]
@@ -8671,9 +8671,9 @@ function fpageadmindonasirun(content)
 		let konfirmasi = ''
 		if(invoice[15]=='')
 		{
-			konfirmasi = '<span style="color:red">Kedaluwarsa</span>'
+			konfirmasi = '<span style="color:red">-</span>'
 		}else{
-			konfirmasi = '<span style="color:green">Diterima</span>'
+			konfirmasi = '<span style="color:green">Ya</span>'
 		}
 		
 		//console.log('invoice',invoice)
@@ -8685,7 +8685,7 @@ function fpageadmindonasirun(content)
 				<td data-collapsible-title="Program">(${safe(invoice[2])}) ${safe(invoice[3])}</td>
 				<td data-collapsible-title="Konfirmasi">${konfirmasi}</td>
 				<td data-collapsible-title="Tanggal">${date}</td>
-				<td data-collapsible-title="Action"><a data-invoiceid="${safe(invoice[1])}" class="button button-fill mybsmi-admindonasi-verifikasi">Verifikasi</a></td>
+				<td data-collapsible-title="Action"><a data-invoiceid="${safe(invoice[1])}" class="button button-fill mybsmi-admindonasi-verifikasi">Periksa</a></td>
 			</tr>
 		`
 	}
@@ -8760,9 +8760,9 @@ function fpageadmindonasiverifikasi(invoiceid)
 	let konfirmasi = ''
 	if(data[15]=='')
 	{
-		konfirmasi = '<span style="color:red">Kedaluwarsa</span>'
+		konfirmasi = '<span style="color:red">-</span>'
 	}else{
-		konfirmasi = '<span style="color:green">Diterima</span>'
+		konfirmasi = '<span style="color:green">Ya</span>'
 	}
 	
 	let date = new Intl.DateTimeFormat("id-ID", { hour12:false,dateStyle: "short" , timeStyle: "short",  timeZone: "Asia/Jakarta"}).format(new Date(data[0]));
@@ -8886,11 +8886,12 @@ function fpageadmindonasiverifikasiupdate(content)
 	if(content.instruksi == 'verifikasivalid')
 	{
 		mybsmiadmindonasidata.pengaturan[2][1] = mybsmiadmindonasidata.pengaturan[2][1]+content.data[13]
-		mybsmiadmindonasidata.pengaturan[4][1] = mybsmiadmindonasidata.pengaturan[4][1]+content.data[13]
+		mybsmiadmindonasidata.pengaturan[4][1] = mybsmiadmindonasidata.pengaturan[4][1]+content.data[9]
+		mybsmiadmindonasidata.pengaturan[7][1] = mybsmiadmindonasidata.pengaturan[7][1]+content.data[9]
 		mybsmiadmindonasidata.invoice.splice(content.indexinvoice, 1)
 		//console.log(mybsmiadmindonasidata)
 		fpageadmindonasi()
-		fpageadmindonasisendemailtodonatur(content)
+		//fpageadmindonasisendemailtodonatur(content)
 	}
 	if(content.instruksi == 'verifikasiinvalid')
 	{
