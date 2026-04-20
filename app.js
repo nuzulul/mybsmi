@@ -14466,6 +14466,7 @@ function fpageeventrun(data){
 	$$('.mybsmi-event a').each(a => $$(a).addClass('openinbrowser'))
 	//$$('.mybsmi-event .card').css('cursor','pointer')
 	$$('.mybsmi-event .card img').css('max-width','100%')
+	$$('.mybsmi-event .card img').css('max-height','320px')
 	$$('.mybsmi-event .card').on('click', function (e) {
 		const url = $$(this).attr('data-url')
 		//console.log('url',url)
@@ -14541,6 +14542,7 @@ function fpagefeedsrun(data){
 	$$('.mybsmi-feeds a').each(a => $$(a).addClass('openinbrowser'))
 	//$$('.mybsmi-feeds .card').css('cursor','pointer')
 	$$('.mybsmi-feeds .card img').css('max-width','100%')
+	$$('.mybsmi-feeds .card img').css('max-height','320px')
 	$$('.mybsmi-feeds .card img').css('display','flex')
 	$$('.mybsmi-feeds .card').on('click', function (e) {
 		const url = $$(this).attr('data-url')
