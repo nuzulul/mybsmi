@@ -8657,7 +8657,7 @@ function fpageadmindonasirun(content)
 	
 	let datainvoice = content.invoice
 	
-	let html = '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th>No</th><th>Donatur</th><th>Donasi</th><th>Program</th><th>Konfirmasi</th><th>Tanggal</th><th>Action</th></tr></thead><tbody>'
+	let html = '<div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th>No</th><th>Donatur</th><th>Tagihan</th><th>Program</th><th>Konfirmasi</th><th>Tanggal</th><th>Action</th></tr></thead><tbody>'
 	
 	let nomor = 0
 	for(const invoice of datainvoice)
@@ -8684,7 +8684,7 @@ function fpageadmindonasirun(content)
 				<td data-collapsible-title="Donasi">Rp ${formatRupiah(safe(invoice[13]))}</td>
 				<td data-collapsible-title="Program">(${safe(invoice[2])}) ${safe(invoice[3])}</td>
 				<td data-collapsible-title="Konfirmasi">${konfirmasi}</td>
-				<td data-collapsible-title="Tanggal">${date}</td>
+				<td data-collapsible-title="Tanggal">${date}</br>${relative_time(invoice[0])}</td>
 				<td data-collapsible-title="Action"><a data-invoiceid="${safe(invoice[1])}" class="button button-fill mybsmi-admindonasi-verifikasi">Periksa</a></td>
 			</tr>
 		`
@@ -8698,7 +8698,7 @@ function fpageadmindonasirun(content)
 			fpageadmindonasiverifikasi(invoiceid)
 	});
 	
-	$$('.mybsmi-admindonasi-action-data').html('<a class="button button-fill mybsmi-admindonasi-action-data-program">DATA PROGRAM</a>')
+	$$('.mybsmi-admindonasi-action-data').html('<a class="button button-fill mybsmi-admindonasi-action-data-program">PENARIKAN</a>')
 	$$('.mybsmi-admindonasi-action-data-program').on('click', function (e) {
 			fetch("dynamic.html")
 			.then((res)=>res.text())
@@ -8772,16 +8772,18 @@ function fpageadmindonasiverifikasi(invoiceid)
     content:''////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       +'<div style="width:100%;height:50vh;overflow:auto;">'
       +'  <div style="display:flex;flex-direction:column;align-items:center;justify-content: center;cursor:hand;">'
-      +'      <img id="img" src="" style="width:150px;height:150px;margin: 10px 10px;object-fit: cover;">'
+      +'      <img id="img" src="" style="width:150px;height:150px;margin: 10px 10px;object-fit: cover;cursor:pointer;">'
       +'      <p style="font-weight:bold;"></p>'
       +'      <div class="data-table" style="width:100%"><table><tbody>'
-      +'          <tr><td>Donasi</td><td>Rp '+formatRupiah(safe(data[13]))+'</td></tr>'
-	  +'          <tr><td>Metode</td><td>'+safe(data[10])+'</td></tr>'
+      +'          <tr><td>Donasi</td><td>Rp '+formatRupiah(safe(data[9]))+'</td></tr>'
+	  +'          <tr><td>Total</td><td>Rp '+formatRupiah(safe(data[13]))+'</td></tr>'
+	  +'          <tr><td>Channel</td><td>'+safe(data[10])+'</td></tr>'
 	  +'          <tr><td>Konfirmasi</td><td>'+konfirmasi+'</td></tr>'
 	  +'          <tr><td>Nama</td><td>'+safe(data[5])+'</td></tr>'
+	  +'          <tr><td>Kontak</td><td>'+safe(data[6])+'</td></tr>'
       +'          <tr><td>Invoice</td><td>'+safe(data[1])+'</td></tr>'
       +'          <tr><td>Program</td><td>('+safe(data[2])+') '+safe(data[3])+'</td></tr>'
-      +'          <tr><td>Tanggal</td><td>'+date+'</td></tr>'
+      +'          <tr><td>Tanggal</td><td>'+date+'</br>'+relative_time(data[0])+'</td></tr>'
       +'      </tbody></table></div>'
       +'  </div>'
       +'</div>',//////////////////////////////////////////////////////////////////////////////////////////////////
@@ -8808,7 +8810,7 @@ function fpageadmindonasiverifikasi(invoiceid)
         color: 'red',
         onClick: function(dialog, e)
           {
-			  app.dialog.confirm('Valid?', 'Konfirmasi', function (){
+			  app.dialog.confirm('Apakah benar donasi ini valid?', 'Konfirmasi', function (){
 					let inputdata = JSON.stringify({instruksi:'verifikasivalid',invoiceid,indexinvoice,data})
 					fpageadmindonasiverifikasirun(inputdata)
 			  })
@@ -8820,7 +8822,7 @@ function fpageadmindonasiverifikasi(invoiceid)
         color: 'red',
         onClick: function(dialog, e)
           {
-			  app.dialog.confirm('Tidak valid?', 'Konfirmasi', function (){
+			  app.dialog.confirm('Apakah benar donasi ini tidak valid?', 'Konfirmasi', function (){
 					let inputdata = JSON.stringify({instruksi:'verifikasiinvalid',invoiceid,indexinvoice,data})
 					fpageadmindonasiverifikasirun(inputdata)
 			  })
