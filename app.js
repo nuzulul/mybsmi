@@ -12336,7 +12336,7 @@ function fbuataktivitas()
           +'<div style="width:100%;">'
           +'  <div style="display:flex;flex-direction:column;align-items:center;justify-content: center;">'
           +'      <img id="img" src="" style="width:150px;height:150px;margin: 10px 10px;object-fit: cover;">'
-          +'      <p style="font-weight:normal;">Buat Aktivitas bertema BSMI dan kumpulkan dukungan dari relawan</p>'
+          +'      <p style="font-weight:normal;">Bagikan aktivitas dan kumpulkan dukungan dari relawan</p>'
           +'      <div class="data-table"></div>'
           +'  </div>'
           +'</div>',//////////////////////////////////////////////////////////////////////////////////////////////////
@@ -12403,7 +12403,7 @@ function fbuataktivitasrun()
       +'        <li class="item-content item-input"><div class="item-inner"><div class="item-input-wrap">'
       +'                            <select name="pembuat" required validate>'
       +'                              <option value="" disabled selected>-- Pembuat --</option>'
-      +'                              <option value="user"><span class="mybsmi-buataktivitas-form-user">User<span></option>'
+      +'                              <option value="user" disabled><span class="mybsmi-buataktivitas-form-user">User<span></option>'
       +'                              <option value="cabang" class="display-none"><span class="mybsmi-buataktivitas-form-cabang">Cabang</span></option>'
       +'                            </select>'
       +'            </div></div>'
@@ -13740,6 +13740,8 @@ async function getsocialdatarun(socialdata)
         if(arr[2]=='Id')return
 		
 		if (!isLocal && skipuid.includes(arr[6]))return
+		
+		if (arr[15] !== 'Aktif') return;
         
         if(arr[3]==''){
         
