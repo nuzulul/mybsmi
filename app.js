@@ -11101,11 +11101,11 @@ function fpagemasterdokumenkodearun(mybsmidokumendata)
 		let data = CSVToArray(arr.data)
 		data = data.filter((sertifikat) => sertifikat[arr.kode] == kode)
         data.forEach(function(ser,idx){
-            let nama = ser[8]
-            let uid = ser[5]
-            let email = ser[5]
-            let photo = ser[6]
-			let bid = ser[9]
+            let nama = ser[7]
+            let uid = ser[4]
+            let email = ser[0]
+            let photo = ser[1]
+			let bid = ser[8]
 			  if (!isLocal) {
 				if (skipuid.includes(uid))return
 			  }
@@ -14245,7 +14245,7 @@ function fpagedokumen(run = true){
     {
         var api = "https://cors.bsmijatim.workers.dev/?";
         var sourcedokumen = [
-            {jenis:"sertifikatmybsmi",sheeturl:"https://docs.google.com/spreadsheets/d/e/2PACX-1vT4LuWDBXuIFxrvHtpl1m2gqb65LUr-ch0NjGCXW7_I4Z7BYttMP90xkR_rSlQNprdCXV2IH09B9pIR/pub?gid=1489274948&single=true&output=csv",tanggal:4,uid:5,kode:6,judul:7,index:2,nomor:2,fileid:2,download:3}
+            {jenis:"sertifikatmybsmi",sheeturl:"https://docs.google.com/spreadsheets/d/e/2PACX-1vT4LuWDBXuIFxrvHtpl1m2gqb65LUr-ch0NjGCXW7_I4Z7BYttMP90xkR_rSlQNprdCXV2IH09B9pIR/pub?gid=1489274948&single=true&output=csv",tanggal:3,uid:4,kode:5,judul:6,index:0,nomor:1,fileid:2,download:2}
           ]
         var allrequest = []
         sourcedokumen.forEach(function(arr,index){
