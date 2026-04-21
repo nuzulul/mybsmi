@@ -672,7 +672,7 @@ function fperiksauserstatus({ resolve, reject })
             let data = JSON.parse(dashboarddata.user.usermydata)
             if (data.verifikasiidentitas)
             {
-              app.dialog.alert('Menunggu verifikasi identitas, hubungi pengurus cabang', 'Status')
+              app.dialog.alert('Menunggu verifikasi identitas, hubungi pengurus untuk bantuan.', 'Status')
               reject();
             }
             else
@@ -3165,7 +3165,7 @@ function fpagerelawan(relawanid)
 function fpagerelawanrun(data)
 {
   //console.log(data);
-  let date = new Intl.DateTimeFormat("id-ID", { hour12:false,dateStyle: "short" , timeStyle: "short",  timeZone: "Asia/Jakarta"}).format(new Date(data[0]));date = date.split(' ');date = date[0];
+  let date = new Intl.DateTimeFormat("id-ID", { hour12:false,dateStyle: "medium" , timeStyle: "short",  timeZone: "Asia/Jakarta"}).format(new Date(data[0]));date = date.split(',');date = date[0];
   const cabang= dashboarddata.kodecabang.find((cabang) => cabang[0]==data[4]);
   let html = ''
 +'    <img class="mybsmi-relawan-userphoto" src="avatar.png" style="width:150px;height:150px;margin: 20px 10px 0px;border-radius: 50%;object-fit: cover;"><span class="badge color-blue mybsmi-relawan-avatar-badge" style="bottom:20px;right:-40px;display:none;"><i class="icon f7-icons" style="font-size:12px;">checkmark_seal</i></span>'
@@ -3263,6 +3263,14 @@ function fpageprofilku()
         let url = "/relawan/"+safe(data.useruid);
         app.views.main.router.navigate(url);          
     });
+    $$('.mybsmi-profilku .mybsmi-userphoto').on('click', function (e) {
+		if(data.userphoto!=''){
+			let url = "/relawan/"+safe(data.useruid);
+			app.views.main.router.navigate(url);  
+		}else{
+			flengkapiphoto();
+		}
+    });	
     $$('.mybsmi-profilku-verifikasi').off('click');
     $$('.mybsmi-profilku-verifikasi').on('click', function (e) {
         //fverifikasiidentitas();
@@ -3552,7 +3560,7 @@ function resetpasswordinput(dynamicPopup,data,email)
 function flengkapidata()
 {
   var dialog = app.dialog.create({
-    text: 'Silahkan lengkapi data Anda untuk membuka menu ini.',
+    text: 'Lengkapi data untuk melanjutkan.',
     closeByBackdropClick: false,
     destroyOnClose: true,
     on: {
@@ -3589,7 +3597,7 @@ function flengkapiphoto()
     closeByBackdropClick: false,
     destroyOnClose: true,
     content: '<div style="width:100%;">'
-      +'<p style="text-align:center; border:1px solid gray;padding:10px 10px;color:gray;">Pilih photo profile</p>'
+      +'<p style="text-align:center; border:1px solid gray;padding:10px 10px;color:gray;">Pilih swaphoto profile resmi</p>'
       +'<form runat="server" style="display:flex;flex-direction:column;align-items:center;justify-content: center;">'
       +'<img id="mybsmiuploadphotopreview" src="avatar.png" style="width:150px;height:150px;margin: 10px 10px;border-radius: 50%;object-fit: cover;">'
       +'<input accept="image/jpeg" type="file" id="mybsmiuploadphoto" />'
@@ -3714,8 +3722,8 @@ function fuploadphoto(dialog,obj)
 function fverifikasidata()
 {
   var dialog = app.dialog.create({
-    title: 'Permintaan Verifikasi',
-    text: 'Verifikasi identitas diperlukan.',
+    title: 'Verifikasi',
+    text: 'Verifikasi diperlukan untuk melanjutkan.',
     closeByBackdropClick: false,
     destroyOnClose: true,
     on: {
@@ -3748,7 +3756,7 @@ function fverifikasidata()
 function fverifikasiidentitas()
 {
   var dialog = app.dialog.create({
-    title: 'Permintaan Verifikasi',
+    title: 'Verifikasi KTP',
     closeByBackdropClick: false,
     destroyOnClose: true,
     content: '<div style="width:100%;height:60vh;overflow:auto;">'
@@ -3859,7 +3867,7 @@ function fverifikasiidentitas()
           }
       },
       {
-        text: 'Verifikasi',
+        text: 'Simpan',
         close:false,
         onClick: function(dialog, e)
           {            
@@ -3917,8 +3925,13 @@ function fkirimverifikasiidentitas(dialog,obj)
         {
           console.log('kirim verifikasi sukses');
           //app.dialog.alert("Permintaan verifikasi telah terkirim. Hubungi operator jika ada kendala. Terima kasih.",'Permintaan Verifikasi');
-          fonesignalprompt('Permintaan Verifikasi Terkirim','Beri tahu jika proses verifikasi selesai');
+          //fonesignalprompt('Permintaan Verifikasi Terkirim','Beri tahu jika proses verifikasi selesai');
           getdefaultdata();
+		  if(dashboardata.user.userphoto === ''){
+			  flengkapiphoto();
+		  }else{
+			  app.dialog.alert("Pengajuan verifikasi berhasil terkirim.",'Berhasil');
+		  }
         }
         else if (status == "failed")
         {
