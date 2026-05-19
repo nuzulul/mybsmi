@@ -7791,7 +7791,7 @@ function fpageadminlaporanadministrasibsmrregistrasi(content)
 
 	let datarelawan = content
 	let jumlah = 0
-	let bsmrhtml = '<div class="data-table data-table-collapsible data-table-init bsmr"><table><thead><tr><th>Nama Sekolah</th><th>Alamat Sekolah</th><th>Tahun Pendirian BSMR</th><th>Jumlah Anggota</th><th>PIC BSMR (dari Sekolah)</th><th>BSMI Cabang</th><th>PIC BSMR (dari BSMI Cabang)</th><th></th></tr></thead><tbody>'
+	let bsmrhtml = '<div class="data-table data-table-collapsible data-table-init bsmr"><table><thead><tr><th>Nama Sekolah</th><th>Alamat Sekolah</th><th>Tahun Pendirian BSMR</th><th>Jumlah Anggota</th><th>PIC BSMR (dari Sekolah)</th><th>BSMI Cabang</th><th>PIC BSMR (dari BSMI Cabang)</th><th>Action</th></tr></thead><tbody>'
 	for(let j=0;j<kodecabang.length;j++)
 	{
 		let cabang = kodecabang[j]
@@ -7811,7 +7811,7 @@ function fpageadminlaporanadministrasibsmrregistrasi(content)
 							'<td data-collapsible-title="PIC BSMR (dari Sekolah)">'+safe(item.picbsmr)+'</td>'+
 							'<td data-collapsible-title="BSMI Cabang">'+safe(namacabang)+'</td>'+
 							'<td data-collapsible-title="PIC BSMR (dari BSMI Cabang)"><a class="mybsmi-adminaction" data-user="'+btoa(JSON.stringify(data))+'">'+safe(data[4])+'</a></td>'+
-							'<td data-collapsible-title=""><a class="button button-fill mybsmi-adminaction-aktif display-none" data-indexcabang="'+j+'" data-indexbsmr="'+i+'">Aktifkan</a></td>'+
+							'<td data-collapsible-title=""><a class="button button-fill mybsmi-adminaction-aktif" data-indexcabang="'+j+'" data-indexbsmr="'+i+'">Aktifkan</a></td>'+
 						'</tr>'
 		}
 	}
