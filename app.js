@@ -3047,7 +3047,7 @@ function fpagecabangrun(content,cabangid)
           app.views.main.router.navigate(url);
     });
   }
-  $$('.mybsmi-cabang').append('<p style="font-size:10px;">Relawan : <span class="jumlahrelawan"></span> Orang</p>');
+  $$('.mybsmi-cabang').append('<p style="font-size:10px;">Anggota : <span class="jumlahrelawan"></span> Orang</p>');
   let struktur = JSON.parse(datacabang[8])
   if(struktur.length > 0)
   {
@@ -3079,7 +3079,7 @@ function fpagecabangrun(content,cabangid)
 		html += '</ul></div>'	  
 		$$('.mybsmi-cabang').append(html)
   }
-  var data = '<p>Anggota Relawan</p><div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th></th><th>Nama</th><th>No. KTA</th><th>Cabang</th></tr></thead><tbody>';
+  var data = '<p>Anggota</p><div class="data-table data-table-collapsible data-table-init"><table><thead><tr><th></th><th>Nama</th><th>No. KTA</th><th>Cabang</th></tr></thead><tbody>';
   var jumlahrelawan = 0;
   for (i=content.length-1;i>-1;i--)
   {
