@@ -3976,16 +3976,16 @@ function fpageekta()
     }
     else
     {
-      let label = 'BUAT e-KTA';
+      let label = 'BUAT ID CARD';
       if (ekta)
       {
-        label = 'PERBARUI e-KTA';
-        app.dialog.alert('Masa berlaku e-KTA anda telah habis','Info');
+        label = 'BUAT ID CARD BARU';
+        app.dialog.alert('Masa berlaku ID CARD anda telah habis','Info');
       }
       $$('.mybsmi-ektabsmi').html('<a class="button button-fill">'+label+'</a>');
       $$('.mybsmi-ektabsmi a').on('click', function () {
             
-            app.dialog.confirm('Penerbitan e-KTA memerlukan waktu sekitar 2-5 menit harap ditunggu.', 'Pemberitahuan', function (){fbuatekta();})
+            app.dialog.confirm('Penerbitan ID CARD memerlukan waktu sekitar 2-5 menit harap ditunggu.', 'Pemberitahuan', function (){fbuatekta();})
       });
     }
     try{let status = data.statuskeanggotaan.status
