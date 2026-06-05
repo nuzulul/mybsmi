@@ -672,7 +672,7 @@ function fperiksauserstatus({ resolve, reject })
             let data = JSON.parse(dashboarddata.user.usermydata)
             if (data.verifikasiidentitas)
             {
-              app.dialog.alert('Menunggu verifikasi identitas, hubungi pengurus untuk bantuan.', 'Status')
+              app.dialog.alert('Menunggu verifikasi data, hubungi pengurus untuk bantuan.', 'Status')
               reject();
             }
             else
@@ -691,7 +691,7 @@ function fperiksauserstatus({ resolve, reject })
        }
        else if (dashboarddata.user.userstatus === 'Tertolak')
        {
-          app.dialog.alert('Verifikasi identitas gagal hubungi pengurus cabang', 'Status')
+          app.dialog.alert('Verifikasi data gagal hubungi pengurus', 'Status')
           reject();
        }
        else
@@ -2860,7 +2860,7 @@ function getdefaultdatarun(data)
   if (usermydata.verifikasiidentitas)
   {
     $$('.mybsmi-ektamenu').show();
-	$$('#ektamenustyle').remove();
+	$$('#ektamenustyle').remove(); //remove css at index.html
   } 
   if (usermydata.verifikator)
   {
@@ -3278,7 +3278,11 @@ function fpageprofilku()
         if (!mydata.verifikasiidentitas){  
             fverifikasidata()
         }else{
-            app.dialog.alert('Proses verifikasi data','Proses');
+			if(data.userphoto!=''){
+				app.dialog.alert('Dalam proses verifikasi data','Proses');
+			}else{
+				flengkapiphoto();
+			}			
         }
     });
 }
@@ -3560,7 +3564,7 @@ function resetpasswordinput(dynamicPopup,data,email)
 function flengkapidata()
 {
   var dialog = app.dialog.create({
-    text: 'Lengkapi data untuk melanjutkan.',
+    text: 'Lengkapi photo profil untuk melanjutkan.',
     closeByBackdropClick: false,
     destroyOnClose: true,
     on: {
@@ -3593,11 +3597,11 @@ function flengkapidata()
 function flengkapiphoto()
 {
   var dialog = app.dialog.create({
-    title: 'Photo Profile',
+    title: 'Photo Profil',
     closeByBackdropClick: false,
     destroyOnClose: true,
     content: '<div style="width:100%;">'
-      +'<p style="text-align:center; border:1px solid gray;padding:10px 10px;color:gray;">Pilih swaphoto profile resmi</p>'
+      +'<p style="text-align:center; border:1px solid gray;padding:10px 10px;color:gray;">Pilih swaphoto profil resmi</p>'
       +'<form runat="server" style="display:flex;flex-direction:column;align-items:center;justify-content: center;">'
       +'<img id="mybsmiuploadphotopreview" src="avatar.png" style="width:150px;height:150px;margin: 10px 10px;border-radius: 50%;object-fit: cover;">'
       +'<input accept="image/jpeg" type="file" id="mybsmiuploadphoto" />'
@@ -3689,9 +3693,10 @@ function fuploadphoto(dialog,obj)
         if (status == "success")
         {
           //console.log(content);
+		  window.dashboarddata.user.userphoto = 'true';
           var toastBottom = app.toast.create({ text: 'Upload photo berhasil', closeTimeout: 5000,position: 'center', });toastBottom.open();
           getdefaultdata();
-          
+ 
         }
         else if (status == "failed")
         {
@@ -3723,7 +3728,7 @@ function fverifikasidata()
 {
   var dialog = app.dialog.create({
     title: 'Verifikasi',
-    text: 'Verifikasi diperlukan untuk melanjutkan.',
+    text: 'Verifikasi data diperlukan untuk melanjutkan.',
     closeByBackdropClick: false,
     destroyOnClose: true,
     on: {
@@ -3756,17 +3761,18 @@ function fverifikasidata()
 function fverifikasiidentitas()
 {
   var dialog = app.dialog.create({
-    title: 'Verifikasi KTP',
+    title: 'Verifikasi Data',
     closeByBackdropClick: false,
     destroyOnClose: true,
     content: '<div style="width:100%;height:60vh;overflow:auto;">'
       +'<form id="mybsmi-formverifikasiidentitas" runat="server" style="display:flex;flex-direction:column;align-items:center;justify-content: center;">'
+	  +'  <div class="margin-top">Photo KTP</div>'
       +'  <img id="mybsmiuploadphotopreview" src="ktpplaceholder.png" style="width:200px;height:150px;margin: 10px 10px;object-fit: contain;">'
       +'  <input accept="image/jpeg" type="file" name="mybsmiuploadphoto" id="mybsmiuploadphoto" required validate/>'
       +'  <div class="list no-hairlines-md">'
       +'    <ul>'
       +'        <li class="item-content item-input"><div class="item-inner"><div class="item-input-wrap">'
-      +'            Isi Sesuai Identitas'
+      +'            Isi Sesuai KTP'
       +'            </div></div>'
       +'        </li>'
       +'        <li class="item-content item-input"><div class="item-inner"><div class="item-input-wrap">'
@@ -3867,7 +3873,7 @@ function fverifikasiidentitas()
           }
       },
       {
-        text: 'Simpan',
+        text: 'Kirim',
         close:false,
         onClick: function(dialog, e)
           {            
@@ -3926,11 +3932,12 @@ function fkirimverifikasiidentitas(dialog,obj)
           console.log('kirim verifikasi sukses');
           //app.dialog.alert("Permintaan verifikasi telah terkirim. Hubungi operator jika ada kendala. Terima kasih.",'Permintaan Verifikasi');
           //fonesignalprompt('Permintaan Verifikasi Terkirim','Beri tahu jika proses verifikasi selesai');
-          getdefaultdata();
-		  if(dashboardata.user.userphoto === ''){
+          $$('.mybsmi-profilku-verifikasi').hide();
+		  getdefaultdata();
+		  if(dashboarddata.user.userphoto === ''){
 			  flengkapiphoto();
 		  }else{
-			  app.dialog.alert("Pengajuan verifikasi berhasil terkirim.",'Berhasil');
+			  app.dialog.alert("Pengajuan verifikasi data berhasil terkirim.",'Berhasil');
 		  }
         }
         else if (status == "failed")
